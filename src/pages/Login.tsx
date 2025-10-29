@@ -45,7 +45,7 @@ const Login = () => {
           title: "Success!",
           description: result.message,
         });
-        navigate('/dashboard');
+        navigate('/');
       } else {
         setError(result.message);
       }
@@ -205,15 +205,6 @@ const Login = () => {
             </div>
           </CardContent>
         </Card>
-
-        {/* Demo credentials */}
-        <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-          <h3 className="text-sm font-medium text-blue-900 mb-2">Demo Credentials</h3>
-          <p className="text-xs text-blue-700">
-            Email: demo@example.com<br />
-            Password: password
-          </p>
-        </div>
       </div>
     </div>
   );

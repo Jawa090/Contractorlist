@@ -1,327 +1,364 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { BookOpen, ArrowRight, Building2, Hammer, Wrench, Calculator, FileText, Users } from 'lucide-react';
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import { Search, BookOpen, Filter, Hash, TrendingUp, Users, Star, CheckCircle } from "lucide-react";
+import { useState } from "react";
 
 const Glossary = () => {
-  const [searchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedLetter, setSelectedLetter] = useState("All");
 
-  const categories = [
-    { name: "All", count: 150, icon: BookOpen },
-    { name: "Project Management", count: 35, icon: FileText },
-    { name: "Construction Methods", count: 28, icon: Hammer },
-    { name: "Materials & Equipment", count: 25, icon: Wrench },
-    { name: "Cost & Estimation", count: 22, icon: Calculator },
-    { name: "Safety & Regulations", count: 20, icon: Building2 },
-    { name: "Team & Roles", count: 20, icon: Users }
-  ];
+  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
   const glossaryTerms = [
     {
-      term: "BIM (Building Information Modeling)",
-      definition: "A digital representation of physical and functional characteristics of a facility. BIM serves as a shared knowledge resource for information about a facility, forming a reliable basis for decisions during its life-cycle.",
-      category: "Project Management",
-      example: "Using BIM software to create 3D models that include structural, mechanical, and electrical systems."
+      term: "Aggregate",
+      definition: "Granular materials such as sand, gravel, crushed stone, or slag that are mixed with cement and water to form concrete or mortar.",
+      category: "Materials",
+      popular: true
     },
     {
-      term: "Change Order",
-      definition: "A written document that modifies the plans, specifications, or price of a construction contract. Change orders are used to document changes to the original scope of work.",
-      category: "Project Management",
-      example: "Adding an extra bathroom to the original floor plan requires a change order to update the contract."
+      term: "Blueprint",
+      definition: "A detailed architectural or engineering drawing that shows the design, dimensions, and specifications of a construction project.",
+      category: "Documentation",
+      popular: true
     },
     {
-      term: "Critical Path",
-      definition: "The sequence of project activities that determines the minimum time needed to complete the project. Any delay in critical path activities will delay the entire project.",
-      category: "Project Management",
-      example: "Foundation work is on the critical path because subsequent activities cannot begin until it's completed."
+      term: "Building Information Modeling (BIM)",
+      definition: "A digital representation of physical and functional characteristics of a facility, used for design, construction, and facility management.",
+      category: "Technology",
+      popular: true
     },
     {
-      term: "Subcontractor",
-      definition: "A person or company hired by the general contractor to perform specific work on a construction project. Subcontractors are specialists in particular trades or types of work.",
-      category: "Team & Roles",
-      example: "An electrical subcontractor is hired to install all electrical systems in a building."
+      term: "Cantilever",
+      definition: "A structural element that extends horizontally and is supported at only one end, creating an overhang without external bracing.",
+      category: "Structural",
+      popular: false
     },
     {
-      term: "RFI (Request for Information)",
-      definition: "A formal request for clarification about project plans, specifications, or other documents. RFIs are used to resolve ambiguities or conflicts in construction documents.",
-      category: "Project Management",
-      example: "Submitting an RFI to clarify the exact specifications for a custom door installation."
+      term: "Drywall",
+      definition: "Interior wall construction material made of gypsum plaster pressed between two thick sheets of paper, used to create smooth wall surfaces.",
+      category: "Materials",
+      popular: true
     },
     {
-      term: "Punch List",
-      definition: "A document listing work that doesn't conform to contract specifications and needs to be corrected before final payment. Also called a snag list or deficiency list.",
-      category: "Project Management",
-      example: "Creating a punch list of minor repairs needed before the client accepts the completed project."
+      term: "Excavation",
+      definition: "The process of removing earth, rock, or other materials from a construction site to create foundations, basements, or other below-grade structures.",
+      category: "Site Work",
+      popular: true
     },
     {
-      term: "Precast Concrete",
-      definition: "Concrete elements that are cast in a factory or plant and then transported to the construction site for installation. This method improves quality control and reduces construction time.",
-      category: "Construction Methods",
-      example: "Using precast concrete wall panels that are manufactured off-site and then lifted into place."
+      term: "Footing",
+      definition: "The bottom portion of a foundation that distributes the building's load to the soil, typically made of concrete and placed below the frost line.",
+      category: "Foundation",
+      popular: false
     },
     {
-      term: "Load-Bearing Wall",
-      definition: "A wall that supports the weight of the structure above it, including the roof, floors, and other walls. Load-bearing walls cannot be removed without structural modifications.",
-      category: "Construction Methods",
-      example: "The exterior walls of a house are typically load-bearing and support the roof structure."
+      term: "Grading",
+      definition: "The process of leveling or sloping the ground surface around a building to ensure proper drainage and site preparation.",
+      category: "Site Work",
+      popular: false
     },
     {
-      term: "R-Value",
-      definition: "A measure of thermal resistance used in the building and construction industry. Higher R-values indicate better insulating properties.",
-      category: "Materials & Equipment",
-      example: "Fiberglass insulation with an R-value of 13 provides better thermal resistance than insulation with an R-value of 8."
+      term: "HVAC",
+      definition: "Heating, Ventilation, and Air Conditioning systems that provide thermal comfort and acceptable indoor air quality in buildings.",
+      category: "Systems",
+      popular: true
     },
     {
-      term: "Change Management",
-      definition: "The systematic approach to dealing with changes in a project, including identifying, evaluating, and implementing changes while minimizing disruption.",
-      category: "Project Management",
-      example: "Implementing a change management process to handle scope changes without affecting project timeline and budget."
+      term: "I-beam",
+      definition: "A structural steel beam with an I-shaped cross-section, commonly used in construction for its high strength-to-weight ratio.",
+      category: "Structural",
+      popular: false
     },
     {
-      term: "Safety Factor",
-      definition: "A factor applied to design calculations to ensure structures can handle loads beyond their expected maximum. It provides a margin of safety against failure.",
-      category: "Safety & Regulations",
-      example: "Using a safety factor of 2.0 means a beam designed to hold 1,000 pounds can actually support 2,000 pounds."
+      term: "Joist",
+      definition: "Horizontal structural members used to support floors and ceilings, typically made of wood, steel, or engineered materials.",
+      category: "Structural",
+      popular: false
     },
     {
-      term: "Value Engineering",
-      definition: "A systematic method to improve the value of goods or products by examining function and cost. The goal is to reduce costs while maintaining or improving performance.",
-      category: "Cost & Estimation",
-      example: "Replacing expensive imported tiles with locally sourced alternatives that meet the same quality standards."
+      term: "Keystone",
+      definition: "The central wedge-shaped stone at the top of an arch that locks the other stones in place and bears the weight of the structure above.",
+      category: "Masonry",
+      popular: false
     },
     {
-      term: "Submittal",
-      definition: "Documents, samples, and other information submitted by contractors for review and approval before work begins. Submittals ensure compliance with project specifications.",
-      category: "Project Management",
-      example: "Submitting paint color samples and material specifications for client approval before painting begins."
+      term: "Load-bearing Wall",
+      definition: "A wall that supports the weight of the structure above it, including floors, ceilings, and roof loads, and cannot be removed without structural modifications.",
+      category: "Structural",
+      popular: true
     },
     {
-      term: "Retention",
-      definition: "A percentage of the contract amount withheld by the client until the project is completed and accepted. Retention provides security for the client and motivates timely completion.",
-      category: "Cost & Estimation",
-      example: "Withholding 10% of each payment until the project is fully completed and accepted."
+      term: "Mortar",
+      definition: "A mixture of cement, sand, and water used to bind masonry units such as bricks, stones, or concrete blocks together.",
+      category: "Materials",
+      popular: false
     },
     {
-      term: "As-Built Drawings",
-      definition: "Drawings that show the actual construction of a project as it was built, including any changes made during construction. These are important for future maintenance and renovations.",
-      category: "Project Management",
-      example: "Updating the original plans to reflect the actual location of electrical outlets and plumbing fixtures."
+      term: "OSHA",
+      definition: "Occupational Safety and Health Administration - the federal agency responsible for enforcing safety and health regulations in the workplace.",
+      category: "Safety",
+      popular: true
+    },
+    {
+      term: "Plumb",
+      definition: "Perfectly vertical or perpendicular to a horizontal surface, often checked using a plumb line or level during construction.",
+      category: "Measurement",
+      popular: false
+    },
+    {
+      term: "Rebar",
+      definition: "Reinforcing bar - steel bars or mesh used to strengthen concrete structures by providing tensile strength to complement concrete's compressive strength.",
+      category: "Materials",
+      popular: true
+    },
+    {
+      term: "Soffit",
+      definition: "The underside of an architectural element such as an arch, balcony, beam, or eave, often finished with decorative or protective materials.",
+      category: "Architectural",
+      popular: false
+    },
+    {
+      term: "Truss",
+      definition: "A structural framework of triangular units used to support roofs and bridges, designed to distribute loads efficiently across the span.",
+      category: "Structural",
+      popular: false
+    },
+    {
+      term: "Underlayment",
+      definition: "A layer of material installed beneath the finished flooring to provide moisture protection, sound dampening, or surface smoothing.",
+      category: "Materials",
+      popular: false
     }
+  ];
+
+  const categories = [
+    { name: "All Categories", count: glossaryTerms.length, color: "bg-gray-100 text-gray-800" },
+    { name: "Materials", count: glossaryTerms.filter(t => t.category === "Materials").length, color: "bg-blue-100 text-blue-800" },
+    { name: "Structural", count: glossaryTerms.filter(t => t.category === "Structural").length, color: "bg-green-100 text-green-800" },
+    { name: "Technology", count: glossaryTerms.filter(t => t.category === "Technology").length, color: "bg-purple-100 text-purple-800" },
+    { name: "Safety", count: glossaryTerms.filter(t => t.category === "Safety").length, color: "bg-red-100 text-red-800" },
+    { name: "Site Work", count: glossaryTerms.filter(t => t.category === "Site Work").length, color: "bg-orange-100 text-orange-800" }
   ];
 
   const filteredTerms = glossaryTerms.filter(term => {
     const matchesSearch = term.term.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          term.definition.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === 'All' || term.category === selectedCategory;
-    return matchesSearch && matchesCategory;
+    const matchesLetter = selectedLetter === "All" || term.term.charAt(0).toUpperCase() === selectedLetter;
+    return matchesSearch && matchesLetter;
   });
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <section className="bg-gradient-to-r from-yellow-400 to-yellow-600 py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-5xl font-bold text-white mb-6">Construction Glossary</h1>
-          <p className="text-xl text-white/90 max-w-3xl mx-auto">
-            A comprehensive guide to construction terms, definitions, and industry terminology. 
-            Find explanations for common and specialized construction concepts.
-          </p>
-        </div>
-      </section>
+  const popularTerms = glossaryTerms.filter(term => term.popular);
 
-      {/* Search and Categories */}
-      <section className="py-8 bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col lg:flex-row gap-6 items-start lg:items-center justify-between">
-            {/* Category Filter */}
-            <div className="flex flex-wrap gap-3">
-              {categories.map((category) => (
-                <button
-                  key={category.name}
-                  onClick={() => setSelectedCategory(category.name)}
-                  className={`flex items-center space-x-2 px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                    selectedCategory === category.name
-                      ? 'bg-yellow-500 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                >
-                  <category.icon className="h-4 w-4" />
-                  <span>{category.name} ({category.count})</span>
-                </button>
-              ))}
+  const stats = [
+    { icon: BookOpen, value: "500+", label: "Terms Defined" },
+    { icon: Users, value: "15K+", label: "Monthly Users" },
+    { icon: TrendingUp, value: "Weekly", label: "Updates" },
+    { icon: Star, value: "4.9/5", label: "User Rating" }
+  ];
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-yellow-50">
+      <Header />
+      
+      {/* Hero Section with Background Image */}
+      <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <img 
+            src="/api/placeholder/1920/600" 
+            alt="Construction blueprints and terminology" 
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30"></div>
+        </div>
+        
+        {/* Hero Content */}
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
+          <div className="inline-flex items-center px-6 py-3 bg-yellow-500/20 backdrop-blur-sm rounded-full text-yellow-300 text-sm font-medium mb-8">
+            📖 Construction Dictionary
+          </div>
+          <h1 className="text-6xl font-bold mb-8 leading-tight">
+            Complete Construction
+            <span className="block text-yellow-400">Terminology Guide</span>
+          </h1>
+          <p className="text-2xl mb-12 max-w-4xl mx-auto leading-relaxed opacity-90">
+            Your comprehensive resource for construction terms, definitions, and industry terminology. 
+            From basic concepts to advanced technical terms, find everything you need to know.
+          </p>
+          
+          {/* Search Bar */}
+          <div className="max-w-2xl mx-auto">
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-6 h-6" />
+              <input
+                type="text"
+                placeholder="Search construction terms..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-14 pr-4 py-4 rounded-full border-0 text-gray-900 placeholder:text-gray-500 focus:ring-2 focus:ring-yellow-300 text-lg"
+              />
             </div>
           </div>
         </div>
       </section>
 
-      {/* Glossary Terms */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">
-              {selectedCategory === 'All' ? 'All Terms' : `${selectedCategory} Terms`}
-            </h2>
-            <p className="text-gray-600">
-              {filteredTerms.length} terms found
-            </p>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        {/* Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-16">
+          {stats.map((stat, idx) => {
+            const Icon = stat.icon;
+            return (
+              <div key={idx} className="text-center p-6 bg-white rounded-2xl shadow-lg border border-gray-100">
+                <div className="inline-flex p-3 bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-xl mb-4">
+                  <Icon className="w-6 h-6 text-yellow-600" />
+                </div>
+                <div className="text-3xl font-bold text-gray-900 mb-2">{stat.value}</div>
+                <div className="text-gray-600 font-medium">{stat.label}</div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Categories */}
+        <div className="mb-16">
+          <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Browse by Category</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            {categories.map((category, idx) => (
+              <div key={idx} className="bg-white p-4 rounded-xl shadow-lg border border-gray-100 text-center hover:shadow-xl transition-shadow cursor-pointer group">
+                <div className={`inline-flex px-3 py-1 rounded-full text-sm font-medium mb-3 ${category.color} group-hover:scale-105 transition-transform`}>
+                  {category.name}
+                </div>
+                <div className="text-xl font-bold text-gray-900 mb-1">{category.count}</div>
+                <div className="text-gray-600 text-sm">Terms</div>
+              </div>
+            ))}
           </div>
+        </div>
 
-          <div className="space-y-6">
-            {filteredTerms.map((term, index) => (
-              <div key={index} className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow">
+        {/* Popular Terms */}
+        <div className="mb-16">
+          <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Popular Terms</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {popularTerms.slice(0, 6).map((term, idx) => (
+              <div key={idx} className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300 group">
                 <div className="flex items-start justify-between mb-4">
-                  <div className="flex-1">
-                    <div className="flex items-center space-x-3 mb-3">
-                      <h3 className="text-2xl font-bold text-gray-900">{term.term}</h3>
-                      <span className="px-3 py-1 bg-yellow-100 text-yellow-800 text-sm font-medium rounded-full">
-                        {term.category}
-                      </span>
-                    </div>
-                    
-                    <div className="mb-6">
-                      <h4 className="text-lg font-semibold text-gray-800 mb-2">Definition:</h4>
-                      <p className="text-gray-700 leading-relaxed">{term.definition}</p>
-                    </div>
-
-                    <div>
-                      <h4 className="text-lg font-semibold text-gray-800 mb-2">Example:</h4>
-                      <p className="text-gray-600 italic">{term.example}</p>
-                    </div>
-                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 group-hover:text-yellow-600 transition-colors">
+                    {term.term}
+                  </h3>
+                  <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium">
+                    Popular
+                  </span>
+                </div>
+                <p className="text-gray-600 leading-relaxed mb-4 line-clamp-3">
+                  {term.definition}
+                </p>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded">
+                    {term.category}
+                  </span>
+                  <button className="text-yellow-600 hover:text-yellow-700 font-medium text-sm">
+                    Read More →
+                  </button>
                 </div>
               </div>
             ))}
           </div>
-
-          {filteredTerms.length === 0 && (
-            <div className="text-center py-12">
-              <BookOpen className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-gray-500 mb-2">No terms found</h3>
-              <p className="text-gray-400">Try adjusting your search or category filter</p>
-            </div>
-          )}
         </div>
-      </section>
 
-      {/* Quick Reference Section */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-16">Quick Reference Guide</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="bg-gray-50 p-6 rounded-xl">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Project Management</h3>
-              <ul className="space-y-2 text-gray-600">
-                <li>• BIM (Building Information Modeling)</li>
-                <li>• Change Order</li>
-                <li>• Critical Path</li>
-                <li>• RFI (Request for Information)</li>
-                <li>• Punch List</li>
-              </ul>
+        {/* Alphabet Filter */}
+        <div className="mb-8">
+          <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Browse Alphabetically</h2>
+          <div className="flex flex-wrap justify-center gap-2 mb-8">
+            <button
+              onClick={() => setSelectedLetter("All")}
+              className={`px-4 py-2 rounded-full font-medium transition-colors ${
+                selectedLetter === "All" 
+                  ? "bg-yellow-500 text-black" 
+                  : "bg-white text-gray-700 hover:bg-yellow-100"
+              }`}
+            >
+              All
+            </button>
+            {alphabet.map(letter => (
+              <button
+                key={letter}
+                onClick={() => setSelectedLetter(letter)}
+                className={`w-10 h-10 rounded-full font-medium transition-colors ${
+                  selectedLetter === letter 
+                    ? "bg-yellow-500 text-black" 
+                    : "bg-white text-gray-700 hover:bg-yellow-100"
+                }`}
+              >
+                {letter}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Terms List */}
+        <div className="mb-16">
+          <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+            <div className="p-6 bg-gray-50 border-b border-gray-200">
+              <h3 className="text-xl font-bold text-gray-900">
+                {searchTerm ? `Search Results (${filteredTerms.length})` : 
+                 selectedLetter === "All" ? `All Terms (${filteredTerms.length})` : 
+                 `Terms starting with "${selectedLetter}" (${filteredTerms.length})`}
+              </h3>
             </div>
-            
-            <div className="bg-gray-50 p-6 rounded-xl">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Construction Methods</h3>
-              <ul className="space-y-2 text-gray-600">
-                <li>• Precast Concrete</li>
-                <li>• Load-Bearing Wall</li>
-                <li>• Modular Construction</li>
-                <li>• Tilt-Up Construction</li>
-                <li>• Cast-in-Place</li>
-              </ul>
-            </div>
-            
-            <div className="bg-gray-50 p-6 rounded-xl">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Materials & Equipment</h3>
-              <ul className="space-y-2 text-gray-600">
-                <li>• R-Value</li>
-                <li>• Concrete Strength</li>
-                <li>• Steel Grade</li>
-                <li>• Load Capacity</li>
-                <li>• Material Properties</li>
-              </ul>
+            <div className="divide-y divide-gray-200">
+              {filteredTerms.length === 0 ? (
+                <div className="p-12 text-center">
+                  <Search className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">No terms found</h3>
+                  <p className="text-gray-600">Try adjusting your search or browse by category</p>
+                </div>
+              ) : (
+                filteredTerms.map((term, idx) => (
+                  <div key={idx} className="p-6 hover:bg-gray-50 transition-colors">
+                    <div className="flex items-start justify-between mb-3">
+                      <h4 className="text-xl font-bold text-gray-900">{term.term}</h4>
+                      <div className="flex items-center space-x-2">
+                        {term.popular && (
+                          <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium">
+                            Popular
+                          </span>
+                        )}
+                        <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-medium">
+                          {term.category}
+                        </span>
+                      </div>
+                    </div>
+                    <p className="text-gray-600 leading-relaxed">
+                      {term.definition}
+                    </p>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </div>
-      </section>
 
-      {/* Learning Resources */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-16">Expand Your Knowledge</h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-white p-8 rounded-2xl shadow-lg text-center">
-              <BookOpen className="h-16 w-16 text-yellow-500 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Construction Articles</h3>
-              <p className="text-gray-600 mb-6">
-                Read in-depth articles about construction techniques, industry trends, and best practices.
-              </p>
-              <Link
-                to="/articles"
-                className="inline-flex items-center space-x-2 text-yellow-600 hover:text-yellow-700 font-medium"
-              >
-                <span>Browse Articles</span>
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
-            
-            <div className="bg-white p-8 rounded-2xl shadow-lg text-center">
-              <Building2 className="h-16 w-16 text-yellow-500 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Case Studies</h3>
-              <p className="text-gray-600 mb-6">
-                Learn from real-world construction projects and see these terms in action.
-              </p>
-              <Link
-                to="/case-studies"
-                className="inline-flex items-center space-x-2 text-yellow-600 hover:text-yellow-700 font-medium"
-              >
-                <span>View Projects</span>
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
-            
-            <div className="bg-white p-8 rounded-2xl shadow-lg text-center">
-              <Users className="h-16 w-16 text-yellow-500 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Expert Consultation</h3>
-              <p className="text-gray-600 mb-6">
-                Need clarification on specific terms? Our construction experts are here to help.
-              </p>
-              <Link
-                to="/contact"
-                className="inline-flex items-center space-x-2 text-yellow-600 hover:text-yellow-700 font-medium"
-              >
-                <span>Contact Us</span>
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-yellow-400 to-yellow-600">
-        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl font-bold text-white mb-6">Need Help Understanding Construction Terms?</h2>
-          <p className="text-xl text-white/90 mb-8">
-            Our team of construction professionals is here to help clarify any terms or concepts you encounter.
+        {/* Contribution CTA */}
+        <div className="bg-gradient-to-r from-gray-900 to-black rounded-3xl p-12 text-center text-white">
+          <h2 className="text-3xl font-bold mb-4">Help Us Improve Our Glossary</h2>
+          <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+            Have a construction term that's not in our glossary? Suggest new terms or improvements to help the construction community.
           </p>
-          <div className="space-x-4">
-            <Link
-              to="/contact"
-              className="inline-block bg-white text-yellow-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
-            >
-              Ask an Expert
-            </Link>
-            <Link
-              to="/services"
-              className="inline-block border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-yellow-600 transition-colors"
-            >
-              Our Services
-            </Link>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <button className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold px-8 py-4 rounded-full text-lg transition-colors">
+              Suggest a Term
+            </button>
+            <button className="border-2 border-white text-white hover:bg-white hover:text-black px-8 py-4 rounded-full text-lg transition-colors">
+              Download PDF Guide
+            </button>
           </div>
         </div>
-      </section>
+      </div>
+      
+      <Footer />
     </div>
   );
 };
 
-export default Glossary; 
+export default Glossary;

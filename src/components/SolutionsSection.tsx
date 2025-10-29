@@ -1,155 +1,113 @@
-import { 
-  Monitor, 
-  TrendingUp, 
-  MapPin, 
-  Calculator,
-  Users,
-  Mail,
-  Megaphone,
-  MessageSquare,
-  Scissors,
-  BarChart3,
-  Building2,
-  Zap,
-  ArrowRight
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Star, ChevronLeft, ChevronRight } from "lucide-react";
 
 const SolutionsSection = () => {
-  const solutions = [
-    { 
-      icon: Monitor, 
-      title: "Professional Websites", 
-      description: "Custom websites designed to showcase your work and attract clients",
-      features: ["Portfolio galleries", "Contact forms", "Mobile responsive"]
+  const testimonials = [
+    {
+      name: "Mike",
+      role: "Home Owner",
+      avatar: "M",
+      avatarBg: "bg-teal-500",
+      rating: 5,
+      review: "It's such a relief to have these trusted resource when looking for reliable, honest, and professional contractors. The contractors are knowledgeable.",
+      readMore: "Read more"
     },
-    { 
-      icon: TrendingUp, 
-      title: "Digital Marketing", 
-      description: "Comprehensive marketing strategies to grow your business",
-      features: ["SEO optimization", "Content marketing", "Analytics tracking"]
+    {
+      name: "Adrian Charles",
+      role: "Home Owner",
+      avatar: "A",
+      avatarBg: "bg-orange-500",
+      rating: 5,
+      review: "What a blessing it is to have Randy and David providing such an amazing service for homeowners. Putting them first is why I chose...",
+      readMore: "Read more"
     },
-    { 
-      icon: MapPin, 
-      title: "Graphic Design", 
-      description: "Professional branding and visual identity solutions",
-      features: ["Logo design", "Business cards", "Marketing materials"]
+    {
+      name: "Tactical Mav",
+      role: "Home Owner",
+      avatar: "T",
+      avatarBg: "bg-yellow-600",
+      rating: 5,
+      review: "The Door Contractor List is a top-tier service for homeowners! They set contractors for licensing and reliability, ensuring quality work. The...",
+      readMore: "Read more"
     },
-    { 
-      icon: Calculator, 
-      title: "Quote Management", 
-      description: "Streamlined quoting and estimation tools",
-      features: ["Project calculators", "Template library", "Client proposals"]
+    {
+      name: "Cesar Gonzalez",
+      role: "Home Owner",
+      avatar: "C",
+      avatarBg: "bg-amber-700",
+      rating: 5,
+      review: "We learned of ways to service our customers and became a bigger blessing to them. Here at MOMENTOUS Construction Group we...",
+      readMore: "Read more"
     },
-    { 
-      icon: Users, 
-      title: "Business Consulting", 
-      description: "Expert advice to optimize your construction business",
-      features: ["Process optimization", "Financial planning", "Growth strategies"]
-    },
-    { 
-      icon: Mail, 
-      title: "Email Marketing", 
-      description: "Targeted email campaigns to nurture client relationships",
-      features: ["Automated sequences", "Newsletter templates", "Performance tracking"]
-    },
-    { 
-      icon: Megaphone, 
-      title: "Social Media Marketing", 
-      description: "Social media presence management and advertising",
-      features: ["Content creation", "Paid advertising", "Community engagement"]
-    },
-    { 
-      icon: MessageSquare, 
-      title: "SMS Marketing", 
-      description: "Direct text messaging for client communication",
-      features: ["Appointment reminders", "Project updates", "Promotional offers"]
-    },
-    { 
-      icon: Scissors, 
-      title: "Customer Support", 
-      description: "24/7 customer support and help desk solutions",
-      features: ["Live chat", "Ticket system", "Knowledge base"]
-    },
-    { 
-      icon: BarChart3, 
-      title: "Lead Generation", 
-      description: "Proven strategies to attract qualified leads",
-      features: ["Local SEO", "Referral programs", "Online directories"]
-    },
-    { 
-      icon: Building2, 
-      title: "Google Advertising", 
-      description: "Targeted Google Ads campaigns for maximum ROI",
-      features: ["Search ads", "Display ads", "Performance optimization"]
-    },
-    { 
-      icon: Zap, 
-      title: "Custom Solutions", 
-      description: "Tailored solutions for your specific business needs",
-      features: ["API integration", "Custom development", "Third-party tools"]
+    {
+      name: "Admin Office",
+      role: "Construction Pro",
+      avatar: "A",
+      avatarBg: "bg-purple-600",
+      rating: 5,
+      review: "Great company to be a part of. Randy and David were extremely informative and have a heart of protecting the consumer.",
+      readMore: "Read more"
     }
   ];
 
   return (
-    <div className="py-24 bg-gradient-to-br from-blue-50 via-white to-yellow-50 relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%23fbbf24%22%20fill-opacity%3D%220.03%22%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2230%22%20r%3D%222%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')]"></div>
-      
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="text-center mb-20">
-          <div className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-medium mb-6">
-            <Zap className="w-4 h-4 mr-2" />
-            Business Solutions
-          </div>
-          <h2 className="text-5xl font-bold text-gray-900 mb-6">
-            Complete Business Solutions for Contractors
+    <div className="py-20 bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h2 className="text-5xl font-bold text-black mb-4">
+            Home Owners & Construction Pros Love Us!
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Everything you need to grow your construction business, from digital presence to client management and marketing automation.
-          </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-          {solutions.map((solution, index) => {
-            const IconComponent = solution.icon;
-            return (
-              <div key={index} className="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer border border-gray-100 hover:border-yellow-300 transform hover:-translate-y-2">
-                <div className="flex items-center mb-6">
-                  <div className="p-4 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-2xl mr-4 group-hover:scale-110 transition-transform duration-300">
-                    <IconComponent className="w-8 h-8 text-white" />
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 group-hover:text-yellow-600 transition-colors">
-                    {solution.title}
-                  </h3>
-                </div>
-                
-                <p className="text-gray-600 mb-6 leading-relaxed">
-                  {solution.description}
-                </p>
-                
-                <div className="space-y-2 mb-6">
-                  {solution.features.map((feature, featureIndex) => (
-                    <div key={featureIndex} className="flex items-center text-sm text-gray-500">
-                      <div className="w-1.5 h-1.5 bg-yellow-400 rounded-full mr-3"></div>
-                      {feature}
+        {/* Testimonials with Navigation Arrows */}
+        <div className="flex items-center gap-4">
+          {/* Left Arrow */}
+          <button className="p-2 rounded-full bg-white shadow-md hover:shadow-lg transition-shadow flex-shrink-0">
+            <ChevronLeft className="w-6 h-6 text-gray-600" />
+          </button>
+
+          {/* Testimonials Horizontal Scroll */}
+          <div className="overflow-x-auto scrollbar-hide flex-1">
+            <div className="flex gap-4 pb-4" style={{width: 'max-content'}}>
+              {testimonials.map((testimonial, index) => (
+                <div key={index} className="bg-white rounded-xl p-4 shadow-lg border border-gray-200 w-80 h-48 flex-shrink-0">
+                  {/* Avatar and Name */}
+                  <div className="flex items-center mb-3">
+                    <div className={`w-10 h-10 ${testimonial.avatarBg} rounded-full flex items-center justify-center text-white font-bold text-sm mr-3`}>
+                      {testimonial.avatar}
                     </div>
-                  ))}
-                </div>
-                
-                <div className="flex items-center text-yellow-600 font-semibold group-hover:text-yellow-700 transition-colors">
-                  <span>Learn More</span>
-                  <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                </div>
-              </div>
-            );
-          })}
-        </div>
+                    <div>
+                      <h3 className="font-bold text-gray-900 text-sm">{testimonial.name}</h3>
+                      <p className="text-xs text-gray-600">{testimonial.role}</p>
+                    </div>
+                  </div>
 
-        <div className="text-center mt-16">
-          <Button className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-black hover:from-yellow-600 hover:to-yellow-700 font-semibold px-8 py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-300">
-            Explore All Solutions
-          </Button>
+                  {/* Star Rating */}
+                  <div className="flex items-center mb-3">
+                    {[...Array(testimonial.rating)].map((_, i) => (
+                      <Star key={i} className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                    ))}
+                    <span className="ml-2 text-xs text-gray-600">5</span>
+                  </div>
+
+                  {/* Review Text */}
+                  <p className="text-gray-700 text-xs leading-relaxed mb-3 line-clamp-4">
+                    {testimonial.review}
+                  </p>
+
+                  {/* Read More Link */}
+                  <button className="text-blue-600 text-xs font-medium hover:text-blue-700 transition-colors">
+                    {testimonial.readMore}
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Right Arrow */}
+          <button className="p-2 rounded-full bg-white shadow-md hover:shadow-lg transition-shadow flex-shrink-0">
+            <ChevronRight className="w-6 h-6 text-gray-600" />
+          </button>
         </div>
       </div>
     </div>

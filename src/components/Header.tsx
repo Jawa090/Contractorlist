@@ -22,12 +22,12 @@ const Header = () => {
   // Don't render authentication-dependent content while loading
   if (isLoading) {
     return (
-      <header className="w-full bg-white shadow-sm sticky top-0 z-50 font-[Montserrat]">
+      <header className="w-full bg-white shadow-sm sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
             <Link to="/" className="flex items-center space-x-3 select-none">
-              <img src="/main-logo.png" alt="Contractorlist Logo" className="h-8 w-auto" />
+              <img src="/logo1.png" alt="Contractorlist Logo" className="h-96 w-auto" />
             </Link>
 
             {/* Loading state */}
@@ -76,79 +76,49 @@ const Header = () => {
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
                     <Link to="/services" className="flex items-center space-x-3 p-3 cursor-pointer hover:bg-yellow-50 bg-gray-50">
-                    <Plus className="h-5 w-5 text-yellow-600" />
-                    <div>
-                      <div className="font-medium text-yellow-600">View More</div>
-                      <div className="text-xs text-gray-500">Explore all our services</div>
-                    </div>
+                      <Plus className="h-5 w-5 text-yellow-600" />
+                      <div>
+                        <div className="font-medium text-yellow-600">View More</div>
+                        <div className="text-xs text-gray-500">Explore all our services</div>
+                      </div>
                     </Link>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-              
-              {/* Who We Serve Dropdown */}
+
+
+              {/* Our Products Dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="flex items-center space-x-2 p-0 h-auto text-base font-medium text-black hover:text-yellow-500 transition-colors hover:bg-transparent focus:bg-transparent active:bg-transparent">
-                    <span>Who We Serve</span>
+                    <span>Our Products</span>
                     <ChevronDown className="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-64">
                   <DropdownMenuLabel className="text-sm font-semibold text-gray-700">
-                    Our Target Clients
+                    Our Products
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
-                    <Link to="/serve/owners-developers" className="flex items-center space-x-3 p-3 cursor-pointer hover:bg-yellow-50">
-                    <Building2 className="h-5 w-5 text-yellow-600" />
+                  <DropdownMenuItem className="flex items-center space-x-3 p-3 cursor-pointer hover:bg-yellow-50">
+                    <FileText className="h-5 w-5 text-yellow-600" />
                     <div>
-                      <div className="font-medium">Owners & Developers</div>
-                      <div className="text-xs text-gray-500">Property owners and real estate developers</div>
+                      <div className="font-medium">Product 1</div>
+                      <div className="text-xs text-gray-500">Product description</div>
                     </div>
-                    </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/serve/general-contractors" className="flex items-center space-x-3 p-3 cursor-pointer hover:bg-yellow-50">
-                    <Hammer className="h-5 w-5 text-yellow-600" />
+                  <DropdownMenuItem className="flex items-center space-x-3 p-3 cursor-pointer hover:bg-yellow-50">
+                    <Calculator className="h-5 w-5 text-yellow-600" />
                     <div>
-                      <div className="font-medium">General Contractors</div>
-                      <div className="text-xs text-gray-500">Primary construction contractors</div>
+                      <div className="font-medium">Product 2</div>
+                      <div className="text-xs text-gray-500">Product description</div>
                     </div>
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/serve/specialty-contractors" className="flex items-center space-x-3 p-3 cursor-pointer hover:bg-yellow-50">
-                    <Wrench className="h-5 w-5 text-yellow-600" />
-                    <div>
-                      <div className="font-medium">Specialty Contractors</div>
-                      <div className="text-xs text-gray-500">Specialized construction services</div>
-                    </div>
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/serve/pm-companies" className="flex items-center space-x-3 p-3 cursor-pointer hover:bg-yellow-50">
-                    <ClipboardList className="h-5 w-5 text-yellow-600" />
-                    <div>
-                      <div className="font-medium">Project Management Companies</div>
-                      <div className="text-xs text-gray-500">Construction project management</div>
-                    </div>
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/serve/commercial-companies" className="flex items-center space-x-3 p-3 cursor-pointer hover:bg-yellow-50">
-                    <Factory className="h-5 w-5 text-yellow-600" />
-                    <div>
-                      <div className="font-medium">Commercial Companies</div>
-                      <div className="text-xs text-gray-500">Commercial construction firms</div>
-                    </div>
-                    </Link>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-              
-              
-              
+
+
+
               {/* Company Dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -218,8 +188,8 @@ const Header = () => {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-              
-              <Link to="/join-network" className="ml-2 px-6 py-2 rounded bg-yellow-400 hover:bg-yellow-300 text-black font-semibold shadow transition-colors" style={{boxShadow:'0 2px 8px rgba(255,221,51,0.08)'}}>Join Our Network</Link>
+
+              <Link to="/join-network" className="ml-2 px-6 py-2 rounded bg-yellow-400 hover:bg-yellow-300 text-black font-semibold shadow transition-colors" style={{ boxShadow: '0 2px 8px rgba(255,221,51,0.08)' }}>Join Our Network</Link>
             </div>
 
             {/* Mobile menu button */}
@@ -237,12 +207,12 @@ const Header = () => {
   }
 
   return (
-    <header className="w-full bg-white shadow-sm sticky top-0 z-50 font-[Montserrat]">
+    <header className="w-full bg-white shadow-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3 select-none">
-            <img src="/main-logo.png" alt="Contractorlist Logo" className="h-8 w-auto" />
+            <img src="/logo1.png" alt="Contractorlist Logo" className="h-96 w-auto" />
           </Link>
 
           {/* Navigation */}
@@ -291,79 +261,49 @@ const Header = () => {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
                   <Link to="/services" className="flex items-center space-x-3 p-3 cursor-pointer hover:bg-yellow-50 bg-gray-50">
-                  <Plus className="h-5 w-5 text-yellow-600" />
-                  <div>
-                    <div className="font-medium text-yellow-600">View More</div>
-                    <div className="text-xs text-gray-500">Explore all our services</div>
-                  </div>
+                    <Plus className="h-5 w-5 text-yellow-600" />
+                    <div>
+                      <div className="font-medium text-yellow-600">View More</div>
+                      <div className="text-xs text-gray-500">Explore all our services</div>
+                    </div>
                   </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            
-            {/* Who We Serve Dropdown */}
+
+
+            {/* Our Products Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="flex items-center space-x-2 p-0 h-auto text-base font-medium text-black hover:text-yellow-500 transition-colors hover:bg-transparent focus:bg-transparent active:bg-transparent">
-                  <span>Who We Serve</span>
+                  <span>Our Products</span>
                   <ChevronDown className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start" className="w-64">
                 <DropdownMenuLabel className="text-sm font-semibold text-gray-700">
-                  Our Target Clients
+                  Our Products
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link to="/serve/owners-developers" className="flex items-center space-x-3 p-3 cursor-pointer hover:bg-yellow-50">
-                    <Building2 className="h-5 w-5 text-yellow-600" />
-                    <div>
-                      <div className="font-medium">Owners & Developers</div>
-                      <div className="text-xs text-gray-500">Property owners and real estate developers</div>
-                    </div>
-                  </Link>
+                <DropdownMenuItem className="flex items-center space-x-3 p-3 cursor-pointer hover:bg-yellow-50">
+                  <FileText className="h-5 w-5 text-yellow-600" />
+                  <div>
+                    <div className="font-medium">Product 1</div>
+                    <div className="text-xs text-gray-500">Product description</div>
+                  </div>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/serve/general-contractors" className="flex items-center space-x-3 p-3 cursor-pointer hover:bg-yellow-50">
-                    <Hammer className="h-5 w-5 text-yellow-600" />
-                    <div>
-                      <div className="font-medium">General Contractors</div>
-                      <div className="text-xs text-gray-500">Primary construction contractors</div>
-                    </div>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/serve/specialty-contractors" className="flex items-center space-x-3 p-3 cursor-pointer hover:bg-yellow-50">
-                    <Wrench className="h-5 w-5 text-yellow-600" />
-                    <div>
-                      <div className="font-medium">Specialty Contractors</div>
-                      <div className="text-xs text-gray-500">Specialized construction services</div>
-                    </div>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/serve/pm-companies" className="flex items-center space-x-3 p-3 cursor-pointer hover:bg-yellow-50">
-                    <ClipboardList className="h-5 w-5 text-yellow-600" />
-                    <div>
-                      <div className="font-medium">Project Management Companies</div>
-                      <div className="text-xs text-gray-500">Construction project management</div>
-                    </div>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/serve/commercial-companies" className="flex items-center space-x-3 p-3 cursor-pointer hover:bg-yellow-50">
-                    <Factory className="h-5 w-5 text-yellow-600" />
-                    <div>
-                      <div className="font-medium">Commercial Companies</div>
-                      <div className="text-xs text-gray-500">Commercial construction firms</div>
-                    </div>
-                  </Link>
+                <DropdownMenuItem className="flex items-center space-x-3 p-3 cursor-pointer hover:bg-yellow-50">
+                  <Calculator className="h-5 w-5 text-yellow-600" />
+                  <div>
+                    <div className="font-medium">Product 2</div>
+                    <div className="text-xs text-gray-500">Product description</div>
+                  </div>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            
-            
-            
+
+
+
             {/* Company Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -382,7 +322,7 @@ const Header = () => {
                     <Users className="h-5 w-5 text-yellow-600" />
                     <div>
                       <div className="font-medium">About Us</div>
-                      <div className="text-xs text-gray-500">Learn about our company</div>
+                      <div className="text-xs text-gray-500">Our story, mission, and values</div>
                     </div>
                   </Link>
                 </DropdownMenuItem>
@@ -391,25 +331,17 @@ const Header = () => {
                     <BookOpen className="h-5 w-5 text-yellow-600" />
                     <div>
                       <div className="font-medium">Case Studies</div>
-                      <div className="text-xs text-gray-500">Success stories and projects</div>
+                      <div className="text-xs text-gray-500">Real project success stories and results</div>
                     </div>
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/testimonials" className="flex items-center space-x-3 p-3 cursor-pointer hover:bg-yellow-50">
-                    <Star className="h-5 w-5 text-yellow-600" />
-                    <div>
-                      <div className="font-medium">Testimonials</div>
-                      <div className="text-xs text-gray-500">Client feedback and reviews</div>
-                    </div>
-                  </Link>
-                </DropdownMenuItem>
+
                 <DropdownMenuItem asChild>
                   <Link to="/videos" className="flex items-center space-x-3 p-3 cursor-pointer hover:bg-yellow-50">
                     <Play className="h-5 w-5 text-yellow-600" />
                     <div>
                       <div className="font-medium">Videos</div>
-                      <div className="text-xs text-gray-500">Company and project videos</div>
+                      <div className="text-xs text-gray-500">Project showcases and company insights</div>
                     </div>
                   </Link>
                 </DropdownMenuItem>
@@ -418,7 +350,7 @@ const Header = () => {
                     <FileTextIcon className="h-5 w-5 text-yellow-600" />
                     <div>
                       <div className="font-medium">Articles</div>
-                      <div className="text-xs text-gray-500">Industry insights and news</div>
+                      <div className="text-xs text-gray-500">Expert insights and industry trends</div>
                     </div>
                   </Link>
                 </DropdownMenuItem>
@@ -427,15 +359,15 @@ const Header = () => {
                     <BookOpenIcon className="h-5 w-5 text-yellow-600" />
                     <div>
                       <div className="font-medium">Glossary</div>
-                      <div className="text-xs text-gray-500">Construction terms and definitions</div>
+                      <div className="text-xs text-gray-500">Complete construction terminology guide</div>
                     </div>
                   </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            
-            <Link to="/join-network" className="ml-2 px-6 py-2 rounded bg-yellow-400 hover:bg-yellow-300 text-black font-semibold shadow transition-colors" style={{boxShadow:'0 2px 8px rgba(255,221,51,0.08)'}}>Join Our Network</Link>
-            
+
+            <Link to="/join-network" className="ml-2 px-6 py-2 rounded bg-yellow-400 hover:bg-yellow-300 text-black font-semibold shadow transition-colors" style={{ boxShadow: '0 2px 8px rgba(255,221,51,0.08)' }}>Join Our Network</Link>
+
             {isAuthenticated ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -456,12 +388,6 @@ const Header = () => {
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
-                    <Link to="/dashboard" className="cursor-pointer">
-                      <User className="mr-2 h-4 w-4" />
-                      <span>Dashboard</span>
-                    </Link>
-                  </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link to="/profile" className="cursor-pointer">
                       <Settings className="mr-2 h-4 w-4" />

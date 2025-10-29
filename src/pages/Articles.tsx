@@ -1,364 +1,302 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { FileText, Calendar, Clock, User, Tag, ArrowRight, Search, Filter, TrendingUp, BookOpen, Award } from 'lucide-react';
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import { Calendar, Clock, User, TrendingUp, BookOpen, Search, Filter, ArrowRight } from "lucide-react";
 
 const Articles = () => {
   const categories = [
-    { name: "All", count: 45, active: true },
-    { name: "Project Management", count: 12, active: false },
-    { name: "Construction Technology", count: 8, active: false },
-    { name: "Industry Trends", count: 15, active: false },
-    { name: "Best Practices", count: 10, active: false }
+    { name: "Industry Trends", count: 24, color: "bg-blue-100 text-blue-800" },
+    { name: "Best Practices", count: 18, color: "bg-green-100 text-green-800" },
+    { name: "Technology", count: 15, color: "bg-purple-100 text-purple-800" },
+    { name: "Safety & Compliance", count: 12, color: "bg-red-100 text-red-800" },
+    { name: "Project Management", count: 20, color: "bg-orange-100 text-orange-800" },
+    { name: "Sustainability", count: 10, color: "bg-emerald-100 text-emerald-800" }
   ];
 
-  const featuredArticles = [
-    {
-      id: 1,
-      title: "The Future of Construction: AI and Machine Learning in 2024",
-      excerpt: "Discover how artificial intelligence and machine learning are revolutionizing construction project management, from automated scheduling to predictive analytics and quality control.",
-      category: "Construction Technology",
-      author: "Dr. Sarah Johnson",
-      date: "March 15, 2024",
-      readTime: "8 min read",
-      tags: ["AI", "Machine Learning", "Innovation", "Technology"],
-      featured: true,
-      image: "/thumbnail-1.jpg"
-    },
-    {
-      id: 2,
-      title: "Sustainable Building Materials: What's New and Why It Matters",
-      excerpt: "Explore the latest sustainable building materials that are not only environmentally friendly but also cost-effective and durable for modern construction projects.",
-      category: "Industry Trends",
-      author: "Michael Chen",
-      date: "March 12, 2024",
-      readTime: "6 min read",
-      tags: ["Sustainability", "Materials", "Green Building", "Cost-Effective"],
-      featured: true,
-      image: "/thumbnail-2.jpg"
-    }
-  ];
+  const featuredArticle = {
+    id: 1,
+    title: "The Future of Construction: How AI and Automation Are Transforming the Industry",
+    excerpt: "Explore the revolutionary impact of artificial intelligence and automation technologies on modern construction practices, from project planning to execution.",
+    author: "Sarah Johnson",
+    date: "2024-01-15",
+    readTime: "8 min read",
+    category: "Technology",
+    image: "/api/placeholder/800/400",
+    featured: true
+  };
 
   const articles = [
     {
+      id: 2,
+      title: "Sustainable Construction Materials: Building for the Future",
+      excerpt: "Discover eco-friendly materials and practices that are reshaping the construction industry while reducing environmental impact.",
+      author: "Mike Davis",
+      date: "2024-01-12",
+      readTime: "6 min read",
+      category: "Sustainability",
+      image: "/api/placeholder/400/250"
+    },
+    {
       id: 3,
-      title: "5 Essential Project Management Strategies for Large-Scale Construction",
-      excerpt: "Learn the proven project management strategies that successful construction managers use to deliver complex projects on time and under budget.",
+      title: "Project Management Excellence: 10 Strategies for Success",
+      excerpt: "Learn proven project management techniques that ensure on-time, on-budget delivery of construction projects.",
+      author: "John Smith",
+      date: "2024-01-10",
+      readTime: "7 min read",
       category: "Project Management",
-      author: "Robert Davis",
-      date: "March 10, 2024",
-      readTime: "10 min read",
-      tags: ["Project Management", "Strategy", "Large-Scale", "Best Practices"],
-      image: "/thumbnail-3.jpg"
+      image: "/api/placeholder/400/250"
     },
     {
       id: 4,
-      title: "BIM Technology: Transforming Construction Planning and Execution",
-      excerpt: "How Building Information Modeling (BIM) is changing the way construction projects are planned, designed, and executed for better efficiency and accuracy.",
-      category: "Construction Technology",
-      author: "Lisa Anderson",
-      date: "March 8, 2024",
-      readTime: "7 min read",
-      tags: ["BIM", "Technology", "Planning", "Efficiency"],
-      image: "/thumbnail-4.jpg"
+      title: "Safety First: Latest OSHA Guidelines for Construction Sites",
+      excerpt: "Stay compliant with the newest safety regulations and best practices to protect your workforce and projects.",
+      author: "Lisa Chen",
+      date: "2024-01-08",
+      readTime: "5 min read",
+      category: "Safety & Compliance",
+      image: "/api/placeholder/400/250"
     },
     {
       id: 5,
-      title: "Cost Estimation Best Practices: Avoiding Common Pitfalls",
-      excerpt: "Master the art of accurate cost estimation with these proven strategies and learn how to avoid the most common mistakes that lead to budget overruns.",
-      category: "Best Practices",
-      author: "David Thompson",
-      date: "March 5, 2024",
+      title: "BIM Technology: Revolutionizing Construction Planning",
+      excerpt: "Understand how Building Information Modeling is transforming project visualization and coordination.",
+      author: "David Wilson",
+      date: "2024-01-05",
       readTime: "9 min read",
-      tags: ["Cost Estimation", "Budget", "Best Practices", "Planning"],
-      image: "/thumbnail-5.jpg"
+      category: "Technology",
+      image: "/api/placeholder/400/250"
     },
     {
       id: 6,
-      title: "Supply Chain Management in Construction: Challenges and Solutions",
-      excerpt: "Navigate the complexities of construction supply chain management with innovative solutions for material sourcing, logistics, and cost optimization.",
-      category: "Industry Trends",
-      author: "Jennifer Williams",
-      date: "March 3, 2024",
-      readTime: "11 min read",
-      tags: ["Supply Chain", "Logistics", "Materials", "Optimization"],
-      image: "/thumbnail-6.jpg"
+      title: "Cost Control Strategies for Large-Scale Projects",
+      excerpt: "Master the art of budget management with proven strategies for keeping construction costs under control.",
+      author: "Emily Rodriguez",
+      date: "2024-01-03",
+      readTime: "6 min read",
+      category: "Best Practices",
+      image: "/api/placeholder/400/250"
     },
     {
       id: 7,
-      title: "Safety Protocols for High-Rise Construction Projects",
-      excerpt: "Comprehensive guide to implementing effective safety protocols for high-rise construction projects, ensuring worker safety and regulatory compliance.",
-      category: "Best Practices",
-      author: "Mark Rodriguez",
-      date: "March 1, 2024",
+      title: "The Rise of Modular Construction: Benefits and Challenges",
+      excerpt: "Explore how modular construction is changing the industry landscape with faster builds and improved quality.",
+      author: "Robert Taylor",
+      date: "2024-01-01",
       readTime: "8 min read",
-      tags: ["Safety", "High-Rise", "Protocols", "Compliance"],
-      image: "/thumbnail-7.jpg"
-    },
-    {
-      id: 8,
-      title: "The Impact of Climate Change on Construction Industry",
-      excerpt: "Understanding how climate change is affecting construction practices and what the industry is doing to adapt and become more resilient.",
       category: "Industry Trends",
-      author: "Emily Chen",
-      date: "February 28, 2024",
-      readTime: "12 min read",
-      tags: ["Climate Change", "Sustainability", "Resilience", "Adaptation"],
-      image: "/thumbnail-7.jpg"
+      image: "/api/placeholder/400/250"
     }
   ];
 
-  const popularArticles = [
-    {
-      id: 9,
-      title: "Modular Construction: The Future of Affordable Housing",
-      readTime: "6 min read",
-      views: "15.2K"
-    },
-    {
-      id: 10,
-      title: "Digital Twins in Construction: Real-Time Project Monitoring",
-      readTime: "8 min read",
-      views: "12.8K"
-    },
-    {
-      id: 11,
-      title: "Green Building Certification: LEED vs. BREEAM",
-      readTime: "7 min read",
-      views: "11.5K"
-    }
+  const stats = [
+    { icon: BookOpen, value: "150+", label: "Articles Published" },
+    { icon: User, value: "25+", label: "Expert Authors" },
+    { icon: TrendingUp, value: "50K+", label: "Monthly Readers" },
+    { icon: Calendar, value: "Weekly", label: "New Content" }
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <section className="bg-gradient-to-r from-yellow-400 to-yellow-600 py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-5xl font-bold text-white mb-6">Construction Articles</h1>
-          <p className="text-xl text-white/90 max-w-3xl mx-auto">
-            Stay informed with the latest insights, trends, and best practices in construction 
-            from industry experts and thought leaders.
-          </p>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-yellow-50">
+      <Header />
+      
+      {/* Hero Section with Background Image */}
+      <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <img 
+            src="/api/placeholder/1920/600" 
+            alt="Construction professionals reading and learning" 
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30"></div>
         </div>
-      </section>
-
-      {/* Search and Filter */}
-      <section className="py-8 bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-            <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search articles..."
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
-              />
-            </div>
-            <div className="flex items-center space-x-2">
-              <Filter className="h-5 w-5 text-gray-500" />
-              <span className="text-gray-600">Filter by:</span>
-            </div>
+        
+        {/* Hero Content */}
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
+          <div className="inline-flex items-center px-6 py-3 bg-yellow-500/20 backdrop-blur-sm rounded-full text-yellow-300 text-sm font-medium mb-8">
+            📚 Knowledge Hub
           </div>
-        </div>
-      </section>
-
-      {/* Categories */}
-      <section className="py-8 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-wrap gap-3">
-            {categories.map((category) => (
-              <button
-                key={category.name}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                  category.active
-                    ? 'bg-yellow-500 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
-              >
-                {category.name} ({category.count})
+          <h1 className="text-6xl font-bold mb-8 leading-tight">
+            Expert Insights &
+            <span className="block text-yellow-400">Industry Trends</span>
+          </h1>
+          <p className="text-2xl mb-12 max-w-4xl mx-auto leading-relaxed opacity-90">
+            Stay ahead of the curve with our comprehensive collection of articles covering the latest trends, 
+            best practices, and innovations in the construction industry.
+          </p>
+          
+          {/* Search Bar */}
+          <div className="max-w-2xl mx-auto">
+            <div className="flex gap-4">
+              <div className="flex-1 relative">
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <input
+                  type="text"
+                  placeholder="Search articles..."
+                  className="w-full pl-12 pr-4 py-4 rounded-full border-0 text-gray-900 placeholder:text-gray-500 focus:ring-2 focus:ring-yellow-300"
+                />
+              </div>
+              <button className="px-6 py-4 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full font-medium transition-colors text-white">
+                <Filter className="w-5 h-5" />
               </button>
-            ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Featured Articles */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-12">Featured Articles</h2>
-          <div className="grid md:grid-cols-2 gap-8">
-            {featuredArticles.map((article) => (
-              <div key={article.id} className="bg-gray-50 rounded-2xl overflow-hidden hover:shadow-lg transition-shadow">
-                <div className="p-8">
-                  <div className="flex items-center space-x-2 mb-4">
-                    <span className="px-3 py-1 bg-yellow-100 text-yellow-800 text-sm font-medium rounded-full">
-                      {article.category}
-                    </span>
-                    <span className="px-3 py-1 bg-blue-100 text-blue-800 text-sm font-medium rounded-full">
-                      Featured
-                    </span>
-                  </div>
-                  
-                  <h3 className="text-2xl font-bold text-gray-900 mb-4 leading-tight">{article.title}</h3>
-                  <p className="text-gray-600 mb-6 leading-relaxed">{article.excerpt}</p>
-                  
-                  <div className="flex flex-wrap gap-2 mb-6">
-                    {article.tags.map((tag, index) => (
-                      <span key={index} className="px-2 py-1 bg-white text-gray-600 text-xs rounded border">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                  
-                  <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
-                    <div className="flex items-center space-x-1">
-                      <User className="h-4 w-4" />
-                      <span>{article.author}</span>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <Calendar className="h-4 w-4" />
-                      <span>{article.date}</span>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-1 text-sm text-gray-500">
-                      <Clock className="h-4 w-4" />
-                      <span>{article.readTime}</span>
-                    </div>
-                    <button className="flex items-center space-x-1 text-yellow-600 hover:text-yellow-700 font-medium">
-                      <span>Read More</span>
-                      <ArrowRight className="h-4 w-4" />
-                    </button>
-                  </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        {/* Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-16">
+          {stats.map((stat, idx) => {
+            const Icon = stat.icon;
+            return (
+              <div key={idx} className="text-center p-6 bg-white rounded-2xl shadow-lg border border-gray-100">
+                <div className="inline-flex p-3 bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-xl mb-4">
+                  <Icon className="w-6 h-6 text-yellow-600" />
                 </div>
+                <div className="text-3xl font-bold text-gray-900 mb-2">{stat.value}</div>
+                <div className="text-gray-600 font-medium">{stat.label}</div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Categories */}
+        <div className="mb-16">
+          <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Article Categories</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            {categories.map((category, idx) => (
+              <div key={idx} className="bg-white p-4 rounded-xl shadow-lg border border-gray-100 text-center hover:shadow-xl transition-shadow cursor-pointer group">
+                <div className={`inline-flex px-3 py-1 rounded-full text-sm font-medium mb-3 ${category.color} group-hover:scale-105 transition-transform`}>
+                  {category.name}
+                </div>
+                <div className="text-xl font-bold text-gray-900 mb-1">{category.count}</div>
+                <div className="text-gray-600 text-sm">Articles</div>
               </div>
             ))}
           </div>
         </div>
-      </section>
 
-      {/* Articles Grid */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-12">Latest Articles</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* Featured Article */}
+        <div className="mb-16">
+          <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Featured Article</h2>
+          <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
+            <div className="grid lg:grid-cols-2 gap-0">
+              <div className="relative">
+                <img src={featuredArticle.image} alt={featuredArticle.title} className="w-full h-full object-cover min-h-[400px]" />
+                <div className="absolute top-6 left-6 bg-yellow-500 text-black px-4 py-2 rounded-full text-sm font-bold">
+                  FEATURED
+                </div>
+              </div>
+              <div className="p-12">
+                <div className="inline-flex px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium mb-6">
+                  {featuredArticle.category}
+                </div>
+                <h3 className="text-3xl font-bold text-gray-900 mb-4 leading-tight">
+                  {featuredArticle.title}
+                </h3>
+                <p className="text-gray-600 text-lg leading-relaxed mb-6">
+                  {featuredArticle.excerpt}
+                </p>
+                <div className="flex items-center justify-between mb-8">
+                  <div className="flex items-center space-x-4 text-gray-500">
+                    <div className="flex items-center">
+                      <User className="w-4 h-4 mr-2" />
+                      <span className="text-sm">{featuredArticle.author}</span>
+                    </div>
+                    <div className="flex items-center">
+                      <Calendar className="w-4 h-4 mr-2" />
+                      <span className="text-sm">{new Date(featuredArticle.date).toLocaleDateString()}</span>
+                    </div>
+                    <div className="flex items-center">
+                      <Clock className="w-4 h-4 mr-2" />
+                      <span className="text-sm">{featuredArticle.readTime}</span>
+                    </div>
+                  </div>
+                </div>
+                <button className="inline-flex items-center bg-yellow-500 hover:bg-yellow-600 text-black font-bold px-6 py-3 rounded-full transition-colors group">
+                  Read Full Article
+                  <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Recent Articles */}
+        <div className="mb-16">
+          <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Recent Articles</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {articles.map((article) => (
-              <article key={article.id} className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
-                <div className="p-6">
-                  <div className="flex items-center space-x-2 mb-4">
-                    <span className="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-medium rounded-full">
+              <div key={article.id} className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300 group">
+                <div className="relative">
+                  <img src={article.image} alt={article.title} className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" />
+                  <div className="absolute top-4 left-4">
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      article.category === 'Technology' ? 'bg-purple-100 text-purple-800' :
+                      article.category === 'Sustainability' ? 'bg-emerald-100 text-emerald-800' :
+                      article.category === 'Project Management' ? 'bg-orange-100 text-orange-800' :
+                      article.category === 'Safety & Compliance' ? 'bg-red-100 text-red-800' :
+                      article.category === 'Best Practices' ? 'bg-green-100 text-green-800' :
+                      'bg-blue-100 text-blue-800'
+                    }`}>
                       {article.category}
                     </span>
                   </div>
-                  
-                  <h3 className="text-xl font-bold text-gray-900 mb-3 leading-tight line-clamp-2">{article.title}</h3>
-                  <p className="text-gray-600 text-sm mb-4 line-clamp-3">{article.excerpt}</p>
-                  
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {article.tags.slice(0, 3).map((tag, index) => (
-                      <span key={index} className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                  
-                  <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
-                    <div className="flex items-center space-x-1">
-                      <User className="h-4 w-4" />
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-yellow-600 transition-colors line-clamp-2">
+                    {article.title}
+                  </h3>
+                  <p className="text-gray-600 leading-relaxed mb-4 line-clamp-3">
+                    {article.excerpt}
+                  </p>
+                  <div className="flex items-center justify-between text-gray-500 text-sm mb-4">
+                    <div className="flex items-center">
+                      <User className="w-4 h-4 mr-1" />
                       <span>{article.author}</span>
                     </div>
-                    <div className="flex items-center space-x-1">
-                      <Clock className="h-4 w-4" />
+                    <div className="flex items-center">
+                      <Clock className="w-4 h-4 mr-1" />
                       <span>{article.readTime}</span>
                     </div>
                   </div>
-                  
                   <div className="flex items-center justify-between">
-                    <div className="text-sm text-gray-500">
-                      <Calendar className="h-4 w-4 inline mr-1" />
-                      {article.date}
+                    <div className="flex items-center text-gray-500 text-sm">
+                      <Calendar className="w-4 h-4 mr-1" />
+                      <span>{new Date(article.date).toLocaleDateString()}</span>
                     </div>
-                    <button className="flex items-center space-x-1 text-yellow-600 hover:text-yellow-700 font-medium text-sm">
-                      <span>Read More</span>
-                      <ArrowRight className="h-4 w-4" />
+                    <button className="text-yellow-600 hover:text-yellow-700 font-medium text-sm group-hover:translate-x-1 transition-all">
+                      Read More →
                     </button>
                   </div>
                 </div>
-              </article>
+              </div>
             ))}
           </div>
         </div>
-      </section>
 
-      {/* Popular Articles Sidebar */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-4 gap-12">
-            <div className="lg:col-span-3">
-              <h2 className="text-3xl font-bold text-gray-900 mb-8">Trending Topics</h2>
-              <div className="grid md:grid-cols-2 gap-8">
-                <div className="bg-gradient-to-br from-yellow-400 to-yellow-600 p-8 rounded-2xl text-white">
-                  <TrendingUp className="h-12 w-12 mb-4" />
-                  <h3 className="text-2xl font-bold mb-3">AI in Construction</h3>
-                  <p className="text-yellow-100 mb-4">
-                    Explore how artificial intelligence is transforming construction project management and efficiency.
-                  </p>
-                  <button className="bg-white text-yellow-600 px-4 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
-                    Learn More
-                  </button>
-                </div>
-                <div className="bg-gradient-to-br from-blue-500 to-blue-700 p-8 rounded-2xl text-white">
-                  <BookOpen className="h-12 w-12 mb-4" />
-                  <h3 className="text-2xl font-bold mb-3">Sustainable Building</h3>
-                  <p className="text-blue-100 mb-4">
-                    Discover the latest trends in sustainable construction and green building practices.
-                  </p>
-                  <button className="bg-white text-blue-600 px-4 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
-                    Learn More
-                  </button>
-                </div>
-              </div>
-            </div>
-            
-            <div className="lg:col-span-1">
-              <h3 className="text-xl font-bold text-gray-900 mb-6">Popular Articles</h3>
-              <div className="space-y-4">
-                {popularArticles.map((article) => (
-                  <div key={article.id} className="border-b border-gray-200 pb-4 last:border-b-0">
-                    <h4 className="font-semibold text-gray-900 mb-2 line-clamp-2">{article.title}</h4>
-                    <div className="flex items-center justify-between text-sm text-gray-500">
-                      <span>{article.readTime}</span>
-                      <span>{article.views} views</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Newsletter Signup */}
-      <section className="py-20 bg-gradient-to-r from-yellow-400 to-yellow-600">
-        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl font-bold text-white mb-6">Stay Updated with Our Latest Insights</h2>
-          <p className="text-xl text-white/90 mb-8">
-            Subscribe to our newsletter and get the latest construction articles, industry trends, and expert insights delivered to your inbox.
+        {/* Newsletter CTA */}
+        <div className="bg-gradient-to-r from-gray-900 to-black rounded-3xl p-12 text-center text-white">
+          <h2 className="text-3xl font-bold mb-4">Stay Informed with Our Newsletter</h2>
+          <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+            Get the latest industry insights, expert tips, and trending topics delivered directly to your inbox every week.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
             <input
               type="email"
               placeholder="Enter your email"
-              className="flex-1 px-4 py-3 rounded-lg border-0 focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-yellow-600"
+              className="flex-1 px-4 py-3 rounded-full text-gray-900 placeholder:text-gray-500 focus:ring-2 focus:ring-yellow-500"
             />
-            <button className="bg-white text-yellow-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+            <button className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold px-6 py-3 rounded-full transition-colors">
               Subscribe
             </button>
           </div>
         </div>
-      </section>
+      </div>
+      
+      <Footer />
     </div>
   );
 };
 
-export default Articles; 
+export default Articles;

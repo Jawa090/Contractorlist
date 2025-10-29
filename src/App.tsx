@@ -8,7 +8,6 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import Dashboard from "./pages/Dashboard";
 import ForgotPassword from "./pages/ForgotPassword";
 import JoinNetwork from "./pages/JoinNetwork";
 import AboutUs from "./pages/AboutUs";
@@ -25,6 +24,7 @@ import ServeSpecialtyContractors from "./pages/ServeSpecialtyContractors";
 import ServePMCompanies from "./pages/ServePMCompanies";
 import ServeCommercialCompanies from "./pages/ServeCommercialCompanies";
 import Contractors from "./pages/Contractors";
+import ContractorDetails from "./pages/ContractorDetails";
 
 const queryClient = new QueryClient();
 
@@ -40,16 +40,8 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route 
-              path="/dashboard" 
-              element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              } 
-            />
             <Route path="/join-network" element={<JoinNetwork />} />
-            
+
             {/* Company Pages */}
             <Route path="/about-us" element={<AboutUs />} />
             <Route path="/case-studies" element={<CaseStudies />} />
@@ -64,7 +56,8 @@ const App = () => (
             <Route path="/serve/pm-companies" element={<ServePMCompanies />} />
             <Route path="/serve/commercial-companies" element={<ServeCommercialCompanies />} />
             <Route path="/contractors" element={<Contractors />} />
-            
+            <Route path="/contractors/:id" element={<ContractorDetails />} />
+
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

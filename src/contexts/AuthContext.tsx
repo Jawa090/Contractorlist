@@ -92,19 +92,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     };
 
     checkAuth();
-    // Ensure demo admin account exists
-    const users = getStoredUsers();
-    if (!users.find(u => u.email === 'demo@example.com')) {
-      users.push({
-        id: '1',
-        email: 'demo@example.com',
-        name: 'Demo Contractor',
-        role: 'contractor',
-        password: 'password',
-        avatar: '/contractor.jpg'
-      });
-      setStoredUsers(users);
-    }
   }, []);
 
   const login = async (email: string, password: string): Promise<{ success: boolean; message: string }> => {

@@ -1,170 +1,113 @@
-import { Building2, Shield, Award, Users, TrendingUp } from "lucide-react";
-import { 
-  Carousel, 
-  CarouselContent, 
-  CarouselItem, 
-  CarouselNext, 
-  CarouselPrevious 
-} from "@/components/ui/carousel";
+import { Link } from "react-router-dom";
+import { useState } from "react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 const PartnersSection = () => {
-  const partners = [
-    { 
-      name: "Construction Pro", 
-      logoSrc: "/logo1.png",
-      type: "General Contracting",
-      rating: "4.9/5",
-      projects: "500+"
-    },
-    { 
-      name: "BuildTech Solutions", 
-      logoSrc: "/logo-v2-01.jpg",
-      type: "Technology Partner",
-      rating: "4.8/5",
-      projects: "300+"
-    },
-    { 
-      name: "Elite Builders", 
-      logoSrc: "/logo-v2-03.jpg",
-      type: "Premium Construction",
-      rating: "4.9/5",
-      projects: "750+"
-    },
-    { 
-      name: "Modern Structures", 
-      logoSrc: "/icon.png",
-      type: "Architecture & Design",
-      rating: "4.7/5",
-      projects: "400+"
-    },
-    { 
-      name: "Quality First", 
-      logoSrc: "/fav-icon.png",
-      type: "Quality Assurance",
-      rating: "4.9/5",
-      projects: "600+"
-    },
-    { 
-      name: "Innovation Build", 
-      logoSrc: "/main-logo.png",
-      type: "Innovation Partner",
-      rating: "4.8/5",
-      projects: "450+"
-    }
-  ];
+  const [showAllServices, setShowAllServices] = useState(false);
 
-  const stats = [
-    { icon: Building2, number: "2,000+", label: "Projects Completed" },
-    { icon: Shield, number: "100%", label: "Verified Partners" },
-    { icon: Award, number: "4.9/5", label: "Average Rating" },
-    { icon: Users, number: "50+", label: "Partner Companies" }
+  const additionalServices = [
+    "concrete contractors near me",
+    "drywall repair near me", 
+    "electrical contractors near me",
+    "fence installation near me",
+    "flooring contractors near me",
+    "gutter cleaning near me",
+    "handyman services near me",
+    "insulation contractors near me",
+    "kitchen remodeling near me",
+    "landscaping contractors near me",
+    "painting contractors near me",
+    "tile installation near me",
+    "window replacement near me",
+    "deck builders near me",
+    "pool contractors near me",
+    "solar panel installation near me",
+    "HVAC contractors near me",
+    "carpet installation near me",
+    "cabinet installation near me",
+    "countertop installation near me"
   ];
-
   return (
-    <div className="py-16 bg-gradient-to-br from-gray-50 to-white relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%23fbbf24%22%20fill-opacity%3D%220.02%22%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2230%22%20r%3D%222%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')]"></div>
-      
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center px-4 py-2 bg-yellow-100 text-yellow-800 rounded-full text-sm font-medium mb-6">
-            <TrendingUp className="w-4 h-4 mr-2" />
-            Trusted Partners
+    <div className="py-12 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Top note with upper line */}
+        <div className="border-t border-gray-200 pt-2">
+          <div className="text-center text-[15px] font-extrabold text-black tracking-tight">
+            Join Over 1M+ Network of Construction Professionals!
           </div>
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">
-            Our Verified Construction Partners
-          </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            We partner with the most trusted and experienced construction companies to deliver exceptional results for your projects.
-          </p>
+          <div className="text-center text-[13px] text-gray-600 mt-1">
+            Best place for General Contractors to find suitable, reliable & economical sub-contractors
+          </div>
         </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
-          {stats.map((stat, index) => {
-            const IconComponent = stat.icon;
-            return (
-              <div key={index} className="text-center">
-                <div className="flex justify-center mb-4">
-                  <div className="p-3 bg-yellow-100 rounded-xl">
-                    <IconComponent className="w-8 h-8 text-yellow-600" />
-                  </div>
-                </div>
-                <div className="text-3xl font-bold text-gray-900 mb-2">
-                  {stat.number}
-                </div>
-                <div className="text-gray-600 font-medium">
-                  {stat.label}
-                </div>
-              </div>
-            );
-          })}
+        {/* Divider */}
+        <div className="mt-4 border-t border-gray-200 relative">
+          <button 
+            onClick={() => setShowAllServices(!showAllServices)}
+            className="absolute right-0 -top-4 flex flex-col items-center leading-none hover:opacity-80 transition-opacity"
+          >
+            <span className="text-[12px] font-extrabold text-black">
+              {showAllServices ? 'show less' : 'expand more'}
+            </span>
+            <span className="mt-0.5 block w-14 h-3 bg-yellow-400 rounded-sm" />
+            <span className={`-mt-1 block w-3 h-3 bg-yellow-400 rounded-[2px] transition-transform duration-300 ${showAllServices ? 'rotate-225' : 'rotate-45'}`} />
+          </button>
         </div>
 
-        {/* Partners Slider */}
-        <Carousel className="relative" opts={{ align: "start", loop: true }}>
-          <CarouselContent>
-            {partners.map((partner, index) => (
-              <CarouselItem key={index} className="basis-full md:basis-1/2 lg:basis-1/3">
-                <div 
-                  className="group relative bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl border border-gray-100 hover:border-yellow-300 transition-all duration-300 cursor-pointer transform hover:-translate-y-2 h-full"
-                >
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-xl flex items-center justify-center overflow-hidden">
-                        <img src="/icon.png" alt={`${partner.name} logo`} className="w-10 h-10 object-contain" />
-                      </div>
-                      <div>
-                        <h3 className="text-lg font-bold text-gray-900 group-hover:text-yellow-600 transition-colors">
-                          {partner.name}
-                        </h3>
-                        <p className="text-sm text-gray-500">
-                          {partner.type}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      <div className="flex items-center">
-                        {[...Array(5)].map((_, i) => (
-                          <svg key={i} className={`w-4 h-4 ${i < Math.floor(parseFloat(partner.rating)) ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} viewBox="0 0 20 20">
-                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                          </svg>
-                        ))}
-                      </div>
-                      <span className="text-sm font-semibold text-gray-700">
-                        {partner.rating}
-                      </span>
-                    </div>
-                    <div className="text-sm text-gray-500">
-                      {partner.projects} projects
-                    </div>
-                  </div>
-                </div>
-              </CarouselItem>
+        {/* Title */}
+        <h2 className="mt-6 text-3xl sm:text-4xl font-extrabold text-gray-900">
+          <span className="text-black">Popular </span>
+          <span className="text-yellow-500">Construction Professional </span>
+          <span className="text-black">Categories</span>
+        </h2>
+
+        {/* Bullet columns */}
+        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-sm">
+          <ul className="space-y-2 text-gray-800">
+            <li className="list-disc list-inside">roofing contractors near me</li>
+            <li className="list-disc list-inside">asbestos abatement near me</li>
+            <li className="list-disc list-inside">basement leak repair near me</li>
+            <li className="list-disc list-inside">basement waterproofing near me</li>
+            <li className="list-disc list-inside">new roofing installation near me</li>
+          </ul>
+          <ul className="space-y-2 text-gray-800">
+            <li className="list-disc list-inside">garage remodeling near me</li>
+            <li className="list-disc list-inside">awning contractors near me</li>
+            <li className="list-disc list-inside">repair home audio near me</li>
+            <li className="list-disc list-inside">repair patio furniture near me</li>
+            <li className="list-disc list-inside">plumbing contractor near me</li>
+          </ul>
+          <ul className="space-y-2 text-gray-800">
+            <li className="list-disc list-inside">power washing near me</li>
+            <li className="list-disc list-inside">recliner repair near me</li>
+            <li className="list-disc list-inside">basement remodeling near me</li>
+            <li className="list-disc list-inside">roof siding near me</li>
+            <li className="list-disc list-inside">facade repair near me</li>
+          </ul>
+          <ul className="space-y-2 text-gray-800">
+            <li className="list-disc list-inside">roofing contractors near me</li>
+            <li className="list-disc list-inside">asbestos abatement near me</li>
+            <li className="list-disc list-inside">basement leak repair near me</li>
+            <li className="list-disc list-inside">repair home audio near me</li>
+            <li className="list-disc list-inside">basement leak repair near me</li>
+          </ul>
+        </div>
+
+        {/* Expandable additional services */}
+        <div className={`overflow-hidden transition-all duration-500 ease-in-out ${showAllServices ? 'max-h-[400px] opacity-100' : 'max-h-0 opacity-0'}`}>
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-sm">
+            {[0, 1, 2, 3].map(colIndex => (
+              <ul key={colIndex} className="space-y-2 text-gray-800">
+                {additionalServices.slice(colIndex * 5, (colIndex + 1) * 5).map((service, index) => (
+                  <li key={index} className="list-disc list-inside">{service}</li>
+                ))}
+              </ul>
             ))}
-          </CarouselContent>
-          <CarouselPrevious className="hidden sm:flex" />
-          <CarouselNext className="hidden sm:flex" />
-        </Carousel>
-
-        {/* CTA */}
-        <div className="text-center mt-16">
-          <div className="bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-2xl p-8 text-white">
-            <h3 className="text-2xl font-bold mb-4">
-              Become a Partner
-            </h3>
-            <p className="text-yellow-100 mb-6 max-w-2xl mx-auto">
-              Join our network of trusted construction professionals and grow your business with Contractorlist.
-            </p>
-            <button className="bg-white text-yellow-600 hover:bg-gray-100 font-bold px-8 py-3 rounded-xl transition-colors">
-              Partner With Us
-            </button>
           </div>
         </div>
+
+        {/* Bottom divider */}
+        <div className="mt-6 border-t border-gray-200" />
       </div>
     </div>
   );

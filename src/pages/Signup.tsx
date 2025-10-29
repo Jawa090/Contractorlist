@@ -11,7 +11,6 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 const signupSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -20,7 +19,6 @@ const signupSchema = z.object({
     .min(8, 'Password must be at least 8 characters')
     .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, 'Password must contain at least one uppercase letter, one lowercase letter, and one number'),
   confirmPassword: z.string(),
-  role: z.enum(['contractor', 'client']),
   phone: z.string().optional(),
   company: z.string().optional(),
 }).refine((data) => data.password === data.confirmPassword, {
@@ -41,17 +39,10 @@ const Signup = () => {
   const {
     register,
     handleSubmit,
-    watch,
-    setValue,
     formState: { errors },
   } = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
-    defaultValues: {
-      role: 'client',
-    },
   });
-
-  const watchedRole = watch('role');
 
   const onSubmit = async (data: SignupFormData) => {
     setError('');
@@ -64,7 +55,7 @@ const Signup = () => {
           title: "Success!",
           description: result.message,
         });
-        navigate('/dashboard');
+        navigate('/');
       } else {
         setError(result.message);
       }
@@ -94,7 +85,7 @@ const Signup = () => {
               Create your account
             </CardTitle>
             <CardDescription className="text-gray-600">
-              Join our network of professionals and clients
+              Join our network of professionals
             </CardDescription>
           </CardHeader>
           
@@ -106,57 +97,6 @@ const Signup = () => {
             )}
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-              {/* Role Selection */}
-              <div className="space-y-3">
-                <Label className="text-sm font-medium text-gray-700">
-                  I am a...
-                </Label>
-                <RadioGroup
-                  value={watchedRole}
-                  onValueChange={(value) => setValue('role', value as 'contractor' | 'client')}
-                  className="grid grid-cols-2 gap-4"
-                >
-                  <div className="relative">
-                    <RadioGroupItem
-                      value="client"
-                      id="client"
-                      className="peer sr-only"
-                    />
-                    <Label
-                      htmlFor="client"
-                      className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
-                    >
-                      <div className="flex items-center space-x-2">
-                        <User className="h-4 w-4" />
-                        <span className="font-medium">Client</span>
-                      </div>
-                      <p className="text-xs text-muted-foreground text-center mt-2">
-                        Looking for professional services
-                      </p>
-                    </Label>
-                  </div>
-                  <div className="relative">
-                    <RadioGroupItem
-                      value="contractor"
-                      id="contractor"
-                      className="peer sr-only"
-                    />
-                    <Label
-                      htmlFor="contractor"
-                      className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
-                    >
-                      <div className="flex items-center space-x-2">
-                        <Building className="h-4 w-4" />
-                        <span className="font-medium">Contractor</span>
-                      </div>
-                      <p className="text-xs text-muted-foreground text-center mt-2">
-                        Providing professional services
-                      </p>
-                    </Label>
-                  </div>
-                </RadioGroup>
-              </div>
-
               {/* Personal Information */}
               <div className="space-y-4">
                 <div className="space-y-2">
@@ -213,23 +153,21 @@ const Signup = () => {
                   </div>
                 </div>
 
-                {watchedRole === 'contractor' && (
-                  <div className="space-y-2">
-                    <Label htmlFor="company" className="text-sm font-medium text-gray-700">
-                      Company Name (Optional)
-                    </Label>
-                    <div className="relative">
-                      <Building className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                      <Input
-                        id="company"
-                        type="text"
-                        placeholder="Enter your company name"
-                        className="pl-10 border-gray-300 focus:border-yellow-500 focus:ring-yellow-500"
-                        {...register('company')}
-                      />
-                    </div>
+                <div className="space-y-2">
+                  <Label htmlFor="company" className="text-sm font-medium text-gray-700">
+                    Company Name (Optional)
+                  </Label>
+                  <div className="relative">
+                    <Building className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <Input
+                      id="company"
+                      type="text"
+                      placeholder="Enter your company name"
+                      className="pl-10 border-gray-300 focus:border-yellow-500 focus:ring-yellow-500"
+                      {...register('company')}
+                    />
                   </div>
-                )}
+                </div>
               </div>
 
               {/* Password Section */}

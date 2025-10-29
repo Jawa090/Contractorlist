@@ -48,102 +48,88 @@ const HeroSection = () => {
           {/* Left content */}
           <div className="lg:col-span-2 space-y-8">
             <div>
-              <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
-                One Platform.{" "}
-                <span className="text-yellow-600">Multiple Solutions.</span>
+              <h1 className="text-4xl lg:text-5xl font-bold text-black leading-tight">
+                One Platform. Multiple Solutions.
               </h1>
             </div>
 
             {/* Search Section */}
             <div className="space-y-4">
-              <div className="bg-white rounded-2xl p-6 shadow-xl border border-gray-100">
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <div className="relative flex-1">
-                    <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <Input 
-                      placeholder="Zip Code"
-                      className="pl-12 h-14 border-2 border-gray-200 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200 text-base rounded-xl bg-gray-50"
-                      value={zipCode}
-                      onChange={(e) => setZipCode(e.target.value)}
-                    />
-                  </div>
-                  <div className="relative flex-1">
-                    <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <Input 
-                      placeholder="Search"
-                      className="pl-12 h-14 border-2 border-gray-200 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200 text-base rounded-xl bg-gray-50"
-                      value={serviceQuery}
-                      onChange={(e) => setServiceQuery(e.target.value)}
-                    />
-                  </div>
-                  <a
-                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap py-2 bg-[#fce011] hover:bg-[#fce011]/90 text-black font-bold px-8 h-14 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
-                    href={`/contractors?zip=${encodeURIComponent(zipCode)}${serviceQuery ? `&service=${encodeURIComponent(serviceQuery)}` : ""}`}
-                    onClick={(e) => { if (!zipCode) e.preventDefault(); }}
-                  >
-                    Find Contractor
-                  </a>
+              <p className="text-lg text-gray-700">Find verified & certified pros in your area</p>
+              <div className="flex flex-col sm:flex-row items-stretch gap-3">
+                <div className="flex-[2]">
+                  <Input
+                    placeholder="Search Contractors in your area"
+                    className="h-14 rounded-full border border-yellow-400 bg-white placeholder:text-gray-400 focus:ring-0 focus:border-yellow-500"
+                    value={serviceQuery}
+                    onChange={(e) => setServiceQuery(e.target.value)}
+                  />
                 </div>
+                <div className="flex-1 sm:max-w-xs">
+                  <Input
+                    placeholder="Zip Code"
+                    className="h-14 rounded-full border border-yellow-400 bg-white placeholder:text-gray-400 focus:ring-0 focus:border-yellow-500"
+                    value={zipCode}
+                    onChange={(e) => setZipCode(e.target.value)}
+                  />
+                </div>
+                <a
+                  className="inline-flex items-center justify-center whitespace-nowrap bg-[#fce011] hover:bg-[#fce011]/90 text-black font-semibold px-8 h-14 rounded-full border border-yellow-500/40 shadow-[0_6px_14px_rgba(0,0,0,0.25)] hover:shadow-[0_8px_18px_rgba(0,0,0,0.28)] transition-shadow"
+                  href={`/contractors?zip=${encodeURIComponent(zipCode)}${serviceQuery ? `&service=${encodeURIComponent(serviceQuery)}` : ""}`}
+                  onClick={(e) => { if (!zipCode) e.preventDefault(); }}
+                >
+                  Search
+                </a>
               </div>
-              {/* Inline Results removed: separate page handles listing */}
-              <div className="text-center text-gray-600 font-semibold text-lg">OR</div>
+              <div className="text-center text-gray-400 font-semibold">OR</div>
             </div>
 
-            <div>
-              <Link to="/services" className="text-xl font-semibold text-gray-800 mb-4 underline decoration-2 underline-offset-4 cursor-pointer hover:text-yellow-600 transition-colors">
-                Get Our Services.
-              </Link>
-              <p className="text-lg text-gray-600 mb-6">
-                Most Popular Categories
-              </p>
+            <div className="space-y-3">
+              <div className="flex items-start gap-6">
+                <p className="text-base sm:text-lg text-black font-bold underline underline-offset-4">
+                  Explore our most popular visited construction pro categories
+                </p>
+                <Link to="/services" className="text-black hover:text-black font-extrabold text-sm mt-1">
+                  + 37 more
+                </Link>
+              </div>
 
-              {/* Service categories */}
+              {/* Icons in two rows - 6 icons each */}
               <div className="space-y-4">
-                {/* First row of categories */}
-                <div className="flex flex-row gap-4">
-                  {categories.slice(0, 5).map((category, index) => {
+                {/* First row - 6 icons */}
+                <div className="flex items-center gap-2">
+                  {categories.slice(0, 6).map((category, index) => {
                     const IconComponent = category.icon;
                     return (
-                      <div key={index} className="flex flex-col items-center bg-white rounded-xl px-4 py-4 min-w-[120px] border border-gray-200 shadow-md hover:shadow-lg hover:border-yellow-300 transition-all duration-300 cursor-pointer transform hover:-translate-y-1">
-                        <div className="p-2 bg-yellow-100 rounded-lg mb-2">
-                          <IconComponent className="w-5 h-5 text-yellow-600" />
-                        </div>
-                        <span className="text-xs text-gray-700 font-medium text-center leading-tight">
+                      <div
+                        key={index}
+                        className="flex flex-col items-center justify-center w-[85px] h-[75px] border border-gray-300 rounded-lg"
+                      >
+                        <IconComponent className="w-6 h-6 text-black mb-1" />
+                        <span className="text-xs font-medium text-gray-900 text-center px-1 leading-tight">
                           {category.label}
                         </span>
                       </div>
                     );
                   })}
                 </div>
-                
-                {/* +9 button below the row */}
-                {!showAllCategories && (
-                  <button 
-                    onClick={() => setShowAllCategories(true)}
-                    className="bg-[#fce011] hover:bg-[#fce011]/90 text-black font-bold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
-                  >
-                    +9 More Services
-                  </button>
-                )}
-                
-                {/* Additional categories row (shown when +9 is clicked) */}
-                {showAllCategories && (
-                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-                    {categories.slice(5).map((category, index) => {
-                      const IconComponent = category.icon;
-                      return (
-                        <div key={index + 5} className="flex flex-col items-center bg-white rounded-xl px-4 py-4 border border-gray-200 shadow-md hover:shadow-lg hover:border-yellow-300 transition-all duration-300 cursor-pointer transform hover:-translate-y-1">
-                          <div className="p-2 bg-yellow-100 rounded-lg mb-2">
-                            <IconComponent className="w-5 h-5 text-yellow-600" />
-                          </div>
-                          <span className="text-xs text-gray-700 font-medium text-center leading-tight">
-                            {category.label}
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
+                {/* Second row - 6 icons */}
+                <div className="flex items-center gap-2">
+                  {categories.slice(6, 12).map((category, index) => {
+                    const IconComponent = category.icon;
+                    return (
+                      <div
+                        key={index + 6}
+                        className="flex flex-col items-center justify-center w-[85px] h-[75px] border border-gray-300 rounded-lg"
+                      >
+                        <IconComponent className="w-6 h-6 text-black mb-1" />
+                        <span className="text-xs font-medium text-gray-900 text-center px-1 leading-tight">
+                          {category.label}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           </div>
