@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { User, LogOut, Settings, ChevronDown, Building2, Hammer, Wrench, ClipboardList, Factory, Calculator, FileText, ShoppingCart, Plus, Users, BookOpen, Star, Play, FileText as FileTextIcon, BookOpen as BookOpenIcon } from "lucide-react";
+import { User, LogOut, Settings, ChevronDown, Building2, Hammer, Wrench, ClipboardList, Factory, Calculator, FileText, ShoppingCart, Plus, Users, BookOpen, Star, Play, FileText as FileTextIcon, BookOpen as BookOpenIcon, DollarSign, MessageCircle, Bot } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -95,24 +95,56 @@ const Header = () => {
                     <ChevronDown className="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-64">
+                <DropdownMenuContent align="start" className="w-72">
                   <DropdownMenuLabel className="text-sm font-semibold text-gray-700">
-                    Our Products
+                    Our AI Products
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem className="flex items-center space-x-3 p-3 cursor-pointer hover:bg-yellow-50">
-                    <FileText className="h-5 w-5 text-yellow-600" />
-                    <div>
-                      <div className="font-medium">Product 1</div>
-                      <div className="text-xs text-gray-500">Product description</div>
-                    </div>
+                  <DropdownMenuItem asChild>
+                    <Link to="/products/ai-quantity-takeoff" className="flex items-center space-x-3 p-3 cursor-pointer hover:bg-yellow-50">
+                      <Calculator className="h-5 w-5 text-blue-600" />
+                      <div>
+                        <div className="font-medium">AI Quantity Take Off</div>
+                        <div className="text-xs text-gray-500">Automated quantity takeoff with AI</div>
+                      </div>
+                    </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="flex items-center space-x-3 p-3 cursor-pointer hover:bg-yellow-50">
-                    <Calculator className="h-5 w-5 text-yellow-600" />
-                    <div>
-                      <div className="font-medium">Product 2</div>
-                      <div className="text-xs text-gray-500">Product description</div>
-                    </div>
+                  <DropdownMenuItem asChild>
+                    <Link to="/products/ai-cost-estimation" className="flex items-center space-x-3 p-3 cursor-pointer hover:bg-yellow-50">
+                      <DollarSign className="h-5 w-5 text-green-600" />
+                      <div>
+                        <div className="font-medium">AI Cost Estimation</div>
+                        <div className="text-xs text-gray-500">Intelligent cost estimation</div>
+                      </div>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/products/ai-chatbot" className="flex items-center space-x-3 p-3 cursor-pointer hover:bg-yellow-50">
+                      <MessageCircle className="h-5 w-5 text-purple-600" />
+                      <div>
+                        <div className="font-medium">AI Chat Bot</div>
+                        <div className="text-xs text-gray-500">24/7 intelligent customer support</div>
+                      </div>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/products/ai-virtual-assistant" className="flex items-center space-x-3 p-3 cursor-pointer hover:bg-yellow-50">
+                      <Bot className="h-5 w-5 text-orange-600" />
+                      <div>
+                        <div className="font-medium">AI Virtual Assistant</div>
+                        <div className="text-xs text-gray-500">Comprehensive AI project assistant</div>
+                      </div>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link to="/products" className="flex items-center space-x-3 p-3 cursor-pointer hover:bg-yellow-50 bg-gray-50">
+                      <Plus className="h-5 w-5 text-yellow-600" />
+                      <div>
+                        <div className="font-medium text-yellow-600">View All Products</div>
+                        <div className="text-xs text-gray-500">Explore our complete AI suite</div>
+                      </div>
+                    </Link>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -280,24 +312,56 @@ const Header = () => {
                   <ChevronDown className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-64">
+              <DropdownMenuContent align="start" className="w-72">
                 <DropdownMenuLabel className="text-sm font-semibold text-gray-700">
-                  Our Products
+                  Our AI Products
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className="flex items-center space-x-3 p-3 cursor-pointer hover:bg-yellow-50">
-                  <FileText className="h-5 w-5 text-yellow-600" />
-                  <div>
-                    <div className="font-medium">Product 1</div>
-                    <div className="text-xs text-gray-500">Product description</div>
-                  </div>
+                <DropdownMenuItem asChild>
+                  <Link to="/products/ai-quantity-takeoff" className="flex items-center space-x-3 p-3 cursor-pointer hover:bg-yellow-50">
+                    <Calculator className="h-5 w-5 text-blue-600" />
+                    <div>
+                      <div className="font-medium">AI Quantity Take Off</div>
+                      <div className="text-xs text-gray-500">Automated quantity takeoff with AI</div>
+                    </div>
+                  </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem className="flex items-center space-x-3 p-3 cursor-pointer hover:bg-yellow-50">
-                  <Calculator className="h-5 w-5 text-yellow-600" />
-                  <div>
-                    <div className="font-medium">Product 2</div>
-                    <div className="text-xs text-gray-500">Product description</div>
-                  </div>
+                <DropdownMenuItem asChild>
+                  <Link to="/products/ai-cost-estimation" className="flex items-center space-x-3 p-3 cursor-pointer hover:bg-yellow-50">
+                    <DollarSign className="h-5 w-5 text-green-600" />
+                    <div>
+                      <div className="font-medium">AI Cost Estimation</div>
+                      <div className="text-xs text-gray-500">Intelligent cost estimation</div>
+                    </div>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/products/ai-chatbot" className="flex items-center space-x-3 p-3 cursor-pointer hover:bg-yellow-50">
+                    <MessageCircle className="h-5 w-5 text-purple-600" />
+                    <div>
+                      <div className="font-medium">AI Chat Bot</div>
+                      <div className="text-xs text-gray-500">24/7 intelligent customer support</div>
+                    </div>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/products/ai-virtual-assistant" className="flex items-center space-x-3 p-3 cursor-pointer hover:bg-yellow-50">
+                    <Bot className="h-5 w-5 text-orange-600" />
+                    <div>
+                      <div className="font-medium">AI Virtual Assistant</div>
+                      <div className="text-xs text-gray-500">Comprehensive AI project assistant</div>
+                    </div>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link to="/products" className="flex items-center space-x-3 p-3 cursor-pointer hover:bg-yellow-50 bg-gray-50">
+                    <Plus className="h-5 w-5 text-yellow-600" />
+                    <div>
+                      <div className="font-medium text-yellow-600">View All Products</div>
+                      <div className="text-xs text-gray-500">Explore our complete AI suite</div>
+                    </div>
+                  </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import AIChatbot from "@/components/AIChatbot";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -18,6 +19,11 @@ import Articles from "./pages/Articles";
 import Glossary from "./pages/Glossary";
 import NotFound from "./pages/NotFound";
 import Services from "./pages/Services";
+import Products from "./pages/Products";
+import AIQuantityTakeOff from "./pages/AIQuantityTakeOff";
+import AICostEstimation from "./pages/AICostEstimation";
+import AIChatBot from "./pages/AIChatBot";
+import AIVirtualAssistant from "./pages/AIVirtualAssistant";
 import ServeOwnersDevelopers from "./pages/ServeOwnersDevelopers";
 import ServeGeneralContractors from "./pages/ServeGeneralContractors";
 import ServeSpecialtyContractors from "./pages/ServeSpecialtyContractors";
@@ -50,6 +56,11 @@ const App = () => (
             <Route path="/articles" element={<Articles />} />
             <Route path="/glossary" element={<Glossary />} />
             <Route path="/services" element={<Services />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/products/ai-quantity-takeoff" element={<AIQuantityTakeOff />} />
+            <Route path="/products/ai-cost-estimation" element={<AICostEstimation />} />
+            <Route path="/products/ai-chatbot" element={<AIChatBot />} />
+            <Route path="/products/ai-virtual-assistant" element={<AIVirtualAssistant />} />
             <Route path="/serve/owners-developers" element={<ServeOwnersDevelopers />} />
             <Route path="/serve/general-contractors" element={<ServeGeneralContractors />} />
             <Route path="/serve/specialty-contractors" element={<ServeSpecialtyContractors />} />
@@ -61,6 +72,9 @@ const App = () => (
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
+          
+          {/* AI Chatbot - Available on all pages */}
+          <AIChatbot />
         </BrowserRouter>
       </TooltipProvider>
     </AuthProvider>

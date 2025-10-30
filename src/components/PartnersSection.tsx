@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { Plus, Minus, Eye, EyeOff } from "lucide-react";
 
 const PartnersSection = () => {
   const [showAllServices, setShowAllServices] = useState(false);
@@ -44,13 +44,33 @@ const PartnersSection = () => {
         <div className="mt-4 border-t border-gray-200 relative">
           <button 
             onClick={() => setShowAllServices(!showAllServices)}
-            className="absolute right-0 -top-4 flex flex-col items-center leading-none hover:opacity-80 transition-opacity"
+            className="absolute right-0 -top-5 group"
+            title={showAllServices ? 'Show Less Services' : 'Show More Services'}
           >
-            <span className="text-[12px] font-extrabold text-black">
-              {showAllServices ? 'show less' : 'expand more'}
-            </span>
-            <span className="mt-0.5 block w-14 h-3 bg-yellow-400 rounded-sm" />
-            <span className={`-mt-1 block w-3 h-3 bg-yellow-400 rounded-[2px] transition-transform duration-300 ${showAllServices ? 'rotate-225' : 'rotate-45'}`} />
+            <div className={`relative rounded-full p-3 shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 ${
+              showAllServices 
+                ? 'bg-gradient-to-r from-red-400 to-red-500 hover:from-red-500 hover:to-red-600 border-2 border-red-600' 
+                : 'bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 border-2 border-yellow-600'
+            }`}>
+              {/* Pulsing ring effect */}
+              <div className={`absolute inset-0 rounded-full animate-pulse ${
+                showAllServices ? 'bg-red-400' : 'bg-yellow-400'
+              } opacity-20`}></div>
+              
+              {/* Icon container */}
+              <div className="relative flex items-center justify-center">
+                {showAllServices ? (
+                  <Minus className="w-5 h-5 text-black transition-transform duration-300 group-hover:rotate-180" />
+                ) : (
+                  <Plus className="w-5 h-5 text-black transition-transform duration-300 group-hover:rotate-90" />
+                )}
+              </div>
+              
+              {/* Highlight dot */}
+              <div className={`absolute -top-1 -right-1 w-3 h-3 rounded-full ${
+                showAllServices ? 'bg-red-600' : 'bg-yellow-600'
+              } border-2 border-white shadow-sm animate-bounce`}></div>
+            </div>
           </button>
         </div>
 
