@@ -110,7 +110,7 @@ const HeroSection = () => {
                   return (
                     <div
                       key={index}
-                      className="flex flex-col items-center justify-center w-[85px] h-[75px] border border-gray-300 rounded-lg"
+                      className="flex flex-col items-center justify-center w-[85px] h-[85px] border border-gray-300 rounded-lg bg-gray-300 "
                     >
                       <IconComponent className="w-6 h-6 text-black mb-1" />
                       <span className="text-[10px] sm:text-xs font-medium text-gray-900 text-center px-1 leading-tight">
@@ -124,7 +124,7 @@ const HeroSection = () => {
           </div>
 
           {/* Right content - Hero image */}
-          <div className="lg:col-span-1 flex justify-end -mr-32 lg:-mr-96 hidden lg:flex">
+          <div className="lg:col-span-1 flex justify-end -mr-32 lg:-mr-96 overflow-hidden lg:flex">
             <div className="relative z-10">
               <img
                 src="/lovable-uploads/b9965203-96b6-4c77-92c6-2a3bbd331d98.png"

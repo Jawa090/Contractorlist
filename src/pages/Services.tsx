@@ -384,21 +384,35 @@ const Services = () => {
       <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%23fbbf24%22%20fill-opacity%3D%220.02%22%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2230%22%20r%3D%222%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')]"></div>
 
       <ReduxHeader />
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        {/* Hero Section */}
-        <div className="text-center mb-20">
-          <div className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-[#fce011] to-yellow-400 text-black rounded-full text-sm font-bold mb-8 shadow-xl border border-yellow-300">
+
+      <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <img
+            src="/constructionAboutUs.jpg"
+            alt="Construction team"
+            className="w-full h-full sm:w-half sm:h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30"></div>
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
+          <div className="inline-flex items-center px-8 py-4 border-2 border-yellow-400 text-yellow rounded-full text-sm font-bold mb-8 shadow-xl bg-transparent">
             ✨ All Services
           </div>
-          <h1 className="text-4xl lg:text-6xl font-bold text-black mb-6 leading-tight">
+          <h1 className="text-4xl lg:text-6xl font-bold text-white mb-6 leading-tight">
             Everything we offer
           </h1>
-          <p className="text-lg lg:text-xl text-gray-700 max-w-4xl mx-auto leading-relaxed">
+          <p className="text-lg lg:text-xl text-white-700 max-w-4xl mx-auto leading-relaxed">
             Browse every service in one place — each card includes a detailed
             description to help you find exactly what you need.
           </p>
           <div className="w-32 h-1 bg-gradient-to-r from-[#fce011] to-yellow-400 mx-auto rounded-full mt-8"></div>
         </div>
+      </section>
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        {/* Hero Section */}
 
         {/* Services Sections */}
         {sections.map((section, sIdx) => (
@@ -463,6 +477,7 @@ const Services = () => {
           </button>
         </div>
       </div>
+
       <Footer />
     </div>
   );

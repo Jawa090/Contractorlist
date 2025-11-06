@@ -409,19 +409,16 @@ const ReduxHeader = () => {
             {isAuthenticated ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    className="flex items-center space-x-2 p-2"
-                  >
+                  <Button variant="ghost" className="flex items-center">
                     <Avatar className="h-8 w-8">
                       <AvatarImage src={user?.avatar} alt={user?.name} />
                       <AvatarFallback>
                         {user?.name?.charAt(0).toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
-                    <span className="hidden sm:inline text-sm font-medium">
+                    {/* <span className="hidden sm:inline text-sm font-medium">
                       {user?.name}
-                    </span>
+                    </span> */}
                     <ChevronDown className="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>

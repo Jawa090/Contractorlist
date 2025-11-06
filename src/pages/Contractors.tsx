@@ -37,8 +37,9 @@ import {
   Users,
   Clock,
   Shield,
-  CheckCircle
+  CheckCircle,
 } from "lucide-react";
+import CompanyCard from "@/components/CompanyCard";
 
 const Contractors = () => {
   const [params] = useSearchParams();
@@ -71,20 +72,133 @@ const Contractors = () => {
   // Sidebar services: fetch real counts from backend with fallback icons
   const [servicesMeta, setServicesMeta] = useState<any[]>([]);
   const serviceIconMap: Record<string, any> = {
-    'Bathroom Remodel': Bath,
-    'Kitchen Remodel': DoorOpen,
-    'Roofing & Gutters': Home,
-    'Masonry & Concrete': Building,
-    'Plumbing': Wrench,
-    'Electrician': Zap,
-    'HVAC': Thermometer,
-    'HVAC Services': Thermometer,
-    'Carpentry': Hammer,
-    'Landscaping': TreePine,
-    'Painting': Palette,
-    'Flooring': Drill,
-    'Windows & Doors': Building,
+    "Bathroom Remodel": Bath,
+    "Kitchen Remodel": DoorOpen,
+    "Roofing & Gutters": Home,
+    "Masonry & Concrete": Building,
+    Plumbing: Wrench,
+    Electrician: Zap,
+    HVAC: Thermometer,
+    "HVAC Services": Thermometer,
+    Carpentry: Hammer,
+    Landscaping: TreePine,
+    Painting: Palette,
+    Flooring: Drill,
+    "Windows & Doors": Building,
   };
+
+  const companies = [
+    {
+      id: 1,
+      name: "Nadler Modular",
+      logo: "/companylogo.png",
+      description:
+        "Nadler Modular has been a leading supplier of quality modular buildings.",
+      features: [
+        "Field Offices/Storage",
+        "Sales/Lease/Custom-Built",
+        "On-site Installation",
+      ],
+      buttons: [
+        {
+          label: "Request a Quote",
+          type: "primary",
+          onClick: () => alert("Quote requested!"),
+        },
+        { label: "Contact Us", type: "secondary" },
+        { label: "Website", type: "secondary" },
+        { label: "Follow", type: "secondary" },
+      ],
+    },
+    {
+      id: 2,
+      name: "BuildPro Contractors",
+      logo: "/companylogo.png",
+      description:
+        "BuildPro specializes in commercial and residential construction projects.",
+      features: [
+        "Project Management",
+        "Design Consultation",
+        "Quality Assurance",
+      ],
+      buttons: [
+        {
+          label: "Request a Quote",
+          type: "primary",
+          onClick: () => alert("Quote requested!"),
+        },
+        { label: "Contact Us", type: "secondary" },
+        { label: "Website", type: "secondary" },
+        { label: "Follow", type: "secondary" },
+      ],
+    },
+    {
+      id: 3,
+      name: "Skyline Builders",
+      logo: "/companylogo.png",
+      description:
+        "Skyline Builders delivers innovative building solutions with excellence.",
+      features: [
+        "High-rise Construction",
+        "Custom Homes",
+        "Sustainable Solutions",
+      ],
+      buttons: [
+        {
+          label: "Request a Quote",
+          type: "primary",
+          onClick: () => alert("Quote requested!"),
+        },
+        { label: "Contact Us", type: "secondary" },
+        { label: "Website", type: "secondary" },
+        { label: "Follow", type: "secondary" },
+      ],
+    },
+    {
+      id: 4,
+      name: "GreenLeaf Construction",
+      logo: "/companylogo.png",
+      description:
+        "GreenLeaf Construction focuses on eco-friendly and sustainable projects.",
+      features: [
+        "Eco-friendly Materials",
+        "Solar Installations",
+        "Energy-efficient Designs",
+      ],
+      buttons: [
+        {
+          label: "Request a Quote",
+          type: "primary",
+          onClick: () => alert("Quote requested!"),
+        },
+        { label: "Contact Us", type: "secondary" },
+        { label: "Website", type: "secondary" },
+        { label: "Follow", type: "secondary" },
+      ],
+    },
+    {
+      id: 5,
+      name: "PrimeBuild Solutions",
+      logo: "/companylogo.png",
+      description:
+        "PrimeBuild Solutions is known for delivering projects on time and budget.",
+      features: [
+        "Industrial Projects",
+        "Residential Projects",
+        "Consulting Services",
+      ],
+      buttons: [
+        {
+          label: "Request a Quote",
+          type: "primary",
+          onClick: () => alert("Quote requested!"),
+        },
+        { label: "Contact Us", type: "secondary" },
+        { label: "Website", type: "secondary" },
+        { label: "Follow", type: "secondary" },
+      ],
+    },
+  ];
   // fallback list if meta is unavailable
   const fallbackServices = [
     { icon: Bath, name: "Bathroom Remodel", contractor_count: 45 },
@@ -98,15 +212,19 @@ const Contractors = () => {
     { icon: TreePine, name: "Landscaping", contractor_count: 34 },
     { icon: Palette, name: "Painting", contractor_count: 41 },
     { icon: Drill, name: "Flooring", contractor_count: 28 },
-    { icon: Building, name: "Windows & Doors", contractor_count: 22 }
+    { icon: Building, name: "Windows & Doors", contractor_count: 22 },
   ];
   useEffect(() => {
     (async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/contractors/meta/services');
+        const res = await fetch(
+          "http://localhost:5000/api/contractors/meta/services"
+        );
         const json = await res.json();
         if (json?.success) {
-          setServicesMeta(Array.isArray(json.data?.services) ? json.data.services : []);
+          setServicesMeta(
+            Array.isArray(json.data?.services) ? json.data.services : []
+          );
         } else {
           setServicesMeta([]);
         }
@@ -130,31 +248,33 @@ const Contractors = () => {
     try {
       const searchParams = new URLSearchParams({
         page: String(pageNum),
-        limit: '20',
-        sortBy: 'rating',
-        sortOrder: 'DESC'
+        limit: "20",
+        sortBy: "rating",
+        sortOrder: "DESC",
       });
 
       if (onlyMyZip && zip) {
-        searchParams.append('zipCode', zip);
+        searchParams.append("zipCode", zip);
       }
 
       if (serviceRaw) {
-        searchParams.append('service', serviceRaw);
+        searchParams.append("service", serviceRaw);
       }
 
-      const res = await fetch(`http://localhost:5000/api/contractors?${searchParams.toString()}`);
+      const res = await fetch(
+        `http://localhost:5000/api/contractors?${searchParams.toString()}`
+      );
       const json = await res.json();
 
       if (!json.success) {
-        throw new Error(json.message || 'Request failed');
+        throw new Error(json.message || "Request failed");
       }
 
       setResults(json.data.contractors || []);
       setPagination(json.data.pagination);
       setPage(json.data.pagination.currentPage);
     } catch (e: any) {
-      setError(e.message || 'Failed to load contractors');
+      setError(e.message || "Failed to load contractors");
       setResults([]);
       setPagination(null);
     } finally {
@@ -184,8 +304,6 @@ const Contractors = () => {
     setSelectedContractor(null);
   };
 
-  
-
   // Pagination handlers
   const goPrev = () => fetchContractors(page - 1);
   const goNext = () => fetchContractors(page + 1);
@@ -197,13 +315,20 @@ const Contractors = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
-              <Link to="/" className="flex items-center space-x-2 text-gray-600 hover:text-gray-900">
+              <Link
+                to="/"
+                className="flex items-center space-x-2 text-gray-600 hover:text-gray-900"
+              >
                 <ArrowLeft className="w-5 h-5" />
                 <span>Back</span>
               </Link>
               <div className="h-6 w-px bg-gray-300" />
               <Link to="/">
-                <img src="/main-logo.png" alt="Contractorlist Logo" className="h-8 w-auto" />
+                <img
+                  src="/main-logo.png"
+                  alt="Contractorlist Logo"
+                  className="h-8 w-auto"
+                />
               </Link>
             </div>
 
@@ -219,7 +344,7 @@ const Contractors = () => {
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
                 </div>
-                <Button
+                {/* <Button
                   variant="outline"
                   size="sm"
                   onClick={() => setShowFilters(!showFilters)}
@@ -227,15 +352,20 @@ const Contractors = () => {
                 >
                   <SlidersHorizontal className="w-4 h-4 mr-2" />
                   Filters
-                </Button>
+                </Button> */}
               </div>
             </div>
 
             <div className="flex items-center space-x-4">
               {user ? (
-                <span className="text-sm text-gray-600">Welcome, {user.name}</span>
+                <span className="text-sm text-gray-600">
+                  Welcome, {user.name}
+                </span>
               ) : (
-                <Link to="/login" className="text-sm text-yellow-600 hover:text-yellow-700 font-medium">
+                <Link
+                  to="/login"
+                  className="text-sm text-yellow-600 hover:text-yellow-700 font-medium"
+                >
                   Sign In
                 </Link>
               )}
@@ -248,14 +378,14 @@ const Contractors = () => {
         {/* Advanced Search Bar */}
         <AdvancedSearchBar
           onSearch={(filters) => {
-            console.log('Search filters:', filters);
+            console.log("Search filters:", filters);
             // Handle search with filters
             fetchContractors(1);
           }}
           initialFilters={{
             query: searchQuery,
             location: zip,
-            service: serviceRaw
+            service: serviceRaw,
           }}
         />
 
@@ -263,7 +393,9 @@ const Contractors = () => {
           {/* Sidebar */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-lg shadow-sm border p-6 sticky top-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Our Services</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                Our Services
+              </h3>
 
               {/* Filters */}
               <div className="space-y-4 mb-6">
@@ -314,30 +446,34 @@ const Contractors = () => {
 
               {/* Services List */}
               <div className="space-y-2">
-                {(servicesMeta.length ? servicesMeta : fallbackServices).map((service: any, index: number) => {
-                  const label = service.name || service.label;
-                  const count = service.contractor_count ?? service.count ?? 0;
-                  const IconComponent = service.icon || serviceIconMap[label] || Wrench;
-                  return (
-                    <Link
-                      key={index}
-                      to={`/contractors?service=${encodeURIComponent(label)}`}
-                      className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors group"
-                    >
-                      <div className="flex items-center space-x-3">
-                        <div className="p-2 bg-yellow-100 rounded-lg group-hover:bg-yellow-200 transition-colors">
-                          <IconComponent className="w-4 h-4 text-yellow-600" />
+                {(servicesMeta.length ? servicesMeta : fallbackServices).map(
+                  (service: any, index: number) => {
+                    const label = service.name || service.label;
+                    const count =
+                      service.contractor_count ?? service.count ?? 0;
+                    const IconComponent =
+                      service.icon || serviceIconMap[label] || Wrench;
+                    return (
+                      <Link
+                        key={index}
+                        to={`/contractors?service=${encodeURIComponent(label)}`}
+                        className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors group"
+                      >
+                        <div className="flex items-center space-x-3">
+                          <div className="p-2 bg-yellow-100 rounded-lg group-hover:bg-yellow-200 transition-colors">
+                            <IconComponent className="w-4 h-4 text-yellow-600" />
+                          </div>
+                          <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
+                            {label}
+                          </span>
                         </div>
-                        <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
-                          {label}
+                        <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                          {count}
                         </span>
-                      </div>
-                      <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
-                        {count}
-                      </span>
-                    </Link>
-                  );
-                })}
+                      </Link>
+                    );
+                  }
+                )}
               </div>
             </div>
           </div>
@@ -345,7 +481,7 @@ const Contractors = () => {
           {/* Main Content */}
           <div className="lg:col-span-3">
             {/* Results Header */}
-            <div className="bg-white rounded-lg shadow-sm border p-6 mb-6">
+            {/* <div className="bg-white rounded-lg shadow-sm border p-6 mb-6">
               <div className="flex items-center justify-between">
                 <div>
                   <h1 className="text-2xl font-bold text-gray-900">
@@ -383,23 +519,25 @@ const Contractors = () => {
                     onClick={() => setShowFilters(!showFilters)}
                   >
                     <SlidersHorizontal className="w-4 h-4 mr-2" />
-                    {showFilters ? 'Hide' : 'Show'} Filters
+                    {showFilters ? "Hide" : "Show"} Filters
                   </Button>
                 </div>
               </div>
-            </div>
+            </div> */}
 
             {/* No Results */}
             {!zip && (
               <div className="bg-white rounded-lg shadow-sm border p-8 text-center">
                 <div className="text-gray-500 mb-4">
                   <Search className="w-12 h-12 mx-auto mb-4 text-gray-300" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">Enter a zip code to find contractors</h3>
-                  <p className="text-gray-600">Please go back and enter your zip code to see available contractors in your area.</p>
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">
+                    Enter a zip code to find contractors
+                  </h3>
+                  <p className="text-gray-600">
+                    Please go back and enter your zip code to see available
+                    contractors in your area.
+                  </p>
                 </div>
-                <Link to="/" className="inline-flex items-center px-4 py-2 bg-yellow-500 text-black font-medium rounded-lg hover:bg-yellow-600 transition-colors">
-                  Go Back to Search
-                </Link>
               </div>
             )}
 
@@ -407,17 +545,23 @@ const Contractors = () => {
               <div className="bg-white rounded-lg shadow-sm border p-8 text-center">
                 <div className="text-gray-500 mb-4">
                   <Search className="w-12 h-12 mx-auto mb-4 text-gray-300 animate-pulse" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">Loading contractors...</h3>
-                  <p className="text-gray-600">Please wait while we find contractors in your area.</p>
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">
+                    Loading contractors...
+                  </h3>
+                  <p className="text-gray-600">
+                    Please wait while we find contractors in your area.
+                  </p>
                 </div>
               </div>
             )}
 
             {error && (
-              <div className="bg-white rounded-lg shadow-sm border p-8 text-center">
+              <div className="bg-white rounded-lg shadow-sm border p-8 text-center mt-2">
                 <div className="text-red-500 mb-4">
                   <Search className="w-12 h-12 mx-auto mb-4 text-red-300" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">Error loading contractors</h3>
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">
+                    Error loading contractors
+                  </h3>
                   <p className="text-gray-600">{error}</p>
                 </div>
               </div>
@@ -427,18 +571,43 @@ const Contractors = () => {
               <div className="bg-white rounded-lg shadow-sm border p-8 text-center">
                 <div className="text-gray-500 mb-4">
                   <Search className="w-12 h-12 mx-auto mb-4 text-gray-300" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">No contractors found</h3>
-                  <p className="text-gray-600">Try adjusting your search or check nearby areas.</p>
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">
+                    No contractors found
+                  </h3>
+                  <p className="text-gray-600">
+                    Try adjusting your search or check nearby areas.
+                  </p>
                 </div>
               </div>
             )}
 
+            {companies?.map((c) => (
+              <CompanyCard
+                key={c?.id}
+                name={c?.name}
+                logo={c?.logo}
+                description={c?.description}
+                features={c?.features}
+                buttons={c?.buttons?.map((b) => ({
+                  label: b?.label,
+                  type: b?.type,
+                  onClick: b?.onClick,
+                }))}
+              />
+            ))}
             {/* Contractors List */}
             <div className="space-y-6">
               {visibleContractors.map((contractor, index) => {
-                const email = contractor?.contact?.email || contractor?.email || 'contact@contractor.com';
-                const phone = contractor?.contact?.phone || contractor?.phone || '(555) 123-4567';
-                const website = contractor?.website || contractor?.contact?.website || '';
+                const email =
+                  contractor?.contact?.email ||
+                  contractor?.email ||
+                  "contact@contractor.com";
+                const phone =
+                  contractor?.contact?.phone ||
+                  contractor?.phone ||
+                  "(555) 123-4567";
+                const website =
+                  contractor?.website || contractor?.contact?.website || "";
 
                 return (
                   <ContractorCard
@@ -446,9 +615,11 @@ const Contractors = () => {
                     contractor={contractor}
                     featured={index < 2} // Mark first 2 as featured
                     onViewProfile={handleProfilePreview}
-                    onCall={(phone) => window.location.href = `tel:${phone}`}
-                    onEmail={(email) => window.location.href = `mailto:${email}`}
-                    onWebsite={(website) => window.open(website, '_blank')}
+                    onCall={(phone) => (window.location.href = `tel:${phone}`)}
+                    onEmail={(email) =>
+                      (window.location.href = `mailto:${email}`)
+                    }
+                    onWebsite={(website) => window.open(website, "_blank")}
                   />
                 );
               })}
@@ -457,11 +628,7 @@ const Contractors = () => {
             {/* Pagination */}
             {pagination && (
               <div className="flex items-center justify-center gap-3 mt-6">
-                <Button
-                  variant="outline"
-                  disabled={page <= 1}
-                  onClick={goPrev}
-                >
+                <Button variant="outline" disabled={page <= 1} onClick={goPrev}>
                   Prev
                 </Button>
                 <span className="text-sm text-gray-600">
@@ -491,5 +658,3 @@ const Contractors = () => {
 };
 
 export default Contractors;
-
-
