@@ -286,47 +286,26 @@ const Signup = () => {
                   <h3 className="font-semibold text-green-900">
                     Project Information
                   </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="">
-                      <Label
-                        htmlFor="projectType"
-                        className="text-sm font-medium text-gray-700"
-                      >
-                        Project Type
-                      </Label>
-                      <select
-                        id="projectType"
-                        {...register("projectType")}
-                        className="w-full h-10 rounded-md border border-gray-300 bg-white px-3  text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
-                      >
-                        <option value="">Select project type</option>
-                        <option value="residential">Residential</option>
-                        <option value="commercial">Commercial</option>
-                        <option value="renovation">Renovation</option>
-                        <option value="new-construction">
-                          New Construction
-                        </option>
-                      </select>
-                    </div>
-                    <div>
-                      <Label
-                        htmlFor="budget"
-                        className="text-sm font-medium text-gray-700"
-                      >
-                        Budget Range
-                      </Label>
-                      <select
-                        id="budget"
-                        {...register("budget")}
-                        className="w-full h-10 rounded-md border border-gray-300 bg-white px-3 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
-                      >
-                        <option value="">Select budget range</option>
-                        <option value="under-10k">Under $10,000</option>
-                        <option value="10k-50k">$10,000 - $50,000</option>
-                        <option value="50k-100k">$50,000 - $100,000</option>
-                        <option value="100k-plus">$100,000+</option>
-                      </select>
-                    </div>
+                  <div>
+                    <Label
+                      htmlFor="projectType"
+                      className="text-sm font-medium text-gray-700"
+                    >
+                      Project Type
+                    </Label>
+                    <select
+                      id="projectType"
+                      {...register("projectType")}
+                      className="w-full h-10 rounded-md border border-gray-300 bg-white px-3 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
+                    >
+                      <option value="">Select project type</option>
+                      <option value="residential">Residential</option>
+                      <option value="commercial">Commercial</option>
+                      <option value="renovation">Renovation</option>
+                      <option value="new-construction">
+                        New Construction
+                      </option>
+                    </select>
                   </div>
                 </div>
               )}

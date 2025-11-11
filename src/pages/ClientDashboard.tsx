@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useAppSelector } from "@/store/hooks";
-import { Plus, MessageSquare, FileText, CreditCard, HelpCircle, Users, Calendar, DollarSign, Download, TrendingUp, Clock, CheckCircle2, AlertCircle, Star, ArrowUpRight, Briefcase, Home } from "lucide-react";
+import { Plus, MessageSquare, FileText, CreditCard, HelpCircle, Users, Calendar, DollarSign, Download, TrendingUp, Clock, CheckCircle2, AlertCircle, Star, ArrowUpRight, Briefcase, Home, User } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -11,6 +11,7 @@ import { Progress } from "@/components/ui/progress";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
+import ClientInfoManager from "@/components/ClientInfoManager";
 
 const ClientDashboard = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -159,7 +160,7 @@ const ClientDashboard = () => {
         <div className="space-y-6">
           {/* Tab Navigation */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-3 lg:grid-cols-6 h-auto p-1 bg-white shadow rounded-lg">
+            <TabsList className="grid w-full grid-cols-3 lg:grid-cols-7 h-auto p-1 bg-white shadow rounded-lg">
               <TabsTrigger value="overview" className="data-[state=active]:text-black" style={{ '--tw-bg-opacity': activeTab === 'overview' ? '1' : '0' } as React.CSSProperties} data-active={activeTab === 'overview'}>
                 <Home className="h-4 w-4 mr-2" />
                 <span className="hidden sm:inline">Overview</span>
@@ -183,6 +184,10 @@ const ClientDashboard = () => {
               <TabsTrigger value="payments" className="data-[state=active]:text-black">
                 <CreditCard className="h-4 w-4 mr-2" />
                 <span className="hidden sm:inline">Payments</span>
+              </TabsTrigger>
+              <TabsTrigger value="account" className="data-[state=active]:text-black">
+                <User className="h-4 w-4 mr-2" />
+                <span className="hidden sm:inline">Account</span>
               </TabsTrigger>
             </TabsList>
             <style jsx>{`
@@ -951,6 +956,10 @@ const ClientDashboard = () => {
                 </div>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="account" className="space-y-6">
+            <ClientInfoManager />
           </TabsContent>
         </Tabs>
 
