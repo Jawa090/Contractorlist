@@ -27,6 +27,7 @@ interface AuthState {
   loginState: AsyncThunkState;
   registerState: AsyncThunkState;
   logoutState: AsyncThunkState;
+  deleteAccountState: AsyncThunkState;
   // Session management
   sessionExpiry: number | null;
   refreshTokenExpiry: number | null;
@@ -43,6 +44,7 @@ const initialState: AuthState = {
   loginState: { pending: false, fulfilled: false, rejected: false, error: null },
   registerState: { pending: false, fulfilled: false, rejected: false, error: null },
   logoutState: { pending: false, fulfilled: false, rejected: false, error: null },
+  deleteAccountState: { pending: false, fulfilled: false, rejected: false, error: null },
   // Session management
   sessionExpiry: null,
   refreshTokenExpiry: null,
@@ -158,6 +160,27 @@ export const logoutUser = createAsyncThunk(
   }
 );
 
+export const deleteUserAccount = createAsyncThunk(
+  'auth/deleteUserAccount',
+  async (_, { rejectWithValue }) => {
+    try {
+      // Simulate API call for account deletion
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // Clear all user data from localStorage
+      localStorage.removeItem('token');
+      localStorage.removeItem('userData');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('sessionExpiry');
+      localStorage.removeItem('rememberMe');
+      
+      return null;
+    } catch (error) {
+      return rejectWithValue('Account deletion failed');
+    }
+  }
+);
+
 // Slice
 const authSlice = createSlice({
   name: 'auth',
@@ -170,6 +193,7 @@ const authSlice = createSlice({
       state.loginState.error = null;
       state.registerState.error = null;
       state.logoutState.error = null;
+      state.deleteAccountState.error = null;
       state.error = null;
     },
     setUser: (state, action: PayloadAction<User>) => {
@@ -255,6 +279,34 @@ const authSlice = createSlice({
         state.token = null;
         state.isAuthenticated = false;
         state.error = null;
+      });
+
+    // Delete Account
+    builder
+      .addCase(deleteUserAccount.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+        state.deleteAccountState = { pending: true, fulfilled: false, rejected: false, error: null };
+      })
+      .addCase(deleteUserAccount.fulfilled, (state) => {
+        state.isLoading = false;
+        state.user = null;
+        state.token = null;
+        state.isAuthenticated = false;
+        state.sessionExpiry = null;
+        state.refreshTokenExpiry = null;
+        state.error = null;
+        state.deleteAccountState = { pending: false, fulfilled: true, rejected: false, error: null };
+      })
+      .addCase(deleteUserAccount.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+        state.deleteAccountState = { 
+          pending: false, 
+          fulfilled: false, 
+          rejected: true, 
+          error: action.payload as string 
+        };
       });
   },
 });
