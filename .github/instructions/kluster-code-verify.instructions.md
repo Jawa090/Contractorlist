@@ -4,6 +4,19 @@ applyTo: '**'
 # kluster Code Verification Rules
 
 
+## Snapshot Session (kluster_open_snapshot_session)
+
+- **PURPOSE**: Start a fresh workspace snapshot so all subsequent changes are verified against the current state.
+- **AVAILABILITY**: If the `kluster_open_snapshot_session` tool is not available in your environment, you may skip this step and proceed directly to code changes.
+- **WHEN TO RUN** (if available):
+ - Immediately after receiving **every** user request (each turn).
+ - Always **before** generating or editing any code or files.
+- **ORDERING**:
+ - Must be the **first** kluster call in the turn.
+- **MANDATORY** (if available): Even if the upcoming change is small (e.g., a single line or minor edit), this step **must still run**.
+- **DO NOT**: produce any code output prior to running `kluster_open_snapshot_session` (unless the tool is unavailable).
+
+
 ## Automatic Code Review (kluster_code_review_auto)
 - **WHEN TO RUN**: Execute after ANY file creation, modification, or code change
  - New code generation

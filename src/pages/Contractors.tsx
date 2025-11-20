@@ -52,6 +52,7 @@ import HeroSection from "@/components/HeroSection";
 import ContractorHeroSection from "@/components/ContractorHeroSection";
 import ReduxHeader from "@/components/ReduxHeader";
 import companyService, { CompanySearchFilters } from "@/services/companyService";
+import { normalizeCompanyData } from "@/utils/normalizeCompany";
 
 const Contractors = () => {
   const [params] = useSearchParams();
@@ -94,7 +95,7 @@ const Contractors = () => {
   const [companiesLoading, setCompaniesLoading] = useState(false);
   const [companiesError, setCompaniesError] = useState<string | null>(null);
   const [companiesCurrentPage, setCompaniesCurrentPage] = useState(1);
-  const companiesPerPage = 5;
+  const [companiesPagination, setCompaniesPagination] = useState<any | null>(null);
 
   // Filter state
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
@@ -268,13 +269,16 @@ const Contractors = () => {
     })();
   }, []);
 
-  // Fetch companies from API
-  const fetchCompanies = async () => {
+  // Fetch companies from API (server-side pagination: 10 per page)
+  const fetchCompanies = async (pageNum = 1) => {
     setCompaniesLoading(true);
     setCompaniesError(null);
 
     try {
-      const filters: CompanySearchFilters = {};
+      const filters: CompanySearchFilters = {
+        page: pageNum,
+        limit: 10,
+      };
 
       // Location filters
       if (zip) {
@@ -345,59 +349,29 @@ const Contractors = () => {
       const response = await companyService.searchCompanies(filters);
       
       if (response.success) {
-        // Map API response to CompanyCard format
-        const mappedCompanies = response.data.map((item: any) => {
-          const company = item.company || item;
-          const details = company.details || {};
-          
-          return {
-            id: company.id || company.name?.toLowerCase().replace(/\s+/g, "-"),
-            name: company.name || "Unknown Company",
-            rating: company.rating || 0,
-            reviewsCount: company.reviews_count || company.reviews || company.reviewCount || 0,
-            verifiedHires: company.verified_hires || company.verifiedHires || 0,
-            tagline: company.tagline || "",
-            featuredReview: company.featured_review ? {
-              reviewer: company.featured_review.reviewer,
-              reviewText: company.featured_review.review_text || company.featured_review.reviewText,
-            } : undefined,
-            address: details.address || company.address || company.location || "",
-            verifiedBusiness: details.verified_business || company.verified_business || false,
-            description: details.description || company.description || "",
-            yearsInBusiness: details.years_in_business || company.years_in_business || company.yearsInBusiness || null,
-            licenseNumber: details.license_number || company.license_number || company.licenseNumber || "",
-            certifications: details.certifications || company.certifications || [],
-            awards: details.awards || company.awards || [],
-            servicesOffered: details.services_offered || company.services_offered || company.services || [],
-            specialties: details.specialties || company.specialties || [],
-            serviceAreas: details.service_areas || company.service_areas || [],
-            respondsQuickly: details.responds_quickly || company.responds_quickly || false,
-            hiredOnPlatform: details.hired_on_platform || company.hired_on_platform || false,
-            provides3d: details.provides_3d_visualization || company.provides_3d_visualization || company.provides_3d || false,
-            ecoFriendly: details.eco_friendly || company.eco_friendly || false,
-            familyOwned: details.family_owned || company.family_owned || false,
-            locallyOwned: details.locally_owned || company.locally_owned || false,
-            offersCustomWork: details.offers_custom_work || company.offers_custom_work || false,
-            languages: details.languages || company.languages || (company.language ? [company.language] : []),
-            budgetRange: details.budget_range || company.budget_range || company.budget || "",
-            professionalCategory: details.professional_category || company.professional_category || company.category || "",
-            images: company.images && company.images.length > 0 
-              ? company.images 
-              : defaultImages,
-            bannerText: company.bannerText || company.banner_text || "",
-            sponsored: company.sponsored || false,
-            email: company.email || company.contact?.email || details.email || "",
-            phone: company.phone || company.contact?.phone || details.phone || "",
-            website: company.website || company.contact?.website || details.website || "",
-          };
-        });
+        const mappedCompanies = response.data.map((item: any) =>
+          normalizeCompanyData(item)
+        );
+
         setCompanies(mappedCompanies);
+
+        const apiPagination =
+          response.pagination || {
+            currentPage: (response as any).page || pageNum,
+            totalPages: (response as any).totalPages || 1,
+            totalItems: (response as any).total || mappedCompanies.length,
+            itemsPerPage: (response as any).count || mappedCompanies.length,
+          };
+
+        setCompaniesPagination(apiPagination);
+        setCompaniesCurrentPage(apiPagination.currentPage || pageNum);
       } else {
         throw new Error(response.message || "Failed to fetch companies");
       }
     } catch (e: any) {
       setCompaniesError(e.message || "Failed to load companies");
       setCompanies([]);
+      setCompaniesPagination(null);
     } finally {
       setCompaniesLoading(false);
     }
@@ -454,7 +428,7 @@ const Contractors = () => {
 
   // Run on mount and when URL params or filters change
   useEffect(() => {
-    fetchCompanies();
+    fetchCompanies(1);
     setCompaniesCurrentPage(1); // Reset to first page when filters change
   }, [
     zip,
@@ -481,15 +455,17 @@ const Contractors = () => {
   // Use API results instead of filtered data
   const visibleContractors = results;
 
-  // Calculate pagination for companies
-  const totalCompaniesPages = Math.ceil(companies.length / companiesPerPage);
-  const startIndex = (companiesCurrentPage - 1) * companiesPerPage;
-  const endIndex = startIndex + companiesPerPage;
-  const paginatedCompanies = companies.slice(startIndex, endIndex);
+  // Calculate pagination for companies (from backend)
+  const totalCompaniesPages = companiesPagination?.totalPages || 1;
+  const totalCompanies = companiesPagination?.totalItems ?? companies.length;
+  const paginatedCompanies = companies;
 
   // Pagination handlers for companies
   const goToCompaniesPage = (page: number) => {
-    setCompaniesCurrentPage(page);
+    if (page < 1 || (companiesPagination && page > companiesPagination.totalPages)) {
+      return;
+    }
+    fetchCompanies(page);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -552,9 +528,9 @@ const Contractors = () => {
         <div className=" border-t border-gray-400" />
         <ProjectTypeSelector />
         <div className="my-1 border-t border-gray-200" />
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          {/* Sidebar */}
-          <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 sticky top-6 w-full max-w-4xl h-fit max-h-[calc(100vh-100px)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {/* Sidebar - Wider, no scroll */}
+          <div className="lg:col-span-4 bg-white rounded-xl shadow-lg border border-gray-200 p-6 h-fit">
             {/* Header with Clear All */}
             {activeFiltersCount > 0 && (
               <div className="mb-4 pb-4 border-b border-gray-200">
@@ -897,7 +873,7 @@ const Contractors = () => {
           </div>
 
           {/* Main Content */}
-          <div className="lg:col-span-3">
+          <div className="lg:col-span-8">
             {/* Results Header */}
             {/* <div className="bg-white rounded-lg shadow-sm border p-6 mb-6">
               <div className="flex items-center justify-between">

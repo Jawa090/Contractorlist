@@ -64,8 +64,8 @@ const Login = () => {
         description: `Welcome back, ${response.data?.user?.name || 'User'}!`,
       });
       
-      // Redirect to dashboard or homepage
-      navigate('/dashboard');
+      // Redirect to main website (homepage) after login
+      navigate('/');
     } catch (err: any) {
       const errorMessage = err.response?.data?.message || err.message || 'Login failed. Please check your credentials.';
       setError(errorMessage);

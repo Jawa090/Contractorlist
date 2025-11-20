@@ -27,6 +27,9 @@ const ClientInfoManager = () => {
   const { user, deleteAccountState } = useAppSelector((state) => state.auth);
   const [deleteConfirmation, setDeleteConfirmation] = useState("");
 
+  // Safely handle potential undefined state to avoid runtime errors
+  const isDeleting = deleteAccountState?.pending ?? false;
+
   const handleDeleteClientInfo = async () => {
     if (deleteConfirmation !== "DELETE") {
       dispatch(
@@ -169,11 +172,11 @@ const ClientInfoManager = () => {
                       Cancel
                     </AlertDialogCancel>
                     <AlertDialogAction
-                      onClick={handleDeleteClientInfo}
-                      disabled={deleteConfirmation !== "DELETE" || deleteAccountState.pending}
+                  onClick={handleDeleteClientInfo}
+                  disabled={deleteConfirmation !== "DELETE" || isDeleting}
                       className="bg-red-600 hover:bg-red-700"
                     >
-                      {deleteAccountState.pending ? (
+                  {isDeleting ? (
                         <div className="flex items-center">
                           <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                           Deleting...

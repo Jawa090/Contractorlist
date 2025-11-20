@@ -20,7 +20,7 @@ const ContractorDashboard = () => {
   const [activeTab, setActiveTab] = useState("overview");
   const { user } = useAppSelector((state) => state.auth);
   const { toast } = useToast();
-  
+
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
   const [selectedItem, setSelectedItem] = useState<any>(null);
@@ -93,7 +93,7 @@ const ContractorDashboard = () => {
           <h2 className="text-xl font-bold text-gray-900">Contractor Portal</h2>
           <p className="text-sm text-gray-800 mt-1">Welcome, {user?.name || 'User'}!</p>
         </div>
-        
+
         <nav className="mt-6 pb-6">
           {menuItems.map((item) => {
             const Icon = item.icon;
@@ -101,9 +101,8 @@ const ContractorDashboard = () => {
               <button
                 key={item.id}
                 onClick={() => setActiveTab(item.id)}
-                className={`w-full flex items-center px-6 py-3 text-left hover:bg-gray-50 transition-colors ${
-                  activeTab === item.id ? 'bg-yellow-50 border-r-4 border-yellow-500 text-yellow-700 font-semibold' : 'text-gray-700'
-                }`}
+                className={`w-full flex items-center px-6 py-3 text-left hover:bg-gray-50 transition-colors ${activeTab === item.id ? 'bg-yellow-50 border-r-4 border-yellow-500 text-yellow-700 font-semibold' : 'text-gray-700'
+                  }`}
               >
                 <Icon className="w-5 h-5 mr-3" />
                 {item.label}
@@ -217,7 +216,7 @@ const ContractorDashboard = () => {
                         </div>
                         <p className="text-sm text-gray-600 mb-3">{project.client} • Due: {project.deadline}</p>
                         <div className="w-full bg-gray-200 rounded-full h-2.5 mb-2">
-                          <div 
+                          <div
                             className={`h-2.5 rounded-full ${project.progress >= 75 ? 'bg-green-500' : project.progress >= 50 ? 'bg-blue-500' : 'bg-yellow-500'}`}
                             style={{ width: `${project.progress}%` }}
                           ></div>
@@ -288,8 +287,8 @@ const ContractorDashboard = () => {
                   <div className="flex gap-3">
                     <div className="relative">
                       <Search className="w-4 h-4 absolute left-3 top-3 text-gray-400" />
-                      <Input 
-                        placeholder="Search leads..." 
+                      <Input
+                        placeholder="Search leads..."
                         className="pl-10 w-64"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
@@ -350,7 +349,7 @@ const ContractorDashboard = () => {
                           <td className="px-6 py-4">
                             <div className="flex items-center">
                               <div className="w-16 bg-gray-200 rounded-full h-2 mr-2">
-                                <div 
+                                <div
                                   className={`h-2 rounded-full ${lead.score >= 90 ? 'bg-green-500' : lead.score >= 75 ? 'bg-blue-500' : 'bg-yellow-500'}`}
                                   style={{ width: `${lead.score}%` }}
                                 ></div>
@@ -441,11 +440,10 @@ const ContractorDashboard = () => {
                         <p className="text-sm font-bold text-gray-900">{project.progress}%</p>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-3">
-                        <div 
-                          className={`h-3 rounded-full transition-all ${
-                            project.progress >= 75 ? 'bg-green-500' : 
-                            project.progress >= 50 ? 'bg-blue-500' : 'bg-yellow-500'
-                          }`}
+                        <div
+                          className={`h-3 rounded-full transition-all ${project.progress >= 75 ? 'bg-green-500' :
+                              project.progress >= 50 ? 'bg-blue-500' : 'bg-yellow-500'
+                            }`}
                           style={{ width: `${project.progress}%` }}
                         ></div>
                       </div>
@@ -690,8 +688,8 @@ const ContractorDashboard = () => {
                 <CardContent className="p-0">
                   <div className="divide-y max-h-[600px] overflow-y-auto">
                     {messages.map((message) => (
-                      <div 
-                        key={message.id} 
+                      <div
+                        key={message.id}
                         className={`p-4 hover:bg-gray-50 cursor-pointer transition-colors ${message.unread ? 'bg-blue-50' : ''}`}
                         onClick={() => setSelectedItem(message)}
                       >
@@ -766,11 +764,11 @@ const ContractorDashboard = () => {
 
                   <div className="border-t pt-4">
                     <div className="flex gap-3">
-                      <Textarea 
-                        placeholder="Type your message..." 
+                      <Textarea
+                        placeholder="Type your message..."
                         className="flex-1 min-h-[80px]"
                         value={formData.message || ''}
-                        onChange={(e) => setFormData({...formData, message: e.target.value})}
+                        onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       />
                       <Button className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold h-[80px]" onClick={() => handleAction("Send Message")}>
                         <Send className="w-5 h-5" />
@@ -846,7 +844,7 @@ const ContractorDashboard = () => {
                         <p className="text-sm font-medium text-gray-700 w-24">{data.month}</p>
                         <div className="flex-1">
                           <div className="w-full bg-gray-200 rounded-full h-8 relative">
-                            <div 
+                            <div
                               className="bg-gradient-to-r from-blue-500 to-blue-600 h-8 rounded-full flex items-center justify-end pr-3"
                               style={{ width: `${(data.revenue / 100000) * 100}%` }}
                             >
@@ -938,8 +936,8 @@ const ContractorDashboard = () => {
 
                   <div>
                     <Label htmlFor="bio">Company Bio</Label>
-                    <Textarea 
-                      id="bio" 
+                    <Textarea
+                      id="bio"
                       className="mt-1 min-h-[120px]"
                       defaultValue="Elite Construction Co. has been serving the New York area for over 15 years. We specialize in residential renovations, kitchen and bathroom remodels, and custom home builds. Our team of certified professionals is committed to delivering exceptional quality and customer satisfaction."
                     />
@@ -1151,7 +1149,7 @@ const ContractorDashboard = () => {
                             </li>
                           ))}
                         </ul>
-                        <Button 
+                        <Button
                           className={`w-full ${plan.current ? 'bg-yellow-500 hover:bg-yellow-600 text-black' : ''}`}
                           variant={plan.current ? 'default' : 'outline'}
                           disabled={plan.current}
@@ -1183,22 +1181,22 @@ const ContractorDashboard = () => {
                 <CardContent className="p-6 space-y-4">
                   <div>
                     <Label htmlFor="ticket-subject">Subject</Label>
-                    <Input 
-                      id="ticket-subject" 
-                      placeholder="Brief description of your issue" 
+                    <Input
+                      id="ticket-subject"
+                      placeholder="Brief description of your issue"
                       className="mt-1"
                       value={formData.subject || ''}
-                      onChange={(e) => setFormData({...formData, subject: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                     />
                   </div>
 
                   <div>
                     <Label htmlFor="ticket-category">Category</Label>
-                    <select 
-                      id="ticket-category" 
+                    <select
+                      id="ticket-category"
                       className="w-full mt-1 p-2 border rounded-md"
                       value={formData.category || ''}
-                      onChange={(e) => setFormData({...formData, category: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                     >
                       <option value="">Select a category</option>
                       <option>Technical Issue</option>
@@ -1211,11 +1209,11 @@ const ContractorDashboard = () => {
 
                   <div>
                     <Label htmlFor="ticket-priority">Priority</Label>
-                    <select 
-                      id="ticket-priority" 
+                    <select
+                      id="ticket-priority"
                       className="w-full mt-1 p-2 border rounded-md"
                       value={formData.priority || ''}
-                      onChange={(e) => setFormData({...formData, priority: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
                     >
                       <option value="">Select priority</option>
                       <option>Low</option>
@@ -1227,12 +1225,12 @@ const ContractorDashboard = () => {
 
                   <div>
                     <Label htmlFor="ticket-description">Description</Label>
-                    <Textarea 
-                      id="ticket-description" 
-                      placeholder="Please provide detailed information about your issue..." 
+                    <Textarea
+                      id="ticket-description"
+                      placeholder="Please provide detailed information about your issue..."
                       className="mt-1 min-h-[150px]"
                       value={formData.description || ''}
-                      onChange={(e) => setFormData({...formData, description: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                     />
                   </div>
 
@@ -1245,8 +1243,8 @@ const ContractorDashboard = () => {
                     </div>
                   </div>
 
-                  <Button 
-                    className="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-semibold" 
+                  <Button
+                    className="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-semibold"
                     onClick={() => {
                       handleAction("Submit Ticket");
                       setFormData({});
@@ -1331,7 +1329,7 @@ const ContractorDashboard = () => {
                         "Billing & Payments FAQ",
                         "Video Tutorials"
                       ].map((resource) => (
-                        <button 
+                        <button
                           key={resource}
                           className="w-full text-left p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors flex items-center justify-between group"
                           onClick={() => handleAction("View Resource", { name: resource })}

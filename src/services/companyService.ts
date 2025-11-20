@@ -18,6 +18,9 @@ export interface CompanySearchFilters {
   locally_owned?: boolean;
   offers_custom_work?: boolean;
   language?: string;
+  // Backend pagination support
+  page?: number;
+  limit?: number;
 }
 
 // Company Response Types
@@ -107,6 +110,8 @@ export const companyService = {
     if (filters.locally_owned !== undefined) params.append('locally_owned', filters.locally_owned.toString());
     if (filters.offers_custom_work !== undefined) params.append('offers_custom_work', filters.offers_custom_work.toString());
     if (filters.language) params.append('language', filters.language);
+    if (filters.page !== undefined) params.append('page', filters.page.toString());
+    if (filters.limit !== undefined) params.append('limit', filters.limit.toString());
 
     const response = await api.get(`/companies/search?${params.toString()}`);
     return response.data;

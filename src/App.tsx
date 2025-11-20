@@ -40,12 +40,14 @@ import ServePMCompanies from "./pages/ServePMCompanies";
 import ServeCommercialCompanies from "./pages/ServeCommercialCompanies";
 import Contractors from "./pages/Contractors";
 import ContractorDetails from "./pages/ContractorDetails";
+import CompanyDetails from "./pages/CompanyDetails";
 import ContactUs from "./pages/ContactUs";
 import Dashboard from "./pages/Dashboard";
 import Settings from "./pages/Settings";
 import ServiceDetail from "./pages/ServiceDetail";
 import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
+import ContractorUpdate from "./pages/ContractorUpdate";
 
 const queryClient = new QueryClient();
 
@@ -120,6 +122,8 @@ const AppRoutes = () => {
             <Route path="/serve/commercial-companies" element={<ServeCommercialCompanies />} />
             <Route path="/contractors" element={<Contractors />} />
             <Route path="/contractors/:id" element={<ContractorDetails />} />
+            <Route path="/companies/:id" element={<CompanyDetails />} />
+            <Route path="/contractor/update/:token" element={<ContractorUpdate />} />
             <Route path="/contact-us" element={<ContactUs />} />
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
