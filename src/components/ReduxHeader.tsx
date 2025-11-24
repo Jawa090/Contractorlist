@@ -36,6 +36,7 @@ import {
   User,
   Users,
   BarChart3,
+  CreditCard,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -462,9 +463,15 @@ const ReduxHeader = () => {
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
-                  <Link to="/settings" className="cursor-pointer">
+                    <Link to="/settings" className="cursor-pointer">
                       <Settings className="mr-2 h-4 w-4" />
                       <span>Settings</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/subscription" className="cursor-pointer">
+                      <CreditCard className="mr-2 h-4 w-4" />
+                      <span>Subscription</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>

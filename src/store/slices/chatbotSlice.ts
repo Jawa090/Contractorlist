@@ -40,24 +40,37 @@ export const sendMessage = createAsyncThunk(
     'chatbot/sendMessage',
     async (message: string, { rejectWithValue }) => {
         try {
-            // Simulate API call to AI service
-            const response = await fetch('/api/chatbot/message', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message }),
-            });
+            // MOCK API CALL - BYPASS BACKEND
+            // const response = await fetch('/api/chatbot/message', {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify({ message }),
+            // });
 
-            if (!response.ok) {
-                throw new Error('Failed to send message');
-            }
+            // if (!response.ok) {
+            //     throw new Error('Failed to send message');
+            // }
 
-            const data = await response.json();
-            return data.response;
+            // const data = await response.json();
+            // return data.response;
+
+            // Mock delay
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
+            const responses = [
+                "Thanks for your question! I'm here to help with construction projects, contractor recommendations, cost estimates, and more.",
+                "I can assist you with finding qualified contractors, project planning, cost estimation, and construction best practices.",
+                "Let me help you with that! What specific construction service or information are you looking for?",
+                "I'm your AI construction expert. I can help with project management, contractor vetting, cost analysis, and technical guidance.",
+            ];
+
+            return responses[Math.floor(Math.random() * responses.length)];
+
         } catch (error) {
             // For demo purposes, provide fallback responses
             // In production, this should properly reject with error
             console.warn('API not available, using fallback response');
-            
+
             const responses = [
                 "Thanks for your question! I'm here to help with construction projects, contractor recommendations, cost estimates, and more.",
                 "I can assist you with finding qualified contractors, project planning, cost estimation, and construction best practices.",
@@ -67,7 +80,7 @@ export const sendMessage = createAsyncThunk(
 
             // Return fallback response (for demo mode only)
             return responses[Math.floor(Math.random() * responses.length)];
-            
+
             // In production, uncomment this to properly handle errors:
             // return rejectWithValue(error instanceof Error ? error.message : 'Failed to send message');
         }
@@ -78,14 +91,17 @@ export const loadConversationHistory = createAsyncThunk(
     'chatbot/loadConversationHistory',
     async (conversationId: string, { rejectWithValue }) => {
         try {
-            const response = await fetch(`/api/chatbot/conversation/${conversationId}`);
+            // MOCK API CALL - BYPASS BACKEND
+            // const response = await fetch(`/api/chatbot/conversation/${conversationId}`);
 
-            if (!response.ok) {
-                throw new Error('Failed to load conversation');
-            }
+            // if (!response.ok) {
+            //     throw new Error('Failed to load conversation');
+            // }
 
-            const data = await response.json();
-            return data.messages;
+            // const data = await response.json();
+            // return data.messages;
+
+            return [];
         } catch (error) {
             return rejectWithValue('Failed to load conversation history');
         }

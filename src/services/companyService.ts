@@ -72,44 +72,35 @@ export const companyService = {
    * GET http://localhost:5000/api/companies
    */
   getAllCompanies: async (): Promise<CompanySearchResponse> => {
-    const response = await api.get('/companies');
-    return response.data;
+    // MOCK RESPONSE
+    return {
+      success: true,
+      data: [],
+      pagination: {
+        currentPage: 1,
+        totalPages: 1,
+        totalItems: 0,
+        itemsPerPage: 10
+      }
+    };
   },
 
   /**
    * Search Companies (Main Endpoint)
    * GET http://localhost:5000/api/companies/search
-   * 
-   * Supports all query parameters:
-   * - zip, service, city, location
-   * - rating, verified_license, responds_quickly, hired_on_platform
-   * - professional_category, budget, provides_3d
-   * - eco_friendly, family_owned, locally_owned, offers_custom_work
-   * - language
    */
   searchCompanies: async (filters: CompanySearchFilters): Promise<CompanySearchResponse> => {
-    const params = new URLSearchParams();
-    
-    // Add all filters to params
-    if (filters.zip) params.append('zip', filters.zip);
-    if (filters.service) params.append('service', filters.service);
-    if (filters.city) params.append('city', filters.city);
-    if (filters.location) params.append('location', filters.location);
-    if (filters.rating !== undefined) params.append('rating', filters.rating.toString());
-    if (filters.verified_license !== undefined) params.append('verified_license', filters.verified_license.toString());
-    if (filters.responds_quickly !== undefined) params.append('responds_quickly', filters.responds_quickly.toString());
-    if (filters.hired_on_platform !== undefined) params.append('hired_on_platform', filters.hired_on_platform.toString());
-    if (filters.professional_category) params.append('professional_category', filters.professional_category);
-    if (filters.budget) params.append('budget', filters.budget);
-    if (filters.provides_3d !== undefined) params.append('provides_3d', filters.provides_3d.toString());
-    if (filters.eco_friendly !== undefined) params.append('eco_friendly', filters.eco_friendly.toString());
-    if (filters.family_owned !== undefined) params.append('family_owned', filters.family_owned.toString());
-    if (filters.locally_owned !== undefined) params.append('locally_owned', filters.locally_owned.toString());
-    if (filters.offers_custom_work !== undefined) params.append('offers_custom_work', filters.offers_custom_work.toString());
-    if (filters.language) params.append('language', filters.language);
-
-    const response = await api.get(`/companies/search?${params.toString()}`);
-    return response.data;
+    // MOCK RESPONSE
+    return {
+      success: true,
+      data: [],
+      pagination: {
+        currentPage: 1,
+        totalPages: 1,
+        totalItems: 0,
+        itemsPerPage: 10
+      }
+    };
   },
 
   /**
@@ -117,8 +108,11 @@ export const companyService = {
    * GET http://localhost:5000/api/companies/zip/{zipCode}
    */
   getServicesByZip: async (zipCode: string): Promise<ServicesByZipResponse> => {
-    const response = await api.get(`/companies/zip/${encodeURIComponent(zipCode)}`);
-    return response.data;
+    // MOCK RESPONSE
+    return {
+      success: true,
+      data: ["Plumbing", "Electrical", "HVAC"],
+    };
   },
 
   /**
@@ -126,8 +120,18 @@ export const companyService = {
    * GET http://localhost:5000/api/companies/{companyName}
    */
   getCompanyByName: async (companyName: string): Promise<CompanyDetailResponse> => {
-    const response = await api.get(`/companies/${encodeURIComponent(companyName)}`);
-    return response.data;
+    // MOCK RESPONSE
+    return {
+      success: true,
+      data: {
+        name: companyName,
+        rating: 4.5,
+        reviews: 10,
+        verifiedHires: 5,
+        location: "New York, NY",
+        projects: 3,
+      },
+    };
   },
 };
 

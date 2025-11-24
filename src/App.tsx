@@ -43,6 +43,7 @@ import ContractorDetails from "./pages/ContractorDetails";
 import ContactUs from "./pages/ContactUs";
 import Dashboard from "./pages/Dashboard";
 import Settings from "./pages/Settings";
+import Subscription from "./pages/Subscription";
 import ServiceDetail from "./pages/ServiceDetail";
 import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
@@ -55,27 +56,28 @@ const AppInitializer = () => {
 
   useEffect(() => {
     const initializeAuth = async () => {
-      const accessToken = localStorage.getItem('accessToken');
-      
-      // If we have a token but no user data in Redux, fetch user profile
-      if (accessToken) {
-        try {
-          const response = await authService.getProfile();
-          if (response.data) {
-            dispatch(setUser({
-              id: response.data.id.toString(),
-              name: response.data.name,
-              email: response.data.email,
-              role: response.data.role,
-            }));
-          }
-        } catch (error) {
-          // If token is invalid, clear it
-          console.error('Failed to fetch user profile:', error);
-          localStorage.removeItem('accessToken');
-          localStorage.removeItem('refreshToken');
-        }
-      }
+      // MOCK AUTH INITIALIZATION - BYPASS BACKEND
+      // const accessToken = localStorage.getItem('accessToken');
+
+      // // If we have a token but no user data in Redux, fetch user profile
+      // if (accessToken) {
+      //   try {
+      //     const response = await authService.getProfile();
+      //     if (response.data) {
+      //       dispatch(setUser({
+      //         id: response.data.id.toString(),
+      //         name: response.data.name,
+      //         email: response.data.email,
+      //         role: response.data.role,
+      //       }));
+      //     }
+      //   } catch (error) {
+      //     // If token is invalid, clear it
+      //     console.error('Failed to fetch user profile:', error);
+      //     localStorage.removeItem('accessToken');
+      //     localStorage.removeItem('refreshToken');
+      //   }
+      // }
     };
 
     initializeAuth();
@@ -90,46 +92,47 @@ const AppRoutes = () => {
     <>
       <AppInitializer />
       <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/verify-email" element={<VerifyEmail />} />
-            <Route path="/verify-email-notice" element={<VerifyEmailNotice />} />
-            <Route path="/join-network" element={<JoinNetwork />} />
+        <Route path="/" element={<Index />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
+        <Route path="/verify-email-notice" element={<VerifyEmailNotice />} />
+        <Route path="/join-network" element={<JoinNetwork />} />
 
-            {/* Company Pages */}
-            <Route path="/about-us" element={<AboutUs />} />
-            <Route path="/case-studies" element={<CaseStudies />} />
-            <Route path="/testimonials" element={<Testimonials />} />
-            <Route path="/videos" element={<Videos />} />
-            <Route path="/articles" element={<Articles />} />
-            <Route path="/glossary" element={<Glossary />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/services/:serviceName" element={<ServiceDetail />} />
-            <Route path="/products" element={<Products />} />
-            <Route path="/products/ai-quantity-takeoff" element={<AIQuantityTakeOff />} />
-            <Route path="/products/ai-cost-estimation" element={<AICostEstimation />} />
-            <Route path="/products/ai-chatbot" element={<AIChatBot />} />
-            <Route path="/products/ai-virtual-assistant" element={<AIVirtualAssistant />} />
-            <Route path="/serve/owners-developers" element={<ServeOwnersDevelopers />} />
-            <Route path="/serve/general-contractors" element={<ServeGeneralContractors />} />
-            <Route path="/serve/specialty-contractors" element={<ServeSpecialtyContractors />} />
-            <Route path="/serve/pm-companies" element={<ServePMCompanies />} />
-            <Route path="/serve/commercial-companies" element={<ServeCommercialCompanies />} />
-            <Route path="/contractors" element={<Contractors />} />
-            <Route path="/contractors/:id" element={<ContractorDetails />} />
-            <Route path="/contact-us" element={<ContactUs />} />
-            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-            <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
-            <Route path="/terms" element={<TermsOfService />} />
-            <Route path="/privacy" element={<PrivacyPolicy />} />
+        {/* Company Pages */}
+        <Route path="/about-us" element={<AboutUs />} />
+        <Route path="/case-studies" element={<CaseStudies />} />
+        <Route path="/testimonials" element={<Testimonials />} />
+        <Route path="/videos" element={<Videos />} />
+        <Route path="/articles" element={<Articles />} />
+        <Route path="/glossary" element={<Glossary />} />
+        <Route path="/services" element={<Services />} />
+        <Route path="/services/:serviceName" element={<ServiceDetail />} />
+        <Route path="/products" element={<Products />} />
+        <Route path="/products/ai-quantity-takeoff" element={<AIQuantityTakeOff />} />
+        <Route path="/products/ai-cost-estimation" element={<AICostEstimation />} />
+        <Route path="/products/ai-chatbot" element={<AIChatBot />} />
+        <Route path="/products/ai-virtual-assistant" element={<AIVirtualAssistant />} />
+        <Route path="/serve/owners-developers" element={<ServeOwnersDevelopers />} />
+        <Route path="/serve/general-contractors" element={<ServeGeneralContractors />} />
+        <Route path="/serve/specialty-contractors" element={<ServeSpecialtyContractors />} />
+        <Route path="/serve/pm-companies" element={<ServePMCompanies />} />
+        <Route path="/serve/commercial-companies" element={<ServeCommercialCompanies />} />
+        <Route path="/contractors" element={<Contractors />} />
+        <Route path="/contractors/:id" element={<ContractorDetails />} />
+        <Route path="/contact-us" element={<ContactUs />} />
+        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+        <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+        <Route path="/subscription" element={<ProtectedRoute><Subscription /></ProtectedRoute>} />
+        <Route path="/terms" element={<TermsOfService />} />
+        <Route path="/privacy" element={<PrivacyPolicy />} />
 
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
+        {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+        <Route path="*" element={<NotFound />} />
       </Routes>
-      
+
       {/* AI Chatbot - Available on all pages */}
       <AIChatbot />
     </>

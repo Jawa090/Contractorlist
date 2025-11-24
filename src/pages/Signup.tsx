@@ -98,21 +98,21 @@ const Signup = () => {
     dispatch(clearError());
 
     try {
-      // Call backend API
-      const response = await authService.register({
-        name: data.name,
-        email: data.email,
-        password: data.password,
-        role: data.role,
-        phone: data.phone,
-        company: data.company,
-        licenseNumber: data.licenseNumber,
-        businessAddress: data.businessAddress,
-        yearsExperience: data.yearsExperience,
-        specialties: data.specialties,
-        projectType: data.projectType,
-        budget: data.budget,
-      });
+      // MOCK SIGNUP - BYPASS BACKEND
+      // const response = await authService.register({
+      //   name: data.name,
+      //   email: data.email,
+      //   password: data.password,
+      //   role: data.role,
+      //   phone: data.phone,
+      //   company: data.company,
+      //   licenseNumber: data.licenseNumber,
+      //   businessAddress: data.businessAddress,
+      //   yearsExperience: data.yearsExperience,
+      //   specialties: data.specialties,
+      //   projectType: data.projectType,
+      //   budget: data.budget,
+      // });
 
       toast({
         title: "Account Created Successfully!",
