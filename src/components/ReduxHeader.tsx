@@ -36,8 +36,11 @@ import {
   User,
   Users,
   BarChart3,
+  CreditCard,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import SignupRoleModal from "./SignupRoleModal";
 
 const ReduxHeader = () => {
   const dispatch = useAppDispatch();
@@ -436,51 +439,81 @@ const ReduxHeader = () => {
             {isAuthenticated ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="flex items-center">
-                    <Avatar className="h-8 w-8">
-                      <AvatarImage src={user?.avatar} alt={user?.name} />
-                      <AvatarFallback>
-                        {user?.name?.charAt(0).toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                    {/* <span className="hidden sm:inline text-sm font-medium">
-                      {user?.name}
-                    </span> */}
-                    <ChevronDown className="h-4 w-4" />
+                  <Button variant="ghost" className="flex items-center gap-2 hover:bg-gray-50 rounded-xl transition-all duration-300 group">
+                    <div className="relative h-10 w-10 rounded-full bg-gradient-to-br from-yellow-400 via-yellow-500 to-orange-500 p-[2px] shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105">
+                      <div className="h-full w-full rounded-full bg-white flex items-center justify-center">
+                        <div className="h-8 w-8 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center">
+                          <User className="h-4 w-4 text-white" strokeWidth={2.5} />
+                        </div>
+                      </div>
+                      <div className="absolute -bottom-0.5 -right-0.5 h-3 w-3 bg-green-500 rounded-full border-2 border-white shadow-sm"></div>
+                    </div>
+                    <ChevronDown className="h-4 w-4 text-gray-500 group-hover:text-gray-700 transition-colors" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuLabel>
-                    <div className="flex flex-col space-y-1">
-                      <p className="text-sm font-medium leading-none">
-                        {user?.name}
-                      </p>
-                      <p className="text-xs leading-none text-muted-foreground">
-                        {user?.email}
-                      </p>
+                <DropdownMenuContent align="end" className="w-64 shadow-xl border border-gray-200 rounded-xl">
+                  <DropdownMenuLabel className="bg-gradient-to-br from-yellow-50 via-orange-50 to-yellow-50 rounded-t-xl">
+                    <div className="flex items-center gap-4 p-3">
+                      <div className="relative">
+                        <div className="h-14 w-14 rounded-full bg-gradient-to-br from-yellow-400 via-yellow-500 to-orange-500 p-[3px] shadow-lg">
+                          <div className="h-full w-full rounded-full bg-white flex items-center justify-center">
+                            <div className="h-11 w-11 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center shadow-inner">
+                              <User className="h-6 w-6 text-white" strokeWidth={2.5} />
+                            </div>
+                          </div>
+                        </div>
+                        <div className="absolute -bottom-1 -right-1 h-4 w-4 bg-green-500 rounded-full border-[3px] border-white shadow-md flex items-center justify-center">
+                          <div className="h-1.5 w-1.5 bg-white rounded-full animate-pulse"></div>
+                        </div>
+                      </div>
+                      <div className="flex flex-col flex-1 min-w-0">
+                        <p className="text-sm font-bold text-gray-900 leading-tight truncate">
+                          {user?.name}
+                        </p>
+                        <p className="text-xs text-gray-600 mt-0.5 truncate">
+                          {user?.email}
+                        </p>
+                        <span className="inline-flex items-center gap-1.5 mt-2 px-2.5 py-1 bg-gradient-to-r from-green-100 to-emerald-100 text-green-700 text-xs font-semibold rounded-full w-fit shadow-sm">
+                          <span className="relative flex h-2 w-2">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                          </span>
+                          Active Now
+                        </span>
+                      </div>
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
-                  <Link to="/settings" className="cursor-pointer">
-                      <Settings className="mr-2 h-4 w-4" />
-                      <span>Settings</span>
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/dashboard" className="cursor-pointer">
-                      <BarChart3 className="mr-2 h-4 w-4" />
-                      <span>Dashboard</span>
-                    </Link>
-                  </DropdownMenuItem>
+                  <div className="p-1">
+                    <DropdownMenuItem asChild>
+                      <Link to="/subscription" className="cursor-pointer flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-blue-50 transition-colors group">
+                        <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-200 transition-colors">
+                          <CreditCard className="h-4 w-4 text-blue-600" />
+                        </div>
+                        <span className="font-medium text-gray-700 group-hover:text-gray-900">Subscription</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/dashboard" className="cursor-pointer flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-purple-50 transition-colors group">
+                        <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center group-hover:bg-purple-200 transition-colors">
+                          <BarChart3 className="h-4 w-4 text-purple-600" />
+                        </div>
+                        <span className="font-medium text-gray-700 group-hover:text-gray-900">Dashboard</span>
+                      </Link>
+                    </DropdownMenuItem>
+                  </div>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    onClick={handleLogout}
-                    className="cursor-pointer"
-                  >
-                    <LogOut className="mr-2 h-4 w-4" />
-                    <span>Log out</span>
-                  </DropdownMenuItem>
+                  <div className="p-1">
+                    <DropdownMenuItem
+                      onClick={handleLogout}
+                      className="cursor-pointer flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-red-50 transition-colors group"
+                    >
+                      <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center group-hover:bg-red-200 transition-colors">
+                        <LogOut className="h-4 w-4 text-red-600" />
+                      </div>
+                      <span className="font-medium text-red-600 group-hover:text-red-700">Log out</span>
+                    </DropdownMenuItem>
+                  </div>
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (

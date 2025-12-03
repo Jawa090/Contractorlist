@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -15,6 +15,7 @@ import {
   Check,
   Users,
   Briefcase,
+  Store,
 } from "lucide-react";
 import { useAppDispatch } from "@/store/hooks";
 import { clearError } from "@/store/slices/authSlice";
@@ -30,7 +31,7 @@ import {
 } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
-import { authService } from "@/services/authService";
+import authService from "@/services/authService";
 
 const signupSchema = z
   .object({
@@ -52,7 +53,7 @@ const signupSchema = z
 
     role: z.preprocess(
       (val) => (val === "" || val === null ? undefined : val),
-      z.enum(["contractor", "client"], {
+      z.enum(["contractor", "client", "vendor"], {
         required_error: "Please select your account type",
       })
     ),
@@ -73,16 +74,25 @@ const signupSchema = z
 type SignupFormData = z.infer<typeof signupSchema>;
 
 const Signup = () => {
+  const location = useLocation();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [selectedRole, setSelectedRole] = useState<
-    "client" | "contractor" | ""
+    "client" | "contractor" | "vendor" | ""
   >("");
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  // Set preselected role from navigation state
+  useEffect(() => {
+    const preselectedRole = location.state?.preselectedRole;
+    if (preselectedRole === 'client' || preselectedRole === 'contractor' || preselectedRole === 'vendor') {
+      setSelectedRole(preselectedRole);
+    }
+  }, [location.state]);
 
   const {
     register,
@@ -98,18 +108,48 @@ const Signup = () => {
     dispatch(clearError());
 
     try {
-      // Call backend API
+      // Check if vendor role - create demo account
+      if (data.role === 'vendor') {
+        // Simulate API delay
+        await new Promise(resolve => setTimeout(resolve, 1500));
+
+        // Create demo vendor account (store in localStorage)
+        const demoVendor = {
+          id: Date.now(),
+          name: data.name,
+          email: data.email,
+          role: 'vendor',
+          phone: data.phone || '',
+          company: data.company || 'My Store',
+          is_verified: true,
+          createdAt: new Date().toISOString(),
+        };
+
+        // Store demo account (but don't log in yet)
+        localStorage.setItem('demoVendorAccount', JSON.stringify(demoVendor));
+
+        toast({
+          title: "Vendor Account Created! 🎉",
+          description: "Your vendor account is ready. Please login to continue.",
+        });
+
+        // Redirect to login page
+        navigate("/login");
+        return;
+      }
+
+      // For client and contractor - call real backend API
       const response = await authService.register({
         name: data.name,
         email: data.email,
         password: data.password,
         role: data.role,
-        phone: data.phone,
+        phone: data.phone || '',
         company: data.company,
         licenseNumber: data.licenseNumber,
         businessAddress: data.businessAddress,
-        yearsExperience: data.yearsExperience,
-        specialties: data.specialties,
+        yearsExperience: data.yearsExperience ? Number(data.yearsExperience) : undefined,
+        specialties: data.specialties ? data.specialties.split(',').map(s => s.trim()) : undefined,
         projectType: data.projectType,
         budget: data.budget,
       });
@@ -122,8 +162,13 @@ const Signup = () => {
       // Redirect to verification notice page with email
       navigate("/verify-email-notice", { state: { email: data.email } });
     } catch (err: any) {
-      const errorMessage = err.response?.data?.message || err.message || "Registration failed. Please try again.";
+      const errorMessage = err.message || "Registration failed. Please try again.";
       setError(errorMessage);
+      toast({
+        title: "Registration Failed",
+        description: errorMessage,
+        variant: "destructive",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -167,61 +212,82 @@ const Signup = () => {
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               {/* Account Type Selection */}
-              <div className="space-y-3">
-                <Label className="text-sm font-medium text-gray-700">
+              <div className="space-y-4">
+                <Label className="text-base font-semibold text-gray-800">
                   I want to sign up as:
                 </Label>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="flex items-center space-x-2">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {/* Client Option */}
+                  <label
+                    htmlFor="client"
+                    className={`relative flex flex-col items-center p-5 border-2 rounded-2xl cursor-pointer transition-all ${
+                      selectedRole === 'client'
+                        ? 'border-green-400 bg-green-50 shadow-lg'
+                        : 'border-gray-200 hover:border-green-300 hover:bg-green-50'
+                    }`}
+                  >
                     <input
                       type="radio"
                       id="client"
                       value="client"
                       {...register("role")}
-                      onChange={(e) =>
-                        setSelectedRole(e.target.value as "client")
-                      }
-                      className="text-yellow-600 focus:ring-yellow-500"
+                      onChange={(e) => setSelectedRole(e.target.value as "client")}
+                      className="absolute top-4 right-4 text-green-600 focus:ring-green-500"
                     />
-                    <label
-                      htmlFor="client"
-                      className="flex items-center p-3 border border-gray-200 rounded-lg cursor-pointer hover:border-yellow-300 transition-colors flex-1"
-                    >
-                      <Users className="w-5 h-5 text-gray-600 mr-3" />
-                      <div>
-                        <div className="font-medium text-gray-900">Client</div>
-                        <div className="text-xs text-gray-500">
-                          Find contractors
-                        </div>
-                      </div>
-                    </label>
-                  </div>
-                  <div className="flex items-center space-x-2">
+                    <div className="w-14 h-14 bg-gradient-to-br from-green-100 to-green-200 rounded-xl flex items-center justify-center mb-3 shadow-md">
+                      <Users className="w-7 h-7 text-green-600" />
+                    </div>
+                    <h3 className="font-bold text-lg text-gray-900 mb-1">Client</h3>
+                    <p className="text-sm text-gray-600 text-center">Find contractors</p>
+                  </label>
+
+                  {/* Contractor Option */}
+                  <label
+                    htmlFor="contractor"
+                    className={`relative flex flex-col items-center p-5 border-2 rounded-2xl cursor-pointer transition-all ${
+                      selectedRole === 'contractor'
+                        ? 'border-blue-400 bg-blue-50 shadow-lg'
+                        : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50'
+                    }`}
+                  >
                     <input
                       type="radio"
                       id="contractor"
                       value="contractor"
                       {...register("role")}
-                      onChange={(e) =>
-                        setSelectedRole(e.target.value as "contractor")
-                      }
-                      className="text-yellow-600 focus:ring-yellow-500"
+                      onChange={(e) => setSelectedRole(e.target.value as "contractor")}
+                      className="absolute top-4 right-4 text-blue-600 focus:ring-blue-500"
                     />
-                    <label
-                      htmlFor="contractor"
-                      className="flex items-center p-3 border border-gray-200 rounded-lg cursor-pointer hover:border-yellow-300 transition-colors flex-1"
-                    >
-                      <Briefcase className="w-5 h-5 text-gray-600 mr-3" />
-                      <div>
-                        <div className="font-medium text-gray-900">
-                          Contractor
-                        </div>
-                        <div className="text-xs text-gray-500">
-                          Get projects
-                        </div>
-                      </div>
-                    </label>
-                  </div>
+                    <div className="w-14 h-14 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl flex items-center justify-center mb-3 shadow-md">
+                      <Briefcase className="w-7 h-7 text-blue-600" />
+                    </div>
+                    <h3 className="font-bold text-lg text-gray-900 mb-1">Contractor</h3>
+                    <p className="text-sm text-gray-600 text-center">Get projects</p>
+                  </label>
+
+                  {/* Vendor Option */}
+                  <label
+                    htmlFor="vendor"
+                    className={`relative flex flex-col items-center p-5 border-2 rounded-2xl cursor-pointer transition-all ${
+                      selectedRole === 'vendor'
+                        ? 'border-purple-400 bg-purple-50 shadow-lg'
+                        : 'border-gray-200 hover:border-purple-300 hover:bg-purple-50'
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      id="vendor"
+                      value="vendor"
+                      {...register("role")}
+                      onChange={(e) => setSelectedRole(e.target.value as "vendor")}
+                      className="absolute top-4 right-4 text-purple-600 focus:ring-purple-500"
+                    />
+                    <div className="w-14 h-14 bg-gradient-to-br from-purple-100 to-purple-200 rounded-xl flex items-center justify-center mb-3 shadow-md">
+                      <Store className="w-7 h-7 text-purple-600" />
+                    </div>
+                    <h3 className="font-bold text-lg text-gray-900 mb-1">Vendor</h3>
+                    <p className="text-sm text-gray-600 text-center">Sell materials</p>
+                  </label>
                 </div>
                 {errors.role && (
                   <p className="text-sm text-red-600">{errors.role.message}</p>
@@ -316,6 +382,63 @@ const Signup = () => {
                         New Construction
                       </option>
                     </select>
+                  </div>
+                </div>
+              )}
+
+              {selectedRole === "vendor" && (
+                <div className="space-y-4 p-4 bg-purple-50 rounded-lg">
+                  <h3 className="font-semibold text-purple-900">
+                    Store Information
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label
+                        htmlFor="storeName"
+                        className="text-sm font-medium text-gray-700"
+                      >
+                        Store Name
+                      </Label>
+                      <Input
+                        id="storeName"
+                        placeholder="Enter your store name"
+                        {...register("company")}
+                      />
+                    </div>
+                    <div>
+                      <Label
+                        htmlFor="businessType"
+                        className="text-sm font-medium text-gray-700"
+                      >
+                        Business Type
+                      </Label>
+                      <select
+                        id="businessType"
+                        {...register("projectType")}
+                        className="w-full h-10 rounded-md border border-gray-300 bg-white px-3 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
+                      >
+                        <option value="">Select business type</option>
+                        <option value="building-materials">Building Materials</option>
+                        <option value="tools-equipment">Tools & Equipment</option>
+                        <option value="plumbing-supplies">Plumbing Supplies</option>
+                        <option value="electrical-supplies">Electrical Supplies</option>
+                        <option value="paint-supplies">Paint & Supplies</option>
+                        <option value="hardware">Hardware Store</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="col-span-2">
+                    <Label
+                      htmlFor="storeAddress"
+                      className="text-sm font-medium text-gray-700"
+                    >
+                      Store Address
+                    </Label>
+                    <Input
+                      id="storeAddress"
+                      placeholder="Enter your store address"
+                      {...register("businessAddress")}
+                    />
                   </div>
                 </div>
               )}

@@ -95,11 +95,13 @@ const arrayToInputValue = (value?: string[] | string) => {
   return "";
 };
 
-const parseCommaSeparated = (value: string) =>
-  value
+const parseCommaSeparated = (value: string) => {
+  if (!value || value.trim() === "") return [];
+  return value
     .split(",")
     .map((item) => item.trim())
-    .filter(Boolean);
+    .filter((item) => item.length > 0); // Only filter truly empty items
+};
 
 const isFieldFilled = (value: any) => {
   if (value === null || value === undefined) return false;
@@ -175,10 +177,10 @@ const ContractorUpdate = () => {
   const progressValue = calculateProgress();
 
   const handleArrayChange = (field: keyof ContractorProfile, value: string) => {
-    const arrayValue = parseCommaSeparated(value);
+    // Store as string while typing, parse only on save
     setData((prev) => ({
       ...(prev || {}),
-      [field]: arrayValue,
+      [field]: value, // Keep as string
     }));
   };
 
@@ -232,6 +234,27 @@ const ContractorUpdate = () => {
     setSuccessMessage(null);
 
     try {
+      // Parse array fields before sending
+      const processedData = { ...data };
+      const arrayFields = [
+        'services_offered',
+        'specialties',
+        'service_areas',
+        'service_cities',
+        'service_zip_codes',
+        'languages',
+        'clients',
+        'awards',
+        'certifications'
+      ];
+
+      arrayFields.forEach(field => {
+        const value = (processedData as any)[field];
+        if (typeof value === 'string') {
+          (processedData as any)[field] = parseCommaSeparated(value);
+        }
+      });
+
       const res = await fetch(
         `${API_URL}/contractor/profile/${encodeURIComponent(token)}`,
         {
@@ -239,7 +262,7 @@ const ContractorUpdate = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(data),
+          body: JSON.stringify(processedData),
         }
       );
 

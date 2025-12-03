@@ -67,25 +67,69 @@ export const fetchContractors = createAsyncThunk(
   'contractor/fetchContractors',
   async (params: { page?: number; filters?: Partial<ContractorFilters>; search?: string }, { rejectWithValue }) => {
     try {
-      const queryParams = new URLSearchParams({
-        page: (params.page || 1).toString(),
-        search: params.search || '',
-        ...Object.entries(params.filters || {}).reduce((acc, [key, value]) => {
-          if (value !== undefined && value !== null) {
-            acc[key] = value.toString();
-          }
-          return acc;
-        }, {} as Record<string, string>),
-      });
+      // MOCK API CALL - BYPASS BACKEND
+      // const queryParams = new URLSearchParams({
+      //   page: (params.page || 1).toString(),
+      //   search: params.search || '',
+      //   ...Object.entries(params.filters || {}).reduce((acc, [key, value]) => {
+      //     if (value !== undefined && value !== null) {
+      //       acc[key] = value.toString();
+      //     }
+      //     return acc;
+      //   }, {} as Record<string, string>),
+      // });
 
-      const response = await fetch(`/api/contractors?${queryParams}`);
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch contractors');
-      }
-      
-      const data = await response.json();
-      return data;
+      // const response = await fetch(`/api/contractors?${queryParams}`);
+
+      // if (!response.ok) {
+      //   throw new Error('Failed to fetch contractors');
+      // }
+
+      // const data = await response.json();
+      // return data;
+
+      // Mock response
+      return {
+        contractors: [
+          {
+            id: '1',
+            name: 'John Doe',
+            company: 'Doe Construction',
+            specialties: ['General', 'Renovation'],
+            rating: 4.8,
+            reviewCount: 24,
+            location: { city: 'New York', state: 'NY', zipCode: '10001' },
+            verified: true,
+            yearsExperience: 10,
+            description: 'Experienced general contractor.',
+            portfolio: [],
+            email: 'john@example.com',
+            phone: '123-456-7890'
+          },
+          {
+            id: '2',
+            name: 'Jane Smith',
+            company: 'Smith Design',
+            specialties: ['Interior', 'Design'],
+            rating: 4.9,
+            reviewCount: 15,
+            location: { city: 'Brooklyn', state: 'NY', zipCode: '11201' },
+            verified: true,
+            yearsExperience: 8,
+            description: 'Creative interior designer.',
+            portfolio: [],
+            email: 'jane@example.com',
+            phone: '987-654-3210'
+          }
+        ],
+        pagination: {
+          currentPage: params.page || 1,
+          totalPages: 1,
+          totalItems: 2,
+          itemsPerPage: 12
+        }
+      };
+
     } catch (error) {
       return rejectWithValue('Failed to fetch contractors');
     }
@@ -96,14 +140,32 @@ export const fetchContractorById = createAsyncThunk(
   'contractor/fetchContractorById',
   async (id: string, { rejectWithValue }) => {
     try {
-      const response = await fetch(`/api/contractors/${id}`);
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch contractor');
-      }
-      
-      const data = await response.json();
-      return data;
+      // MOCK API CALL - BYPASS BACKEND
+      // const response = await fetch(`/api/contractors/${id}`);
+
+      // if (!response.ok) {
+      //   throw new Error('Failed to fetch contractor');
+      // }
+
+      // const data = await response.json();
+      // return data;
+
+      return {
+        id: id,
+        name: 'John Doe',
+        company: 'Doe Construction',
+        specialties: ['General', 'Renovation'],
+        rating: 4.8,
+        reviewCount: 24,
+        location: { city: 'New York', state: 'NY', zipCode: '10001' },
+        verified: true,
+        yearsExperience: 10,
+        description: 'Experienced general contractor.',
+        portfolio: [],
+        email: 'john@example.com',
+        phone: '123-456-7890'
+      };
+
     } catch (error) {
       return rejectWithValue('Failed to fetch contractor details');
     }
@@ -114,14 +176,25 @@ export const searchContractors = createAsyncThunk(
   'contractor/searchContractors',
   async (query: string, { rejectWithValue }) => {
     try {
-      const response = await fetch(`/api/contractors/search?q=${encodeURIComponent(query)}`);
-      
-      if (!response.ok) {
-        throw new Error('Failed to search contractors');
-      }
-      
-      const data = await response.json();
-      return data;
+      // MOCK API CALL - BYPASS BACKEND
+      // const response = await fetch(`/api/contractors/search?q=${encodeURIComponent(query)}`);
+
+      // if (!response.ok) {
+      //   throw new Error('Failed to search contractors');
+      // }
+
+      // const data = await response.json();
+      // return data;
+
+      return {
+        contractors: [],
+        pagination: {
+          currentPage: 1,
+          totalPages: 1,
+          totalItems: 0,
+          itemsPerPage: 12
+        }
+      };
     } catch (error) {
       return rejectWithValue('Failed to search contractors');
     }
@@ -156,7 +229,7 @@ const contractorSlice = createSlice({
     // Local filtering for better UX
     applyLocalFilters: (state) => {
       let filtered = [...state.contractors];
-      
+
       // Apply search query
       if (state.searchQuery) {
         const query = state.searchQuery.toLowerCase();
@@ -167,26 +240,26 @@ const contractorSlice = createSlice({
           contractor.location.city.toLowerCase().includes(query)
         );
       }
-      
+
       // Apply filters
       if (state.filters.specialty) {
         filtered = filtered.filter(contractor =>
           contractor.specialties.includes(state.filters.specialty!)
         );
       }
-      
+
       if (state.filters.rating) {
         filtered = filtered.filter(contractor =>
           contractor.rating >= state.filters.rating!
         );
       }
-      
+
       if (state.filters.verified !== undefined) {
         filtered = filtered.filter(contractor =>
           contractor.verified === state.filters.verified
         );
       }
-      
+
       state.filteredContractors = filtered;
     },
   },

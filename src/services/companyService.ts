@@ -75,20 +75,22 @@ export const companyService = {
    * GET http://localhost:5000/api/companies
    */
   getAllCompanies: async (): Promise<CompanySearchResponse> => {
-    const response = await api.get('/companies');
-    return response.data;
+    // MOCK RESPONSE
+    return {
+      success: true,
+      data: [],
+      pagination: {
+        currentPage: 1,
+        totalPages: 1,
+        totalItems: 0,
+        itemsPerPage: 10
+      }
+    };
   },
 
   /**
    * Search Companies (Main Endpoint)
    * GET http://localhost:5000/api/companies/search
-   * 
-   * Supports all query parameters:
-   * - zip, service, city, location
-   * - rating, verified_license, responds_quickly, hired_on_platform
-   * - professional_category, budget, provides_3d
-   * - eco_friendly, family_owned, locally_owned, offers_custom_work
-   * - language
    */
   searchCompanies: async (filters: CompanySearchFilters): Promise<CompanySearchResponse> => {
     const params = new URLSearchParams();
@@ -122,8 +124,11 @@ export const companyService = {
    * GET http://localhost:5000/api/companies/zip/{zipCode}
    */
   getServicesByZip: async (zipCode: string): Promise<ServicesByZipResponse> => {
-    const response = await api.get(`/companies/zip/${encodeURIComponent(zipCode)}`);
-    return response.data;
+    // MOCK RESPONSE
+    return {
+      success: true,
+      data: ["Plumbing", "Electrical", "HVAC"],
+    };
   },
 
   /**
@@ -131,8 +136,18 @@ export const companyService = {
    * GET http://localhost:5000/api/companies/{companyName}
    */
   getCompanyByName: async (companyName: string): Promise<CompanyDetailResponse> => {
-    const response = await api.get(`/companies/${encodeURIComponent(companyName)}`);
-    return response.data;
+    // MOCK RESPONSE
+    return {
+      success: true,
+      data: {
+        name: companyName,
+        rating: 4.5,
+        reviews: 10,
+        verifiedHires: 5,
+        location: "New York, NY",
+        projects: 3,
+      },
+    };
   },
 };
 

@@ -24,7 +24,7 @@ import { Trash2, AlertTriangle, User, Mail, Phone, Building } from "lucide-react
 const ClientInfoManager = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { user, deleteAccountState } = useAppSelector((state) => state.auth);
+  const { user, deleteAccountState = { pending: false, fulfilled: false, rejected: false, error: null } } = useAppSelector((state) => state.auth);
   const [deleteConfirmation, setDeleteConfirmation] = useState("");
 
   // Safely handle potential undefined state to avoid runtime errors
@@ -125,7 +125,7 @@ const ClientInfoManager = () => {
               <p className="text-sm text-red-700 mt-1">
                 Permanently delete all your client information and account data. This action cannot be undone.
               </p>
-              
+
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <Button variant="destructive" className="mt-3">

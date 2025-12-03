@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Mail, ArrowLeft } from 'lucide-react';
-import { authService } from '@/services/authService';
+import authService from '@/services/authService';
 import { useToast } from '@/hooks/use-toast';
 
 const VerifyEmailNotice = () => {

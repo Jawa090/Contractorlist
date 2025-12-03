@@ -1,13 +1,24 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { AsyncThunkState, ApiError } from '../types';
+import { AsyncThunkState } from '../types';
+import authService from '@/services/authService';
+import { RegisterData, LoginData, User as ApiUser } from '@/types/auth.types';
 
 // Types
 export interface User {
-  id: string;
+  id: number | string;
   name: string;
   email: string;
   avatar?: string;
-  role: 'contractor' | 'client' | 'homeowner' | 'admin';
+  role: 'contractor' | 'client' | 'homeowner' | 'admin' | 'vendor';
+  phone?: string;
+  company?: string;
+  is_verified?: boolean;
+  license_number?: string;
+  business_address?: string;
+  years_experience?: number;
+  specialties?: string[];
+  project_type?: string;
+  budget?: string;
   createdAt?: string;
   lastLogin?: string;
   preferences?: {
@@ -56,22 +67,64 @@ const getInitialAuthState = (): AuthState => {
 const initialState: AuthState = getInitialAuthState();
 
 // Async thunks
-// Note: Login and registration are handled directly via authService in the UI.
-// The only async thunks we keep here are for logout and account deletion.
 
+/**
+ * Register new user
+ */
+export const registerUser = createAsyncThunk(
+  'auth/registerUser',
+  async (data: RegisterData, { rejectWithValue }) => {
+    try {
+      const response = await authService.register(data);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.message || 'Registration failed');
+    }
+  }
+);
+
+/**
+ * Login user
+ */
+export const loginUser = createAsyncThunk(
+  'auth/loginUser',
+  async (data: LoginData, { rejectWithValue }) => {
+    try {
+      const response = await authService.login(data);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.message || 'Login failed');
+    }
+  }
+);
+
+/**
+ * Get user profile
+ */
+export const fetchUserProfile = createAsyncThunk(
+  'auth/fetchUserProfile',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await authService.getProfile();
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.message || 'Failed to fetch profile');
+    }
+  }
+);
+
+/**
+ * Logout user
+ */
 export const logoutUser = createAsyncThunk(
   'auth/logoutUser',
   async (_, { rejectWithValue }) => {
     try {
-      // Import authService dynamically to avoid circular dependencies
-      const { authService } = await import('@/services/authService');
-      await authService.logout();
+      authService.logout();
       return null;
     } catch (error) {
       // Even if API call fails, clear local state
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('userData');
+      authService.logout();
       return null;
     }
   }
@@ -149,6 +202,73 @@ const authSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    // Register
+    builder
+      .addCase(registerUser.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+        state.registerState = { pending: true, fulfilled: false, rejected: false, error: null };
+      })
+      .addCase(registerUser.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.user = action.payload.user as User;
+        state.token = action.payload.token;
+        state.isAuthenticated = true;
+        state.error = null;
+        state.registerState = { pending: false, fulfilled: true, rejected: false, error: null };
+      })
+      .addCase(registerUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+        state.registerState = { 
+          pending: false, 
+          fulfilled: false, 
+          rejected: true, 
+          error: action.payload as string 
+        };
+      });
+
+    // Login
+    builder
+      .addCase(loginUser.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+        state.loginState = { pending: true, fulfilled: false, rejected: false, error: null };
+      })
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.user = action.payload.user as User;
+        state.token = action.payload.token;
+        state.isAuthenticated = true;
+        state.error = null;
+        state.loginState = { pending: false, fulfilled: true, rejected: false, error: null };
+      })
+      .addCase(loginUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+        state.loginState = { 
+          pending: false, 
+          fulfilled: false, 
+          rejected: true, 
+          error: action.payload as string 
+        };
+      });
+
+    // Fetch Profile
+    builder
+      .addCase(fetchUserProfile.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchUserProfile.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.user = action.payload as User;
+        state.isAuthenticated = true;
+      })
+      .addCase(fetchUserProfile.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      });
+
     // Logout
     builder
       .addCase(logoutUser.pending, (state) => {
