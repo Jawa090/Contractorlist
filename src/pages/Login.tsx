@@ -47,55 +47,51 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      // Check for demo vendor account first
-      const demoVendor = localStorage.getItem('demoVendorAccount');
-      if (demoVendor) {
-        const vendorData = JSON.parse(demoVendor);
-        if (vendorData.email === data.email) {
-          // Simulate API delay
-          await new Promise(resolve => setTimeout(resolve, 1000));
+      // DUMMY LOGIN DATA - NO API CALLS
+      // Check for different user types based on email
+      let userRole: 'contractor' | 'client' | 'homeowner' | 'admin' | 'vendor' = 'contractor'; // default
+      let userName = 'Demo User';
+      let redirectPath = '/subcontractor-dashboard';
 
-          // Dispatch setUser action to update Redux state
-          const { setUser } = await import('@/store/slices/authSlice');
-          dispatch(setUser({
-            id: vendorData.id,
-            name: vendorData.name,
-            email: vendorData.email,
-            role: 'vendor',
-            phone: vendorData.phone,
-            company: vendorData.company,
-            is_verified: true,
-          }));
-
-          toast({
-            title: "Login Successful! 🎉",
-            description: `Welcome back, ${vendorData.name}! (Demo Vendor Account)`,
-          });
-
-          // Redirect to home page
-          navigate('/');
-          return;
-        }
+      if (data.email.includes('supplier') || data.email.includes('vendor')) {
+        userRole = 'vendor';
+        userName = 'Demo Supplier';
+        redirectPath = '/supplier-dashboard';
+      } else if (data.email.includes('homeowner') || data.email.includes('client')) {
+        userRole = 'homeowner';
+        userName = 'Demo Homeowner';
+        redirectPath = '/homeowner-dashboard';
+      } else if (data.email.includes('gc') || data.email.includes('general')) {
+        userRole = 'contractor';
+        userName = 'Demo General Contractor';
+        redirectPath = '/gc-dashboard';
       }
 
-      // Call the API through Redux thunk for real accounts
-      const result = await dispatch(loginUser({
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // Dispatch setUser action to update Redux state
+      const { setUser } = await import('@/store/slices/authSlice');
+      dispatch(setUser({
+        id: '1',
+        name: userName,
         email: data.email,
-        password: data.password,
-      })).unwrap();
+        role: userRole,
+        phone: '(555) 123-4567',
+        company: 'Demo Company',
+        is_verified: true,
+      }));
 
       toast({
-        title: "Login Successful!",
-        description: `Welcome back, ${result.user.name}!`,
+        title: "Login Successful! 🎉",
+        description: `Welcome ${userName}! (Demo Account - No API)`,
       });
 
-      // Redirect to home page for all users
-      // Users can access their dashboard from the header menu
-      navigate('/');
+      // Redirect to appropriate dashboard
+      navigate(redirectPath);
     } catch (err: any) {
       const errorMessage = err || "Login failed. Please check your credentials.";
       setError(errorMessage);
-      // Error is displayed in the red alert box above the form
     } finally {
       setIsLoading(false);
     }
@@ -128,6 +124,16 @@ const Login = () => {
             <CardDescription className="text-gray-600">
               Sign in to your account to continue
             </CardDescription>
+            <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+              <p className="text-xs text-blue-800 font-medium mb-2">Demo Access (No API):</p>
+              <div className="text-xs text-blue-700 space-y-1">
+                <div>• contractor@demo.com → Subcontractor Dashboard</div>
+                <div>• supplier@demo.com → Supplier Dashboard</div>
+                <div>• homeowner@demo.com → Homeowner Dashboard</div>
+                <div>• gc@demo.com → General Contractor Dashboard</div>
+                <div className="mt-2 text-blue-600">Password: any 8+ characters</div>
+              </div>
+            </div>
           </CardHeader>
 
           <CardContent className="space-y-4">

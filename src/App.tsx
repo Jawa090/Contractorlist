@@ -43,7 +43,10 @@ import Contractors from "./pages/Contractors";
 import ContractorDetails from "./pages/ContractorDetails";
 import CompanyDetails from "./pages/CompanyDetails";
 import ContactUs from "./pages/ContactUs";
-import Dashboard from "./pages/Dashboard";
+import GCDashboard from "./pages/GCDashboard";
+import SubcontractorDashboard from "./pages/SubcontractorDashboard";
+import SupplierDashboard from "./pages/SupplierDashboard";
+import HomeownerDashboard from "./pages/HomeownerDashboard";
 import Settings from "./pages/Settings";
 import Subscription from "./pages/Subscription";
 import ServiceDetail from "./pages/ServiceDetail";
@@ -129,9 +132,12 @@ const AppRoutes = () => {
             <Route path="/companies/:id" element={<CompanyDetails />} />
             <Route path="/contractor/update/:token" element={<ContractorUpdate />} />
         <Route path="/contact-us" element={<ContactUs />} />
-        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-        <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
-        <Route path="/subscription" element={<ProtectedRoute><Subscription /></ProtectedRoute>} />
+        <Route path="/gc-dashboard/*" element={<GCDashboard />} />
+        <Route path="/subcontractor-dashboard/*" element={<SubcontractorDashboard />} />
+        <Route path="/supplier-dashboard/*" element={<SupplierDashboard />} />
+        <Route path="/homeowner-dashboard/*" element={<HomeownerDashboard />} />
+        <Route path="/settings" element={<Settings />} />
+        <Route path="/subscription" element={<Subscription />} />
         <Route path="/terms" element={<TermsOfService />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
 
