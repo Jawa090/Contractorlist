@@ -124,16 +124,6 @@ const Login = () => {
             <CardDescription className="text-gray-600">
               Sign in to your account to continue
             </CardDescription>
-            <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-              <p className="text-xs text-blue-800 font-medium mb-2">Demo Access (No API):</p>
-              <div className="text-xs text-blue-700 space-y-1">
-                <div>• contractor@demo.com → Subcontractor Dashboard</div>
-                <div>• supplier@demo.com → Supplier Dashboard</div>
-                <div>• homeowner@demo.com → Homeowner Dashboard</div>
-                <div>• gc@demo.com → General Contractor Dashboard</div>
-                <div className="mt-2 text-blue-600">Password: any 8+ characters</div>
-              </div>
-            </div>
           </CardHeader>
 
           <CardContent className="space-y-4">

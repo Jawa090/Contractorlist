@@ -7,9 +7,6 @@ import {
   LayoutDashboard,
   Search,
   FileText,
-  User,
-  BarChart3,
-  Bot,
   Briefcase,
   MessageSquare,
   Settings,
@@ -18,16 +15,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Building,
-  Kanban,
-  Zap,
-  TrendingUp,
-  Target,
-  Award,
-  Activity,
-  DollarSign,
-  Clock,
-  Star,
-  Crown
+  Activity
 } from 'lucide-react';
 
 interface SubcontractorSidebarProps {
@@ -43,90 +31,51 @@ const SubcontractorSidebar = ({ isOpen, onClose }: SubcontractorSidebarProps) =>
     {
       icon: LayoutDashboard,
       label: 'Overview',
-      description: 'Dashboard & insights',
+      description: 'Dashboard overview',
       path: '/subcontractor-dashboard/overview',
-      badge: null,
-      isPro: false
-    },
-    {
-      icon: Search,
-      label: 'Find Projects',
-      description: 'Discover opportunities',
-      path: '/subcontractor-dashboard/find-projects',
-      badge: '24',
-      isPro: false
-    },
-    {
-      icon: FileText,
-      label: 'Bid Management',
-      description: 'Track & manage bids',
-      path: '/subcontractor-dashboard/bid-management',
-      badge: '5',
-      isPro: false
+      badge: null
     },
     {
       icon: Briefcase,
       label: 'My Projects',
-      description: 'Active projects',
+      description: 'Manage projects',
       path: '/subcontractor-dashboard/my-projects',
-      badge: '3',
-      isPro: false
+      badge: '3'
     },
     {
-      icon: Kanban,
-      label: 'Project Management',
-      description: 'Advanced tools',
-      path: '/subcontractor-dashboard/project-management',
-      badge: 'Pro',
-      isPro: true
+      icon: FileText,
+      label: 'Bid Management',
+      description: 'Track bids',
+      path: '/subcontractor-dashboard/bid-management',
+      badge: '5'
     },
     {
-      icon: User,
-      label: 'My Profile',
-      description: 'Company profile',
-      path: '/subcontractor-dashboard/my-profile',
-      badge: null,
-      isPro: false
-    },
-    {
-      icon: BarChart3,
-      label: 'Marketing Analytics',
-      description: 'Performance metrics',
-      path: '/subcontractor-dashboard/marketing-analytics',
-      badge: null,
-      isPro: false
-    },
-    {
-      icon: Bot,
-      label: 'AI Assistant',
-      description: 'Smart bidding help',
-      path: '/subcontractor-dashboard/ai-assistant',
-      badge: 'New',
-      isPro: false
+      icon: Search,
+      label: 'Project Discovery',
+      description: 'Find projects',
+      path: '/subcontractor-dashboard/project-discovery',
+      badge: null
     },
     {
       icon: MessageSquare,
       label: 'Messages',
       description: 'Communications',
       path: '/subcontractor-dashboard/messages',
-      badge: '12',
-      isPro: false
+      badge: '12'
     },
     {
       icon: Settings,
       label: 'Settings',
       description: 'Account settings',
       path: '/subcontractor-dashboard/settings',
-      badge: null,
-      isPro: false
+      badge: null
     },
     {
       icon: HelpCircle,
       label: 'Help & Support',
-      description: 'Get assistance',
-      path: '/subcontractor-dashboard/help',
-      badge: null,
-      isPro: false
+      description: 'Get help',
+      path: '/subcontractor-dashboard/help-support',
+      badge: null
     }
   ];
 
@@ -226,7 +175,6 @@ const SubcontractorSidebar = ({ isOpen, onClose }: SubcontractorSidebarProps) =>
                   
                   <div className={cn(
                     "flex items-center justify-center w-5 h-5 transition-all duration-300 relative z-10",
-                    item.isPro && !active && "text-purple-500",
                     active && "scale-110",
                     "group-hover:scale-110"
                   )}>
@@ -238,21 +186,12 @@ const SubcontractorSidebar = ({ isOpen, onClose }: SubcontractorSidebarProps) =>
                   {!isCollapsed && (
                     <>
                       <div className="flex-1 min-w-0 relative z-10">
-                        <div className="flex items-center gap-2">
-                          <span className={cn(
-                            "truncate transition-all duration-300",
-                            active && "font-bold"
-                          )}>
-                            {item.label}
-                          </span>
-                          {item.isPro && (
-                            <Crown className={cn(
-                              "w-3 h-3 transition-transform duration-300",
-                              "group-hover:scale-125",
-                              active ? "text-black" : "text-purple-500"
-                            )} />
-                          )}
-                        </div>
+                        <span className={cn(
+                          "truncate transition-all duration-300",
+                          active && "font-bold"
+                        )}>
+                          {item.label}
+                        </span>
                         <p className={cn(
                           "text-xs truncate transition-all duration-300",
                           active ? "text-black/70" : "text-gray-500 dark:text-gray-400"
@@ -262,13 +201,11 @@ const SubcontractorSidebar = ({ isOpen, onClose }: SubcontractorSidebarProps) =>
                       </div>
                       {item.badge && (
                         <Badge 
-                          variant={item.badge === 'Pro' ? 'default' : 'secondary'} 
+                          variant="secondary"
                           className={cn(
                             "text-xs px-2 py-1 font-semibold transition-all duration-300 relative z-10",
                             active && 'bg-black/20 text-black border-black/20 shadow-md',
-                            item.badge === 'Pro' && !active && "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 group-hover:scale-110",
-                            item.badge === 'New' && !active && "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300 group-hover:scale-110 animate-pulse",
-                            !active && !['Pro', 'New'].includes(item.badge) && "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 group-hover:scale-105"
+                            !active && "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 group-hover:scale-105"
                           )}
                         >
                           {item.badge}
