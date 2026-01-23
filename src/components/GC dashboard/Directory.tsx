@@ -6,7 +6,6 @@ import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   Dialog,
   DialogContent,
@@ -29,14 +28,13 @@ import {
   CheckCircle2,
   Clock,
   Users,
-  FileText,
-  Zap,
-  Award,
-  CircleCheck,
-  ChevronRight,
-  ExternalLink,
-  Briefcase
+  Grid3x3,
+  List as ListIcon,
+  SearchCode,
+  AlertCircle,
+  MoreHorizontal
 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 const Directory = () => {
   const { toast } = useToast();
@@ -46,13 +44,10 @@ const Directory = () => {
   const [selectedContractor, setSelectedContractor] = useState<any>(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [sortBy, setSortBy] = useState('best');
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
-  const stats = [
-    { label: 'Verified Pros', value: '1,248', icon: ShieldCheck, color: 'text-blue-500' },
-    { label: 'Avg. Rating', value: '4.8', icon: Star, color: 'text-yellow-500' },
-    { label: 'Active Trade Bids', value: '342', icon: Zap, color: 'text-purple-500' },
-    { label: 'Insurance Compliant', value: '98%', icon: CircleCheck, color: 'text-green-500' },
-  ];
+  const [selectedAvailability, setSelectedAvailability] = useState<string[]>([]);
+  const [selectedTiers, setSelectedTiers] = useState<string[]>([]);
 
   const contractors = [
     {
@@ -67,14 +62,12 @@ const Directory = () => {
       specialties: ['Electrical', 'Fire Alarm', 'Lighting'],
       status: 'Available',
       projects: 45,
-      image: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80&w=200&h=200',
+      avatar: 'VM',
       phone: '(512) 555-0123',
       email: 'info@voltmaster.com',
       yearsExperience: 15,
       bonded: true,
-      insured: true,
-      description: 'VoltMaster is a premier electrical contracting firm specializing in complex commercial and industrial power systems. Our team is fully certified for high-voltage and low-voltage installations.',
-      complianceScore: 98,
+      insured: true
     },
     {
       id: 2,
@@ -88,38 +81,15 @@ const Directory = () => {
       specialties: ['Electrical', 'Low Voltage'],
       status: 'Busy',
       projects: 12,
-      image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200&h=200',
+      avatar: 'AW',
       phone: '(210) 555-0145',
       email: 'contact@apexwiring.com',
       yearsExperience: 8,
       bonded: true,
-      insured: true,
-      description: 'Apex provides reliable wiring solutions for residential and light commercial developments. We focus on speed and budget-friendly compliance.',
-      complianceScore: 92,
+      insured: true
     },
     {
       id: 3,
-      name: 'Titan Concrete Pros',
-      location: 'Dallas, TX',
-      distance: '120 mi',
-      rating: 4.7,
-      reviews: 215,
-      verified: true,
-      tier: 'Platinum',
-      specialties: ['Concrete', 'Foundation'],
-      status: 'Available',
-      projects: 89,
-      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200&h=200',
-      phone: '(214) 555-0189',
-      email: 'info@titanconcrete.com',
-      yearsExperience: 25,
-      bonded: true,
-      insured: true,
-      description: 'Titan is a multi-generational concrete contracting company. We handle everything from high-rise foundations to decorative hardscaping with precision.',
-      complianceScore: 100,
-    },
-    {
-      id: 4,
       name: 'Bright Future Solar',
       location: 'Austin, TX',
       distance: '8 mi',
@@ -130,23 +100,51 @@ const Directory = () => {
       specialties: ['Solar', 'Green Energy'],
       status: 'Available',
       projects: 5,
-      image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=200&h=200',
+      avatar: 'BF',
       phone: '(512) 555-0167',
       email: 'hello@brightfuture.com',
       yearsExperience: 5,
       bonded: true,
-      insured: true,
-      description: 'Specializing in sustainable energy transitions for commercial properties. We offer full design-build solar services across Central Texas.',
-      complianceScore: 88,
+      insured: true
+    },
+    {
+      id: 4,
+      name: 'Titan Concrete Pros',
+      location: 'Dallas, TX',
+      distance: '120 mi',
+      rating: 4.7,
+      reviews: 215,
+      verified: true,
+      tier: 'Platinum',
+      specialties: ['Concrete', 'Foundation'],
+      status: 'Available',
+      projects: 89,
+      avatar: 'TC',
+      phone: '(214) 555-0189',
+      email: 'info@titanconcrete.com',
+      yearsExperience: 25,
+      bonded: true,
+      insured: true
     }
   ];
 
   const filteredContractors = contractors.filter(c => {
     const matchesSearch = c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       c.specialties.some(s => s.toLowerCase().includes(searchQuery.toLowerCase()));
+
     const matchesCategory = selectedCategory.length === 0 ||
       c.specialties.some(s => selectedCategory.includes(s));
-    return matchesSearch && matchesCategory;
+
+    const matchesLocation = selectedLocation === '' ||
+      c.location.toLowerCase().includes(selectedLocation.toLowerCase());
+
+    const matchesAvailability = selectedAvailability.length === 0 ||
+      selectedAvailability.some(status => c.status.toLowerCase().includes(status.toLowerCase().replace(' now', '')));
+
+    const matchesTier = selectedTiers.length === 0 ||
+      selectedTiers.includes(c.tier);
+
+    return matchesSearch && matchesCategory && matchesLocation && matchesAvailability && matchesTier;
   });
 
   const handleInvite = (name: string) => {
@@ -158,285 +156,249 @@ const Directory = () => {
 
   const categories = ['Electrical', 'Plumbing', 'HVAC', 'Concrete', 'Masonry', 'Drywall', 'Roofing', 'Painting', 'Flooring'];
 
+  const getTierColor = (tier: string) => {
+    switch (tier) {
+      case 'Platinum': return 'from-gray-700 to-gray-900 text-white';
+      case 'Gold': return 'from-yellow-400 to-yellow-600 text-black';
+      case 'Silver': return 'from-slate-300 to-slate-400 text-black';
+      default: return 'from-orange-400 to-orange-500 text-white';
+    }
+  };
+
   return (
-    <div className="flex h-full w-full flex-col bg-gray-50 dark:bg-[#0f1115] text-gray-900 dark:text-white font-sans transition-colors duration-300">
+    <div className="flex h-full w-full flex-col bg-white dark:bg-[#0f1115] text-gray-900 dark:text-white transition-colors duration-500 overflow-hidden font-sans">
+
       {/* Background Ambience */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-[30%] left-[-20%] w-[50%] h-[50%] rounded-full bg-yellow-400/5 dark:bg-yellow-600/5 blur-[120px]" />
-        <div className="absolute bottom-[10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-blue-400/5 dark:bg-blue-600/5 blur-[100px]" />
+      <div className="fixed inset-0 pointer-events-none opacity-50">
+        <div className="absolute top-[20%] left-[-10%] w-[600px] h-[600px] bg-yellow-400/10 dark:bg-yellow-500/5 blur-[120px] rounded-full" />
+        <div className="absolute bottom-[10%] right-[5%] w-[400px] h-[400px] bg-blue-400/5 dark:bg-blue-600/5 blur-[100px] rounded-full" />
       </div>
 
-      {/* Header Section */}
-      <div className="bg-white/80 dark:bg-[#1c1e24]/80 backdrop-blur-md border-b border-gray-200 dark:border-white/5 px-6 py-8 sticky top-0 z-20 shadow-sm relative transition-colors duration-300">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col gap-8">
-            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-              <div className="max-w-2xl">
-                <div className="flex items-center gap-2 mb-3">
-                  <Badge className="bg-yellow-400 dark:bg-yellow-500 text-black border-none font-bold px-3 py-1">
-                    Verified Network
-                  </Badge>
-                  <span className="text-sm font-medium text-gray-500 dark:text-gray-400 flex items-center gap-1">
-                    <ShieldCheck className="w-4 h-4 text-green-500" /> All Pros Compliance Checked
-                  </span>
-                </div>
-                <h1 className="text-3xl md:text-4xl font-black text-gray-900 dark:text-white tracking-tight leading-tight">
-                  Expert Subcontractor <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 to-yellow-600">Directory</span>
-                </h1>
-                <p className="mt-2 text-gray-500 dark:text-gray-400 leading-relaxed max-w-xl">
-                  Connect with Austin's highest-rated trades. Each professional in our network is fully insured, bonded, and has a proven track record of on-time project completion.
-                </p>
-              </div>
+      {/* Modern Search Banner */}
+      <div className="relative bg-gray-50/50 dark:bg-[#1c1e24]/50 border-b border-gray-200 dark:border-white/5 px-8 py-8 z-20 backdrop-blur-md">
+        <div className="max-w-7xl mx-auto space-y-6">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div>
+              <h1 className="text-3xl font-black tracking-tight text-gray-900 dark:text-white flex items-center gap-3">
+                <Building2 className="w-8 h-8 text-yellow-500" />
+                B2B PARTNER DIRECTORY
+              </h1>
+              <p className="text-gray-500 dark:text-gray-400 font-bold text-sm mt-1">Verified sub-contractors and resource providers</p>
+            </div>
+            <div className="flex items-center gap-2 bg-white dark:bg-black/30 p-1 rounded-xl border border-gray-200 dark:border-white/5">
+              <button onClick={() => setViewMode('grid')} className={cn("p-2 rounded-lg transition-all", viewMode === 'grid' ? "bg-yellow-400 text-black shadow-lg" : "text-gray-400 hover:text-black dark:hover:text-white")}>
+                <Grid3x3 className="w-4 h-4" />
+              </button>
+              <button onClick={() => setViewMode('list')} className={cn("p-2 rounded-lg transition-all", viewMode === 'list' ? "bg-yellow-400 text-black shadow-lg" : "text-gray-400 hover:text-black dark:hover:text-white")}>
+                <ListIcon className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
 
-              {/* Quick Stats Grid */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-2 gap-3 lg:w-72">
-                {stats.slice(0, 4).map((stat, i) => (
-                  <div key={i} className="bg-gray-100 dark:bg-black/20 p-3 rounded-2xl border border-gray-200 dark:border-white/5">
-                    <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-1">{stat.label}</p>
-                    <div className="flex items-center gap-2">
-                      <stat.icon className={`w-4 h-4 ${stat.color}`} />
-                      <span className="text-lg font-bold">{stat.value}</span>
+          <div className="flex flex-col md:flex-row gap-4 p-1.5 bg-white dark:bg-black/40 rounded-2xl border border-gray-200 dark:border-white/5 shadow-xl">
+            <div className="flex-1 relative">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <Input
+                placeholder="Search by company name or trade (e.g. 'Electrical')"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 h-12 border-none bg-transparent text-base focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-gray-400"
+              />
+            </div>
+            <div className="hidden md:block w-[1px] h-6 bg-gray-200 dark:bg-white/10 self-center" />
+            <div className="w-full md:w-[220px] relative">
+              <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <Input
+                placeholder="Location Search"
+                value={selectedLocation}
+                onChange={(e) => setSelectedLocation(e.target.value)}
+                className="pl-10 h-12 border-none bg-transparent placeholder:text-gray-400 focus-visible:ring-0"
+              />
+            </div>
+            <Button className="h-12 px-8 bg-black dark:bg-yellow-500 text-white dark:text-black font-black uppercase text-xs tracking-tighter rounded-xl hover:bg-yellow-500 transition-all">
+              Find Partners
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex-1 flex overflow-hidden relative z-10">
+        {/* Dynamic Filter Sidebar */}
+        <aside className="hidden xl:flex w-80 flex-col border-r border-gray-200 dark:border-white/5 bg-gray-50/30 dark:bg-black/20 overflow-y-auto p-8 custom-scrollbar">
+          <div className="flex items-center justify-between mb-8">
+            <h3 className="text-xl font-black tracking-tight">FILTERS</h3>
+            <button
+              onClick={() => {
+                setSelectedCategory([]);
+                setSelectedAvailability([]);
+                setSelectedTiers([]);
+                setSearchQuery('');
+                setSelectedLocation('');
+              }}
+              className="text-[10px] font-black uppercase text-yellow-600 dark:text-yellow-500 hover:underline"
+            >
+              Reset
+            </button>
+          </div>
+
+          <div className="space-y-10">
+            <div>
+              <Label className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4 block underline decoration-yellow-500/30 underline-offset-4">Core Trades</Label>
+              <div className="grid grid-cols-1 gap-2">
+                {categories.map(cat => (
+                  <div key={cat} className="flex items-center group cursor-pointer" onClick={() => {
+                    setSelectedCategory(prev => prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat]);
+                  }}>
+                    <div className={cn(
+                      "w-4 h-4 rounded border flex items-center justify-center transition-all mr-3",
+                      selectedCategory.includes(cat) ? "bg-yellow-500 border-yellow-500 text-black" : "border-gray-300 dark:border-white/10 group-hover:border-yellow-400"
+                    )}>
+                      {selectedCategory.includes(cat) && <CheckCircle2 className="w-3 h-3" />}
                     </div>
+                    <span className={cn("text-xs font-bold transition-all", selectedCategory.includes(cat) ? "text-gray-900 dark:text-white" : "text-gray-500 dark:text-gray-400 group-hover:pl-1")}>{cat}</span>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Search and Filters Bar */}
-            <div className="flex flex-col md:flex-row gap-4 items-center bg-white dark:bg-[#14161b] p-2 rounded-2xl border border-gray-200 dark:border-white/5 shadow-xl shadow-black/5 dark:shadow-yellow-500/5">
-              <div className="flex-1 relative w-full">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-600 w-5 h-5" />
-                <Input
-                  placeholder="What trade or company are you looking for?"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-12 h-14 border-none bg-transparent text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-700 focus-visible:ring-0 focus-visible:ring-offset-0 text-base"
-                />
+            <div>
+              <Label className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4 block underline decoration-yellow-500/30 underline-offset-4">Verification Level</Label>
+              <div className="space-y-3">
+                {['Platinum', 'Gold', 'Silver', 'Verified'].map(tier => (
+                  <div key={tier} className="flex items-center group cursor-pointer" onClick={() => {
+                    setSelectedTiers(prev => prev.includes(tier) ? prev.filter(t => t !== tier) : [...prev, tier]);
+                  }}>
+                    <div className={cn(
+                      "w-4 h-4 rounded border flex items-center justify-center transition-all mr-3",
+                      selectedTiers.includes(tier) ? "bg-yellow-500 border-yellow-500 text-black" : "border-gray-300 dark:border-white/10 group-hover:border-yellow-400"
+                    )}>
+                      {selectedTiers.includes(tier) && <CheckCircle2 className="w-3 h-3" />}
+                    </div>
+                    <span className={cn("text-xs font-bold transition-all", selectedTiers.includes(tier) ? "text-gray-900 dark:text-white" : "text-gray-500 dark:text-gray-400 group-hover:pl-1")}>{tier} Tier</span>
+                  </div>
+                ))}
               </div>
-              <div className="hidden md:block w-[1px] h-8 bg-gray-200 dark:bg-white/10" />
-              <div className="w-full md:w-[220px] relative">
-                <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-600 w-5 h-5" />
-                <Input
-                  placeholder="Location"
-                  value={selectedLocation}
-                  onChange={(e) => setSelectedLocation(e.target.value)}
-                  className="pl-12 h-14 border-none bg-transparent text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-700 focus-visible:ring-0 focus-visible:ring-offset-0 text-sm"
-                />
-              </div>
-              <Button className="h-14 w-full md:w-auto px-10 bg-yellow-400 hover:bg-yellow-500 dark:bg-yellow-500 dark:hover:bg-yellow-400 text-black font-black uppercase tracking-tighter rounded-xl transition-all shadow-lg dark:shadow-yellow-500/20 active:scale-95">
-                Search Network
-              </Button>
             </div>
-          </div>
-        </div>
-      </div>
 
-      {/* Main Content */}
-      <div className="flex-1 overflow-y-auto px-6 py-10 relative z-0 custom-scrollbar">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-4 gap-10">
-          {/* Enhanced Filters Sidebar */}
-          <div className="hidden lg:block space-y-8">
-            <div className="sticky top-10 space-y-8">
-              <div>
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-lg font-bold flex items-center gap-2">
-                    <Filter className="h-5 w-5 text-yellow-500" />
-                    Filters
-                  </h3>
-                  <button onClick={() => { setSearchQuery(''); setSelectedCategory([]); }} className="text-xs text-yellow-600 dark:text-yellow-400 font-bold hover:underline">Clear All</button>
-                </div>
-
-                <div className="space-y-6">
-                  <div className="bg-white dark:bg-[#1c1e24] p-6 rounded-2xl border border-gray-200 dark:border-white/5 shadow-sm">
-                    <Label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4 block underline decoration-yellow-500/50 underline-offset-4">
-                      Primary Trades
-                    </Label>
-                    <div className="space-y-3">
-                      {categories.map((category) => (
-                        <div key={category} className="flex items-center group cursor-pointer" onClick={() => {
-                          if (selectedCategory.includes(category)) {
-                            setSelectedCategory(selectedCategory.filter(c => c !== category));
-                          } else {
-                            setSelectedCategory([...selectedCategory, category]);
-                          }
-                        }}>
-                          <div className={cn(
-                            "w-5 h-5 rounded-md border flex items-center justify-center transition-all duration-200 mr-3",
-                            selectedCategory.includes(category)
-                              ? "bg-yellow-500 border-yellow-500 text-black"
-                              : "border-gray-300 dark:border-white/10 group-hover:border-yellow-400"
-                          )}>
-                            {selectedCategory.includes(category) && <CheckCircle2 className="w-3.5 h-3.5" />}
-                          </div>
-                          <span className={cn(
-                            "text-sm font-semibold transition-colors",
-                            selectedCategory.includes(category) ? "text-gray-900 dark:text-white" : "text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-200"
-                          )}>{category}</span>
-                        </div>
-                      ))}
+            <div>
+              <Label className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4 block underline decoration-yellow-500/30 underline-offset-4">Live Status</Label>
+              <div className="space-y-3">
+                {['Available Now', 'Accepting Bids', 'Busy'].map(status => (
+                  <div key={status} className="flex items-center group cursor-pointer" onClick={() => {
+                    setSelectedAvailability(prev => prev.includes(status) ? prev.filter(s => s !== status) : [...prev, status]);
+                  }}>
+                    <div className={cn(
+                      "w-4 h-4 rounded border flex items-center justify-center transition-all mr-3",
+                      selectedAvailability.includes(status) ? "bg-yellow-500 border-yellow-500 text-black" : "border-gray-300 dark:border-white/10 group-hover:border-yellow-400"
+                    )}>
+                      {selectedAvailability.includes(status) && <CheckCircle2 className="w-3 h-3" />}
                     </div>
+                    <span className={cn("text-xs font-bold transition-all", selectedAvailability.includes(status) ? "text-gray-900 dark:text-white" : "text-gray-500 dark:text-gray-400 group-hover:pl-1")}>{status}</span>
                   </div>
-
-                  <div className="bg-white dark:bg-[#1c1e24] p-6 rounded-2xl border border-gray-200 dark:border-white/5 shadow-sm">
-                    <Label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4 block underline decoration-yellow-500/50 underline-offset-4">
-                      Account Status
-                    </Label>
-                    <div className="space-y-3">
-                      {['Available Now', 'Accepting Bids', 'Busy'].map((s) => (
-                        <div key={s} className="flex items-center group cursor-pointer">
-                          <div className="w-5 h-5 rounded-md border border-gray-300 dark:border-white/10 group-hover:border-yellow-400 mr-3" />
-                          <span className="text-sm font-semibold text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-200">{s}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="bg-white dark:bg-[#1c1e24] p-6 rounded-2xl border border-gray-200 dark:border-white/5 shadow-sm">
-                    <Label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4 block underline decoration-yellow-500/50 underline-offset-4">
-                      Sort Results By
-                    </Label>
-                    <Select value={sortBy} onValueChange={setSortBy}>
-                      <SelectTrigger className="w-full bg-gray-50 dark:bg-black/20 border-gray-200 dark:border-white/10 font-bold rounded-xl text-xs">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent className="bg-white dark:bg-[#1c1e24] border-gray-200 dark:border-white/10 font-sans">
-                        <SelectItem value="best">Best Match</SelectItem>
-                        <SelectItem value="rating">Highest Rated</SelectItem>
-                        <SelectItem value="distance">Nearest First</SelectItem>
-                        <SelectItem value="projects">Most Experience</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>
+        </aside>
 
-          {/* Results List Redesign */}
-          <div className="lg:col-span-3 space-y-8">
-            <div className="flex items-center justify-between mb-4">
-              <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">
-                Showing <span className="text-gray-900 dark:text-white font-bold">{filteredContractors.length}</span> verified professionals found in <span className="underline decoration-yellow-500 underline-offset-2">{selectedLocation}</span>
-              </p>
+        {/* Main Feed */}
+        <main className="flex-1 overflow-y-auto p-8 custom-scrollbar">
+          <div className="max-w-6xl mx-auto">
+            <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center gap-2">
+                <Badge variant="secondary" className="bg-gray-100 dark:bg-white/5 text-gray-500 dark:text-gray-400 font-bold border-none px-3">
+                  Showing {filteredContractors.length} Partners
+                </Badge>
+              </div>
+              <Select value={sortBy} onValueChange={setSortBy}>
+                <SelectTrigger className="w-[180px] h-10 border-gray-200 dark:border-white/10 bg-white dark:bg-black/20 text-xs font-bold rounded-xl">
+                  <SelectValue placeholder="Sort by" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="best">Best Match</SelectItem>
+                  <SelectItem value="rating">Highest Rated</SelectItem>
+                  <SelectItem value="distance">Nearest First</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             {filteredContractors.length > 0 ? (
-              <div className="grid grid-cols-1 gap-6">
+              <div className={cn(
+                "grid gap-8",
+                viewMode === 'grid' ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3" : "grid-cols-1"
+              )}>
                 {filteredContractors.map((contractor) => (
                   <Card
                     key={contractor.id}
-                    className="group relative overflow-hidden bg-white dark:bg-[#1c1e24] border border-gray-200 dark:border-white/5 hover:border-yellow-400/50 transition-all duration-500 hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] dark:hover:shadow-[0_20px_40px_rgba(234,179,8,0.03)] cursor-pointer rounded-[2rem]"
-                    onClick={() => {
-                      setSelectedContractor(contractor);
-                      setIsDetailModalOpen(true);
-                    }}
+                    onClick={() => { setSelectedContractor(contractor); setIsDetailModalOpen(true); }}
+                    className={cn(
+                      "group relative bg-white dark:bg-[#1c1e24] border border-gray-200 dark:border-white/5 transition-all duration-500 hover:scale-[1.02] cursor-pointer rounded-[2.5rem] hover:shadow-[0_30px_60px_rgba(0,0,0,0.12)] overflow-hidden",
+                      viewMode === 'list' ? "flex flex-row items-center p-2 rounded-3xl h-40" : ""
+                    )}
                   >
-                    {/* Visual Accents */}
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-400/5 blur-[80px] rounded-full group-hover:bg-yellow-400/10 transition-colors pointer-events-none" />
+                    {/* Unique Tier Tag Overlay */}
+                    <div className="absolute top-6 right-6 z-10">
+                      <Badge className={cn("font-black text-[9px] uppercase tracking-tighter border-none px-3 py-1 shadow-lg bg-gradient-to-r", getTierColor(contractor.tier))}>
+                        {contractor.tier}
+                      </Badge>
+                    </div>
 
-                    <CardContent className="p-8">
-                      <div className="flex flex-col lg:flex-row gap-8 items-start">
-                        {/* Profile Section */}
+                    <CardContent className={cn("p-8", viewMode === 'list' ? "flex-1 py-4 flex gap-6 items-center" : "")}>
+                      <div className={cn("flex flex-col gap-5", viewMode === 'list' ? "flex-row flex-1 items-center" : "")}>
+
+                        {/* Avatar Circle with Glow */}
                         <div className="relative shrink-0">
-                          <div className="relative w-24 h-24 lg:w-32 lg:h-32 rounded-3xl overflow-hidden ring-4 ring-gray-100 dark:ring-white/5 shadow-2xl group-hover:scale-105 transition-transform duration-500">
-                            <img src={contractor.image} alt={contractor.name} className="w-full h-full object-cover" />
-                            {contractor.status === 'Available' && (
-                              <div className="absolute bottom-0 left-0 right-0 bg-green-500 text-white text-[10px] font-black uppercase tracking-tighter text-center py-1">Available Now</div>
-                            )}
+                          <div className="h-16 w-16 rounded-2xl bg-gray-50 dark:bg-black/40 border border-gray-200 dark:border-white/5 flex items-center justify-center text-2xl font-black text-yellow-600 dark:text-yellow-400 shadow-xl group-hover:border-yellow-400 transition-all">
+                            {contractor.avatar}
                           </div>
                           {contractor.verified && (
-                            <div className="absolute -top-3 -right-3 bg-yellow-400 text-black rounded-full p-2 shadow-xl ring-4 ring-white dark:ring-[#1c1e24] z-10">
-                              <ShieldCheck className="h-4 w-4" />
+                            <div className="absolute -bottom-1 -right-1 bg-white dark:bg-[#1c1e24] rounded-full p-1 border-2 border-green-500/20 shadow-md">
+                              <ShieldCheck className="h-4 w-4 text-green-500 fill-green-500/10" />
                             </div>
                           )}
                         </div>
 
-                        {/* Content Section */}
                         <div className="flex-1 min-w-0">
-                          <div className="flex flex-col gap-4">
-                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                              <div>
-                                <h3 className="text-2xl font-black text-gray-900 dark:text-white group-hover:text-yellow-600 dark:group-hover:text-yellow-400 transition-colors tracking-tight leading-none mb-2">
-                                  {contractor.name}
-                                </h3>
-                                <div className="flex items-center gap-4">
-                                  <div className="flex items-center gap-1.5">
-                                    <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                                    <span className="font-black text-lg">{contractor.rating}</span>
-                                    <span className="text-gray-400 text-sm font-bold">({contractor.reviews})</span>
-                                  </div>
-                                  <span className="text-gray-200 dark:text-white/10">|</span>
-                                  <div className="flex items-center gap-1.5 text-gray-500 dark:text-gray-400 text-sm font-bold">
-                                    <Building2 className="w-4 h-4" />
-                                    {contractor.projects}+ Projects
-                                  </div>
-                                </div>
-                              </div>
-
-                              <div className="flex flex-wrap gap-2">
-                                {contractor.tier === 'Platinum' && (
-                                  <Badge className="bg-black text-white px-3 py-1 font-black text-[10px] uppercase tracking-widest border-none">
-                                    <Trophy className="w-3 h-3 mr-1.5 text-yellow-500" /> Platinum Partner
-                                  </Badge>
-                                )}
-                                {contractor.tier === 'Gold' && (
-                                  <Badge className="bg-yellow-400 text-black px-3 py-1 font-black text-[10px] uppercase tracking-widest border-none">
-                                    Gold Member
-                                  </Badge>
-                                )}
-                              </div>
-                            </div>
-
-                            <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed line-clamp-2 italic font-medium">
-                              "{contractor.description}"
-                            </p>
-
-                            <div className="flex flex-wrap gap-2 pt-2">
-                              {contractor.specialties.map((s) => (
-                                <span key={s} className="px-3 py-1 rounded-full bg-gray-100 dark:bg-white/5 text-[10px] font-black uppercase text-gray-600 dark:text-gray-400 group-hover:bg-yellow-500/10 group-hover:text-yellow-600 transition-colors">
-                                  {s}
-                                </span>
-                              ))}
-                            </div>
-
-                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pt-6 mt-2 border-t border-gray-100 dark:border-white/5">
-                              <div className="flex items-center gap-6 text-sm">
-                                <div className="flex items-center gap-2 group/loc">
-                                  <div className="w-8 h-8 rounded-full bg-gray-100 dark:bg-white/5 flex items-center justify-center group-hover/loc:bg-yellow-400 transition-colors">
-                                    <MapPin className="w-4 h-4 text-gray-400 dark:text-gray-600 group-hover/loc:text-black" />
-                                  </div>
-                                  <div>
-                                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Location</p>
-                                    <p className="font-bold">{contractor.location}</p>
-                                  </div>
-                                </div>
-                                <div className="flex items-center gap-2 group/exp">
-                                  <div className="w-8 h-8 rounded-full bg-gray-100 dark:bg-white/5 flex items-center justify-center group-hover/exp:bg-yellow-400 transition-colors">
-                                    <Briefcase className="w-4 h-4 text-gray-400 dark:text-gray-600 group-hover/exp:text-black" />
-                                  </div>
-                                  <div>
-                                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Experience</p>
-                                    <p className="font-bold">{contractor.yearsExperience} Years</p>
-                                  </div>
-                                </div>
-                              </div>
-
-                              <div className="flex items-center gap-3">
-                                <Button variant="ghost" size="icon" className="h-12 w-12 rounded-2xl bg-gray-100 dark:bg-white/5 text-gray-400 hover:bg-yellow-400 hover:text-black transition-all group-hover:scale-105 active:scale-95" onClick={(e) => { e.stopPropagation(); toast({ title: "Profile Linked", description: `Sharing profile for ${contractor.name}` }) }}>
-                                  <ExternalLink className="w-5 h-5" />
-                                </Button>
-                                <Button
-                                  className="h-12 px-8 bg-black dark:bg-yellow-500 text-white dark:text-black font-black uppercase tracking-tighter text-sm rounded-2xl transition-all shadow-xl shadow-black/10 dark:shadow-yellow-500/20 active:scale-95 hover:bg-yellow-500 dark:hover:bg-yellow-400 hover:text-black"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleInvite(contractor.name);
-                                  }}
-                                >
-                                  Invite to Bid
-                                </Button>
-                              </div>
-                            </div>
+                          <div className="flex items-center gap-2 text-[10px] font-black uppercase text-yellow-600 tracking-widest mb-1">
+                            <ShieldCheck className="w-3 h-3" />
+                            Partner ID: #B2B-00{contractor.id}4
                           </div>
+                          <h4 className="text-xl font-black text-gray-900 dark:text-white leading-tight mb-2 truncate group-hover:text-yellow-600 dark:group-hover:text-yellow-400 transition-colors">
+                            {contractor.name}
+                          </h4>
+                          <div className="flex flex-wrap items-center gap-3 text-xs text-gray-400 font-bold">
+                            <span className="flex items-center gap-1"><MapPin className="w-3 h-3" /> {contractor.location}</span>
+                            <span>•</span>
+                            <span className="flex items-center gap-1 text-yellow-500"><Star className="w-3 h-3 fill-current" /> {contractor.rating} ({contractor.reviews})</span>
+                          </div>
+                        </div>
+
+                        {viewMode === 'grid' && (
+                          <div className="pt-5 mt-auto border-t border-gray-100 dark:border-white/5 flex flex-wrap gap-1.5">
+                            {contractor.specialties.slice(0, 3).map(s => (
+                              <Badge key={s} variant="outline" className="text-[9px] font-bold border-gray-200 dark:border-white/10 text-gray-500 dark:text-gray-400">
+                                {s.toUpperCase()}
+                              </Badge>
+                            ))}
+                          </div>
+                        )}
+
+                        <div className={cn("flex items-center justify-between gap-4 mt-2", viewMode === 'list' ? "flex-col justify-center items-end" : "")}>
+                          {viewMode === 'grid' && (
+                            <div className="flex items-center gap-3">
+                              <div className="flex flex-col">
+                                <p className="text-[8px] font-black uppercase text-gray-400 tracking-tight">Status</p>
+                                <p className={cn("text-[10px] font-bold", contractor.status === 'Available' ? "text-green-500" : "text-yellow-600")}>{contractor.status}</p>
+                              </div>
+                              <div className="flex flex-col">
+                                <p className="text-[8px] font-black uppercase text-gray-400 tracking-tight">Exp.</p>
+                                <p className="text-[10px] font-bold text-gray-900 dark:text-white">{contractor.yearsExperience}yr</p>
+                              </div>
+                            </div>
+                          )}
+                          <Button className="bg-black dark:bg-white text-white dark:text-black font-black uppercase text-[9px] tracking-widest rounded-xl hover:bg-yellow-500 dark:hover:bg-yellow-400 transition-all h-10 px-6 group-hover:shadow-2xl">
+                            Send Invite
+                          </Button>
                         </div>
                       </div>
                     </CardContent>
@@ -444,115 +406,97 @@ const Directory = () => {
                 ))}
               </div>
             ) : (
-              <div className="flex flex-col items-center justify-center py-24 bg-white dark:bg-[#1c1e24] rounded-[3rem] border-4 border-dashed border-gray-100 dark:border-white/5 animate-pulse">
-                <Search className="w-20 h-20 text-gray-100 dark:text-white/5 mb-6" />
-                <h3 className="text-2xl font-black tracking-tight">Expansion Needed</h3>
-                <p className="text-gray-500 font-bold mt-2">No professionals found matching these specific filters.</p>
-                <Button variant="link" onClick={() => { setSearchQuery(''); setSelectedCategory([]); }} className="mt-4 text-yellow-500 font-black uppercase text-sm tracking-widest">Widen Search Radius</Button>
+              <div className="flex flex-col items-center justify-center py-32 bg-gray-50/50 dark:bg-black/20 rounded-[3rem] border-4 border-dashed border-gray-200 dark:border-white/5">
+                <AlertCircle className="w-16 h-16 text-gray-200 dark:text-white/5 mb-6" />
+                <h3 className="text-2xl font-black tracking-tight mb-2">No matches found</h3>
+                <p className="text-gray-500 font-bold max-w-xs text-center text-sm">We couldn't find any partners matching your criteria. Broaden your search signals.</p>
+                <Button variant="link" onClick={() => { setSearchQuery(''); setSelectedCategory([]); }} className="mt-4 text-yellow-500 font-black uppercase tracking-widest text-xs">Clear Signals</Button>
               </div>
             )}
           </div>
-        </div>
+        </main>
       </div>
 
-      {/* Contractor Detail Modal - Redesign */}
+      {/* Unique Contractor Details Modal */}
       <Dialog open={isDetailModalOpen} onOpenChange={setIsDetailModalOpen}>
-        <DialogContent className="sm:max-w-[800px] p-0 overflow-hidden bg-white dark:bg-[#0f1115] border-none shadow-[0_0_100px_rgba(0,0,0,0.5)]">
+        <DialogContent className="max-w-md p-0 overflow-hidden bg-white dark:bg-[#111318] border-gray-200 dark:border-white/10 shadow-2xl rounded-[1.5rem]">
           {selectedContractor && (
             <div className="flex flex-col">
-              {/* Cover/Header */}
-              <div className="relative h-48 bg-gray-900 overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent z-10 opacity-70" />
-                <img src="https://images.unsplash.com/photo-1541888946425-d81bb19480c5?auto=format&fit=crop&q=80&w=1200" className="w-full h-full object-cover opacity-40 grayscale" />
-
-                <div className="absolute -bottom-10 left-10 z-20">
-                  <div className="relative">
-                    <div className="w-32 h-32 rounded-[2rem] overflow-hidden ring-8 ring-white dark:ring-[#0f1115] shadow-2xl">
-                      <img src={selectedContractor.image} className="w-full h-full object-cover" />
+              <div className="px-8 py-6 border-b border-gray-100 dark:border-white/5 bg-gray-50/30">
+                <div className="flex gap-4 items-center mb-4">
+                  <div className="h-14 w-14 rounded-2xl bg-yellow-400 flex items-center justify-center text-black font-black text-xl">
+                    {selectedContractor.avatar}
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <Badge variant="outline" className={cn("text-[8px] font-black tracking-widest border-none px-2 py-0.5", getTierColor(selectedContractor.tier))}>
+                        {selectedContractor.tier.toUpperCase()}
+                      </Badge>
+                      {selectedContractor.verified && <ShieldCheck className="w-3 h-3 text-green-500" />}
                     </div>
-                    {selectedContractor.verified && (
-                      <div className="absolute bottom-0 right-0 bg-yellow-400 text-black p-2 rounded-full ring-4 ring-white dark:ring-[#0f1115]">
-                        <ShieldCheck className="w-6 h-6" />
-                      </div>
-                    )}
+                    <h2 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">{selectedContractor.name}</h2>
                   </div>
                 </div>
               </div>
 
-              <div className="px-10 pt-16 pb-10">
-                <div className="flex flex-col lg:flex-row justify-between items-start gap-8">
-                  <div className="flex-1 space-y-4">
-                    <div>
-                      <h2 className="text-4xl font-black tracking-tight leading-none mb-2">{selectedContractor.name}</h2>
-                      <div className="flex flex-wrap items-center gap-4 text-gray-500 font-bold text-sm">
-                        <span className="flex items-center gap-1.5"><MapPin className="w-4 h-4" /> {selectedContractor.location}</span>
-                        <span>•</span>
-                        <span className="flex items-center gap-1.5 text-yellow-500"><Star className="w-4 h-4 fill-current" /> {selectedContractor.rating} ({selectedContractor.reviews})</span>
-                        <span>•</span>
-                        <span className="flex items-center gap-1.5 text-green-500 italic"><ShieldCheck className="w-4 h-4" /> Compliance Mastered</span>
-                      </div>
-                    </div>
-
-                    <div className="bg-gray-50 dark:bg-black/20 p-6 rounded-3xl border border-gray-100 dark:border-white/5">
-                      <h4 className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3">About the Professional</h4>
-                      <p className="text-gray-600 dark:text-gray-300 leading-relaxed font-medium">
-                        {selectedContractor.description}
-                      </p>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="p-4 rounded-2xl bg-white dark:bg-white/5 border border-gray-100 dark:border-white/5">
-                        <h4 className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Primary Trade</h4>
-                        <p className="font-black text-lg">{selectedContractor.specialties[0]}</p>
-                      </div>
-                      <div className="p-4 rounded-2xl bg-white dark:bg-white/5 border border-gray-100 dark:border-white/5">
-                        <h4 className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Compliance Score</h4>
-                        <p className="font-black text-lg text-green-500">{selectedContractor.complianceScore}%</p>
-                      </div>
-                    </div>
+              <div className="px-8 py-6 space-y-6">
+                <div className="grid grid-cols-3 gap-2 border-b border-gray-100 dark:border-white/5 pb-4">
+                  <div className="text-center">
+                    <p className="text-[8px] font-black text-gray-400 mb-0.5 uppercase">Rating</p>
+                    <p className="text-xs font-bold flex items-center justify-center gap-1 text-yellow-500"><Star className="w-3 h-3 fill-current" /> {selectedContractor.rating}</p>
                   </div>
+                  <div className="text-center border-l border-r border-gray-100 dark:border-white/5">
+                    <p className="text-[8px] font-black text-gray-400 mb-0.5 uppercase">Experience</p>
+                    <p className="text-xs font-bold text-gray-900 dark:text-white">{selectedContractor.yearsExperience}yrs</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-[8px] font-black text-gray-400 mb-0.5 uppercase">Projects</p>
+                    <p className="text-xs font-bold text-gray-900 dark:text-white">{selectedContractor.projects}</p>
+                  </div>
+                </div>
 
-                  <div className="lg:w-72 space-y-6">
-                    <div className="flex flex-col gap-3">
-                      <Button className="w-full h-14 bg-yellow-400 hover:bg-yellow-500 text-black font-black uppercase text-sm tracking-widest rounded-2xl shadow-xl shadow-yellow-500/20" onClick={() => {
-                        handleInvite(selectedContractor.name);
-                        setIsDetailModalOpen(false);
-                      }}>Invite to Bid</Button>
-                      <Button variant="outline" className="w-full h-14 border-gray-200 dark:border-white/10 font-black uppercase text-sm tracking-widest rounded-2xl group">
-                        <MessageSquare className="w-4 h-4 mr-2 group-hover:text-yellow-500" /> Message
-                      </Button>
+                <div className="space-y-4">
+                  <h4 className="text-[10px] font-black uppercase tracking-widest text-gray-400">Core Specialties</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedContractor.specialties.map((s: string) => (
+                      <Badge key={s} className="bg-gray-100 dark:bg-white/5 text-gray-600 dark:text-gray-400 border-none font-bold text-[10px]">
+                        {s}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="p-4 rounded-xl bg-gray-50 dark:bg-black/20 space-y-3">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-gray-400 font-bold uppercase tracking-widest text-[9px]">Contact Data</span>
+                    <Badge className="bg-green-500/10 text-green-500 border-none text-[8px] uppercase">{selectedContractor.status}</Badge>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] text-gray-500">Official Email</span>
+                      <span className="text-[10px] font-bold text-gray-900 dark:text-white">{selectedContractor.email}</span>
                     </div>
-
-                    <div className="space-y-4 pt-4">
-                      <h4 className="text-[10px] font-black uppercase tracking-widest text-gray-400">Verifications</h4>
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between p-3 rounded-xl bg-green-500/10 text-green-600 dark:text-green-500 border border-green-500/20">
-                          <span className="text-xs font-black uppercase tracking-tighter">Bonded & Insured</span>
-                          <CircleCheck className="w-4 h-4" />
-                        </div>
-                        <div className="flex items-center justify-between p-3 rounded-xl bg-green-500/10 text-green-600 dark:text-green-500 border border-green-500/20">
-                          <span className="text-xs font-black uppercase tracking-tighter">Safety Record Clear</span>
-                          <ShieldCheck className="w-4 h-4" />
-                        </div>
-                        <div className="flex items-center justify-between p-3 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-500 border border-blue-500/20">
-                          <span className="text-xs font-black uppercase tracking-tighter">License #GC-99482</span>
-                          <FileText className="w-4 h-4" />
-                        </div>
-                      </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] text-gray-500">Phone Signal</span>
+                      <span className="text-[10px] font-bold text-gray-900 dark:text-white">{selectedContractor.phone}</span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="px-10 py-6 bg-gray-50 dark:bg-black/30 border-t border-gray-100 dark:border-white/5 flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <p className="text-xs font-bold text-gray-500">Contact Method Preference:</p>
-                  <div className="flex items-center gap-3">
-                    <Phone className="w-4 h-4 text-gray-400" />
-                    <Mail className="w-4 h-4 text-gray-400" />
+              <div className="px-8 py-4 bg-gray-50/50 dark:bg-transparent border-t border-gray-100 dark:border-white/5 flex flex-col gap-3">
+                <Button onClick={() => { handleInvite(selectedContractor.name); setIsDetailModalOpen(false); }} className="w-full h-11 bg-black dark:bg-yellow-500 text-white dark:text-black font-black uppercase text-[10px] tracking-widest rounded-xl hover:bg-yellow-600 transition-all">
+                  Onboard to Project
+                </Button>
+                <div className="flex justify-between items-center opacity-60">
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
+                    <span className="text-[8px] font-black text-gray-400 uppercase tracking-widest">Insured & Bonded</span>
                   </div>
+                  <button onClick={() => setIsDetailModalOpen(false)} className="text-[9px] font-black uppercase text-gray-400 hover:text-black transition-colors">
+                    Dismiss
+                  </button>
                 </div>
-                <Button variant="ghost" className="text-gray-400 font-bold" onClick={() => setIsDetailModalOpen(false)}>Close Profile</Button>
               </div>
             </div>
           )}

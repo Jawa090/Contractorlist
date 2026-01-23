@@ -89,25 +89,9 @@ const Header = ({ onMenuClick }: HeaderProps) => {
               <Menu className="w-5 h-5" />
             </Button>
 
-            {/* Page Title */}
-            <div className="hidden lg:block">
-              <h1 className="text-xl font-semibold text-gray-900 dark:text-white">
-                {getPageTitle()}
-              </h1>
-            </div>
+        
 
-            {/* Global Search */}
-            <div className="hidden md:flex flex-1 max-w-md">
-              <div className="relative w-full">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <Input
-                  placeholder="Search projects, bids, documents..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-9 h-9 border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950"
-                />
-              </div>
-            </div>
+         
           </div>
 
           {/* Right Section - Actions, Theme & Profile */}

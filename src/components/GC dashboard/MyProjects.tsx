@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { getProjects, createProject as createProjectAPI, initializeFreshUserData } from '@/services/gcDashboardService';
+import { getProjects, createProject as createProjectAPI, updateProject as updateProjectAPI, initializeFreshUserData } from '@/services/gcDashboardService';
+import EnterpriseTeamManagement from './EnterpriseTeamManagement';
+import ProjectDocuments from './ProjectDocuments';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
@@ -13,7 +15,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogFooter
+  DialogFooter,
 } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
@@ -26,19 +28,7 @@ import {
   List,
   UserPlus,
   ArrowRight,
-  Avatar,
-  Building2,
-  Calendar,
-  Briefcase,
-  TrendingUp,
-  Clock,
-  MessageSquare,
-  FileText,
-  Users,
-  CheckCircle2,
-  AlertCircle,
-  Trophy,
-  Activity
+  Avatar, MessageSquare, FileText, Users
 } from 'lucide-react';
 import { Avatar as UIAvatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
@@ -75,6 +65,10 @@ const MyProjects = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedProjectData, setSelectedProjectData] = useState<any>(null);
   const [showProjectDetails, setShowProjectDetails] = useState(false);
+  const [activeTab, setActiveTab] = useState<'projects' | 'team' | 'documents'>('projects');
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingProjectId, setEditingProjectId] = useState<number | null>(null);
 
   // Load Projects from Service
   useEffect(() => {
@@ -104,42 +98,70 @@ const MyProjects = () => {
     return () => window.removeEventListener('openNewProjectModal', handleOpenModal);
   }, []);
 
-  const handleCreateProject = async () => {
+  const resetForm = () => {
+    setNewProjectName('');
+    setNewProjectLocation('');
+    setNewProjectClient('');
+    setNewProjectBudget('');
+    setNewProjectDuration('');
+    setNewProjectStatus('Planning');
+    setNewProjectDescription('');
+    setIsEditing(false);
+    setEditingProjectId(null);
+  };
+
+  const handleSaveProject = async () => {
     try {
-      const newProject = {
+      const projectData = {
         name: newProjectName,
         location: newProjectLocation,
         client: newProjectClient,
-        status: newProjectStatus,
+        status: newProjectStatus as any,
         budget: Number(newProjectBudget) || 0,
         duration: Number(newProjectDuration) || 0,
         description: newProjectDescription
       };
 
-      const created = await createProjectAPI(newProject);
-      setProjects([created, ...projects]);
+      if (isEditing && editingProjectId) {
+        const updated = await updateProjectAPI(editingProjectId, projectData as any);
+        setProjects(projects.map(p => p.id === editingProjectId ? updated : p));
+        toast({
+          title: "Project Updated",
+          description: "Project details have been successfully updated.",
+        });
+      } else {
+        const created = await createProjectAPI(projectData);
+        setProjects([created, ...projects]);
+        toast({
+          title: "Project Created",
+          description: "Your new project has been successfully initialized.",
+        });
+        // Only show invite modal for new projects
+        setTimeout(() => setShowInviteModal(true), 500);
+      }
+
       setShowNewProject(false);
-      toast({
-        title: "Project Created",
-        description: "Your new project has been successfully initialized.",
-      });
-      // Reset form
-      setNewProjectName('');
-      setNewProjectLocation('');
-      setNewProjectClient('');
-      setNewProjectBudget('');
-
-      // Ask to invite team/subcontractors
-      setInvitedMembers([]); // Reset invited list
-      setTimeout(() => setShowInviteModal(true), 500);
-
+      resetForm();
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to create project",
+        description: `Failed to ${isEditing ? 'update' : 'create'} project`,
         variant: "destructive"
       });
     }
+  };
+
+  const handleEditClick = (e: React.MouseEvent, project: any) => {
+    e.stopPropagation();
+    setIsEditing(true);
+    setEditingProjectId(project.id);
+    setNewProjectName(project.name || '');
+    setNewProjectLocation(project.location || '');
+    setNewProjectClient(project.client || '');
+    setNewProjectBudget(project.budget?.toString() || '');
+    setNewProjectStatus(project.status || 'Planning');
+    setNewProjectDescription(project.description || '');
+    setShowNewProject(true);
   };
 
   const goToDirectory = () => {
@@ -167,518 +189,472 @@ const MyProjects = () => {
   };
 
   return (
-    <div className="min-h-full bg-gray-50 dark:bg-[#0f1115] text-gray-900 dark:text-white p-8 font-sans transition-colors duration-500 overflow-x-hidden">
+    <div className="min-h-full bg-gray-50 dark:bg-[#0f1115] text-gray-900 dark:text-white p-6 font-sans transition-colors duration-300">
 
       {/* Background Ambience */}
-      <div className="fixed inset-0 pointer-events-none">
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-[20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-yellow-400/5 dark:bg-yellow-600/5 blur-[120px]" />
-        <div className="absolute bottom-[0%] right-[-5%] w-[40%] h-[40%] rounded-full bg-blue-500/5 dark:bg-blue-600/5 blur-[100px]" />
       </div>
 
-      <div className="max-w-7xl mx-auto space-y-10 relative z-10">
+      <div className="max-w-7xl mx-auto space-y-6 relative z-10">
 
-        {/* Dynamic Header */}
-        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-6">
-          <div className="space-y-2">
-            <div className="flex items-center gap-2 mb-1">
-              <div className="h-2 w-10 bg-yellow-400 rounded-full" />
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Portfolio Hub</span>
+        {/* Header Actions */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div>
+            <div className="flex items-center gap-6 mb-1">
+              <button
+                onClick={() => setActiveTab('projects')}
+                className={cn(
+                  "text-2xl font-bold transition-all",
+                  activeTab === 'projects' ? "text-gray-900 dark:text-white" : "text-gray-400 dark:text-gray-600 hover:text-gray-500"
+                )}
+              >
+                My Projects
+              </button>
+              <button
+                onClick={() => setActiveTab('team')}
+                className={cn(
+                  "text-2xl font-bold transition-all",
+                  activeTab === 'team' ? "text-gray-900 dark:text-white" : "text-gray-400 dark:text-gray-600 hover:text-gray-500"
+                )}
+              >
+                Team
+              </button>
+              <button
+                onClick={() => setActiveTab('documents')}
+                className={cn(
+                  "text-2xl font-bold transition-all",
+                  activeTab === 'documents' ? "text-gray-900 dark:text-white" : "text-gray-400 dark:text-gray-600 hover:text-gray-500"
+                )}
+              >
+                Documents
+              </button>
             </div>
-            <h1 className="text-4xl md:text-5xl font-black text-gray-900 dark:text-white tracking-tighter leading-none">
-              My <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 to-yellow-600">Active Pipeline</span>
-            </h1>
-            <p className="text-gray-500 dark:text-gray-400 font-medium text-lg max-w-lg">
-              Real-time monitoring and coordination of your entire construction fleet.
+            <p className="text-gray-500 dark:text-gray-400 text-sm">
+              {activeTab === 'projects' ? 'Manage and track all your construction jobs' :
+                activeTab === 'team' ? 'Review team members and contractor onboarding status' :
+                  'Centralized storage for all project related documents'}
             </p>
           </div>
 
-          <div className="flex items-center gap-4 w-full lg:w-auto">
-            <div className="hidden sm:flex bg-white dark:bg-[#1c1e24] p-1.5 rounded-2xl border border-gray-200 dark:border-white/5 shadow-xl">
-              <button
-                onClick={() => setViewMode('card')}
-                className={cn("p-2 rounded-xl transition-all", viewMode === 'card' ? "bg-gray-100 dark:bg-white/10 text-black dark:text-white shadow-inner" : "text-gray-400 hover:text-black dark:hover:text-white")}
-              >
-                <Grid3x3 size={20} />
-              </button>
-              <button
-                onClick={() => setViewMode('table')}
-                className={cn("p-2 rounded-xl transition-all", viewMode === 'table' ? "bg-gray-100 dark:bg-white/10 text-black dark:text-white shadow-inner" : "text-gray-400 hover:text-black dark:hover:text-white")}
-              >
-                <List size={20} />
-              </button>
-            </div>
-            <Button
-              onClick={() => setShowNewProject(true)}
-              className="h-14 px-8 bg-yellow-400 hover:bg-yellow-500 dark:bg-yellow-500 dark:hover:bg-yellow-400 text-black font-black uppercase text-xs tracking-widest rounded-2xl shadow-xl shadow-yellow-500/20 active:scale-95 transition-all w-full lg:w-auto"
-            >
-              <Plus size={20} className="mr-2 stroke-[3]" /> Initialize Project
-            </Button>
-          </div>
-        </div>
-
-        {/* Global Pipeline Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {[
-            { label: 'Total Projects', value: projects.length, icon: Building2, color: 'text-blue-500' },
-            { label: 'On Schedule', value: projects.filter(p => p.status === 'On Track').length, icon: CheckCircle2, color: 'text-green-500' },
-            { label: 'Pending Bids', value: projects.filter(p => p.status === 'Bidding').length, icon: Clock, color: 'text-yellow-500' },
-            { label: 'Pipeline Value', value: '$84.2M', icon: TrendingUp, color: 'text-purple-500' }
-          ].map((stat, i) => (
-            <div key={i} className="bg-white/50 dark:bg-[#1c1e24]/50 backdrop-blur-xl p-6 rounded-[2rem] border border-gray-200 dark:border-white/5 shadow-sm group hover:border-yellow-500/30 transition-all">
-              <div className="flex justify-between items-start mb-4">
-                <div className={cn("p-3 rounded-2xl bg-gray-100 dark:bg-black/20 group-hover:bg-yellow-500/10 transition-colors", stat.color.replace('text', 'text-'))}>
-                  <stat.icon size={20} className={stat.color} />
-                </div>
-                <Activity size={16} className="text-gray-200 dark:text-white/5" />
+          {activeTab === 'projects' && (
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              <div className="relative flex-1 sm:w-64">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500" />
+                <Input
+                  placeholder="Search projects..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-9 bg-white dark:bg-[#1c1e24] border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-yellow-500/50"
+                />
               </div>
-              <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">{stat.label}</p>
-              <div className="text-3xl font-black text-gray-900 dark:text-white">{stat.value}</div>
+              <div className="flex bg-white dark:bg-[#1c1e24] rounded-lg p-1 border border-gray-200 dark:border-white/10">
+                <button
+                  onClick={() => setViewMode('card')}
+                  className={`p-1.5 rounded-md transition-all ${viewMode === 'card' ? 'bg-gray-100 dark:bg-white/10 text-black dark:text-white' : 'text-gray-400 dark:text-gray-500 hover:text-black dark:hover:text-white'}`}
+                >
+                  <Grid3x3 size={18} />
+                </button>
+                <button
+                  onClick={() => setViewMode('table')}
+                  className={`p-1.5 rounded-md transition-all ${viewMode === 'table' ? 'bg-gray-100 dark:bg-white/10 text-black dark:text-white' : 'text-gray-400 dark:text-gray-500 hover:text-black dark:hover:text-white'}`}
+                >
+                  <List size={18} />
+                </button>
+              </div>
+              <Button onClick={() => { resetForm(); setShowNewProject(true); }} className="bg-yellow-400 hover:bg-yellow-500 dark:bg-yellow-500 dark:hover:bg-yellow-400 text-black font-semibold">
+                <Plus size={18} className="mr-2" /> New Project
+              </Button>
             </div>
-          ))}
+          )}
         </div>
 
-        {/* Content Controls */}
-        <div className="flex items-center gap-4 relative">
-          <div className="relative flex-1">
-            <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-            <Input
-              placeholder="Search by project name, client, or site location..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="h-14 pl-14 pr-6 bg-white dark:bg-[#1c1e24] border-gray-200 dark:border-white/5 rounded-[1.25rem] text-lg focus:ring-yellow-500/20 shadow-sm"
-            />
-          </div>
-        </div>
+        {/* Project Grid / List / Team Management */}
+        {activeTab === 'projects' ? (
+          viewMode === 'card' ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredProjects.map((project, index) => (
+                <div
+                  key={project.id || index}
+                  className="group relative bg-white dark:bg-[#1c1e24]/80 backdrop-blur-md rounded-2xl border border-gray-200 dark:border-white/5 hover:border-yellow-400 dark:hover:border-yellow-500/30 transition-all duration-300 overflow-hidden cursor-pointer hover:shadow-lg dark:hover:shadow-yellow-500/5"
+                  onClick={() => handleViewDetails(project)}
+                >
+                  {/* Left Status Stripe */}
+                  <div className={`absolute left-0 top-0 bottom-0 w-1 ${project.status === 'On Track' ? 'bg-green-500' :
+                    project.status === 'Planning' ? 'bg-yellow-500' :
+                      project.status === 'Delayed' ? 'bg-red-500' : 'bg-gray-500'
+                    }`} />
 
-        {/* Projects Render */}
-        {viewMode === 'card' ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredProjects.map((project, index) => (
-              <div
-                key={project.id || index}
-                className="group relative bg-white dark:bg-[#1c1e24] rounded-[2.5rem] border border-gray-200 dark:border-white/5 hover:border-yellow-400 dark:hover:border-yellow-500/30 transition-all duration-500 overflow-hidden cursor-pointer hover:shadow-2xl hover:-translate-y-1"
-                onClick={() => handleViewDetails(project)}
-              >
-                <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-400/5 blur-[80px] rounded-full group-hover:bg-yellow-400/10 transition-colors" />
-
-                <div className="p-8">
-                  <div className="flex justify-between items-start mb-6">
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-gray-400">
-                        <Layers className="w-3 h-3 text-yellow-500" />
-                        ID: #PJ-00{index + 1}2
+                  <div className="p-6">
+                    {/* Project Header */}
+                    <div className="mb-4">
+                      <div className="flex justify-between items-start mb-1">
+                        <h3 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-yellow-600 dark:group-hover:text-yellow-400 transition-colors line-clamp-1 pr-2">
+                          {project.name}
+                        </h3>
+                        <div className="flex items-center gap-2">
+                          <Badge variant="outline" className={`border-0 bg-gray-100 dark:bg-white/5 whitespace-nowrap ${project.status === 'On Track' ? 'text-green-600 dark:text-green-400' :
+                            project.status === 'Planning' ? 'text-yellow-600 dark:text-yellow-400' :
+                              project.status === 'Delayed' ? 'text-red-600 dark:text-red-400' : 'text-gray-500 dark:text-gray-400'
+                            }`}>
+                            {project.status}
+                          </Badge>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-7 w-7 text-gray-400 hover:text-yellow-500 transition-colors"
+                            onClick={(e) => handleEditClick(e, project)}
+                          >
+                            <FileText size={14} />
+                          </Button>
+                        </div>
                       </div>
-                      <h3 className="text-2xl font-black text-gray-900 dark:text-white group-hover:text-yellow-600 dark:group-hover:text-yellow-400 transition-colors leading-tight truncate max-w-[200px]">
-                        {project.name}
-                      </h3>
+                      <p className="text-sm text-gray-500 dark:text-gray-500">{project.client}</p>
                     </div>
-                    <Badge className={cn(
-                      "rounded-xl px-3 py-1 font-black text-[10px] uppercase tracking-tighter border-none",
-                      project.status === 'On Track' ? "bg-green-500/10 text-green-500" :
-                        project.status === 'Planning' ? "bg-yellow-500/10 text-yellow-500" :
-                          project.status === 'Delayed' ? "bg-red-500/10 text-red-500" : "bg-gray-100 dark:bg-white/5 text-gray-500"
-                    )}>
-                      {project.status === 'On Track' ? 'ACTIVE' : project.status.toUpperCase()}
-                    </Badge>
-                  </div>
 
-                  <div className="space-y-6">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="bg-gray-50 dark:bg-black/20 p-4 rounded-2xl border border-gray-100 dark:border-white/5">
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Owner</p>
-                        <p className="text-sm font-bold truncate">{project.client}</p>
+                    {/* Location & Budget Grid */}
+                    <div className="grid grid-cols-2 gap-4 mb-6">
+                      <div>
+                        <p className="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-wide mb-1">Location</p>
+                        <p className="text-sm text-gray-700 dark:text-gray-200 flex items-center gap-1">
+                          <MapPin size={12} className="text-gray-400 dark:text-gray-500" />
+                          {project.location}
+                        </p>
                       </div>
-                      <div className="bg-gray-50 dark:bg-black/20 p-4 rounded-2xl border border-gray-100 dark:border-white/5">
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Budget</p>
-                        <p className="text-sm font-black font-mono">
-                          {typeof project.budget === 'object' ? project.budget.estimated : project.budget}
+                      <div>
+                        <p className="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-wide mb-1">Budget</p>
+                        <p className="text-sm text-gray-900 dark:text-white font-mono">
+                          {typeof project.budget === 'object' && project.budget !== null
+                            ? project.budget.estimated || '$0.00'
+                            : project.budget}
                         </p>
                       </div>
                     </div>
 
-                    <div className="space-y-2">
-                      <div className="flex justify-between text-[10px] font-black uppercase tracking-widest mb-1 text-gray-400">
-                        <span>Completion Depth</span>
-                        <span className="text-gray-900 dark:text-white">{project.progress}%</span>
+                    {/* Progress & Circular Indicator */}
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1 mr-4">
+                        <div className="flex justify-between text-xs mb-1.5">
+                          <span className="text-gray-500">Completion</span>
+                          <span className="text-gray-900 dark:text-white">{project.completion}</span>
+                        </div>
+                        <Progress value={project.progress} className="h-1.5 bg-gray-100 dark:bg-white/10">
+                          <div className="h-full bg-gradient-to-r from-yellow-400 to-yellow-500 dark:from-yellow-600 dark:to-yellow-400" style={{ width: `${project.progress}%` }} />
+                        </Progress>
                       </div>
-                      <div className="h-3 bg-gray-100 dark:bg-black/40 rounded-full overflow-hidden p-0.5">
-                        <div
-                          className="h-full bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full shadow-[0_0_10px_rgba(234,179,8,0.3)] transition-all duration-1000"
-                          style={{ width: `${project.progress}%` }}
-                        />
-                      </div>
-                    </div>
 
-                    <div className="flex items-center justify-between pt-4 mt-2 border-t border-gray-100 dark:border-white/5">
-                      <div className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-500 font-bold">
-                        <MapPin size={14} className="text-yellow-500" />
-                        {project.location}
-                      </div>
-                      <div className="flex -space-x-3">
-                        {existingTeamMembers.slice(0, 3).map((m, i) => (
-                          <UIAvatar key={i} className="h-8 w-8 border-4 border-white dark:border-[#1c1e24] ring-1 ring-gray-100 dark:ring-white/5">
-                            <AvatarImage src={m.avatar} />
-                            <AvatarFallback>{m.name.charAt(0)}</AvatarFallback>
-                          </UIAvatar>
-                        ))}
-                        <div className="h-8 w-8 rounded-full bg-yellow-400 text-black flex items-center justify-center text-[10px] font-black border-4 border-white dark:border-[#1c1e24] ring-1 ring-gray-100 dark:ring-white/5">+2</div>
+                      <div className="relative w-12 h-12 flex items-center justify-center">
+                        <svg className="w-full h-full transform -rotate-90">
+                          <circle cx="24" cy="24" r="20" stroke="currentColor" strokeWidth="4" fill="transparent" className="text-gray-200 dark:text-gray-800" />
+                          <circle cx="24" cy="24" r="20" stroke="currentColor" strokeWidth="4" fill="transparent" className="text-yellow-500" strokeDasharray={125.6} strokeDashoffset={125.6 - (125.6 * project.progress) / 100} />
+                        </svg>
+                        <span className="absolute text-[10px] font-bold text-gray-900 dark:text-white">{project.progress}%</span>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+          ) : (
+            // Table View
+            <div className="bg-white dark:bg-[#1c1e24] rounded-xl border border-gray-200 dark:border-white/5 overflow-hidden shadow-sm">
+              <table className="w-full">
+                <thead className="bg-gray-50 dark:bg-black/20 border-b border-gray-200 dark:border-white/5">
+                  <tr>
+                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-500 uppercase">Project</th>
+                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-500 uppercase">Client</th>
+                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-500 uppercase">Status</th>
+                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-500 uppercase">Budget</th>
+                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-500 uppercase">Timeline</th>
+                    <th className="px-6 py-4 text-right text-xs font-medium text-gray-500 dark:text-gray-500 uppercase">Action</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100 dark:divide-white/5">
+                  {filteredProjects.map((project) => (
+                    <tr key={project.id} className="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors cursor-pointer group" onClick={() => handleViewDetails(project)}>
+                      <td className="px-6 py-4">
+                        <div className="text-sm font-medium text-gray-900 dark:text-white group-hover:text-yellow-600 dark:group-hover:text-yellow-400 transition-colors">{project.name}</div>
+                        <div className="text-xs text-gray-500">{project.location}</div>
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{project.client}</td>
+                      <td className="px-6 py-4">
+                        <Badge variant="outline" className={`border-0 bg-gray-100 dark:bg-white/5 ${project.status === 'On Track' ? 'text-green-600 dark:text-green-400' :
+                          project.status === 'Planning' ? 'text-yellow-600 dark:text-yellow-400' : 'text-gray-500 dark:text-gray-400'
+                          }`}>
+                          {project.status}
+                        </Badge>
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-900 dark:text-white font-mono">
+                        {typeof project.budget === 'object' && project.budget !== null
+                          ? project.budget.estimated || '$0.00'
+                          : project.budget}
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-2">
+                          <Progress value={project.progress} className="w-24 h-1.5 bg-gray-200 dark:bg-white/10" />
+                          <span className="text-xs text-gray-500 whitespace-nowrap">{project.progress}%</span>
+                        </div>
+                        <div className="text-[10px] text-gray-400 dark:text-gray-600 mt-1">{project.completion}</div>
+                      </td>
+                      <td className="px-6 py-4 text-right" onClick={(e) => e.stopPropagation()}>
+                        <div className="flex justify-end gap-2">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 text-gray-400 hover:text-yellow-500"
+                            onClick={(e) => handleEditClick(e, project)}
+                          >
+                            <FileText size={16} />
+                          </Button>
+                          <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 dark:text-gray-500 hover:text-black dark:hover:text-white">
+                            <MoreHorizontal size={16} />
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )
+        ) : activeTab === 'team' ? (
+          <div className="-mx-6">
+            <EnterpriseTeamManagement />
           </div>
         ) : (
-          /* Premium Table View */
-          <div className="bg-white dark:bg-[#1c1e24] rounded-[2rem] border border-gray-200 dark:border-white/5 overflow-hidden shadow-2xl">
-            <table className="w-full">
-              <thead>
-                <tr className="bg-gray-50/50 dark:bg-black/20 border-b border-gray-100 dark:border-white/5">
-                  <th className="px-8 py-5 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest pr-0">Project / Site</th>
-                  <th className="px-8 py-5 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">Client</th>
-                  <th className="px-8 py-5 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">Efficiency</th>
-                  <th className="px-8 py-5 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">Budget</th>
-                  <th className="px-8 py-5 text-right text-[10px] font-black text-gray-400 uppercase tracking-widest">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100 dark:divide-white/5">
-                {filteredProjects.map((project) => (
-                  <tr key={project.id} className="hover:bg-gray-50 dark:hover:bg-white/5 transition-all cursor-pointer group" onClick={() => handleViewDetails(project)}>
-                    <td className="px-8 py-6">
-                      <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-2xl bg-yellow-400 text-black flex items-center justify-center font-black text-xl group-hover:scale-110 transition-transform">
-                          {project.name.charAt(0)}
-                        </div>
-                        <div>
-                          <p className="text-lg font-black text-gray-900 dark:text-white group-hover:text-yellow-600 dark:group-hover:text-yellow-400 tracking-tight leading-none mb-2">{project.name}</p>
-                          <p className="text-xs text-gray-400 font-bold flex items-center gap-1.5"><MapPin size={12} className="text-yellow-500" /> {project.location}</p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-8 py-6">
-                      <p className="text-sm font-bold text-gray-600 dark:text-gray-300">{project.client}</p>
-                      <Badge variant="outline" className="mt-1.5 border-none bg-gray-100 dark:bg-white/5 text-gray-500 text-[10px] font-black px-2">{project.status}</Badge>
-                    </td>
-                    <td className="px-8 py-6">
-                      <div className="flex items-center gap-4">
-                        <div className="flex-1 w-32 h-2 bg-gray-100 dark:bg-black/40 rounded-full overflow-hidden">
-                          <div className="h-full bg-yellow-500 rounded-full" style={{ width: `${project.progress}%` }} />
-                        </div>
-                        <span className="text-sm font-black text-gray-900 dark:text-white">{project.progress}%</span>
-                      </div>
-                      <p className="text-[10px] text-gray-400 font-bold mt-1 uppercase tracking-widest">{project.completion}</p>
-                    </td>
-                    <td className="px-8 py-6 font-black font-mono text-gray-900 dark:text-white">
-                      {typeof project.budget === 'object' ? project.budget.estimated : project.budget}
-                    </td>
-                    <td className="px-8 py-6 text-right">
-                      <Button variant="ghost" size="icon" className="h-12 w-12 rounded-2xl bg-gray-50 dark:bg-white/5 text-gray-400 hover:bg-yellow-400 hover:text-black transition-all">
-                        <MoreHorizontal size={20} />
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="-mx-6">
+            <ProjectDocuments projectId={projects[0]?.id || 1} />
           </div>
         )}
 
-        {/* Project Detail Modal Redesign */}
+        {/* Project Detail Modal */}
         <Dialog open={showProjectDetails} onOpenChange={setShowProjectDetails}>
-          <DialogContent className="bg-white dark:bg-[#0f1115] border-none text-gray-900 dark:text-white sm:max-w-4xl p-0 overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.4)]">
+          <DialogContent className="bg-white dark:bg-[#1c1e24] border-gray-200 dark:border-white/10 text-gray-900 dark:text-white sm:max-w-2xl overflow-hidden">
             {selectedProjectData && (
-              <div className="flex flex-col">
-                {/* Modal Header Cover */}
-                <div className="relative h-64 bg-gray-900 overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-tr from-yellow-500/20 to-transparent z-10 opacity-60" />
-                  <img src="https://images.unsplash.com/photo-1541888946425-d81bb19480c5?auto=format&fit=crop&q=80&w=1200" className="w-full h-full object-cover opacity-30 grayscale" />
-
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0f1115] via-transparent to-transparent z-20" />
-
-                  <div className="absolute bottom-10 left-10 z-30 space-y-3">
-                    <div className="flex items-center gap-3">
-                      <Badge className="bg-yellow-500 text-black border-none font-black text-[10px] tracking-widest px-3 py-1">
-                        PROJECT {selectedProjectData.status.toUpperCase()}
-                      </Badge>
-                      <span className="text-gray-300 font-black text-lg">/ {selectedProjectData.client}</span>
-                    </div>
-                    <h2 className="text-5xl font-black tracking-tighter text-white leading-none">{selectedProjectData.name}</h2>
-                    <p className="flex items-center gap-2 text-gray-400 font-bold text-sm">
-                      <MapPin className="w-4 h-4 text-yellow-500" /> {selectedProjectData.location}
-                    </p>
+              <>
+                <div className="absolute top-0 right-0 w-48 h-48 bg-yellow-400/5 blur-3xl rounded-full pointer-events-none"></div>
+                <DialogHeader className="relative z-10">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Badge className="bg-yellow-400 dark:bg-yellow-500 text-black border-none font-bold">
+                      {selectedProjectData.status}
+                    </Badge>
+                    <span className="text-sm text-gray-500">{selectedProjectData.client}</span>
                   </div>
-                </div>
+                  <DialogTitle className="text-3xl font-bold tracking-tight">{selectedProjectData.name}</DialogTitle>
+                  <DialogDescription className="flex items-center gap-1 text-gray-500 dark:text-gray-400">
+                    <MapPin className="w-4 h-4" /> {selectedProjectData.location}
+                  </DialogDescription>
+                </DialogHeader>
 
-                <div className="p-10">
-                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-                    <div className="lg:col-span-2 space-y-8">
-                      {/* Stats Summary */}
-                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                        <div className="bg-gray-50 dark:bg-white/5 p-6 rounded-3xl border border-gray-100 dark:border-white/5">
-                          <p className="text-[10px] font-black uppercase text-gray-400 tracking-widest mb-2">Total Budget</p>
-                          <p className="text-2xl font-black text-gray-900 dark:text-white font-mono">
-                            {typeof selectedProjectData.budget === 'object' ? selectedProjectData.budget.estimated : selectedProjectData.budget}
-                          </p>
+                <div className="grid grid-cols-2 gap-6 py-6 border-t border-b border-gray-100 dark:border-white/5 my-4">
+                  <div className="space-y-4">
+                    <div>
+                      <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">Estimated Budget</p>
+                      <p className="text-2xl font-bold font-mono text-gray-900 dark:text-white">
+                        {typeof selectedProjectData.budget === 'object' ? selectedProjectData.budget.estimated : selectedProjectData.budget}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">Target Completion</p>
+                      <p className="text-lg font-semibold text-gray-900 dark:text-white">
+                        {selectedProjectData.completion}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="space-y-4">
+                    <div>
+                      <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">Current Progress</p>
+                      <div className="flex items-center gap-3">
+                        <div className="relative w-12 h-12 flex items-center justify-center">
+                          <svg className="w-full h-full transform -rotate-90">
+                            <circle cx="24" cy="24" r="20" stroke="currentColor" strokeWidth="4" fill="transparent" className="text-gray-100 dark:text-white/5" />
+                            <circle cx="24" cy="24" r="20" stroke="currentColor" strokeWidth="4" fill="transparent" className="text-yellow-500" strokeDasharray={125.6} strokeDashoffset={125.6 - (125.6 * selectedProjectData.progress) / 100} />
+                          </svg>
+                          <span className="absolute text-[10px] font-bold">{selectedProjectData.progress}%</span>
                         </div>
-                        <div className="bg-gray-50 dark:bg-white/5 p-6 rounded-3xl border border-gray-100 dark:border-white/5">
-                          <p className="text-[10px] font-black uppercase text-gray-400 tracking-widest mb-2">Timeline</p>
-                          <p className="text-xl font-black text-gray-900 dark:text-white leading-tight">
-                            {selectedProjectData.completion}
-                          </p>
-                        </div>
-                        <div className="bg-gray-50 dark:bg-white/5 p-6 rounded-3xl border border-gray-100 dark:border-white/5">
-                          <p className="text-[10px] font-black uppercase text-gray-400 tracking-widest mb-2">Efficiency</p>
-                          <div className="flex items-center gap-3">
-                            <div className="relative h-10 w-10 flex items-center justify-center">
-                              <svg className="w-full h-full -rotate-90">
-                                <circle cx="20" cy="20" r="18" stroke="currentColor" strokeWidth="4" fill="transparent" className="text-gray-100 dark:text-white/5" />
-                                <circle cx="20" cy="20" r="18" stroke="currentColor" strokeWidth="4" fill="transparent" className="text-yellow-500" strokeDasharray={113} strokeDashoffset={113 - (113 * selectedProjectData.progress) / 100} />
-                              </svg>
-                              <span className="absolute text-[8px] font-black">{selectedProjectData.progress}%</span>
-                            </div>
-                            <span className="text-xs font-black text-green-500 italic">ON TRACK</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="space-y-4">
-                        <h4 className="text-2xl font-black tracking-tight flex items-center gap-3">
-                          <Activity className="w-6 h-6 text-yellow-500" /> Site Intelligence
-                        </h4>
-                        <div className="bg-gray-50 dark:bg-black/20 p-8 rounded-[2.5rem] border border-gray-100 dark:border-white/5">
-                          <p className="text-gray-600 dark:text-gray-400 leading-relaxed font-medium text-lg">
-                            {selectedProjectData.description || "Project specifications are active. The site is currently cleared and undergoing foundation preparation. Subcontractor scheduling is 85% complete."}
-                          </p>
-                        </div>
-                      </div>
-
-                      {/* Active Team */}
-                      <div className="space-y-4">
-                        <h4 className="text-xl font-black tracking-tight">Assigned Command</h4>
-                        <div className="grid grid-cols-2 gap-4">
-                          {existingTeamMembers.slice(0, 2).map((member, i) => (
-                            <div key={i} className="flex items-center gap-4 bg-white dark:bg-white/5 p-4 rounded-2xl border border-gray-100 dark:border-white/5">
-                              <UIAvatar className="h-12 w-12 rounded-xl ring-2 ring-yellow-500/20">
-                                <AvatarImage src={member.avatar} />
-                                <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
-                              </UIAvatar>
-                              <div>
-                                <p className="font-black text-sm leading-none mb-1">{member.name}</p>
-                                <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">{member.role}</p>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
+                        <span className="text-sm font-medium text-gray-500">On Schedule</span>
                       </div>
                     </div>
-
-                    {/* Side Panel Actions */}
-                    <div className="space-y-8">
-                      <div className="bg-white dark:bg-white/5 p-8 rounded-[2.5rem] border border-gray-100 dark:border-white/5 shadow-xl space-y-6">
-                        <h4 className="text-[10px] font-black uppercase tracking-widest text-gray-400 border-b border-gray-100 dark:border-white/5 pb-4">Project Terminal</h4>
-                        <div className="space-y-3">
-                          <Button className="w-full h-14 bg-yellow-400 hover:bg-yellow-500 text-black font-black uppercase text-[10px] tracking-widest rounded-2xl shadow-xl shadow-yellow-500/20" onClick={() => navigate('/gc-dashboard/communications')}>
-                            Open Communications
-                          </Button>
-                          <Button variant="outline" className="w-full h-14 border-gray-200 dark:border-white/10 font-black uppercase text-[10px] tracking-widest rounded-2xl group" onClick={() => navigate('/gc-dashboard/directory')}>
-                            <Users className="w-4 h-4 mr-2 group-hover:text-yellow-500" /> Deploy Subcontractors
-                          </Button>
-                        </div>
-
-                        <div className="space-y-4 pt-4">
-                          <div className="flex items-center justify-between group cursor-pointer hover:bg-gray-100 dark:hover:bg-white/5 p-2 rounded-xl transition-all">
-                            <div className="flex items-center gap-3">
-                              <div className="h-8 w-8 rounded-lg bg-blue-500/10 text-blue-500 flex items-center justify-center">
-                                <FileText size={16} />
-                              </div>
-                              <span className="text-xs font-bold">Project Plans</span>
-                            </div>
-                            <ArrowRight size={14} className="text-gray-300 group-hover:text-yellow-500 group-hover:translate-x-1 transition-all" />
-                          </div>
-                          <div className="flex items-center justify-between group cursor-pointer hover:bg-gray-100 dark:hover:bg-white/5 p-2 rounded-xl transition-all">
-                            <div className="flex items-center gap-3">
-                              <div className="h-8 w-8 rounded-lg bg-purple-500/10 text-purple-500 flex items-center justify-center">
-                                <Trophy size={16} />
-                              </div>
-                              <span className="text-xs font-bold">Milestone Reports</span>
-                            </div>
-                            <ArrowRight size={14} className="text-gray-300 group-hover:text-yellow-500 group-hover:translate-x-1 transition-all" />
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="p-6 rounded-2xl bg-yellow-400/5 border border-yellow-400/20">
-                        <p className="text-[10px] font-black text-yellow-600 dark:text-yellow-500 uppercase tracking-widest mb-3 flex items-center gap-2">
-                          <AlertCircle size={14} /> Attention Required
-                        </p>
-                        <p className="text-xs font-bold text-gray-600 dark:text-gray-400 leading-relaxed">
-                          Insurance certificate for Electrical Sub is expiring in 8 days. Renewal required for site access.
-                        </p>
+                    <div>
+                      <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">Lead Contact</p>
+                      <div className="flex items-center gap-2">
+                        <UIAvatar className="h-6 w-6">
+                          <AvatarFallback className="text-[10px]">PM</AvatarFallback>
+                        </UIAvatar>
+                        <span className="text-sm">John Project Manager</span>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="px-10 py-6 bg-gray-50 dark:bg-black/30 border-t border-gray-100 dark:border-white/5 flex items-center justify-between overflow-hidden relative">
-                  <div className="absolute top-0 left-0 w-2 h-full bg-yellow-500" />
-                  <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest flex items-center gap-2">
-                    <Trophy size={14} className="text-yellow-500" /> Elite Project Status Verified
-                  </p>
-                  <Button variant="ghost" className="text-gray-400 font-black uppercase text-[10px] tracking-widest" onClick={() => setShowProjectDetails(false)}>
-                    Exit Project Deck
+                <div className="space-y-4 pb-4">
+                  <h4 className="text-sm font-bold uppercase tracking-wider text-gray-400">Quick Actions</h4>
+                  <div className="grid grid-cols-3 gap-3">
+                    <Button variant="outline" className="flex flex-col h-auto py-3 gap-2 border-gray-200 dark:border-white/5 hover:bg-yellow-400/10 hover:border-yellow-400/30 group" onClick={() => navigate('/gc-dashboard/communications')}>
+                      <MessageSquare className="w-5 h-5 text-gray-400 group-hover:text-yellow-500" />
+                      <span className="text-xs">Message Team</span>
+                    </Button>
+                    <Button variant="outline" className="flex flex-col h-auto py-3 gap-2 border-gray-200 dark:border-white/5 hover:bg-yellow-400/10 hover:border-yellow-400/30 group">
+                      <FileText className="w-5 h-5 text-gray-400 group-hover:text-yellow-500" />
+                      <span className="text-xs">Documents</span>
+                    </Button>
+                    <Button variant="outline" className="flex flex-col h-auto py-3 gap-2 border-gray-200 dark:border-white/5 hover:bg-yellow-400/10 hover:border-yellow-400/30 group" onClick={() => navigate('/gc-dashboard/directory')}>
+                      <Users className="w-5 h-5 text-gray-400 group-hover:text-yellow-500" />
+                      <span className="text-xs">Find Subs</span>
+                    </Button>
+                  </div>
+                </div>
+
+                <DialogFooter className="border-t border-gray-100 dark:border-white/5 pt-4">
+                  <Button variant="ghost" onClick={() => setShowProjectDetails(false)}>Close</Button>
+                  <Button className="bg-yellow-400 hover:bg-yellow-500 text-black font-bold h-11 px-8">
+                    Open Project Dashboard
                   </Button>
-                </div>
-              </div>
+                </DialogFooter>
+              </>
             )}
           </DialogContent>
         </Dialog>
 
-        {/* New Project Dialog Redesign */}
+        {/* New Project Dialog */}
         <Dialog open={showNewProject} onOpenChange={setShowNewProject}>
-          <DialogContent className="bg-white dark:bg-[#1c1e24] border-none text-gray-900 dark:text-white sm:max-w-2xl p-0 overflow-hidden shadow-2xl rounded-[2.5rem]">
-            <div className="bg-yellow-400 p-8 flex items-center justify-between">
-              <div>
-                <h2 className="text-3xl font-black text-black tracking-tighter leading-none">INITIALIZE PROJECT</h2>
-                <p className="text-black/60 font-bold text-sm mt-2">Deploying new construction assets to the pipeline.</p>
-              </div>
-              <div className="h-16 w-16 rounded-[1.5rem] bg-black text-white flex items-center justify-center shadow-2xl">
-                <Briefcase size={32} />
-              </div>
-            </div>
-
-            <div className="p-10 space-y-8">
-              <div className="grid grid-cols-2 gap-6">
+          <DialogContent className="bg-white dark:bg-[#1c1e24] border-gray-200 dark:border-white/10 text-gray-900 dark:text-white sm:max-w-xl">
+            <DialogHeader>
+              <DialogTitle className="text-xl font-bold">{isEditing ? 'Edit Project' : 'Create New Project'}</DialogTitle>
+              <DialogDescription className="text-gray-500 dark:text-gray-400">
+                {isEditing ? 'Update project details and settings.' : 'Fill in the details below to initialize a new construction project.'}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">Project Identifier</Label>
+                  <Label className="text-gray-700 dark:text-gray-300">Project Name</Label>
                   <Input
-                    placeholder="e.g. Skyline Towers Phase 1"
-                    className="h-14 bg-gray-50 dark:bg-black/20 border-gray-200 dark:border-white/10 rounded-2xl px-6 focus:ring-yellow-500/20"
+                    placeholder="e.g. Office Renovation"
+                    className="bg-gray-50 dark:bg-black/20 border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600"
                     value={newProjectName}
                     onChange={(e) => setNewProjectName(e.target.value)}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">Geographic Location</Label>
+                  <Label className="text-gray-700 dark:text-gray-300">Location</Label>
                   <Input
-                    placeholder="Austin, TX"
-                    className="h-14 bg-gray-50 dark:bg-black/20 border-gray-200 dark:border-white/10 rounded-2xl px-6 focus:ring-yellow-500/20"
+                    placeholder="City, State"
+                    className="bg-gray-50 dark:bg-black/20 border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600"
                     value={newProjectLocation}
                     onChange={(e) => setNewProjectLocation(e.target.value)}
                   />
                 </div>
               </div>
-
               <div className="space-y-2">
-                <Label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">Stakeholder / Client Name</Label>
+                <Label className="text-gray-700 dark:text-gray-300">Client / Owner</Label>
                 <Input
-                  placeholder="The Millennial Group LLC"
-                  className="h-14 bg-gray-50 dark:bg-black/20 border-gray-200 dark:border-white/10 rounded-2xl px-6 focus:ring-yellow-500/20"
+                  placeholder="Client Name or Company"
+                  className="bg-gray-50 dark:bg-black/20 border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600"
                   value={newProjectClient}
                   onChange={(e) => setNewProjectClient(e.target.value)}
                 />
               </div>
-
-              <div className="grid grid-cols-2 gap-6">
+              <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">Estimated Budgetary Cap</Label>
+                  <Label className="text-gray-700 dark:text-gray-300">Estimated Budget</Label>
                   <Input
-                    placeholder="$2.5M"
-                    className="h-14 bg-gray-50 dark:bg-black/20 border-gray-200 dark:border-white/10 rounded-2xl px-6 focus:ring-yellow-500/20 font-mono font-bold"
+                    placeholder="$0.00"
+                    className="bg-gray-50 dark:bg-black/20 border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600"
                     value={newProjectBudget}
                     onChange={(e) => setNewProjectBudget(e.target.value)}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">Operational Status</Label>
+                  <Label className="text-gray-700 dark:text-gray-300">Timeline / Status</Label>
                   <Select value={newProjectStatus} onValueChange={setNewProjectStatus}>
-                    <SelectTrigger className="h-14 bg-gray-50 dark:bg-black/20 border-gray-200 dark:border-white/10 rounded-2xl px-6 font-bold">
-                      <SelectValue placeholder="Select Status" />
+                    <SelectTrigger className="bg-gray-50 dark:bg-black/20 border-gray-200 dark:border-white/10 text-gray-900 dark:text-white">
+                      <SelectValue placeholder="Select status" />
                     </SelectTrigger>
-                    <SelectContent className="bg-white dark:bg-[#1c1e24] border-gray-200 dark:border-white/10 rounded-2xl">
-                      <SelectItem value="Planning">PLANNING PHASE</SelectItem>
-                      <SelectItem value="In Progress">IN PROGRESS</SelectItem>
-                      <SelectItem value="Bidding">BIDDING OPEN</SelectItem>
-                      <SelectItem value="On Hold">ON HOLD</SelectItem>
+                    <SelectContent className="bg-white dark:bg-[#1c1e24] border-gray-200 dark:border-white/10 text-gray-900 dark:text-white">
+                      <SelectItem value="Planning">Planning</SelectItem>
+                      <SelectItem value="In Progress">In Progress</SelectItem>
+                      <SelectItem value="Bidding">Bidding</SelectItem>
+                      <SelectItem value="On Hold">On Hold</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
-
               <div className="space-y-2">
-                <Label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">Strategic Overview</Label>
+                <Label className="text-gray-700 dark:text-gray-300">Description (Optional)</Label>
                 <Textarea
-                  placeholder="Primary project objectives and constraints..."
-                  className="bg-gray-50 dark:bg-black/20 border-gray-200 dark:border-white/10 rounded-2xl px-6 py-4 min-h-[120px] focus:ring-yellow-500/20"
+                  placeholder="Brief details..."
+                  className="bg-gray-50 dark:bg-black/20 border-gray-200 dark:border-white/10 text-gray-900 dark:text-white min-h-[80px] placeholder:text-gray-400 dark:placeholder:text-gray-600"
                   value={newProjectDescription}
                   onChange={(e) => setNewProjectDescription(e.target.value)}
                 />
               </div>
             </div>
-
-            <div className="flex bg-gray-50 dark:bg-white/5 p-8 gap-4">
-              <Button variant="ghost" onClick={() => setShowNewProject(false)} className="h-14 flex-1 font-black uppercase text-xs tracking-widest rounded-2xl hover:bg-red-500/10 hover:text-red-500">
-                Cancel
-              </Button>
-              <Button onClick={handleCreateProject} className="h-14 flex-[2] bg-black text-white hover:bg-yellow-500 hover:text-black font-black uppercase text-xs tracking-widest rounded-2xl transition-all shadow-xl shadow-black/20">
-                Deploy Project
+            <div className="flex justify-end gap-3">
+              <Button variant="ghost" onClick={() => setShowNewProject(false)} className="text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10">Cancel</Button>
+              <Button onClick={handleSaveProject} className="bg-yellow-400 hover:bg-yellow-500 dark:bg-yellow-500 dark:hover:bg-yellow-400 text-black">
+                {isEditing ? 'Save Changes' : 'Create Project'}
               </Button>
             </div>
           </DialogContent>
         </Dialog>
 
-        {/* Invite Team Modal Redesign */}
+        {/* Invite Team Modal */}
         <Dialog open={showInviteModal} onOpenChange={setShowInviteModal}>
-          <DialogContent className="bg-white dark:bg-[#1c1e24] border-none text-gray-900 dark:text-white sm:max-w-lg p-0 overflow-hidden shadow-2xl rounded-[2.5rem]">
-            <div className="h-32 bg-yellow-400 flex items-center justify-center relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-black/10 rounded-full -mr-16 -mt-16" />
-              <div className="p-4 rounded-3xl bg-black text-white shadow-2xl">
-                <UserPlus className="w-8 h-8" />
+          <DialogContent className="bg-white dark:bg-[#1c1e24] border-gray-200 dark:border-white/10 text-gray-900 dark:text-white sm:max-w-lg">
+            <DialogHeader>
+              <div className="mx-auto bg-yellow-100 dark:bg-yellow-400/20 p-3 rounded-full mb-4">
+                <UserPlus className="w-8 h-8 text-yellow-600 dark:text-yellow-400" />
               </div>
-            </div>
+              <DialogTitle className="text-xl font-bold text-center">Assign Team Members</DialogTitle>
+              <DialogDescription className="text-center text-gray-500 dark:text-gray-400">
+                Select from your existing team to assign them to this project.
+              </DialogDescription>
+            </DialogHeader>
 
-            <div className="p-10 text-center space-y-8">
-              <div className="space-y-2">
-                <h3 className="text-3xl font-black tracking-tight leading-none">ASSIGN COMMAND</h3>
-                <p className="text-gray-500 dark:text-gray-400 font-bold">Deploy leadership assets to maintain operational efficiency.</p>
-              </div>
-
-              <div className="space-y-4 max-h-[350px] overflow-y-auto pr-2 custom-scrollbar">
+            <div className="space-y-4 py-2">
+              <div className="bg-gray-50 dark:bg-black/20 rounded-lg border border-gray-100 dark:border-white/5 max-h-[300px] overflow-y-auto">
                 {existingTeamMembers.map(member => (
-                  <div key={member.id} className="flex items-center justify-between p-4 rounded-3xl bg-gray-50 dark:bg-black/20 border border-gray-100 dark:border-white/5 hover:border-yellow-500/30 transition-all group">
-                    <div className="flex items-center gap-4">
-                      <UIAvatar className='h-12 w-12 rounded-2xl ring-2 ring-transparent group-hover:ring-yellow-500/20 transition-all'>
+                  <div key={member.id} className="flex items-center justify-between p-3 border-b border-gray-200 dark:border-white/5 last:border-0 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">
+                    <div className="flex items-center gap-3">
+                      <UIAvatar className='h-8 w-8'>
                         <AvatarImage src={member.avatar} />
-                        <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
+                        <AvatarFallback className="text-gray-900 dark:text-gray-100">{member.name.charAt(0)}</AvatarFallback>
                       </UIAvatar>
-                      <div className="text-left">
-                        <p className="text-sm font-black group-hover:text-yellow-600 dark:group-hover:text-yellow-400 transition-colors uppercase tracking-tight">{member.name}</p>
-                        <p className="text-[10px] text-gray-400 font-black uppercase tracking-widest">{member.role}</p>
+                      <div>
+                        <p className="text-sm font-medium text-gray-900 dark:text-white">{member.name}</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">{member.role}</p>
                       </div>
                     </div>
                     <Button
                       size="sm"
                       variant={invitedMembers.includes(member.id) ? "secondary" : "outline"}
-                      className={cn(
-                        "h-10 px-4 rounded-xl font-black uppercase text-[10px] tracking-widest transition-all",
-                        invitedMembers.includes(member.id)
-                          ? "bg-yellow-400 text-black border-none shadow-lg shadow-yellow-400/20"
-                          : "border-gray-200 dark:border-white/10 hover:border-yellow-400 hover:text-black hover:bg-yellow-400"
-                      )}
+                      className={`h-8 text-xs ${invitedMembers.includes(member.id) ? 'bg-yellow-100 text-yellow-900 dark:bg-yellow-500/20 dark:text-yellow-400 border-yellow-200 dark:border-yellow-500/50' : 'border-gray-200 text-gray-700 dark:text-gray-300 dark:border-white/10'}`}
                       onClick={() => toggleInvite(member.id)}
                     >
-                      {invitedMembers.includes(member.id) ? 'DEPLOYED' : 'DEPLOY'}
+                      {invitedMembers.includes(member.id) ? 'Assigned' : 'Assign'}
                     </Button>
                   </div>
                 ))}
               </div>
 
-              <div className="flex flex-col gap-3">
-                <Button className="h-14 w-full bg-black text-white hover:bg-yellow-500 hover:text-black font-black uppercase text-xs tracking-widest rounded-2xl shadow-xl shadow-black/20 transition-all" onClick={() => {
-                  toast({ title: "Command Assigned", description: `${invitedMembers.length} assets deployed to project board.` });
+              <div className="flex items-center justify-between text-xs text-gray-500 pt-2">
+                <p>Don't see who you need?</p>
+                <Button variant="link" onClick={() => { setShowInviteModal(false); navigate('/gc-dashboard/team'); }} className="h-auto p-0 text-yellow-600 dark:text-yellow-400">
+                  Add new members to team
+                </Button>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 pt-2">
+                <Button variant="ghost" onClick={() => setShowInviteModal(false)}>
+                  Skip for now
+                </Button>
+                <Button className="bg-yellow-400 hover:bg-yellow-500 dark:bg-yellow-500 dark:hover:bg-yellow-400 text-black" onClick={() => {
+                  toast({ title: "Team Invitation Sent", description: `${invitedMembers.length} members have been assigned to the project.` });
                   setShowInviteModal(false);
-                }}> Confirm Assignments </Button>
-                <Button variant="ghost" onClick={() => setShowInviteModal(false)} className="text-gray-400 font-black uppercase text-[10px] tracking-widest"> Skip Configuration </Button>
+                }}>
+                  Done
+                </Button>
               </div>
             </div>
           </DialogContent>

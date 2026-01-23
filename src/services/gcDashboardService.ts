@@ -18,12 +18,12 @@ export interface Project {
   status: 'Planning' | 'In Progress' | 'Bidding' | 'Completed';
   statusColor: 'green' | 'yellow' | 'blue';
   timeline: { current: number; total: number; percentage: number };
-  budget: { 
-    spent?: number; 
-    total?: number; 
-    estimated?: number; 
-    percentage: number; 
-    variance?: string 
+  budget: {
+    spent?: number;
+    total?: number;
+    estimated?: number;
+    percentage: number;
+    variance?: string
   };
   completion: string;
   teamSize: number;
@@ -59,7 +59,7 @@ export const getDashboardOverview = async (): Promise<DashboardStats> => {
     const result = mockAPI.getOverview();
     return result.data;
   }
-  
+
   try {
     const response = await api.get('/gc-dashboard/overview');
     return response.data;
@@ -78,7 +78,7 @@ export const getProjects = async (): Promise<Project[]> => {
     const result = mockAPI.getProjects();
     return result.data;
   }
-  
+
   try {
     const response = await api.get('/gc-dashboard/projects');
     return response.data;
@@ -105,7 +105,7 @@ export const createProject = async (projectData: {
     const result = mockAPI.createProject(projectData);
     return result.data;
   }
-  
+
   try {
     const response = await api.post('/gc-dashboard/projects', projectData);
     return response.data;
@@ -120,15 +120,34 @@ export const createProject = async (projectData: {
  * Update Project
  */
 export const updateProject = async (id: number, projectData: Partial<Project>): Promise<Project> => {
-  const response = await api.put(`/gc-dashboard/projects/${id}`, projectData);
-  return response.data;
+  if (USE_MOCK_API) {
+    const result = mockAPI.updateProject(id, projectData);
+    return result.data;
+  }
+
+  try {
+    const response = await api.put(`/gc-dashboard/projects/${id}`, projectData);
+    return response.data;
+  } catch (error) {
+    const result = mockAPI.updateProject(id, projectData);
+    return result.data;
+  }
 };
 
 /**
  * Delete Project
  */
 export const deleteProject = async (id: number): Promise<void> => {
-  await api.delete(`/gc-dashboard/projects/${id}`);
+  if (USE_MOCK_API) {
+    mockAPI.deleteProject(id);
+    return;
+  }
+
+  try {
+    await api.delete(`/gc-dashboard/projects/${id}`);
+  } catch (error) {
+    mockAPI.deleteProject(id);
+  }
 };
 
 /**
@@ -139,7 +158,7 @@ export const getRecentProjects = async (limit: number = 3): Promise<RecentProjec
     const result = mockAPI.getRecentProjects(limit);
     return result.data;
   }
-  
+
   try {
     const response = await api.get(`/gc-dashboard/recent-projects?limit=${limit}`);
     return response.data;
@@ -159,7 +178,7 @@ export const initializeFreshUserData = async (): Promise<void> => {
     mockAPI.initializeFreshUser();
     return;
   }
-  
+
   try {
     await api.post('/gc-dashboard/initialize-fresh-user');
   } catch (error) {
@@ -201,7 +220,7 @@ export const submitBid = async (projectId: number, bidData: {
  */
 export const getTeamMembers = async (projectId?: number): Promise<any[]> => {
   try {
-    const url = projectId 
+    const url = projectId
       ? `/gc-dashboard/team-members?projectId=${projectId}`
       : '/gc-dashboard/team-members';
     const response = await api.get(url);
@@ -228,11 +247,17 @@ export const inviteTeamMember = async (projectId: number, memberData: {
  * Get Project Documents
  */
 export const getProjectDocuments = async (projectId: number): Promise<any[]> => {
+  if (USE_MOCK_API) {
+    const result = mockAPI.getProjectDocuments(projectId);
+    return result.data;
+  }
+
   try {
     const response = await api.get(`/gc-dashboard/projects/${projectId}/documents`);
     return response.data;
   } catch (error) {
-    return [];
+    const result = mockAPI.getProjectDocuments(projectId);
+    return result.data;
   }
 };
 
@@ -240,15 +265,40 @@ export const getProjectDocuments = async (projectId: number): Promise<any[]> => 
  * Upload Document
  */
 export const uploadDocument = async (projectId: number, file: File, category: string): Promise<any> => {
+  if (USE_MOCK_API) {
+    const result = mockAPI.uploadDocument(projectId, {
+      name: file.name,
+      type: file.type,
+      size: file.size
+    }, category);
+    return result.data;
+  }
+
   const formData = new FormData();
   formData.append('file', file);
   formData.append('category', category);
-  
+
   const response = await api.post(`/gc-dashboard/projects/${projectId}/documents`, formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
   });
   return response.data;
+};
+
+/**
+ * Delete Document
+ */
+export const deleteDocument = async (documentId: number): Promise<void> => {
+  if (USE_MOCK_API) {
+    mockAPI.deleteDocument(documentId);
+    return;
+  }
+
+  try {
+    await api.delete(`/gc-dashboard/documents/${documentId}`);
+  } catch (error) {
+    mockAPI.deleteDocument(documentId);
+  }
 };
 

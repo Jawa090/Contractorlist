@@ -67,12 +67,6 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
       description: 'Manage projects, bid, & documents'
     },
     {
-      name: 'Team Management',
-      href: '/gc-dashboard/team',
-      icon: Users,
-      description: 'Manage employees & contractors'
-    },
-    {
       name: 'Communication',
       href: '/gc-dashboard/communications',
       icon: MessageSquare,
@@ -309,7 +303,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
         </div>
 
         {/* Navigation */}
-        <div className={cn("flex-1 flex flex-col gap-4 overflow-y-auto duration-300", isCollapsed ? "p-2 items-center" : "p-6")}>
+        <div className={cn("flex-1 flex flex-col gap-4 overflow-y-auto duration-300 custom-scrollbar", isCollapsed ? "p-2 items-center" : "p-6")}>
           <div className="space-y-1 w-full">
             {navigationItems.map((item) => renderNavItem(item))}
           </div>

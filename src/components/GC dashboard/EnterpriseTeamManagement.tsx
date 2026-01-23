@@ -138,14 +138,9 @@ const EnterpriseTeamManagement = () => {
   };
 
   return (
-    <div className="p-6 md:p-8 min-h-full bg-gray-50 dark:bg-[#0f1115] text-gray-900 dark:text-white space-y-8 transition-colors duration-300">
+    <div className="space-y-8">
 
-      {/* Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white mb-2">Team Management</h1>
-          <p className="text-gray-500 dark:text-gray-400">Review team members and contractor onboarding status.</p>
-        </div>
+      <div className="flex flex-col md:flex-row justify-end items-center gap-4">
         <div className="flex items-center gap-3">
           <Button
             onClick={() => setIsAddModalOpen(true)}

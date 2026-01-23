@@ -91,8 +91,7 @@ const ProjectDiscovery = () => {
       duration: '12-18 months',
       status: 'Bidding',
       requirements: ['Commercial license', '5+ years experience', 'Bonding capacity $3M+'],
-      documents: ['Project Plans.pdf', 'Specifications.pdf', 'Bid Package.zip'],
-      image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=600'
+      documents: ['Project Plans.pdf', 'Specifications.pdf', 'Bid Package.zip']
     },
     {
       id: 2,
@@ -118,8 +117,7 @@ const ProjectDiscovery = () => {
       duration: '18 months',
       status: 'Open',
       requirements: ['Healthcare construction certification', 'Safety record < 0.8 EMR'],
-      documents: ['Schematics.pdf'],
-      image: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=600'
+      documents: ['Schematics.pdf']
     },
     {
       id: 3,
@@ -144,8 +142,7 @@ const ProjectDiscovery = () => {
       duration: '24 months',
       status: 'Bidding',
       requirements: ['Multi-family experience', 'Bonding capacity $15M+'],
-      documents: [],
-      image: 'https://images.unsplash.com/photo-1448630321823-8cd7f4289fe2?auto=format&fit=crop&q=80&w=600'
+      documents: []
     }
   ];
 
@@ -159,15 +156,35 @@ const ProjectDiscovery = () => {
   ];
   const tradeCategories = ['General Construction', 'Electrical', 'Plumbing', 'HVAC', 'Concrete', 'Masonry', 'Roofing', 'Flooring', 'Painting', 'Landscaping'];
 
+  const [selectedTiers, setSelectedTiers] = useState<string[]>([]);
+
   const filteredProjects = projects.filter(p => {
+    // Search filter
     const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       p.owner.toLowerCase().includes(searchQuery.toLowerCase()) ||
       p.description.toLowerCase().includes(searchQuery.toLowerCase());
 
+    // Project Type filter
     const matchesType = selectedTypes.length === 0 || selectedTypes.includes(p.type);
+
+    // Location filter
     const matchesLocation = locationSearch === '' || p.location.toLowerCase().includes(locationSearch.toLowerCase());
 
-    return matchesSearch && matchesType && matchesLocation;
+    // Budget filter
+    const matchesBudget = selectedBudgetRange.length === 0 || selectedBudgetRange.some(range => {
+      const [min, max] = range.split('-').map(Number);
+      const projMax = p.budgetMax || 0;
+      if (range === '5000000+') return projMax >= 5000000;
+      return projMax >= min && projMax <= max;
+    });
+
+    // Tier/Compliance filter (using tags or other props if available, or just mocking for now)
+    // For this mock, we'll assume tiers match some project tags or properties
+    const matchesTier = selectedTiers.length === 0 || selectedTiers.some(tier =>
+      p.tags.includes(tier) || p.type.includes(tier) // Mocking tier matching
+    );
+
+    return matchesSearch && matchesType && matchesLocation && matchesBudget && matchesTier;
   });
 
   const handleViewDetails = (project: any) => {
@@ -201,59 +218,33 @@ const ProjectDiscovery = () => {
       </div>
 
       {/* Header & Search Banner */}
-      <div className="relative bg-gray-50 dark:bg-[#1c1e24] border-b border-gray-200 dark:border-white/5 px-8 py-10 z-20">
+      <div className="relative bg-gray-50 dark:bg-[#1c1e24] border-b border-gray-200 dark:border-white/5 px-8 py-6 z-20">
         <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8 mb-10">
-            <div>
-              <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 rounded-xl bg-yellow-400 text-black shadow-lg shadow-yellow-400/20">
-                  <Compass className="w-5 h-5 animate-spin-slow" />
-                </div>
-                <Badge variant="outline" className="border-yellow-500/30 text-yellow-600 dark:text-yellow-500 font-black uppercase tracking-widest text-[10px] px-3">Live Feed: 42 New Projects Today</Badge>
-              </div>
-              <h1 className="text-4xl md:text-5xl font-black tracking-tighter text-gray-900 dark:text-white leading-[0.9] mb-4">
-                PROJECT <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 to-yellow-600">DISCOVERY</span>
-              </h1>
-              <p className="text-gray-500 dark:text-gray-400 font-medium max-w-xl text-lg">
-                Unlock high-value opportunities in your area. Our AI-powered discovery engine matches you with projects that fit your capacity and expertise.
-              </p>
-            </div>
 
-            <div className="flex gap-4">
-              <div className="bg-white dark:bg-black/20 p-5 rounded-3xl border border-gray-200 dark:border-white/5 shadow-xl text-center min-w-[140px]">
-                <p className="text-[10px] font-black uppercase text-gray-400 tracking-widest mb-1">Total Market Value</p>
-                <p className="text-3xl font-black text-gray-900 dark:text-white">$4.2B</p>
-              </div>
-              <div className="bg-white dark:bg-black/20 p-5 rounded-3xl border border-gray-200 dark:border-white/5 shadow-xl text-center min-w-[140px]">
-                <p className="text-[10px] font-black uppercase text-gray-400 tracking-widest mb-1">Active Tenders</p>
-                <p className="text-3xl font-black text-yellow-500">1.2K</p>
-              </div>
-            </div>
-          </div>
 
           {/* Unified Search Bar */}
-          <div className="flex flex-col md:flex-row gap-4 p-2 bg-white dark:bg-black/40 rounded-[2rem] border border-gray-200 dark:border-white/5 shadow-2xl backdrop-blur-xl">
+          <div className="flex flex-col md:flex-row gap-4 p-1.5 bg-white dark:bg-black/40 rounded-2xl border border-gray-200 dark:border-white/5 shadow-xl backdrop-blur-xl">
             <div className="flex-1 relative">
-              <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-600 w-5 h-5" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-600 w-4 h-4" />
               <Input
-                placeholder="Keywords (e.g. 'Renovation', 'Commercial', 'Steel')"
+                placeholder="Keywords (e.g. 'Renovation', 'Steel')"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-14 h-16 border-none bg-transparent text-lg focus-visible:ring-0 focus-visible:ring-offset-0 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-700"
+                className="pl-10 h-12 border-none bg-transparent text-base focus-visible:ring-0 focus-visible:ring-offset-0 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-700"
               />
             </div>
-            <div className="hidden md:block w-[1px] h-10 bg-gray-200 dark:bg-white/10 self-center" />
-            <div className="w-full md:w-[280px] relative">
-              <MapPin className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-600 w-5 h-5" />
+            <div className="hidden md:block w-[1px] h-6 bg-gray-200 dark:bg-white/10 self-center" />
+            <div className="w-full md:w-[220px] relative">
+              <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-600 w-4 h-4" />
               <Input
                 placeholder="Search Location"
                 value={locationSearch}
                 onChange={(e) => setLocationSearch(e.target.value)}
-                className="pl-14 h-16 border-none bg-transparent text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-700 focus-visible:ring-0 focus-visible:ring-offset-0"
+                className="pl-10 h-12 border-none bg-transparent text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-700 focus-visible:ring-0 focus-visible:ring-offset-0 text-sm"
               />
             </div>
-            <Button className="h-16 px-12 bg-yellow-400 hover:bg-yellow-500 dark:bg-yellow-500 dark:hover:bg-yellow-400 text-black font-black uppercase text-sm tracking-tighter rounded-[1.5rem] shadow-xl shadow-yellow-500/20 active:scale-95 transition-all">
-              Refresh Pulse
+            <Button size="sm" className="h-12 px-8 bg-yellow-400 hover:bg-yellow-500 dark:bg-yellow-500 dark:hover:bg-yellow-400 text-black font-black uppercase text-xs tracking-tighter rounded-xl shadow-lg active:scale-95 transition-all">
+              Search Projects
             </Button>
           </div>
         </div>
@@ -266,7 +257,13 @@ const ProjectDiscovery = () => {
           <div className="flex items-center justify-between mb-8">
             <h3 className="text-xl font-black tracking-tight">FILTERS</h3>
             <button
-              onClick={() => { setSelectedTypes([]); setSelectedBudgetRange([]); setSelectedTrade([]); }}
+              onClick={() => {
+                setSelectedTypes([]);
+                setSelectedBudgetRange([]);
+                setSelectedTiers([]);
+                setSearchQuery('');
+                setLocationSearch('');
+              }}
               className="text-[10px] font-black uppercase text-yellow-600 dark:text-yellow-500 hover:underline"
             >
               Reset
@@ -297,9 +294,16 @@ const ProjectDiscovery = () => {
               <Label className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4 block underline decoration-yellow-500/30 underline-offset-4">Financial Class</Label>
               <div className="space-y-3">
                 {budgetRanges.map(range => (
-                  <div key={range.value} className="flex items-center group cursor-pointer">
-                    <div className="w-5 h-5 rounded-md border border-gray-300 dark:border-white/10 group-hover:border-yellow-400 mr-3" />
-                    <span className="text-xs font-bold text-gray-500 dark:text-gray-400 group-hover:pl-1 transition-all">{range.label}</span>
+                  <div key={range.value} className="flex items-center group cursor-pointer" onClick={() => {
+                    setSelectedBudgetRange(prev => prev.includes(range.value) ? prev.filter(r => r !== range.value) : [...prev, range.value]);
+                  }}>
+                    <div className={cn(
+                      "w-5 h-5 rounded-md border flex items-center justify-center transition-all duration-200 mr-3",
+                      selectedBudgetRange.includes(range.value) ? "bg-yellow-500 border-yellow-500 text-black" : "border-gray-300 dark:border-white/10 group-hover:border-yellow-400"
+                    )}>
+                      {selectedBudgetRange.includes(range.value) && <CheckCircle2 className="w-3.5 h-3.5" />}
+                    </div>
+                    <span className={cn("text-xs font-bold transition-all", selectedBudgetRange.includes(range.value) ? "text-gray-900 dark:text-white" : "text-gray-500 dark:text-gray-400 group-hover:pl-1")}>{range.label}</span>
                   </div>
                 ))}
               </div>
@@ -309,9 +313,16 @@ const ProjectDiscovery = () => {
               <Label className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4 block underline decoration-yellow-500/30 underline-offset-4">Compliance Tiers</Label>
               <div className="space-y-3">
                 {['Public Works Only', 'Union Signatory', 'HUB / Minority Owned'].map(tier => (
-                  <div key={tier} className="flex items-center group cursor-pointer">
-                    <div className="w-5 h-5 rounded-md border border-gray-300 dark:border-white/10 group-hover:border-yellow-400 mr-3" />
-                    <span className="text-xs font-bold text-gray-500 dark:text-gray-400 group-hover:pl-1 transition-all">{tier}</span>
+                  <div key={tier} className="flex items-center group cursor-pointer" onClick={() => {
+                    setSelectedTiers(prev => prev.includes(tier) ? prev.filter(t => t !== tier) : [...prev, tier]);
+                  }}>
+                    <div className={cn(
+                      "w-5 h-5 rounded-md border flex items-center justify-center transition-all duration-200 mr-3",
+                      selectedTiers.includes(tier) ? "bg-yellow-500 border-yellow-500 text-black" : "border-gray-300 dark:border-white/10 group-hover:border-yellow-400"
+                    )}>
+                      {selectedTiers.includes(tier) && <CheckCircle2 className="w-3.5 h-3.5" />}
+                    </div>
+                    <span className={cn("text-xs font-bold transition-all", selectedTiers.includes(tier) ? "text-gray-900 dark:text-white" : "text-gray-500 dark:text-gray-400 group-hover:pl-1")}>{tier}</span>
                   </div>
                 ))}
               </div>
@@ -349,29 +360,21 @@ const ProjectDiscovery = () => {
                     )}
                     onClick={() => handleViewDetails(project)}
                   >
-                    {/* Image Header for Cards */}
-                    {viewMode === 'card' && (
-                      <div className="h-48 relative overflow-hidden">
-                        <img src={project.image} alt={project.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-60" />
-                        <div className="absolute top-4 left-4 flex gap-2">
-                          {project.isHot && (
-                            <Badge className="bg-red-500 text-white font-black text-[10px] uppercase tracking-tighter border-none px-2 shadow-lg">HOT</Badge>
-                          )}
-                          <Badge className="bg-yellow-400 text-black font-black text-[10px] uppercase tracking-tighter border-none px-2 shadow-lg">{project.type}</Badge>
-                        </div>
-                        <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end">
-                          <div className="flex items-center gap-1.5">
-                            <div className="h-10 w-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white ring-2 ring-white/20">
-                              <Star className="w-4 h-4 fill-white" />
-                            </div>
-                            <span className="text-white font-black text-lg">{project.matchScore}% Match</span>
-                          </div>
-                        </div>
+                    {/* Status Badges Overlay */}
+                    <div className="px-8 pt-6 flex justify-between items-start">
+                      <div className="flex gap-2">
+                        {project.isHot && (
+                          <Badge className="bg-red-500 text-white font-black text-[10px] uppercase tracking-tighter border-none px-2 shadow-lg">HOT</Badge>
+                        )}
+                        <Badge className="bg-yellow-400/10 text-yellow-600 dark:text-yellow-500 font-black text-[10px] uppercase tracking-tighter border-none px-2">{project.type}</Badge>
                       </div>
-                    )}
+                      <div className="flex items-center gap-1.5 text-yellow-500 font-black text-xs uppercase tracking-widest">
+                        <Star className="w-3.5 h-3.5 fill-current" />
+                        {project.matchScore}% Match
+                      </div>
+                    </div>
 
-                    <CardContent className={cn("p-8", viewMode === 'table' ? "flex-1 py-4" : "")}>
+                    <CardContent className={cn("px-8 pb-8 pt-4", viewMode === 'table' ? "flex-1 py-4" : "")}>
                       <div className="flex flex-col h-full">
                         <div className="mb-6 flex-1">
                           <div className="flex items-center gap-2 text-[10px] font-black uppercase text-yellow-600 dark:text-yellow-500 tracking-widest mb-2">
@@ -421,100 +424,84 @@ const ProjectDiscovery = () => {
         </main>
       </div>
 
-      {/* Detail Modal Redesign */}
+      {/* Small & Minimal Project Detail Modal */}
       <Dialog open={showDetailsModal} onOpenChange={setShowDetailsModal}>
-        <DialogContent className="max-w-5xl p-0 overflow-hidden bg-white dark:bg-[#0f1115] border-none shadow-2xl">
+        <DialogContent className="max-w-md p-0 overflow-hidden bg-white dark:bg-[#111318] border-gray-200 dark:border-white/10 shadow-2xl rounded-[1.5rem]">
           {selectedProject && (
             <div className="flex flex-col">
-              <div className="h-64 relative overflow-hidden bg-gray-900">
-                <img src={selectedProject.image} className="w-full h-full object-cover opacity-50" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0f1115] to-transparent" />
-                <div className="absolute bottom-8 left-10 right-10 flex flex-col gap-2">
-                  <div className="flex items-center gap-3">
-                    <Badge className="bg-yellow-500 text-black font-black uppercase text-[10px] tracking-widest border-none">Active Bidding</Badge>
-                    <span className="flex items-center gap-1.5 text-yellow-500 font-black">
-                      <Star className="w-4 h-4 fill-current" /> {selectedProject.matchScore}% Match
-                    </span>
+              {/* Clean Header */}
+              <div className="px-6 py-5 border-b border-gray-100 dark:border-white/5 bg-gray-50/30">
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Badge variant="outline" className="text-[9px] font-black tracking-widest border-yellow-500/20 text-yellow-600 dark:text-yellow-500 bg-yellow-400/5">
+                      {selectedProject.type.toUpperCase()}
+                    </Badge>
+                    <span className="text-[9px] font-bold text-gray-400">#{selectedProject.id}0922</span>
                   </div>
-                  <h2 className="text-4xl font-black text-white tracking-tighter leading-none">{selectedProject.name}</h2>
+                  <h2 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white leading-tight">
+                    {selectedProject.name}
+                  </h2>
+                  <p className="text-gray-500 flex items-center gap-1.5 text-xs">
+                    <MapPin className="w-3 h-3" /> {selectedProject.location}
+                  </p>
                 </div>
               </div>
 
-              <div className="p-10">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-                  <div className="lg:col-span-2 space-y-8">
-                    <div className="flex flex-wrap gap-4">
-                      <div className="bg-gray-50 dark:bg-white/5 px-6 py-4 rounded-3xl border border-gray-100 dark:border-white/5 min-w-[150px]">
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Budget Allocation</p>
-                        <p className="text-xl font-black text-gray-900 dark:text-white font-mono">{selectedProject.budget}</p>
-                      </div>
-                      <div className="bg-gray-50 dark:bg-white/5 px-6 py-4 rounded-3xl border border-gray-100 dark:border-white/5 min-w-[150px]">
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Project Scale</p>
-                        <p className="text-xl font-black text-gray-900 dark:text-white font-mono">{selectedProject.sqft} SQFT</p>
-                      </div>
-                      <div className="bg-gray-50 dark:bg-white/5 px-6 py-4 rounded-3xl border border-gray-100 dark:border-white/5 min-w-[150px]">
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Timeline</p>
-                        <p className="text-xl font-black text-gray-900 dark:text-white font-mono">{selectedProject.duration}</p>
-                      </div>
-                    </div>
-
-                    <div className="space-y-4">
-                      <h4 className="text-xl font-black tracking-tight">Scope of Work</h4>
-                      <p className="text-gray-600 dark:text-gray-300 leading-relaxed font-medium bg-gray-50 dark:bg-black/20 p-6 rounded-[2rem] border border-gray-100 dark:border-white/5">
-                        {selectedProject.description}
-                      </p>
-                    </div>
-
-                    <div className="space-y-4">
-                      <h4 className="text-xl font-black tracking-tight">Project Stakeholders</h4>
-                      <div className="flex items-center gap-6 bg-white dark:bg-white/5 p-6 rounded-[2rem] border border-gray-100 dark:border-white/5">
-                        <div className="h-16 w-16 rounded-2xl bg-yellow-400 text-black flex items-center justify-center font-black text-xl">
-                          {selectedProject.owner.charAt(0)}
-                        </div>
-                        <div>
-                          <p className="font-black text-xl leading-none mb-2">{selectedProject.owner}</p>
-                          <div className="flex gap-4 text-xs font-bold text-gray-400">
-                            <span className="flex items-center gap-1.5 hover:text-yellow-500 cursor-pointer"><Mail className="w-4 h-4" /> Email Owner</span>
-                            <span className="flex items-center gap-1.5 hover:text-yellow-500 cursor-pointer"><Phone className="w-4 h-4" /> Call Request</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+              <div className="px-6 py-5 space-y-6">
+                {/* Compact Stats Row */}
+                <div className="grid grid-cols-3 gap-2 text-center pb-4 border-b border-gray-100 dark:border-white/5">
+                  <div>
+                    <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest mb-0.5">Budget</p>
+                    <p className="text-xs font-bold font-mono">{selectedProject.budget}</p>
                   </div>
+                  <div className="border-l border-r border-gray-100 dark:border-white/5">
+                    <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest mb-0.5">Scale</p>
+                    <p className="text-xs font-bold font-mono">{selectedProject.sqft} sqft</p>
+                  </div>
+                  <div>
+                    <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest mb-0.5">Duration</p>
+                    <p className="text-xs font-bold font-mono">{selectedProject.duration}</p>
+                  </div>
+                </div>
 
-                  <div className="space-y-8">
-                    <div className="p-8 rounded-[2rem] bg-black text-white space-y-6 shadow-2xl">
-                      <div>
-                        <h4 className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4">Submission Status</h4>
-                        <div className="p-4 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-between">
-                          <span className="text-xs font-bold">Proposal Deadline</span>
-                          <Badge className="bg-yellow-500 text-black border-none">{selectedProject.deadline}</Badge>
-                        </div>
-                      </div>
-                      <div className="space-y-3">
-                        <Button className="w-full h-14 bg-yellow-400 hover:bg-yellow-500 text-black font-black uppercase text-xs tracking-widest rounded-2xl" onClick={() => { setShowDetailsModal(false); handleAddBid(selectedProject); }}>Add Bid Package</Button>
-                        <Button variant="outline" className="w-full h-14 border-white/10 text-white hover:bg-white/5 font-black uppercase text-xs tracking-widest rounded-2xl">Save for Later</Button>
-                      </div>
+                <div className="space-y-4">
+                  <h4 className="text-[9px] font-black uppercase tracking-widest text-gray-400">Scope</h4>
+                  <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed font-semibold">
+                    {selectedProject.description}
+                  </p>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3 bg-gray-50 dark:bg-white/[0.02] p-2.5 rounded-xl border border-gray-100 dark:border-white/5">
+                    <div className="h-8 w-8 rounded-lg bg-yellow-400 flex items-center justify-center text-black font-bold text-xs shrink-0">
+                      {selectedProject.owner.charAt(0)}
                     </div>
-
-                    <div className="space-y-4">
-                      <h4 className="text-[10px] font-black uppercase tracking-widest text-gray-400 underline decoration-yellow-500 underline-offset-4">Critical Requirements</h4>
-                      <div className="space-y-3">
-                        {selectedProject.requirements.map((req: any, i: number) => (
-                          <div key={i} className="flex gap-3 text-sm font-bold items-start leading-tight">
-                            <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0 mt-0.5" />
-                            <span className="text-gray-600 dark:text-gray-300">{req}</span>
-                          </div>
-                        ))}
-                      </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-bold truncate">{selectedProject.owner}</p>
+                      <p className="text-[9px] text-gray-400">Project Owner</p>
+                    </div>
+                    <div className="flex gap-1.5">
+                      <Button variant="outline" size="sm" className="h-7 w-7 p-0 rounded-md"><Mail className="w-3 h-3" /></Button>
+                      <Button variant="outline" size="sm" className="h-7 w-7 p-0 rounded-md"><Phone className="w-3 h-3" /></Button>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="px-10 py-6 bg-gray-50 dark:bg-black/40 border-t border-gray-100 dark:border-white/5 flex items-center justify-between">
-                <p className="text-xs font-bold text-gray-400">Security Clearance: <span className="text-green-500">LEVEL 1 VERIFIED</span></p>
-                <Button variant="ghost" className="font-black uppercase text-[10px] tracking-widest text-gray-400" onClick={() => setShowDetailsModal(false)}>Close Inspector</Button>
+              {/* Action Area */}
+              <div className="px-6 py-4 bg-gray-50/50 dark:bg-transparent border-t border-gray-100 dark:border-white/5 space-y-3">
+                <Button className="w-full h-10 bg-yellow-400 hover:bg-yellow-500 text-black font-black uppercase text-[10px] tracking-widest rounded-lg shadow-lg" onClick={() => { setShowDetailsModal(false); handleAddBid(selectedProject); }}>
+                  Submit Intent to Bid
+                </Button>
+                <div className="flex justify-between items-center px-1">
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-1 h-1 rounded-full bg-green-500" />
+                    <span className="text-[8px] font-black text-gray-400 uppercase">Verified Opportunity</span>
+                  </div>
+                  <button onClick={() => setShowDetailsModal(false)} className="text-[9px] font-black uppercase text-gray-400 hover:text-black dark:hover:text-white transition-colors">
+                    Dismiss
+                  </button>
+                </div>
               </div>
             </div>
           )}

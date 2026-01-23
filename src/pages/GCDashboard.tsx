@@ -6,9 +6,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 // Lazy load components for better performance
 const CleanOverview = lazy(() => import('@/components/GC dashboard/CleanOverview'));
-const EnterpriseTeamManagement = lazy(() => import('@/components/GC dashboard/EnterpriseTeamManagement'));
 const CleanCommunications = lazy(() => import('@/components/GC dashboard/CleanCommunications'));
-const EnhancedDocuments = lazy(() => import('@/components/GC dashboard/EnhancedDocuments'));
 const Directory = lazy(() => import('@/components/GC dashboard/Directory'));
 const MyProjects = lazy(() => import('@/components/GC dashboard/MyProjects'));
 const AccountSettings = lazy(() => import('@/components/GC dashboard/AccountSettings'));
@@ -120,8 +118,6 @@ const GCDashboard = () => {
                 <Route path="/overview" element={<CleanOverview />} />
                 <Route path="/my-projects" element={<MyProjects />} />
                 <Route path="/communications" element={<CleanCommunications />} />
-                <Route path="/team" element={<EnterpriseTeamManagement />} />
-                <Route path="/documents" element={<EnhancedDocuments />} />
                 <Route path="/project-discovery" element={<ProjectDiscovery />} />
                 <Route path="/directory" element={<Directory />} />
                 <Route path="/settings" element={<AccountSettings />} />
