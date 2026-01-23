@@ -21,6 +21,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 interface HeaderProps {
   onMenuClick: () => void;
@@ -72,7 +73,7 @@ const Header = ({ onMenuClick }: HeaderProps) => {
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
+    <header className="sticky top-0 z-40 bg-gray-50 dark:bg-[#0f1115] border-b border-gray-200 dark:border-white/5">
       <div className="px-4 sm:px-6 py-3">
         <div className="flex items-center justify-between gap-4">
           {/* Left Section */}
@@ -137,14 +138,15 @@ const Header = ({ onMenuClick }: HeaderProps) => {
             {/* Profile Menu */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
+                <Button
+                  variant="ghost"
+                  size="sm"
                   className="flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-800 p-1.5 rounded-lg h-9"
                 >
-                  <div className="w-8 h-8 rounded-full bg-yellow-400 dark:bg-yellow-500 flex items-center justify-center text-gray-900 shadow-md">
-                    <User className="w-4 h-4" />
-                  </div>
+                  <Avatar className="w-8 h-8 cursor-pointer ring-2 ring-transparent group-hover:ring-yellow-400 dark:group-hover:ring-yellow-500 transition-all">
+                    <AvatarImage src="https://images.unsplash.com/photo-1599305445671-ac291c95aaa9?auto=format&fit=crop&q=80&w=150&h=150" className="object-cover" />
+                    <AvatarFallback className="bg-yellow-400 dark:bg-yellow-500 text-black font-semibold">AC</AvatarFallback>
+                  </Avatar>
                   <span className="hidden lg:block text-sm font-medium text-gray-900 dark:text-white">
                     Profile
                   </span>
@@ -163,14 +165,14 @@ const Header = ({ onMenuClick }: HeaderProps) => {
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem 
+                <DropdownMenuItem
                   className="p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg cursor-pointer"
                   onClick={() => navigate('/gc-dashboard/settings')}
                 >
                   <User className="w-4 h-4 mr-3" />
                   Update Profile
                 </DropdownMenuItem>
-                <DropdownMenuItem 
+                <DropdownMenuItem
                   className="p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg cursor-pointer"
                   onClick={() => navigate('/gc-dashboard/settings')}
                 >

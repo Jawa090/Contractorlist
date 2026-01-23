@@ -13,6 +13,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogFooter
 } from '@/components/ui/dialog';
 import {
   Search,
@@ -38,9 +39,14 @@ import {
   Ruler,
   HardHat,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  TrendingUp,
+  Compass,
+  Layers,
+  MoreHorizontal
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
 
 const ProjectDiscovery = () => {
   const { toast } = useToast();
@@ -52,7 +58,7 @@ const ProjectDiscovery = () => {
   const [selectedBudgetRange, setSelectedBudgetRange] = useState<string[]>([]);
   const [selectedTrade, setSelectedTrade] = useState<string[]>([]);
   const [selectedStatus, setSelectedStatus] = useState<string[]>([]);
-  const [viewMode, setViewMode] = useState<'table' | 'card'>('table');
+  const [viewMode, setViewMode] = useState<'table' | 'card'>('card');
   const [selectedProject, setSelectedProject] = useState<any>(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [showBidModal, setShowBidModal] = useState(false);
@@ -79,13 +85,14 @@ const ProjectDiscovery = () => {
       trade: ['Electrical', 'HVAC', 'General Construction'],
       description: 'Complete renovation of 3-story commercial plaza including new electrical systems, HVAC overhaul, and exterior facade updates. Project requires GC with experience in commercial renovations.',
       owner: 'Metro Properties LLC',
-      ownerEmail: 'contact@metrop properties.com',
+      ownerEmail: 'contact@metroproperties.com',
       ownerPhone: '(512) 555-0100',
       sqft: '45,000',
       duration: '12-18 months',
       status: 'Bidding',
       requirements: ['Commercial license', '5+ years experience', 'Bonding capacity $3M+'],
-      documents: ['Project Plans.pdf', 'Specifications.pdf', 'Bid Package.zip']
+      documents: ['Project Plans.pdf', 'Specifications.pdf', 'Bid Package.zip'],
+      image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=600'
     },
     {
       id: 2,
@@ -98,85 +105,70 @@ const ProjectDiscovery = () => {
       budgetMax: 10000000,
       type: 'Healthcare',
       posted: '5 hours ago',
-      deadline: 'Nov 14, 2024',
+      deadline: 'Nov 15, 2024',
       matchScore: 88,
       isHot: false,
-      tags: ['New Construction', 'Medical', 'Concrete'],
-      trade: ['Concrete', 'MEP', 'Medical Gas'],
-      description: 'Ground-up construction of a 12,000 sq ft medical annex. Requires specialized medical gas systems and clean room standards. Must have healthcare construction experience.',
-      owner: 'Austin Healthcare Systems',
-      ownerEmail: 'projects@austinhealthcare.com',
-      ownerPhone: '(512) 555-0200',
-      sqft: '12,000',
-      duration: '18-24 months',
-      status: 'Bidding',
-      requirements: ['Healthcare license', 'Medical gas certification', '10+ years experience'],
-      documents: ['Architectural Plans.pdf', 'MEP Drawings.pdf']
+      tags: ['New Construction', 'Healthcare'],
+      trade: ['General Construction', 'Plumbing', 'Electrical'],
+      description: 'New construction of a 20,000 sq ft medical annex. Requires specialized healthcare construction experience and medical gas certification.',
+      owner: 'Oak Ridge Health',
+      ownerEmail: 'facilities@oakridge.org',
+      ownerPhone: '(512) 555-0250',
+      sqft: '20,000',
+      duration: '18 months',
+      status: 'Open',
+      requirements: ['Healthcare construction certification', 'Safety record < 0.8 EMR'],
+      documents: ['Schematics.pdf'],
+      image: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=600'
     },
     {
       id: 3,
-      name: 'Skyline Heights Apartments Phase 2',
-      location: 'Austin, TX',
-      zipCode: '78702',
-      distance: '5 mi',
-      budget: '$15M+',
-      budgetMin: 15000000,
-      budgetMax: 20000000,
-      type: 'Residential',
-      posted: '1 day ago',
+      name: 'Residential Complex Phase 2',
+      location: 'San Marcos, TX',
+      zipCode: '78666',
+      distance: '30 mi',
+      budget: '$12M - $15M',
+      budgetMin: 12000000,
+      budgetMax: 15000000,
+      type: 'Multi-Family',
+      posted: '1 week ago',
       deadline: 'Nov 01, 2024',
       matchScore: 76,
       isHot: true,
-      tags: ['Multi-family', 'Framing', 'Plumbing'],
-      trade: ['Framing', 'Plumbing', 'Drywall'],
-      description: 'Phase 2 of Skyline Heights luxury apartments. 200 units. Bidding for framing, plumbing, and drywall packages. Experience with multi-family projects required.',
+      tags: ['New Construction', 'Residential'],
+      trade: ['General Construction', 'Concrete', 'Framing'],
+      description: 'Phase 2 of Riverside Apartments. 4 buildings, 120 units total. Wood frame construction on slab on grade.',
       owner: 'Riverside Development',
-      ownerEmail: 'bids@riversidedev.com',
-      ownerPhone: '(512) 555-0300',
-      sqft: '180,000',
-      duration: '24-30 months',
+      ownerEmail: 'bids@riverside.com',
+      sqft: '145,000',
+      duration: '24 months',
       status: 'Bidding',
       requirements: ['Multi-family experience', 'Bonding capacity $15M+'],
-      documents: ['Site Plans.pdf', 'Unit Plans.pdf', 'Bid Package.zip']
-    },
-    {
-      id: 4,
-      name: 'TechPark Data Center Upgrade',
-      location: 'San Marcos, TX',
-      zipCode: '78666',
-      distance: '32 mi',
-      budget: '$4.2M',
-      budgetMin: 4200000,
-      budgetMax: 4200000,
-      type: 'Industrial',
-      posted: '3 days ago',
-      deadline: 'Oct 25, 2024',
-      matchScore: 65,
-      isHot: false,
-      tags: ['Industrial', 'Cooling', 'Security'],
-      trade: ['HVAC', 'Electrical', 'Security Systems'],
-      description: 'Upgrade of cooling infrastructure and security systems for Tier 3 data center. Requires specialized knowledge of data center construction and MEP systems.',
-      owner: 'TechPark Infrastructure',
-      ownerEmail: 'projects@techpark.com',
-      ownerPhone: '(512) 555-0400',
-      sqft: '25,000',
-      duration: '8-12 months',
-      status: 'Bidding',
-      requirements: ['Data center experience', 'MEP expertise'],
-      documents: ['MEP Plans.pdf', 'Security Specs.pdf']
+      documents: [],
+      image: 'https://images.unsplash.com/photo-1448630321823-8cd7f4289fe2?auto=format&fit=crop&q=80&w=600'
     }
   ];
 
-  const projectTypes = ['Commercial', 'Residential', 'Industrial', 'Healthcare', 'Education', 'Government'];
+  const projectTypes = ['Commercial', 'Residential', 'Industrial', 'Healthcare', 'Educational', 'Multi-Family', 'Government'];
   const budgetRanges = [
-    { label: '$0 - $1M', value: '0-1M', min: 0, max: 1000000 },
-    { label: '$1M - $5M', value: '1M-5M', min: 1000000, max: 5000000 },
-    { label: '$5M - $10M', value: '5M-10M', min: 5000000, max: 10000000 },
-    { label: '$10M - $25M', value: '10M-25M', min: 10000000, max: 25000000 },
-    { label: '$25M+', value: '25M+', min: 25000000, max: Infinity }
+    { label: '< $100k', value: '0-100000' },
+    { label: '$100k - $500k', value: '100000-500000' },
+    { label: '$500k - $1M', value: '500000-1000000' },
+    { label: '$1M - $5M', value: '1000000-5000000' },
+    { label: '$5M+', value: '5000000+' }
   ];
-  const tradeCategories = ['Electrical', 'Plumbing', 'HVAC', 'Framing', 'Drywall', 'Concrete', 'Roofing', 'General Construction', 'MEP', 'Medical Gas'];
-  const projectStatuses = ['Bidding', 'Planning', 'Pre-Construction', 'Active'];
+  const tradeCategories = ['General Construction', 'Electrical', 'Plumbing', 'HVAC', 'Concrete', 'Masonry', 'Roofing', 'Flooring', 'Painting', 'Landscaping'];
+
+  const filteredProjects = projects.filter(p => {
+    const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.owner.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.description.toLowerCase().includes(searchQuery.toLowerCase());
+
+    const matchesType = selectedTypes.length === 0 || selectedTypes.includes(p.type);
+    const matchesLocation = locationSearch === '' || p.location.toLowerCase().includes(locationSearch.toLowerCase());
+
+    return matchesSearch && matchesType && matchesLocation;
+  });
 
   const handleViewDetails = (project: any) => {
     setSelectedProject(project);
@@ -188,15 +180,7 @@ const ProjectDiscovery = () => {
     setShowBidModal(true);
   };
 
-  const handleSubmitBid = () => {
-    if (!bidAmount || !bidDuration || !bidProposal) {
-      toast({
-        title: "Missing Information",
-        description: "Please fill in all required fields",
-        variant: "destructive"
-      });
-      return;
-    }
+  const submitBid = () => {
     toast({
       title: "Bid Submitted Successfully",
       description: `Your bid of $${parseFloat(bidAmount).toLocaleString()} has been submitted for ${selectedProject?.name}.`,
@@ -208,730 +192,329 @@ const ProjectDiscovery = () => {
   };
 
   return (
-    <div className="flex h-full w-full flex-col bg-gray-50 dark:bg-gray-900">
-      {/* Header Section */}
-      <div className="bg-white dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800 px-6 py-6 sticky top-0 z-10 shadow-sm">
+    <div className="flex h-full w-full flex-col bg-white dark:bg-[#0f1115] text-gray-900 dark:text-white transition-colors duration-500 overflow-hidden font-sans">
+
+      {/* Dynamic Background */}
+      <div className="fixed inset-0 pointer-events-none opacity-50">
+        <div className="absolute top-[10%] right-[10%] w-[600px] h-[600px] bg-yellow-400/10 dark:bg-yellow-500/5 blur-[120px] rounded-full animate-pulse" />
+        <div className="absolute bottom-[20%] left-[5%] w-[400px] h-[400px] bg-blue-400/5 dark:bg-blue-600/5 blur-[100px] rounded-full" />
+      </div>
+
+      {/* Header & Search Banner */}
+      <div className="relative bg-gray-50 dark:bg-[#1c1e24] border-b border-gray-200 dark:border-white/5 px-8 py-10 z-20">
         <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8 mb-10">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                Project Discovery
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 rounded-xl bg-yellow-400 text-black shadow-lg shadow-yellow-400/20">
+                  <Compass className="w-5 h-5 animate-spin-slow" />
+                </div>
+                <Badge variant="outline" className="border-yellow-500/30 text-yellow-600 dark:text-yellow-500 font-black uppercase tracking-widest text-[10px] px-3">Live Feed: 42 New Projects Today</Badge>
+              </div>
+              <h1 className="text-4xl md:text-5xl font-black tracking-tighter text-gray-900 dark:text-white leading-[0.9] mb-4">
+                PROJECT <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 to-yellow-600">DISCOVERY</span>
               </h1>
-              <p className="text-gray-600 dark:text-gray-400">
-                Discover new construction opportunities posted by homeowners and property owners. Filter by location, project type, and budget to find projects that match your expertise.
+              <p className="text-gray-500 dark:text-gray-400 font-medium max-w-xl text-lg">
+                Unlock high-value opportunities in your area. Our AI-powered discovery engine matches you with projects that fit your capacity and expertise.
               </p>
             </div>
 
-            {/* Search and Filters */}
-            <div className="flex flex-col lg:flex-row gap-4">
-              <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <Input
-                  placeholder="Search projects by keyword, owner, or project name..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 h-12 border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900"
-                />
+            <div className="flex gap-4">
+              <div className="bg-white dark:bg-black/20 p-5 rounded-3xl border border-gray-200 dark:border-white/5 shadow-xl text-center min-w-[140px]">
+                <p className="text-[10px] font-black uppercase text-gray-400 tracking-widest mb-1">Total Market Value</p>
+                <p className="text-3xl font-black text-gray-900 dark:text-white">$4.2B</p>
               </div>
-              <div className="relative">
-                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
-                <Input
-                  placeholder="City, State or ZIP Code"
-                  value={locationSearch}
-                  onChange={(e) => setLocationSearch(e.target.value)}
-                  className="pl-10 w-[200px] h-12 border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900"
-                />
+              <div className="bg-white dark:bg-black/20 p-5 rounded-3xl border border-gray-200 dark:border-white/5 shadow-xl text-center min-w-[140px]">
+                <p className="text-[10px] font-black uppercase text-gray-400 tracking-widest mb-1">Active Tenders</p>
+                <p className="text-3xl font-black text-yellow-500">1.2K</p>
               </div>
-              <Button 
-                className="h-12 px-6 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold"
-                onClick={() => {
-                  toast({
-                    title: "Search Applied",
-                    description: `Searching for projects matching "${searchQuery}" in ${locationSearch || selectedLocation}`,
-                  });
-                }}
-              >
-                <Search className="w-4 h-4 mr-2" />
-                Search
-              </Button>
             </div>
+          </div>
+
+          {/* Unified Search Bar */}
+          <div className="flex flex-col md:flex-row gap-4 p-2 bg-white dark:bg-black/40 rounded-[2rem] border border-gray-200 dark:border-white/5 shadow-2xl backdrop-blur-xl">
+            <div className="flex-1 relative">
+              <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-600 w-5 h-5" />
+              <Input
+                placeholder="Keywords (e.g. 'Renovation', 'Commercial', 'Steel')"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-14 h-16 border-none bg-transparent text-lg focus-visible:ring-0 focus-visible:ring-offset-0 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-700"
+              />
+            </div>
+            <div className="hidden md:block w-[1px] h-10 bg-gray-200 dark:bg-white/10 self-center" />
+            <div className="w-full md:w-[280px] relative">
+              <MapPin className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-600 w-5 h-5" />
+              <Input
+                placeholder="Search Location"
+                value={locationSearch}
+                onChange={(e) => setLocationSearch(e.target.value)}
+                className="pl-14 h-16 border-none bg-transparent text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-700 focus-visible:ring-0 focus-visible:ring-offset-0"
+              />
+            </div>
+            <Button className="h-16 px-12 bg-yellow-400 hover:bg-yellow-500 dark:bg-yellow-500 dark:hover:bg-yellow-400 text-black font-black uppercase text-sm tracking-tighter rounded-[1.5rem] shadow-xl shadow-yellow-500/20 active:scale-95 transition-all">
+              Refresh Pulse
+            </Button>
           </div>
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="flex-1 overflow-y-auto">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 xl:grid-cols-4 gap-0 min-h-[calc(100vh-200px)]">
-          {/* Filters Sidebar */}
-          <div className="hidden xl:block col-span-1 border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 p-6 space-y-6 overflow-y-auto max-h-[calc(100vh-200px)]">
+      {/* Main Grid View */}
+      <div className="flex-1 flex overflow-hidden relative z-10">
+        {/* Left Filters - Slimmer Premium Version */}
+        <aside className="hidden xl:flex w-80 flex-col border-r border-gray-200 dark:border-white/5 bg-gray-50/50 dark:bg-black/20 overflow-y-auto p-8 custom-scrollbar">
+          <div className="flex items-center justify-between mb-8">
+            <h3 className="text-xl font-black tracking-tight">FILTERS</h3>
+            <button
+              onClick={() => { setSelectedTypes([]); setSelectedBudgetRange([]); setSelectedTrade([]); }}
+              className="text-[10px] font-black uppercase text-yellow-600 dark:text-yellow-500 hover:underline"
+            >
+              Reset
+            </button>
+          </div>
+
+          <div className="space-y-10">
             <div>
-              <h3 className="font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                <Filter className="w-4 h-4" />
-                Filter Projects
-              </h3>
-              <div className="space-y-6">
-                {/* Location Filter */}
-                <div>
-                  <Label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 block">
-                    Location
-                  </Label>
-                  <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-                    <SelectTrigger className="w-full border-gray-200 dark:border-gray-800">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="austin">Austin, TX (+50mi)</SelectItem>
-                      <SelectItem value="dallas">Dallas, TX</SelectItem>
-                      <SelectItem value="houston">Houston, TX</SelectItem>
-                      <SelectItem value="sa">San Antonio, TX</SelectItem>
-                      <SelectItem value="all">All Locations</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <div className="mt-2">
-                    <Input
-                      placeholder="ZIP Code"
-                      value={zipCode}
-                      onChange={(e) => setZipCode(e.target.value)}
-                      className="w-full border-gray-200 dark:border-gray-800"
-                    />
+              <Label className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4 block underline decoration-yellow-500/30 underline-offset-4">Project Categories</Label>
+              <div className="space-y-3">
+                {projectTypes.map(type => (
+                  <div key={type} className="flex items-center group cursor-pointer" onClick={() => {
+                    setSelectedTypes(prev => prev.includes(type) ? prev.filter(t => t !== type) : [...prev, type]);
+                  }}>
+                    <div className={cn(
+                      "w-5 h-5 rounded-md border flex items-center justify-center transition-all duration-200 mr-3",
+                      selectedTypes.includes(type) ? "bg-yellow-500 border-yellow-500 text-black" : "border-gray-300 dark:border-white/10 group-hover:border-yellow-400"
+                    )}>
+                      {selectedTypes.includes(type) && <CheckCircle2 className="w-3.5 h-3.5" />}
+                    </div>
+                    <span className={cn("text-xs font-bold transition-all", selectedTypes.includes(type) ? "text-gray-900 dark:text-white" : "text-gray-500 dark:text-gray-400 group-hover:pl-1")}>{type}</span>
                   </div>
-                </div>
+                ))}
+              </div>
+            </div>
 
-                {/* Project Type */}
-                <div className="pt-4 border-t border-gray-200 dark:border-gray-800">
-                  <Label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 block">
-                    Project Type
-                  </Label>
-                  <div className="space-y-2">
-                    {projectTypes.map((type) => (
-                      <div key={type} className="flex items-center space-x-2">
-                        <Checkbox 
-                          id={type}
-                          checked={selectedTypes.includes(type)}
-                          onCheckedChange={(checked) => {
-                            if (checked) {
-                              setSelectedTypes([...selectedTypes, type]);
-                            } else {
-                              setSelectedTypes(selectedTypes.filter(t => t !== type));
-                            }
-                          }}
-                        />
-                        <Label htmlFor={type} className="text-sm text-gray-600 dark:text-gray-400 cursor-pointer">
-                          {type}
-                        </Label>
-                      </div>
-                    ))}
+            <div>
+              <Label className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4 block underline decoration-yellow-500/30 underline-offset-4">Financial Class</Label>
+              <div className="space-y-3">
+                {budgetRanges.map(range => (
+                  <div key={range.value} className="flex items-center group cursor-pointer">
+                    <div className="w-5 h-5 rounded-md border border-gray-300 dark:border-white/10 group-hover:border-yellow-400 mr-3" />
+                    <span className="text-xs font-bold text-gray-500 dark:text-gray-400 group-hover:pl-1 transition-all">{range.label}</span>
                   </div>
-                </div>
+                ))}
+              </div>
+            </div>
 
-                {/* Budget Range */}
-                <div className="pt-4 border-t border-gray-200 dark:border-gray-800">
-                  <Label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 block">
-                    Budget Range
-                  </Label>
-                  <div className="space-y-2">
-                    {budgetRanges.map((range) => (
-                      <div key={range.value} className="flex items-center space-x-2">
-                        <Checkbox 
-                          id={range.value}
-                          checked={selectedBudgetRange.includes(range.value)}
-                          onCheckedChange={(checked) => {
-                            if (checked) {
-                              setSelectedBudgetRange([...selectedBudgetRange, range.value]);
-                            } else {
-                              setSelectedBudgetRange(selectedBudgetRange.filter(b => b !== range.value));
-                            }
-                          }}
-                        />
-                        <Label htmlFor={range.value} className="text-sm text-gray-600 dark:text-gray-400 cursor-pointer">
-                          {range.label}
-                        </Label>
-                      </div>
-                    ))}
+            <div>
+              <Label className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4 block underline decoration-yellow-500/30 underline-offset-4">Compliance Tiers</Label>
+              <div className="space-y-3">
+                {['Public Works Only', 'Union Signatory', 'HUB / Minority Owned'].map(tier => (
+                  <div key={tier} className="flex items-center group cursor-pointer">
+                    <div className="w-5 h-5 rounded-md border border-gray-300 dark:border-white/10 group-hover:border-yellow-400 mr-3" />
+                    <span className="text-xs font-bold text-gray-500 dark:text-gray-400 group-hover:pl-1 transition-all">{tier}</span>
                   </div>
-                </div>
-
-                {/* Trade Categories */}
-                <div className="pt-4 border-t border-gray-200 dark:border-gray-800">
-                  <Label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 block">
-                    Trade / Category
-                  </Label>
-                  <div className="space-y-2">
-                    {tradeCategories.map((trade) => (
-                      <div key={trade} className="flex items-center space-x-2">
-                        <Checkbox 
-                          id={trade}
-                          checked={selectedTrade.includes(trade)}
-                          onCheckedChange={(checked) => {
-                            if (checked) {
-                              setSelectedTrade([...selectedTrade, trade]);
-                            } else {
-                              setSelectedTrade(selectedTrade.filter(t => t !== trade));
-                            }
-                          }}
-                        />
-                        <Label htmlFor={trade} className="text-sm text-gray-600 dark:text-gray-400 cursor-pointer">
-                          {trade}
-                        </Label>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Project Status */}
-                <div className="pt-4 border-t border-gray-200 dark:border-gray-800">
-                  <Label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 block">
-                    Project Status
-                  </Label>
-                  <div className="space-y-2">
-                    {projectStatuses.map((status) => (
-                      <div key={status} className="flex items-center space-x-2">
-                        <Checkbox 
-                          id={status}
-                          checked={selectedStatus.includes(status)}
-                          onCheckedChange={(checked) => {
-                            if (checked) {
-                              setSelectedStatus([...selectedStatus, status]);
-                            } else {
-                              setSelectedStatus(selectedStatus.filter(s => s !== status));
-                            }
-                          }}
-                        />
-                        <Label htmlFor={status} className="text-sm text-gray-600 dark:text-gray-400 cursor-pointer">
-                          {status}
-                        </Label>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Clear Filters */}
-                <Button 
-                  variant="outline" 
-                  className="w-full mt-4"
-                  onClick={() => {
-                    setSelectedTypes([]);
-                    setSelectedBudgetRange([]);
-                    setSelectedTrade([]);
-                    setSelectedStatus([]);
-                    setZipCode('');
-                  }}
-                >
-                  Clear All Filters
-                </Button>
+                ))}
               </div>
             </div>
           </div>
+        </aside>
 
-          {/* Results List */}
-          <div className="col-span-1 xl:col-span-3 bg-gray-50 dark:bg-gray-900 p-6">
-            <div className="flex items-center justify-between mb-6">
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                Showing <span className="font-semibold text-gray-900 dark:text-white">248</span> projects near {selectedLocation === 'austin' ? 'Austin, TX' : selectedLocation}
-              </p>
+        {/* Middle Feed */}
+        <main className="flex-1 overflow-y-auto p-8 custom-scrollbar">
+          <div className="max-w-6xl mx-auto">
+            <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-2">
-                <div className="flex items-center border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden">
-                  <Button
-                    variant={viewMode === 'table' ? 'default' : 'ghost'}
-                    size="sm"
-                    onClick={() => setViewMode('table')}
-                    className={`h-9 px-3 ${viewMode === 'table' ? 'bg-yellow-400 hover:bg-yellow-500 text-gray-900' : ''}`}
-                  >
-                    <ListIcon className="w-4 h-4" />
-                  </Button>
-                  <Button
-                    variant={viewMode === 'card' ? 'default' : 'ghost'}
-                    size="sm"
-                    onClick={() => setViewMode('card')}
-                    className={`h-9 px-3 ${viewMode === 'card' ? 'bg-yellow-400 hover:bg-yellow-500 text-gray-900' : ''}`}
-                  >
-                    <Grid3x3 className="w-4 h-4" />
-                  </Button>
-                </div>
-                <Select defaultValue="match">
-                  <SelectTrigger className="w-[180px] border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="match">Best Match</SelectItem>
-                    <SelectItem value="newest">Newest First</SelectItem>
-                    <SelectItem value="budget">Highest Budget</SelectItem>
-                    <SelectItem value="deadline">Deadline Soonest</SelectItem>
-                  </SelectContent>
-                </Select>
+                <TrendingUp className="w-5 h-5 text-green-500" />
+                <span className="text-sm font-bold text-gray-500">Trending in <span className="text-gray-900 dark:text-white underline decoration-yellow-500 decoration-2 underline-offset-4">{locationSearch || 'Central Texas'}</span></span>
+              </div>
+
+              <div className="flex items-center bg-gray-100 dark:bg-black/40 p-1.5 rounded-2xl border border-gray-200 dark:border-white/5">
+                <button onClick={() => setViewMode('card')} className={cn("p-2 rounded-xl transition-all", viewMode === 'card' ? "bg-white dark:bg-[#1c1e24] text-black dark:text-white shadow-xl" : "text-gray-400 hover:text-black dark:hover:text-white")}>
+                  <Grid3x3 className="w-4 h-4" />
+                </button>
+                <button onClick={() => setViewMode('table')} className={cn("p-2 rounded-xl transition-all", viewMode === 'table' ? "bg-white dark:bg-[#1c1e24] text-black dark:text-white shadow-xl" : "text-gray-400 hover:text-black dark:hover:text-white")}>
+                  <ListIcon className="w-4 h-4" />
+                </button>
               </div>
             </div>
 
-            {/* Table View (Default) */}
-            {viewMode === 'table' ? (
-              <Card className="border-gray-200 dark:border-gray-800">
-                <CardContent className="p-0">
-                  <div className="overflow-x-auto">
-                    <table className="w-full">
-                      <thead className="bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-                        <tr>
-                          <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Project</th>
-                          <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Location</th>
-                          <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Type</th>
-                          <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Budget</th>
-                          <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Match</th>
-                          <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Deadline</th>
-                          <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-800">
-                        {projects.map((project) => (
-                          <tr key={project.id} className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                            <td className="px-6 py-4">
-                              <div className="flex flex-col">
-                                <div className="flex items-center gap-2 mb-1">
-                                  {project.isHot && (
-                                    <Badge className="bg-red-50 text-red-700 dark:bg-red-900/30 dark:text-red-400 border-red-200 dark:border-red-800 text-xs">
-                                      <Zap className="w-3 h-3 mr-1" />
-                                      Hot
-                                    </Badge>
-                                  )}
-                                  <div className="text-sm font-semibold text-gray-900 dark:text-white">{project.name}</div>
-                                </div>
-                                <div className="text-xs text-gray-500 dark:text-gray-400">{project.owner}</div>
-                                <div className="flex flex-wrap gap-1 mt-1">
-                                  {project.tags.slice(0, 2).map((tag) => (
-                                    <Badge key={tag} variant="outline" className="text-xs">{tag}</Badge>
-                                  ))}
-                                </div>
-                              </div>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="text-sm text-gray-900 dark:text-white">{project.location}</div>
-                              <div className="text-xs text-gray-500 dark:text-gray-400">{project.distance}</div>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <Badge className="bg-yellow-50 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400">
-                                {project.type}
-                              </Badge>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="text-base font-bold text-gray-900 dark:text-white">{project.budget}</div>
-                              <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">{project.sqft} sq ft</div>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="flex items-center gap-1">
-                                <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                                <span className="text-sm font-semibold text-gray-900 dark:text-white">{project.matchScore}%</span>
-                              </div>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="text-sm text-gray-900 dark:text-white">{project.deadline}</div>
-                              <div className="text-xs text-gray-500 dark:text-gray-400">Posted {project.posted}</div>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="flex items-center gap-2">
-                                <Button 
-                                  onClick={() => handleAddBid(project)}
-                                  className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold h-8 text-xs" 
-                                  size="sm"
-                                >
-                                  <Gavel className="w-3 h-3 mr-1" />
-                                  Add Bid
-                                </Button>
-                                <Button 
-                                  onClick={() => handleViewDetails(project)}
-                                  variant="outline" 
-                                  size="sm" 
-                                  className="h-8 text-xs"
-                                >
-                                  <FileText className="w-3 h-3 mr-1" />
-                                  View Details
-                                </Button>
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </CardContent>
-              </Card>
-            ) : (
-              /* Card View */
-              <div className="space-y-4">
-                {projects.map((project) => (
-                <Card key={project.id} className="border-gray-200 dark:border-gray-800 hover:shadow-lg transition-shadow">
-                  <CardContent className="p-6">
-                    <div className="flex flex-col lg:flex-row gap-6">
-                      {/* Project Info */}
-                      <div className="flex-1">
-                        <div className="flex items-start justify-between mb-3">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-2">
-                              {project.isHot && (
-                                <Badge className="bg-red-50 text-red-700 dark:bg-red-900/30 dark:text-red-400 border-red-200 dark:border-red-800">
-                                  <Zap className="w-3 h-3 mr-1" />
-                                  Hot Opportunity
-                                </Badge>
-                              )}
-                              <Badge className="bg-yellow-50 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400">
-                                {project.type}
-                              </Badge>
-                              <div className="flex items-center gap-1 text-sm text-yellow-600 dark:text-yellow-400">
-                                <Star className="w-4 h-4 fill-current" />
-                                <span className="font-semibold">{project.matchScore}% Match</span>
-                              </div>
+            {filteredProjects.length > 0 ? (
+              <div className={cn("grid gap-8", viewMode === 'card' ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3" : "grid-cols-1")}>
+                {filteredProjects.map((project) => (
+                  <Card
+                    key={project.id}
+                    className={cn(
+                      "group relative overflow-hidden bg-white dark:bg-[#1c1e24] border border-gray-200 dark:border-white/5 transition-all duration-500 hover:scale-[1.02] cursor-pointer rounded-[2.5rem] hover:shadow-[0_30px_60px_rgba(0,0,0,0.12)] cursor-pointer",
+                      viewMode === 'table' ? "flex flex-row items-center p-2 rounded-3xl" : ""
+                    )}
+                    onClick={() => handleViewDetails(project)}
+                  >
+                    {/* Image Header for Cards */}
+                    {viewMode === 'card' && (
+                      <div className="h-48 relative overflow-hidden">
+                        <img src={project.image} alt={project.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-60" />
+                        <div className="absolute top-4 left-4 flex gap-2">
+                          {project.isHot && (
+                            <Badge className="bg-red-500 text-white font-black text-[10px] uppercase tracking-tighter border-none px-2 shadow-lg">HOT</Badge>
+                          )}
+                          <Badge className="bg-yellow-400 text-black font-black text-[10px] uppercase tracking-tighter border-none px-2 shadow-lg">{project.type}</Badge>
+                        </div>
+                        <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end">
+                          <div className="flex items-center gap-1.5">
+                            <div className="h-10 w-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white ring-2 ring-white/20">
+                              <Star className="w-4 h-4 fill-white" />
                             </div>
-                            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-                              {project.name}
-                            </h3>
-                            <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 dark:text-gray-400 mb-3">
-                              <div className="flex items-center gap-1">
-                                <MapPin className="w-4 h-4" />
-                                {project.location} <span className="text-gray-400">({project.distance})</span>
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <Building2 className="w-4 h-4" />
-                                {project.sqft} sq ft
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <Clock className="w-4 h-4" />
-                                {project.duration}
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <Users className="w-4 h-4" />
-                                {project.owner}
-                              </div>
-                            </div>
-                            <p className="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
-                              {project.description}
-                            </p>
-                            <div className="flex flex-wrap gap-2 mb-4">
-                              {project.tags.map((tag) => (
-                                <Badge key={tag} variant="outline" className="text-xs">
-                                  {tag}
-                                </Badge>
-                              ))}
-                            </div>
-                            <div className="flex items-center gap-6 text-sm text-gray-600 dark:text-gray-400">
-                              <div className="flex items-center gap-1">
-                                <Calendar className="w-4 h-4" />
-                                Posted {project.posted}
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <Clock className="w-4 h-4" />
-                                Bid Deadline: {project.deadline}
-                              </div>
-                            </div>
+                            <span className="text-white font-black text-lg">{project.matchScore}% Match</span>
                           </div>
                         </div>
                       </div>
+                    )}
 
-                      {/* Action Panel */}
-                      <div className="lg:w-64 flex flex-col gap-4">
-                        <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
-                          <div className="text-xs text-gray-600 dark:text-gray-400 mb-1">Estimated Budget</div>
-                          <div className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                            {project.budget}
+                    <CardContent className={cn("p-8", viewMode === 'table' ? "flex-1 py-4" : "")}>
+                      <div className="flex flex-col h-full">
+                        <div className="mb-6 flex-1">
+                          <div className="flex items-center gap-2 text-[10px] font-black uppercase text-yellow-600 dark:text-yellow-500 tracking-widest mb-2">
+                            <Layers className="w-3.5 h-3.5" />
+                            ID: #DISC-{project.id}0922
                           </div>
-                          <div className="space-y-2">
-                            <div className="flex items-center justify-between text-xs">
-                              <span className="text-gray-600 dark:text-gray-400">Match Score</span>
-                              <span className="font-semibold text-green-600 dark:text-green-400">
-                                {project.matchScore}%
-                              </span>
-                            </div>
-                            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                              <div 
-                                className="bg-green-500 h-2 rounded-full"
-                                style={{ width: `${project.matchScore}%` }}
-                              ></div>
-                            </div>
+                          <h4 className="text-xl font-black text-gray-900 dark:text-white leading-tight mb-2 group-hover:text-yellow-600 dark:group-hover:text-yellow-400 transition-colors">
+                            {project.name}
+                          </h4>
+                          <div className="flex items-center gap-3 text-xs text-gray-400 font-bold">
+                            <span className="flex items-center gap-1"><MapPin className="w-3 h-3" /> {project.location}</span>
+                            <span>•</span>
+                            <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {project.posted}</span>
                           </div>
                         </div>
-                        <div className="flex flex-col gap-2">
-                          <Button 
-                            onClick={() => handleAddBid(project)}
-                            className="w-full bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold"
-                          >
-                            <Gavel className="w-4 h-4 mr-2" />
-                            Add Bid
-                          </Button>
-                          <Button 
-                            onClick={() => handleViewDetails(project)}
-                            variant="outline" 
-                            className="w-full"
-                          >
-                            <FileText className="w-4 h-4 mr-2" />
-                            View Details
-                          </Button>
+
+                        <div className="space-y-4 pt-4 border-t border-gray-100 dark:border-white/5">
+                          <div className="flex justify-between items-end">
+                            <div>
+                              <p className="text-[10px] font-black uppercase text-gray-400 tracking-widest mb-1">Target Budget</p>
+                              <p className="text-lg font-black font-mono">{project.budget}</p>
+                            </div>
+                            <Button variant="ghost" size="icon" className="h-10 w-10 rounded-xl bg-gray-50 dark:bg-white/5 text-gray-400 hover:text-black dark:hover:text-white">
+                              <MoreHorizontal className="w-4 h-4" />
+                            </Button>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Button className="flex-1 bg-black dark:bg-yellow-500 text-white dark:text-black font-black uppercase text-[10px] tracking-widest rounded-xl hover:bg-yellow-500 dark:hover:bg-yellow-400 transition-all h-10 shadow-lg" onClick={(e) => { e.stopPropagation(); handleAddBid(project) }}>
+                              Submit Intent
+                            </Button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
                 ))}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center py-32 bg-gray-50/50 dark:bg-black/20 rounded-[3rem] border-4 border-dashed border-gray-200 dark:border-white/5">
+                <AlertCircle className="w-16 h-16 text-gray-200 dark:text-white/5 mb-6" />
+                <h3 className="text-2xl font-black tracking-tight mb-2">Expanding Feed...</h3>
+                <p className="text-gray-500 font-bold max-w-xs text-center">We couldn't find matches for this specific query. Try broadening your location or budget range.</p>
+                <Button variant="link" onClick={() => { setSearchQuery(''); setSelectedTypes([]); }} className="mt-4 text-yellow-500 font-black uppercase tracking-widest text-xs">Clear Signals</Button>
               </div>
             )}
           </div>
-        </div>
+        </main>
       </div>
 
-      {/* Project Details Modal */}
+      {/* Detail Modal Redesign */}
       <Dialog open={showDetailsModal} onOpenChange={setShowDetailsModal}>
-        <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="text-2xl flex items-center gap-2">
-              <Building2 className="w-6 h-6" />
-              {selectedProject?.name}
-            </DialogTitle>
-            <DialogDescription>
-              Complete project details and specifications
-            </DialogDescription>
-          </DialogHeader>
-          
+        <DialogContent className="max-w-5xl p-0 overflow-hidden bg-white dark:bg-[#0f1115] border-none shadow-2xl">
           {selectedProject && (
-            <div className="space-y-6">
-              {/* Project Header */}
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-3">
-                    {selectedProject.isHot && (
-                      <Badge className="bg-red-50 text-red-700 dark:bg-red-900/30 dark:text-red-400">
-                        <Zap className="w-3 h-3 mr-1" />
-                        Hot Opportunity
-                      </Badge>
-                    )}
-                    <Badge className="bg-yellow-50 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400">
-                      {selectedProject.type}
-                    </Badge>
-                    <Badge variant="outline">{selectedProject.status}</Badge>
-                    <div className="flex items-center gap-1 text-sm text-yellow-600 dark:text-yellow-400">
-                      <Star className="w-4 h-4 fill-current" />
-                      <span className="font-semibold">{selectedProject.matchScore}% Match</span>
+            <div className="flex flex-col">
+              <div className="h-64 relative overflow-hidden bg-gray-900">
+                <img src={selectedProject.image} className="w-full h-full object-cover opacity-50" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0f1115] to-transparent" />
+                <div className="absolute bottom-8 left-10 right-10 flex flex-col gap-2">
+                  <div className="flex items-center gap-3">
+                    <Badge className="bg-yellow-500 text-black font-black uppercase text-[10px] tracking-widest border-none">Active Bidding</Badge>
+                    <span className="flex items-center gap-1.5 text-yellow-500 font-black">
+                      <Star className="w-4 h-4 fill-current" /> {selectedProject.matchScore}% Match
+                    </span>
+                  </div>
+                  <h2 className="text-4xl font-black text-white tracking-tighter leading-none">{selectedProject.name}</h2>
+                </div>
+              </div>
+
+              <div className="p-10">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+                  <div className="lg:col-span-2 space-y-8">
+                    <div className="flex flex-wrap gap-4">
+                      <div className="bg-gray-50 dark:bg-white/5 px-6 py-4 rounded-3xl border border-gray-100 dark:border-white/5 min-w-[150px]">
+                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Budget Allocation</p>
+                        <p className="text-xl font-black text-gray-900 dark:text-white font-mono">{selectedProject.budget}</p>
+                      </div>
+                      <div className="bg-gray-50 dark:bg-white/5 px-6 py-4 rounded-3xl border border-gray-100 dark:border-white/5 min-w-[150px]">
+                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Project Scale</p>
+                        <p className="text-xl font-black text-gray-900 dark:text-white font-mono">{selectedProject.sqft} SQFT</p>
+                      </div>
+                      <div className="bg-gray-50 dark:bg-white/5 px-6 py-4 rounded-3xl border border-gray-100 dark:border-white/5 min-w-[150px]">
+                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Timeline</p>
+                        <p className="text-xl font-black text-gray-900 dark:text-white font-mono">{selectedProject.duration}</p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <h4 className="text-xl font-black tracking-tight">Scope of Work</h4>
+                      <p className="text-gray-600 dark:text-gray-300 leading-relaxed font-medium bg-gray-50 dark:bg-black/20 p-6 rounded-[2rem] border border-gray-100 dark:border-white/5">
+                        {selectedProject.description}
+                      </p>
+                    </div>
+
+                    <div className="space-y-4">
+                      <h4 className="text-xl font-black tracking-tight">Project Stakeholders</h4>
+                      <div className="flex items-center gap-6 bg-white dark:bg-white/5 p-6 rounded-[2rem] border border-gray-100 dark:border-white/5">
+                        <div className="h-16 w-16 rounded-2xl bg-yellow-400 text-black flex items-center justify-center font-black text-xl">
+                          {selectedProject.owner.charAt(0)}
+                        </div>
+                        <div>
+                          <p className="font-black text-xl leading-none mb-2">{selectedProject.owner}</p>
+                          <div className="flex gap-4 text-xs font-bold text-gray-400">
+                            <span className="flex items-center gap-1.5 hover:text-yellow-500 cursor-pointer"><Mail className="w-4 h-4" /> Email Owner</span>
+                            <span className="flex items-center gap-1.5 hover:text-yellow-500 cursor-pointer"><Phone className="w-4 h-4" /> Call Request</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-8">
+                    <div className="p-8 rounded-[2rem] bg-black text-white space-y-6 shadow-2xl">
+                      <div>
+                        <h4 className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4">Submission Status</h4>
+                        <div className="p-4 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-between">
+                          <span className="text-xs font-bold">Proposal Deadline</span>
+                          <Badge className="bg-yellow-500 text-black border-none">{selectedProject.deadline}</Badge>
+                        </div>
+                      </div>
+                      <div className="space-y-3">
+                        <Button className="w-full h-14 bg-yellow-400 hover:bg-yellow-500 text-black font-black uppercase text-xs tracking-widest rounded-2xl" onClick={() => { setShowDetailsModal(false); handleAddBid(selectedProject); }}>Add Bid Package</Button>
+                        <Button variant="outline" className="w-full h-14 border-white/10 text-white hover:bg-white/5 font-black uppercase text-xs tracking-widest rounded-2xl">Save for Later</Button>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <h4 className="text-[10px] font-black uppercase tracking-widest text-gray-400 underline decoration-yellow-500 underline-offset-4">Critical Requirements</h4>
+                      <div className="space-y-3">
+                        {selectedProject.requirements.map((req: any, i: number) => (
+                          <div key={i} className="flex gap-3 text-sm font-bold items-start leading-tight">
+                            <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0 mt-0.5" />
+                            <span className="text-gray-600 dark:text-gray-300">{req}</span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Project Overview */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
-                  <div className="text-xs text-gray-600 dark:text-gray-400 mb-1">Budget</div>
-                  <div className="text-lg font-bold text-gray-900 dark:text-white">{selectedProject.budget}</div>
-                </div>
-                <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
-                  <div className="text-xs text-gray-600 dark:text-gray-400 mb-1">Square Footage</div>
-                  <div className="text-lg font-bold text-gray-900 dark:text-white">{selectedProject.sqft} sq ft</div>
-                </div>
-                <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
-                  <div className="text-xs text-gray-600 dark:text-gray-400 mb-1">Duration</div>
-                  <div className="text-lg font-bold text-gray-900 dark:text-white">{selectedProject.duration}</div>
-                </div>
-                <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
-                  <div className="text-xs text-gray-600 dark:text-gray-400 mb-1">Deadline</div>
-                  <div className="text-lg font-bold text-gray-900 dark:text-white">{selectedProject.deadline}</div>
-                </div>
-              </div>
-
-              {/* Description */}
-              <div>
-                <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Project Description</h3>
-                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{selectedProject.description}</p>
-              </div>
-
-              {/* Location & Contact */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <h3 className="font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
-                    <MapPin className="w-5 h-5" />
-                    Location
-                  </h3>
-                  <div className="space-y-2 text-sm">
-                    <div className="text-gray-900 dark:text-white">{selectedProject.location}</div>
-                    {selectedProject.zipCode && (
-                      <div className="text-gray-600 dark:text-gray-400">ZIP: {selectedProject.zipCode}</div>
-                    )}
-                    <div className="text-gray-600 dark:text-gray-400">Distance: {selectedProject.distance}</div>
-                  </div>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
-                    <Users className="w-5 h-5" />
-                    Project Owner
-                  </h3>
-                  <div className="space-y-2 text-sm">
-                    <div className="text-gray-900 dark:text-white font-medium">{selectedProject.owner}</div>
-                    {selectedProject.ownerEmail && (
-                      <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
-                        <Mail className="w-4 h-4" />
-                        {selectedProject.ownerEmail}
-                      </div>
-                    )}
-                    {selectedProject.ownerPhone && (
-                      <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
-                        <Phone className="w-4 h-4" />
-                        {selectedProject.ownerPhone}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {/* Trade Categories */}
-              {selectedProject.trade && selectedProject.trade.length > 0 && (
-                <div>
-                  <h3 className="font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
-                    <HardHat className="w-5 h-5" />
-                    Required Trades
-                  </h3>
-                  <div className="flex flex-wrap gap-2">
-                    {selectedProject.trade.map((trade: string) => (
-                      <Badge key={trade} variant="outline">{trade}</Badge>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Requirements */}
-              {selectedProject.requirements && selectedProject.requirements.length > 0 && (
-                <div>
-                  <h3 className="font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
-                    <CheckCircle2 className="w-5 h-5" />
-                    Requirements
-                  </h3>
-                  <ul className="space-y-2">
-                    {selectedProject.requirements.map((req: string, index: number) => (
-                      <li key={index} className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300">
-                        <CheckCircle2 className="w-4 h-4 text-green-500 mt-0.5 shrink-0" />
-                        <span>{req}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {/* Documents */}
-              {selectedProject.documents && selectedProject.documents.length > 0 && (
-                <div>
-                  <h3 className="font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
-                    <FileText className="w-5 h-5" />
-                    Available Documents
-                  </h3>
-                  <div className="space-y-2">
-                    {selectedProject.documents.map((doc: string, index: number) => (
-                      <div key={index} className="flex items-center gap-2 p-2 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                        <FileText className="w-4 h-4 text-gray-400" />
-                        <span className="text-sm text-gray-700 dark:text-gray-300">{doc}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Tags */}
-              <div>
-                <h3 className="font-semibold text-gray-900 dark:text-white mb-3">Tags</h3>
-                <div className="flex flex-wrap gap-2">
-                  {selectedProject.tags.map((tag: string) => (
-                    <Badge key={tag} variant="outline">{tag}</Badge>
-                  ))}
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-800">
-                <Button 
-                  onClick={() => {
-                    setShowDetailsModal(false);
-                    handleAddBid(selectedProject);
-                  }}
-                  className="flex-1 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold"
-                >
-                  <Gavel className="w-4 h-4 mr-2" />
-                  Add Bid
-                </Button>
-                <Button variant="outline" onClick={() => setShowDetailsModal(false)}>
-                  Close
-                </Button>
-              </div>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
-
-      {/* Bid Modal */}
-      <Dialog open={showBidModal} onOpenChange={setShowBidModal}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="text-2xl">Place Bid</DialogTitle>
-            <DialogDescription>
-              Submit your professional bid for <span className="font-semibold">{selectedProject?.name}</span>
-            </DialogDescription>
-          </DialogHeader>
-          {selectedProject && (
-            <div className="space-y-6">
-              <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
-                <h4 className="font-semibold text-gray-900 dark:text-white mb-3">Project Summary</h4>
-                <div className="grid grid-cols-2 gap-4 text-sm">
-                  <div>
-                    <span className="text-gray-600 dark:text-gray-400">Owner:</span>
-                    <span className="ml-2 font-medium text-gray-900 dark:text-white">{selectedProject.owner}</span>
-                  </div>
-                  <div>
-                    <span className="text-gray-600 dark:text-gray-400">Location:</span>
-                    <span className="ml-2 font-medium text-gray-900 dark:text-white">{selectedProject.location}</span>
-                  </div>
-                  <div>
-                    <span className="text-gray-600 dark:text-gray-400">Budget Range:</span>
-                    <span className="ml-2 font-medium text-gray-900 dark:text-white">{selectedProject.budget}</span>
-                  </div>
-                  <div>
-                    <span className="text-gray-600 dark:text-gray-400">Deadline:</span>
-                    <span className="ml-2 font-medium text-gray-900 dark:text-white">{selectedProject.deadline}</span>
-                  </div>
-                </div>
-              </div>
-              <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label>Bid Amount ($) *</Label>
-                    <Input 
-                      type="number" 
-                      placeholder="0.00"
-                      value={bidAmount}
-                      onChange={(e) => setBidAmount(e.target.value)}
-                      className="mt-2"
-                    />
-                  </div>
-                  <div>
-                    <Label>Estimated Duration (weeks) *</Label>
-                    <Input 
-                      type="number" 
-                      placeholder="0"
-                      value={bidDuration}
-                      onChange={(e) => setBidDuration(e.target.value)}
-                      className="mt-2"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <Label>Bid Proposal & Approach *</Label>
-                  <Textarea 
-                    placeholder="Describe your approach, methodology, timeline..."
-                    value={bidProposal}
-                    onChange={(e) => setBidProposal(e.target.value)}
-                    className="mt-2 min-h-[150px]"
-                  />
-                </div>
-              </div>
-              <div className="flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-800">
-                <Button 
-                  onClick={handleSubmitBid}
-                  className="flex-1 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold"
-                >
-                  <Gavel className="w-4 h-4 mr-2" />
-                  Submit Bid
-                </Button>
-                <Button variant="outline" onClick={() => setShowBidModal(false)}>
-                  Cancel
-                </Button>
+              <div className="px-10 py-6 bg-gray-50 dark:bg-black/40 border-t border-gray-100 dark:border-white/5 flex items-center justify-between">
+                <p className="text-xs font-bold text-gray-400">Security Clearance: <span className="text-green-500">LEVEL 1 VERIFIED</span></p>
+                <Button variant="ghost" className="font-black uppercase text-[10px] tracking-widest text-gray-400" onClick={() => setShowDetailsModal(false)}>Close Inspector</Button>
               </div>
             </div>
           )}
