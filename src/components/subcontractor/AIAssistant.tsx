@@ -37,13 +37,13 @@ const AIAssistant = () => {
 
   const handleSendMessage = () => {
     if (!message.trim()) return;
-    
+
     setChatHistory(prev => [...prev, {
       type: 'user',
       message: message,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     }]);
-    
+
     // Simulate AI response
     setTimeout(() => {
       setChatHistory(prev => [...prev, {
@@ -52,40 +52,11 @@ const AIAssistant = () => {
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       }]);
     }, 1000);
-    
+
     setMessage('');
   };
 
-  const insights = [
-    {
-      icon: TrendingUp,
-      title: 'Win Rate Optimization',
-      description: 'Your HVAC bids in Austin have a 32% higher win rate than average',
-      action: 'View Analysis',
-      color: 'text-green-600'
-    },
-    {
-      icon: Target,
-      title: 'Perfect Match Found',
-      description: '3 new projects match your expertise and location preferences',
-      action: 'Review Projects',
-      color: 'text-blue-600'
-    },
-    {
-      icon: DollarSign,
-      title: 'Pricing Strategy',
-      description: 'Consider reducing bid by 5-8% for commercial projects this month',
-      action: 'See Details',
-      color: 'text-purple-600'
-    },
-    {
-      icon: Clock,
-      title: 'Deadline Alert',
-      description: 'Medical Center bid due in 2 days - 87% completion',
-      action: 'Complete Bid',
-      color: 'text-red-600'
-    }
-  ];
+  const insights: any[] = [];
 
   const quickActions = [
     { icon: FileText, label: 'Analyze Spec', description: 'Upload project specs for AI analysis' },
@@ -133,24 +104,22 @@ const AIAssistant = () => {
                     <div className="h-96 overflow-y-auto p-4 space-y-4">
                       {chatHistory.map((chat, index) => (
                         <div key={index} className={`flex ${chat.type === 'user' ? 'justify-end' : 'justify-start'}`}>
-                          <div className={`max-w-[80%] rounded-lg p-3 ${
-                            chat.type === 'user' 
-                              ? 'bg-primary text-black ml-4' 
+                          <div className={`max-w-[80%] rounded-lg p-3 ${chat.type === 'user'
+                              ? 'bg-primary text-black ml-4'
                               : 'bg-gray-100 dark:bg-gray-800 mr-4'
-                          }`}>
-                            <p className="text-sm">{chat.message}</p>
-                            <p className={`text-xs mt-1 ${
-                              chat.type === 'user' 
-                                ? 'text-black/70' 
-                                : 'text-text-secondary-light dark:text-text-secondary-dark'
                             }`}>
+                            <p className="text-sm">{chat.message}</p>
+                            <p className={`text-xs mt-1 ${chat.type === 'user'
+                                ? 'text-black/70'
+                                : 'text-text-secondary-light dark:text-text-secondary-dark'
+                              }`}>
                               {chat.timestamp}
                             </p>
                           </div>
                         </div>
                       ))}
                     </div>
-                    
+
                     {/* Chat Input */}
                     <div className="border-t border-border-light dark:border-border-dark p-4">
                       <div className="flex gap-2">
@@ -161,7 +130,7 @@ const AIAssistant = () => {
                           onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                           className="flex-1"
                         />
-                        <Button 
+                        <Button
                           onClick={handleSendMessage}
                           className="bg-primary hover:bg-yellow-400 text-black"
                         >
@@ -273,32 +242,8 @@ const AIAssistant = () => {
                 <CardTitle className="text-lg">Recent AI Activity</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="flex items-start gap-3">
-                  <div className="size-8 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
-                    <CheckCircle className="w-4 h-4 text-green-600" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium">Analyzed Medical Center specs</p>
-                    <p className="text-xs text-text-secondary-light dark:text-text-secondary-dark">2 hours ago</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="size-8 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
-                    <TrendingUp className="w-4 h-4 text-blue-600" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium">Optimized bid pricing</p>
-                    <p className="text-xs text-text-secondary-light dark:text-text-secondary-dark">5 hours ago</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="size-8 rounded-full bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center">
-                    <AlertCircle className="w-4 h-4 text-yellow-600" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium">Flagged deadline risk</p>
-                    <p className="text-xs text-text-secondary-light dark:text-text-secondary-dark">1 day ago</p>
-                  </div>
+                <div className="text-center py-4 text-gray-500 text-sm">
+                  No recent AI activity logged.
                 </div>
               </CardContent>
             </Card>
@@ -311,19 +256,19 @@ const AIAssistant = () => {
               <CardContent className="space-y-4">
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-text-secondary-light dark:text-text-secondary-dark">Bids Optimized</span>
-                  <span className="font-bold">47</span>
+                  <span className="font-bold">0</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-text-secondary-light dark:text-text-secondary-dark">Win Rate Improvement</span>
-                  <span className="font-bold text-green-600">+12%</span>
+                  <span className="font-bold text-gray-400">0%</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-text-secondary-light dark:text-text-secondary-dark">Time Saved</span>
-                  <span className="font-bold">24 hours</span>
+                  <span className="font-bold">0 hours</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-text-secondary-light dark:text-text-secondary-dark">Projects Analyzed</span>
-                  <span className="font-bold">156</span>
+                  <span className="font-bold">0</span>
                 </div>
               </CardContent>
             </Card>

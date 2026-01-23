@@ -96,128 +96,7 @@ const EnhancedAICopilot = () => {
 
   // Mock AI insights data
   useEffect(() => {
-    const mockInsights: AIInsight[] = [
-      {
-        id: '1',
-        type: 'optimization',
-        priority: 'high',
-        title: 'Win Rate Optimization Detected',
-        description: 'Your win rate on Commercial HVAC projects in Austin is up 15% this quarter. I\'ve identified 3 similar high-value leads that match your successful project profile.',
-        impact: '+$180K potential revenue',
-        confidence: 92,
-        actionable: true,
-        actions: [
-          { id: 'a1', label: 'Review Similar Leads', type: 'primary', action: 'view_leads' },
-          { id: 'a2', label: 'Optimize Bid Strategy', type: 'secondary', action: 'optimize_bid' },
-          { id: 'a3', label: 'Schedule Analysis Call', type: 'link', action: 'schedule_call' }
-        ],
-        data: {
-          winRate: 68,
-          previousWinRate: 53,
-          leadsFound: 3,
-          potentialValue: 180000,
-          matchScore: 92
-        },
-        timestamp: new Date(Date.now() - 10 * 60 * 1000),
-        category: 'Bid Optimization',
-        tags: ['Commercial', 'HVAC', 'Austin', 'High-Value']
-      },
-      {
-        id: '2',
-        type: 'opportunity',
-        priority: 'critical',
-        title: 'High-Value Project Alert',
-        description: 'New $2.3M medical facility HVAC project posted. Based on your expertise and location, you have an 87% compatibility match. Bid deadline in 5 days.',
-        impact: '$2.3M project value',
-        confidence: 87,
-        actionable: true,
-        actions: [
-          { id: 'b1', label: 'View Project Details', type: 'primary', action: 'view_project' },
-          { id: 'b2', label: 'Start Bid Preparation', type: 'primary', action: 'start_bid' },
-          { id: 'b3', label: 'Set Deadline Reminder', type: 'secondary', action: 'set_reminder' }
-        ],
-        data: {
-          projectValue: 2300000,
-          compatibility: 87,
-          daysLeft: 5,
-          competition: 'Medium',
-          location: 'Austin, TX'
-        },
-        timestamp: new Date(Date.now() - 30 * 60 * 1000),
-        category: 'New Opportunities',
-        tags: ['Medical', 'HVAC', 'High-Value', 'Urgent']
-      },
-      {
-        id: '3',
-        type: 'prediction',
-        priority: 'medium',
-        title: 'Market Trend Analysis',
-        description: 'AI predicts 23% increase in commercial HVAC demand in Q2 2024. Energy efficiency projects showing highest growth potential.',
-        impact: '+23% market demand',
-        confidence: 78,
-        actionable: true,
-        actions: [
-          { id: 'c1', label: 'View Market Report', type: 'primary', action: 'view_report' },
-          { id: 'c2', label: 'Update Specializations', type: 'secondary', action: 'update_profile' }
-        ],
-        data: {
-          demandIncrease: 23,
-          topCategories: ['Energy Efficiency', 'Smart Systems', 'Green Building'],
-          timeframe: 'Q2 2024'
-        },
-        timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
-        category: 'Market Intelligence',
-        tags: ['Market Trends', 'Predictions', 'Growth']
-      },
-      {
-        id: '4',
-        type: 'warning',
-        priority: 'high',
-        title: 'Bid Deadline Risk',
-        description: 'Hospital renovation bid (Project #HRV-2024-03) is due in 18 hours. Current completion: 73%. Risk of missing deadline detected.',
-        impact: 'Risk: $450K opportunity',
-        confidence: 95,
-        actionable: true,
-        actions: [
-          { id: 'd1', label: 'Complete Bid Now', type: 'primary', action: 'complete_bid' },
-          { id: 'd2', label: 'Request Extension', type: 'secondary', action: 'request_extension' },
-          { id: 'd3', label: 'Set Priority Alert', type: 'link', action: 'set_alert' }
-        ],
-        data: {
-          projectId: 'HRV-2024-03',
-          completion: 73,
-          hoursLeft: 18,
-          projectValue: 450000
-        },
-        timestamp: new Date(Date.now() - 45 * 60 * 1000),
-        category: 'Risk Management',
-        tags: ['Deadline', 'Hospital', 'Urgent', 'Risk']
-      },
-      {
-        id: '5',
-        type: 'recommendation',
-        priority: 'medium',
-        title: 'Pricing Strategy Optimization',
-        description: 'Analysis shows your bids are 8% higher than winning competitors on residential projects. Suggested adjustment could increase win rate by 12%.',
-        impact: '+12% win rate potential',
-        confidence: 84,
-        actionable: true,
-        actions: [
-          { id: 'e1', label: 'View Pricing Analysis', type: 'primary', action: 'view_pricing' },
-          { id: 'e2', label: 'Adjust Pricing Model', type: 'secondary', action: 'adjust_pricing' },
-          { id: 'e3', label: 'Compare with Market', type: 'link', action: 'market_compare' }
-        ],
-        data: {
-          pricingDifference: 8,
-          winRateIncrease: 12,
-          category: 'Residential',
-          sampleSize: 47
-        },
-        timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000),
-        category: 'Pricing Strategy',
-        tags: ['Pricing', 'Residential', 'Optimization']
-      }
-    ];
+    const mockInsights: AIInsight[] = [];
 
     setInsights(mockInsights);
 
@@ -225,9 +104,9 @@ const EnhancedAICopilot = () => {
     const initialConversation: AIConversation[] = [
       {
         id: '1',
-        message: 'Hello! I\'m your AI Copilot. I\'ve analyzed your recent performance and found some exciting opportunities. Your commercial HVAC win rate in Austin is up 15%! How can I help you capitalize on this success?',
+        message: 'Hello! I\'m your AI Assistant. I\'ve initialized your control panel. How can I assist you with your projects and bids today?',
         sender: 'ai',
-        timestamp: new Date(Date.now() - 5 * 60 * 1000),
+        timestamp: new Date(),
         type: 'text'
       }
     ];
@@ -347,57 +226,57 @@ const EnhancedAICopilot = () => {
 
         {/* AI Performance Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-          <Card className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 border-green-200 dark:border-green-800">
+          <Card className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900/20 dark:to-gray-800/20 border-gray-200 dark:border-gray-800">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-green-700 dark:text-green-300">AI Accuracy</p>
-                  <p className="text-2xl font-bold text-green-800 dark:text-green-200">94.2%</p>
+                  <p className="text-sm text-gray-500">AI Accuracy</p>
+                  <p className="text-2xl font-bold dark:text-gray-200">0.0%</p>
                 </div>
-                <div className="w-12 h-12 bg-green-200 dark:bg-green-800 rounded-lg flex items-center justify-center">
-                  <Target className="w-6 h-6 text-green-700 dark:text-green-300" />
+                <div className="w-12 h-12 bg-gray-200 dark:bg-gray-800 rounded-lg flex items-center justify-center">
+                  <Target className="w-6 h-6 text-gray-400" />
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border-blue-200 dark:border-blue-800">
+          <Card className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900/20 dark:to-gray-800/20 border-gray-200 dark:border-gray-800">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-blue-700 dark:text-blue-300">Insights Generated</p>
-                  <p className="text-2xl font-bold text-blue-800 dark:text-blue-200">247</p>
+                  <p className="text-sm text-gray-500">Insights Generated</p>
+                  <p className="text-2xl font-bold dark:text-gray-200">0</p>
                 </div>
-                <div className="w-12 h-12 bg-blue-200 dark:bg-blue-800 rounded-lg flex items-center justify-center">
-                  <Brain className="w-6 h-6 text-blue-700 dark:text-blue-300" />
+                <div className="w-12 h-12 bg-gray-200 dark:bg-gray-800 rounded-lg flex items-center justify-center">
+                  <Brain className="w-6 h-6 text-gray-400" />
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 border-purple-200 dark:border-purple-800">
+          <Card className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900/20 dark:to-gray-800/20 border-gray-200 dark:border-gray-800">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-purple-700 dark:text-purple-300">Revenue Impact</p>
-                  <p className="text-2xl font-bold text-purple-800 dark:text-purple-200">+$1.2M</p>
+                  <p className="text-sm text-gray-500">Revenue Impact</p>
+                  <p className="text-2xl font-bold dark:text-gray-200">$0</p>
                 </div>
-                <div className="w-12 h-12 bg-purple-200 dark:bg-purple-800 rounded-lg flex items-center justify-center">
-                  <DollarSign className="w-6 h-6 text-purple-700 dark:text-purple-300" />
+                <div className="w-12 h-12 bg-gray-200 dark:bg-gray-800 rounded-lg flex items-center justify-center">
+                  <DollarSign className="w-6 h-6 text-gray-400" />
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 border-orange-200 dark:border-orange-800">
+          <Card className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900/20 dark:to-gray-800/20 border-gray-200 dark:border-gray-800">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-orange-700 dark:text-orange-300">Time Saved</p>
-                  <p className="text-2xl font-bold text-orange-800 dark:text-orange-200">156h</p>
+                  <p className="text-sm text-gray-500">Time Saved</p>
+                  <p className="text-2xl font-bold dark:text-gray-200">0h</p>
                 </div>
-                <div className="w-12 h-12 bg-orange-200 dark:bg-orange-800 rounded-lg flex items-center justify-center">
-                  <Clock className="w-6 h-6 text-orange-700 dark:text-orange-300" />
+                <div className="w-12 h-12 bg-gray-200 dark:bg-gray-800 rounded-lg flex items-center justify-center">
+                  <Clock className="w-6 h-6 text-gray-400" />
                 </div>
               </div>
             </CardContent>
@@ -433,8 +312,8 @@ const EnhancedAICopilot = () => {
 
                 <div className="space-y-4">
                   {insights.map((insight) => (
-                    <Card 
-                      key={insight.id} 
+                    <Card
+                      key={insight.id}
                       className={`border-l-4 ${getPriorityColor(insight.priority)} hover:shadow-md transition-shadow cursor-pointer`}
                       onClick={() => setSelectedInsight(selectedInsight === insight.id ? null : insight.id)}
                     >
@@ -448,12 +327,11 @@ const EnhancedAICopilot = () => {
                               <div>
                                 <h4 className="font-bold text-lg mb-1">{insight.title}</h4>
                                 <div className="flex items-center gap-2 mb-2">
-                                  <Badge className={`text-xs ${
-                                    insight.priority === 'critical' ? 'bg-red-100 text-red-800' :
-                                    insight.priority === 'high' ? 'bg-orange-100 text-orange-800' :
-                                    insight.priority === 'medium' ? 'bg-yellow-100 text-yellow-800' :
-                                    'bg-green-100 text-green-800'
-                                  }`}>
+                                  <Badge className={`text-xs ${insight.priority === 'critical' ? 'bg-red-100 text-red-800' :
+                                      insight.priority === 'high' ? 'bg-orange-100 text-orange-800' :
+                                        insight.priority === 'medium' ? 'bg-yellow-100 text-yellow-800' :
+                                          'bg-green-100 text-green-800'
+                                    }`}>
                                     {insight.priority.toUpperCase()}
                                   </Badge>
                                   <Badge variant="outline" className="text-xs">
@@ -469,9 +347,9 @@ const EnhancedAICopilot = () => {
                                 <p className="text-xs text-gray-500">{formatTimestamp(insight.timestamp)}</p>
                               </div>
                             </div>
-                            
+
                             <p className="text-gray-700 dark:text-gray-300 mb-4">{insight.description}</p>
-                            
+
                             {/* Tags */}
                             <div className="flex flex-wrap gap-1 mb-4">
                               {insight.tags.map((tag, index) => (
@@ -520,11 +398,11 @@ const EnhancedAICopilot = () => {
                                         {key.replace(/([A-Z])/g, ' $1').trim()}:
                                       </span>
                                       <span className="font-medium">
-                                        {typeof value === 'number' && key.includes('Value') 
+                                        {typeof value === 'number' && key.includes('Value')
                                           ? `$${value.toLocaleString()}`
                                           : typeof value === 'number' && key.includes('Rate')
-                                          ? `${value}%`
-                                          : value?.toString()}
+                                            ? `${value}%`
+                                            : value?.toString()}
                                       </span>
                                     </div>
                                   ))}
@@ -557,11 +435,10 @@ const EnhancedAICopilot = () => {
                             className={`flex ${conv.sender === 'user' ? 'justify-end' : 'justify-start'}`}
                           >
                             <div
-                              className={`max-w-[80%] rounded-lg p-3 ${
-                                conv.sender === 'user'
+                              className={`max-w-[80%] rounded-lg p-3 ${conv.sender === 'user'
                                   ? 'bg-primary text-black'
                                   : 'bg-gray-100 dark:bg-gray-800'
-                              }`}
+                                }`}
                             >
                               <p className="text-sm">{conv.message}</p>
                               <p className="text-xs opacity-70 mt-1">
@@ -583,7 +460,7 @@ const EnhancedAICopilot = () => {
                         )}
                       </div>
                     </ScrollArea>
-                    
+
                     <div className="border-t p-4">
                       <div className="flex gap-2">
                         <Input
@@ -623,13 +500,13 @@ const EnhancedAICopilot = () => {
                           <span className="font-bold text-green-600">68% ↑</span>
                         </div>
                         <Progress value={68} className="h-2" />
-                        
+
                         <div className="flex justify-between items-center">
                           <span>Bid Accuracy</span>
                           <span className="font-bold text-blue-600">84% ↑</span>
                         </div>
                         <Progress value={84} className="h-2" />
-                        
+
                         <div className="flex justify-between items-center">
                           <span>Response Time</span>
                           <span className="font-bold text-purple-600">2.3h ↓</span>

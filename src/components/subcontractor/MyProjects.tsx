@@ -1,9 +1,17 @@
-import { useState } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import {
   Briefcase,
   Calendar,
@@ -15,363 +23,316 @@ import {
   FileText,
   Eye,
   Edit,
-  MoreHorizontal
+  MoreHorizontal,
+  Zap,
+  ArrowRight,
+  TrendingUp,
+  Activity,
+  Shield,
+  Layers,
+  Inbox,
+  AlertCircle
 } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { scDashboardService, Deployment } from '@/services/scDashboardService';
+import { useToast } from '@/hooks/use-toast';
 
 const MyProjects = () => {
+  const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('active');
+  const [sortBy, setSortBy] = useState('progress');
+  const [deployments, setDeployments] = useState<Deployment[]>([]);
 
-  const activeProjects = [
-    {
-      id: '1',
-      name: 'City Center Office Complex',
-      client: 'Hensel Phelps',
-      location: 'Dallas, TX',
-      value: '$1,950,000',
-      startDate: '2023-09-15',
-      endDate: '2024-02-28',
-      progress: 65,
-      status: 'on-track',
-      phase: 'Installation',
-      team: 8,
-      lastUpdate: '2 days ago'
-    },
-    {
-      id: '2',
-      name: 'Riverside Elementary HVAC',
-      client: 'Turner Construction',
-      location: 'Austin, TX',
-      value: '$750,000',
-      startDate: '2023-10-01',
-      endDate: '2024-01-15',
-      progress: 45,
-      status: 'at-risk',
-      phase: 'Rough-in',
-      team: 5,
-      lastUpdate: '1 day ago'
-    },
-    {
-      id: '3',
-      name: 'Medical Plaza Expansion',
-      client: 'Skanska',
-      location: 'San Antonio, TX',
-      value: '$2,200,000',
-      startDate: '2023-08-20',
-      endDate: '2024-03-30',
-      progress: 80,
-      status: 'ahead',
-      phase: 'Final Testing',
-      team: 12,
-      lastUpdate: '4 hours ago'
-    }
-  ];
+  // Modal State
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<Deployment | null>(null);
 
-  const completedProjects = [
-    {
-      id: '4',
-      name: 'Downtown Shopping Center',
-      client: 'McCarthy Building',
-      location: 'Houston, TX',
-      value: '$1,400,000',
-      completedDate: '2023-09-30',
-      duration: '4 months',
-      rating: 4.9,
-      testimonial: 'Excellent work quality and on-time delivery.'
-    },
-    {
-      id: '5',
-      name: 'University Dormitory',
-      client: 'Balfour Beatty',
-      location: 'College Station, TX',
-      value: '$980,000',
-      completedDate: '2023-08-15',
-      duration: '3 months',
-      rating: 4.8,
-      testimonial: 'Professional team with great attention to detail.'
-    }
-  ];
+  useEffect(() => {
+    setDeployments(scDashboardService.getDeployments());
+  }, []);
 
-  const getStatusBadge = (status: string) => {
+  const sortedProjects = useMemo(() => {
+    return [...deployments].sort((a, b) => {
+      if (sortBy === 'progress') return b.progress - a.progress;
+      if (sortBy === 'value') return b.budgetValue - a.budgetValue;
+      return 0;
+    });
+  }, [sortBy, deployments]);
+
+  const getStatusStyle = (status: string) => {
     switch (status) {
-      case 'on-track':
-        return <Badge className="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300">On Track</Badge>;
-      case 'at-risk':
-        return <Badge className="bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300">At Risk</Badge>;
-      case 'ahead':
-        return <Badge className="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300">Ahead</Badge>;
-      case 'delayed':
-        return <Badge className="bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300">Delayed</Badge>;
-      default:
-        return <Badge>{status}</Badge>;
+      case 'ON-TRACK': return "bg-green-400/10 text-green-600 dark:text-green-500";
+      case 'AT-RISK': return "bg-yellow-400/10 text-yellow-600 dark:text-yellow-500";
+      case 'AHEAD': return "bg-blue-400/10 text-blue-600 dark:text-blue-400";
+      case 'DELAYED': return "bg-red-400/10 text-red-600 dark:text-red-500";
+      default: return "bg-gray-100 text-gray-800";
     }
   };
 
   const getProgressColor = (status: string) => {
-    if (status === 'ahead') return 'bg-blue-500';
-    if (status === 'at-risk') return 'bg-yellow-500';
-    if (status === 'delayed') return 'bg-red-500';
+    if (status === 'AHEAD') return 'bg-blue-500';
+    if (status === 'AT-RISK') return 'bg-yellow-500';
+    if (status === 'DELAYED') return 'bg-red-500';
     return 'bg-green-500';
   };
 
+  const handleMissionControl = (project: Deployment) => {
+    setSelectedProject(project);
+    setIsDetailModalOpen(true);
+  };
+
   return (
-    <div className="p-4 sm:p-6 lg:p-8 pb-20">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-          <div>
-            <h1 className="text-3xl font-black tracking-tight mb-2">My Projects</h1>
-            <p className="text-text-secondary-light dark:text-text-secondary-dark">
-              Manage and track all your active and completed projects
+    <div className="min-h-full bg-gray-50 dark:bg-[#0f1115] p-4 sm:p-6 lg:p-8 transition-colors duration-300">
+      <div className="max-w-[1600px] mx-auto space-y-8">
+
+        {/* Header Section */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="p-2 bg-yellow-400 rounded-lg">
+                <Layers className="w-5 h-5 text-black" />
+              </div>
+              <h1 className="text-3xl font-bold uppercase tracking-tight text-gray-900 dark:text-white">Active Deployments</h1>
+            </div>
+            <p className="text-gray-500 dark:text-gray-400 font-medium max-w-xl">
+              Track real-time project execution, resource allocation, and milestone achievement across all active sites.
             </p>
           </div>
-          <Button className="bg-primary hover:bg-yellow-400 text-black font-semibold">
-            <Briefcase className="w-4 h-4 mr-2" />
-            Project Report
+          <Button
+            className="h-12 px-8 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white hover:bg-gray-50 font-bold rounded-xl transition-all uppercase tracking-widest text-[10px]"
+            onClick={() => {
+              toast({
+                title: "Generating Manifest",
+                description: "Fleet status report has been compiled for export."
+              });
+            }}
+          >
+            <FileText className="w-4 h-4 mr-2" /> GENERATE MANIFEST
           </Button>
         </div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          <Card className="bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark">
-            <CardContent className="p-5">
-              <div className="flex justify-between items-start mb-2">
-                <p className="text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark">Active Projects</p>
-                <Briefcase className="w-5 h-5 text-primary" />
-              </div>
-              <p className="text-2xl font-bold">3</p>
-              <p className="text-xs font-medium text-green-600 mt-1">$4.9M total value</p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark">
-            <CardContent className="p-5">
-              <div className="flex justify-between items-start mb-2">
-                <p className="text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark">Avg Progress</p>
-                <CheckCircle className="w-5 h-5 text-green-600" />
-              </div>
-              <p className="text-2xl font-bold">63%</p>
-              <p className="text-xs font-medium text-green-600 mt-1">+5% this week</p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark">
-            <CardContent className="p-5">
-              <div className="flex justify-between items-start mb-2">
-                <p className="text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark">Team Members</p>
-                <Users className="w-5 h-5 text-blue-600" />
-              </div>
-              <p className="text-2xl font-bold">25</p>
-              <p className="text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark mt-1">Across all projects</p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark">
-            <CardContent className="p-5">
-              <div className="flex justify-between items-start mb-2">
-                <p className="text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark">Client Rating</p>
-                <CheckCircle className="w-5 h-5 text-yellow-600" />
-              </div>
-              <p className="text-2xl font-bold">4.9</p>
-              <p className="text-xs font-medium text-green-600 mt-1">Average rating</p>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-            <TabsList className="grid w-full sm:w-auto grid-cols-3">
-              <TabsTrigger value="active">Active Projects</TabsTrigger>
-              <TabsTrigger value="completed">Completed</TabsTrigger>
-              <TabsTrigger value="pipeline">Pipeline</TabsTrigger>
-            </TabsList>
-            <Select>
-              <SelectTrigger className="w-48">
-                <SelectValue placeholder="Sort by: Progress" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="progress">Progress</SelectItem>
-                <SelectItem value="value">Project Value</SelectItem>
-                <SelectItem value="deadline">Deadline</SelectItem>
-                <SelectItem value="status">Status</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <TabsContent value="active" className="space-y-4">
-            {activeProjects.map((project) => (
-              <Card key={project.id} className="bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark hover:border-primary/50 transition-colors">
-                <CardContent className="p-6">
-                  <div className="flex flex-col lg:flex-row gap-6">
-                    <div className="flex-1">
-                      <div className="flex items-start justify-between mb-4">
-                        <div>
-                          <div className="flex items-center gap-3 mb-2">
-                            <h3 className="font-bold text-xl">{project.name}</h3>
-                            {getStatusBadge(project.status)}
-                          </div>
-                          <div className="flex flex-wrap items-center gap-4 text-sm text-text-secondary-light dark:text-text-secondary-dark">
-                            <span className="flex items-center gap-1">
-                              <Building className="w-4 h-4" />
-                              {project.client}
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <MapPin className="w-4 h-4" />
-                              {project.location}
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <DollarSign className="w-4 h-4" />
-                              {project.value}
-                            </span>
-                          </div>
-                        </div>
-                        <Button variant="ghost" size="sm">
-                          <MoreHorizontal className="w-4 h-4" />
-                        </Button>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                        <div>
-                          <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark mb-1">Current Phase</p>
-                          <p className="font-semibold">{project.phase}</p>
-                        </div>
-                        <div>
-                          <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark mb-1">Team Size</p>
-                          <p className="font-semibold">{project.team} members</p>
-                        </div>
-                        <div>
-                          <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark mb-1">Last Update</p>
-                          <p className="font-semibold">{project.lastUpdate}</p>
-                        </div>
-                      </div>
-
-                      <div className="mb-4">
-                        <div className="flex justify-between items-center mb-2">
-                          <span className="text-sm font-medium">Progress</span>
-                          <span className="text-sm font-bold">{project.progress}%</span>
-                        </div>
-                        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                          <div 
-                            className={`h-2 rounded-full transition-all ${getProgressColor(project.status)}`}
-                            style={{ width: `${project.progress}%` }}
-                          />
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-4 text-sm text-text-secondary-light dark:text-text-secondary-dark">
-                        <span className="flex items-center gap-1">
-                          <Calendar className="w-4 h-4" />
-                          {project.startDate} - {project.endDate}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="flex flex-col gap-2 min-w-[200px]">
-                      <Button className="bg-primary text-black font-semibold hover:bg-yellow-400">
-                        <Eye className="w-4 h-4 mr-2" />
-                        View Details
-                      </Button>
-                      <Button variant="outline">
-                        <Edit className="w-4 h-4 mr-2" />
-                        Update Progress
-                      </Button>
-                      <Button variant="outline" size="sm">
-                        <FileText className="w-4 h-4 mr-2" />
-                        Documents
-                      </Button>
-                    </div>
+        {/* Fleet Metrics */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[
+            { label: 'ACTIVE FLEET', value: deployments.length.toString().padStart(2, '0'), sub: 'OPERATIONAL UNITS', icon: Activity, color: 'text-yellow-500' },
+            { label: 'AVG EFFICIENCY', value: '0%', sub: 'NO DATA YET', icon: TrendingUp, color: 'text-gray-500' },
+            { label: 'PERSONNEL', value: deployments.reduce((acc, d) => acc + d.team, 0).toString(), sub: 'TOTAL FIELD DEPLOYED', icon: Users, color: 'text-blue-500' },
+            { label: 'TRUST SCORE', value: 'N/A', sub: 'AWAITING FEEDBACK', icon: Shield, color: 'text-gray-500' },
+          ].map((stat, i) => (
+            <Card key={i} className="bg-white dark:bg-[#1c1e24] border-gray-100 dark:border-white/5 shadow-sm rounded-2xl overflow-hidden group hover:border-yellow-400/50 transition-all">
+              <CardContent className="p-5">
+                <div className="flex justify-between items-start mb-4">
+                  <div className="p-2 bg-gray-50 dark:bg-white/5 rounded-lg group-hover:bg-yellow-400 group-hover:text-black transition-all">
+                    <stat.icon className="w-5 h-5 transition-colors" />
                   </div>
-                </CardContent>
-              </Card>
-            ))}
-          </TabsContent>
-
-          <TabsContent value="completed" className="space-y-4">
-            {completedProjects.map((project) => (
-              <Card key={project.id} className="bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark">
-                <CardContent className="p-6">
-                  <div className="flex flex-col lg:flex-row gap-6">
-                    <div className="flex-1">
-                      <div className="flex items-start justify-between mb-4">
-                        <div>
-                          <div className="flex items-center gap-3 mb-2">
-                            <h3 className="font-bold text-xl">{project.name}</h3>
-                            <Badge className="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300">
-                              <CheckCircle className="w-3 h-3 mr-1" />
-                              Completed
-                            </Badge>
-                          </div>
-                          <div className="flex flex-wrap items-center gap-4 text-sm text-text-secondary-light dark:text-text-secondary-dark">
-                            <span className="flex items-center gap-1">
-                              <Building className="w-4 h-4" />
-                              {project.client}
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <MapPin className="w-4 h-4" />
-                              {project.location}
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <DollarSign className="w-4 h-4" />
-                              {project.value}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                        <div>
-                          <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark mb-1">Completed</p>
-                          <p className="font-semibold">{project.completedDate}</p>
-                        </div>
-                        <div>
-                          <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark mb-1">Duration</p>
-                          <p className="font-semibold">{project.duration}</p>
-                        </div>
-                        <div>
-                          <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark mb-1">Client Rating</p>
-                          <p className="font-semibold text-yellow-600">★ {project.rating}</p>
-                        </div>
-                      </div>
-
-                      {project.testimonial && (
-                        <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                          <p className="text-sm italic">"{project.testimonial}"</p>
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="flex flex-col gap-2 min-w-[200px]">
-                      <Button variant="outline">
-                        <Eye className="w-4 h-4 mr-2" />
-                        View Project
-                      </Button>
-                      <Button variant="outline" size="sm">
-                        <FileText className="w-4 h-4 mr-2" />
-                        Final Report
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </TabsContent>
-
-          <TabsContent value="pipeline" className="space-y-4">
-            <Card className="bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark">
-              <CardContent className="p-6 text-center">
-                <Briefcase className="w-12 h-12 text-text-secondary-light dark:text-text-secondary-dark mx-auto mb-4" />
-                <h3 className="font-bold text-lg mb-2">No Projects in Pipeline</h3>
-                <p className="text-text-secondary-light dark:text-text-secondary-dark mb-4">
-                  Projects you've won but haven't started yet will appear here
-                </p>
-                <Button className="bg-primary hover:bg-yellow-400 text-black font-semibold">
-                  Find New Projects
-                </Button>
+                  <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-gray-400">{stat.label}</span>
+                </div>
+                <div className="space-y-1">
+                  <h3 className="text-3xl font-bold text-gray-900 dark:text-white tabular-nums">{stat.value}</h3>
+                  <p className={cn("text-[10px] font-bold uppercase tracking-widest", stat.color)}>{stat.sub}</p>
+                </div>
               </CardContent>
             </Card>
-          </TabsContent>
-        </Tabs>
+          ))}
+        </div>
+
+        {/* Project Interface */}
+        <div className="space-y-6">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8">
+              <TabsList className="bg-white dark:bg-white/5 p-1.5 rounded-2xl border border-gray-100 dark:border-white/5 h-auto">
+                <TabsTrigger value="active" className="px-6 py-3 rounded-xl font-bold uppercase text-[10px] tracking-widest data-[state=active]:bg-yellow-400 data-[state=active]:text-black transition-all">
+                  In Progress
+                </TabsTrigger>
+                <TabsTrigger value="completed" className="px-6 py-3 rounded-xl font-bold uppercase text-[10px] tracking-widest data-[state=active]:bg-yellow-400 data-[state=active]:text-black transition-all">
+                  Success Logs
+                </TabsTrigger>
+                <TabsTrigger value="pipeline" className="px-6 py-3 rounded-xl font-bold uppercase text-[10px] tracking-widest data-[state=active]:bg-yellow-400 data-[state=active]:text-black transition-all">
+                  Awaiting Prep
+                </TabsTrigger>
+              </TabsList>
+
+              <Select value={sortBy} onValueChange={setSortBy}>
+                <SelectTrigger className="h-11 lg:w-48 bg-white dark:bg-white/5 border-gray-200 dark:border-white/10 rounded-xl font-bold uppercase text-[10px] tracking-widest">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="progress">SORT: COMPLETION</SelectItem>
+                  <SelectItem value="value">SORT: REVENUE</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <TabsContent value="active" className="space-y-4">
+              {sortedProjects.map((project) => (
+                <Card key={project.id} className="group bg-white dark:bg-[#1c1e24] border-gray-200 dark:border-white/5 hover:border-yellow-400/50 transition-all rounded-3xl overflow-hidden shadow-sm hover:shadow-md">
+                  <CardContent className="p-6">
+                    <div className="flex flex-col lg:flex-row gap-8">
+                      <div className="flex-1 space-y-6">
+                        <div className="flex flex-wrap items-center justify-between gap-4">
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-3">
+                              <h3 className="text-xl font-bold text-gray-900 dark:text-white uppercase tracking-tight">{project.name}</h3>
+                              <Badge className={cn("border-none font-bold text-[9px] uppercase tracking-[0.2em] px-3 py-1", getStatusStyle(project.status))}>
+                                {project.status}
+                              </Badge>
+                            </div>
+                            <div className="flex flex-wrap items-center gap-4 text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                              <span className="flex items-center gap-1.5"><Building className="w-3.5 h-3.5 text-yellow-500" /> {project.client}</span>
+                              <span className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-yellow-500" /> {project.location}</span>
+                              <span className="flex items-center gap-1.5 text-green-600"><DollarSign className="w-3.5 h-3.5" /> {project.value}</span>
+                            </div>
+                          </div>
+                          <Button variant="ghost" size="icon" className="h-10 w-10 text-gray-400 hover:text-yellow-500">
+                            <MoreHorizontal className="w-5 h-5" />
+                          </Button>
+                        </div>
+
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 py-4 border-y border-gray-50 dark:border-white/5">
+                          <div className="space-y-1">
+                            <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest block">Phase</span>
+                            <span className="text-xs font-bold text-gray-900 dark:text-white uppercase">{project.phase}</span>
+                          </div>
+                          <div className="space-y-1">
+                            <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest block">Active Team</span>
+                            <span className="text-xs font-bold text-gray-900 dark:text-white uppercase">{project.team} OPERATIVES</span>
+                          </div>
+                          <div className="space-y-1">
+                            <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest block">Last Sync</span>
+                            <span className="text-xs font-bold text-gray-900 dark:text-white uppercase">{project.lastUpdate}</span>
+                          </div>
+                          <div className="space-y-1">
+                            <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest block">Timeline</span>
+                            <span className="text-xs font-bold text-gray-900 dark:text-white uppercase font-mono">{project.endDate} EXPIRE</span>
+                          </div>
+                        </div>
+
+                        <div className="space-y-3">
+                          <div className="flex justify-between items-end">
+                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">Completion Metric</span>
+                            <span className="text-lg font-bold text-gray-900 dark:text-white tabular-nums">{project.progress}%</span>
+                          </div>
+                          <div className="h-2 w-full bg-gray-100 dark:bg-white/5 rounded-full overflow-hidden">
+                            <div className={cn("h-full transition-all duration-1000", getProgressColor(project.status))} style={{ width: `${project.progress}%` }} />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col gap-2 min-w-[220px] justify-center pt-6 lg:pt-0 lg:pl-8 border-t lg:border-t-0 lg:border-l border-gray-50 dark:border-white/5">
+                        <Button
+                          onClick={() => handleMissionControl(project)}
+                          className="h-12 w-full bg-black dark:bg-yellow-400 text-white dark:text-black font-bold uppercase text-[10px] tracking-widest rounded-xl hover:scale-[1.02] group transition-all"
+                        >
+                          MISSION CONTROL <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          className="h-12 w-full border-gray-200 dark:border-white/10 font-bold uppercase text-[10px] tracking-widest rounded-xl bg-transparent"
+                          onClick={() => {
+                            toast({
+                              title: "Asset Refinement",
+                              description: "Project documents and specs synced."
+                            });
+                          }}
+                        >
+                          REFINE ASSETS
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          className="h-12 w-full font-bold uppercase text-[10px] tracking-widest rounded-xl text-gray-400 hover:text-yellow-500"
+                          onClick={() => {
+                            toast({
+                              title: "Syncing Logs",
+                              description: "Communication and field logs updated."
+                            });
+                          }}
+                        >
+                          SYNC LOGS
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </TabsContent>
+
+            <TabsContent value="completed" className="space-y-4">
+              <Card className="p-20 text-center bg-white dark:bg-[#1c1e24] border-gray-200 dark:border-white/5 rounded-3xl">
+                <Inbox className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white uppercase tracking-tight">No Success Logs</h3>
+                <p className="text-gray-500 dark:text-gray-400 font-medium">Completed missions will be archived here for record recovery.</p>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="pipeline" className="space-y-4">
+              <Card className="p-20 text-center bg-white dark:bg-[#1c1e24] border-gray-200 dark:border-white/5 rounded-3xl">
+                <Inbox className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white uppercase tracking-tight">Pipeline Empty</h3>
+                <p className="text-gray-500 dark:text-gray-400 font-medium">Secure new protocols in the terminal to populate your pipeline.</p>
+              </Card>
+            </TabsContent>
+          </Tabs>
+        </div>
       </div>
+
+      {/* Deployment Details Modal */}
+      <Dialog open={isDetailModalOpen} onOpenChange={setIsDetailModalOpen}>
+        <DialogContent className="sm:max-w-xl bg-white dark:bg-[#1c1e24] border-gray-100 dark:border-white/5 rounded-3xl p-0 overflow-hidden">
+          <div className="h-2 bg-yellow-400 w-full" />
+          <div className="p-8">
+            <DialogHeader className="mb-6">
+              <div className="flex items-center gap-3 mb-2">
+                <Badge className={cn("border-none font-bold text-[9px] uppercase tracking-[0.2em] px-3 py-1", getStatusStyle(selectedProject?.status || ''))}>
+                  {selectedProject?.status}
+                </Badge>
+                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Deployment ID: EX-{selectedProject?.id.padStart(4, '0')}</span>
+              </div>
+              <DialogTitle className="text-3xl font-bold uppercase tracking-tight">{selectedProject?.name}</DialogTitle>
+              <DialogDescription className="text-[11px] font-bold uppercase tracking-widest text-gray-500 flex items-center gap-2 mt-2">
+                <Building className="w-3.5 h-3.5" /> {selectedProject?.client} Terminal • <MapPin className="w-3.5 h-3.5" /> {selectedProject?.location}
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="grid grid-cols-2 gap-4 mb-8">
+              <div className="p-4 bg-gray-50 dark:bg-white/5 rounded-2xl border border-gray-100 dark:border-white/5">
+                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-1">Contract Scale</span>
+                <span className="text-xl font-bold text-green-600 font-mono">{selectedProject?.value}</span>
+              </div>
+              <div className="p-4 bg-gray-50 dark:bg-white/5 rounded-2xl border border-gray-100 dark:border-white/5">
+                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-1">Execution Phase</span>
+                <span className="text-xl font-bold uppercase">{selectedProject?.phase}</span>
+              </div>
+            </div>
+
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <div className="flex justify-between items-end">
+                  <span className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">Operational Progress</span>
+                  <span className="text-lg font-bold tabular-nums">{selectedProject?.progress}%</span>
+                </div>
+                <div className="h-3 w-full bg-gray-100 dark:bg-white/5 rounded-full overflow-hidden">
+                  <div className={cn("h-full transition-all duration-1000", getProgressColor(selectedProject?.status || ''))} style={{ width: `${selectedProject?.progress}%` }} />
+                </div>
+              </div>
+
+              <div className="flex gap-4 p-4 bg-blue-500/5 border border-blue-500/10 rounded-2xl">
+                <Activity className="w-5 h-5 text-blue-500 shrink-0" />
+                <div className="space-y-1">
+                  <p className="text-xs font-bold uppercase tracking-tight text-blue-700 dark:text-blue-400">Tactical Recommendation</p>
+                  <p className="text-[11px] font-medium text-gray-500 dark:text-gray-400">
+                    Target milestones are within nominal parameters. Personnel allocation is optimized for {selectedProject?.phase} phase.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <DialogFooter className="mt-8 flex gap-3 sm:justify-between w-full">
+              <Button variant="ghost" className="font-bold uppercase text-[10px] tracking-widest" onClick={() => setIsDetailModalOpen(false)}>Close Terminal</Button>
+              <Button className="bg-black dark:bg-yellow-400 text-white dark:text-black font-bold uppercase text-[10px] tracking-widest px-8 rounded-xl">View Full Logs</Button>
+            </DialogFooter>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
