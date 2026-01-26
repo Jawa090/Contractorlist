@@ -5,9 +5,9 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import {
   LayoutDashboard,
-  Package,
+  Boxes,
   ShoppingCart,
-  Target,
+  LayoutGrid,
   MessageSquare,
   BarChart3,
   Settings,
@@ -39,11 +39,11 @@ const SupplierSidebar = ({ isOpen, onClose }: SupplierSidebarProps) => {
       isPro: false
     },
     {
-      icon: Package,
-      label: 'Product Catalog',
-      description: 'Manage products',
+      icon: Boxes,
+      label: 'Inventory System',
+      description: 'Manage live stock',
       path: '/supplier-dashboard/catalog',
-      badge: '1,247',
+      badge: 'Active',
       isPro: false
     },
     {
@@ -55,11 +55,11 @@ const SupplierSidebar = ({ isOpen, onClose }: SupplierSidebarProps) => {
       isPro: false
     },
     {
-      icon: Target,
-      label: 'Project Leads',
-      description: 'New opportunities',
+      icon: LayoutGrid,
+      label: 'Project Directory',
+      description: 'GC Bids & Leads',
       path: '/supplier-dashboard/leads',
-      badge: '42',
+      badge: 'Live',
       isPro: false
     },
     {
@@ -102,7 +102,7 @@ const SupplierSidebar = ({ isOpen, onClose }: SupplierSidebarProps) => {
     <>
       {/* Mobile Overlay */}
       {isOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/50 z-40 lg:hidden"
           onClick={onClose}
         />
@@ -135,7 +135,7 @@ const SupplierSidebar = ({ isOpen, onClose }: SupplierSidebarProps) => {
               </div>
             </div>
           )}
-          
+
           <div className="flex items-center gap-1">
             {/* Desktop Collapse Toggle */}
             <Button
@@ -150,7 +150,7 @@ const SupplierSidebar = ({ isOpen, onClose }: SupplierSidebarProps) => {
                 <ChevronLeft className="w-4 h-4" />
               )}
             </Button>
-            
+
             {/* Mobile Close */}
             <Button
               variant="ghost"
@@ -189,7 +189,7 @@ const SupplierSidebar = ({ isOpen, onClose }: SupplierSidebarProps) => {
                   {active && (
                     <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/20 to-orange-500/20 animate-pulse" />
                   )}
-                  
+
                   <div className={cn(
                     "flex items-center justify-center w-5 h-5 transition-all duration-300 relative z-10",
                     item.isPro && !active && "text-purple-500",
@@ -227,8 +227,8 @@ const SupplierSidebar = ({ isOpen, onClose }: SupplierSidebarProps) => {
                         </p>
                       </div>
                       {item.badge && (
-                        <Badge 
-                          variant={item.badge === 'Pro' ? 'default' : 'secondary'} 
+                        <Badge
+                          variant={item.badge === 'Pro' ? 'default' : 'secondary'}
                           className={cn(
                             "text-xs px-2 py-1 font-semibold transition-all duration-300 relative z-10",
                             active && 'bg-black/20 text-black border-black/20 shadow-md',

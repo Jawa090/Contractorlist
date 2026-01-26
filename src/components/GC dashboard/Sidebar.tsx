@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   Building2,
@@ -16,10 +15,11 @@ import {
   X,
   ChevronRight,
   ChevronLeft,
-  ChevronDown,
-  ChevronUp,
   LayoutDashboard,
-  LogOut
+  Gavel,
+  Sparkles,
+  Truck,
+  PhoneCall
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -30,208 +30,58 @@ interface SidebarProps {
 
 const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [expandedSections, setExpandedSections] = useState<{ [key: string]: boolean }>({
-    myprojects: false
-  });
   const location = useLocation();
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    toast({
-      title: "Logging out...",
-      description: "You are being safely redirected to the login page.",
-    });
-    // In a real app, clear tokens etc.
-    setTimeout(() => navigate('/'), 1500);
-  };
 
-  const toggleSection = (section: string) => {
-    setExpandedSections(prev => ({
-      ...prev,
-      [section]: !prev[section]
-    }));
-  };
-
-  const navigationItems = [
+  const navGroups = [
     {
-      name: 'Overview',
-      href: '/gc-dashboard/overview',
-      icon: LayoutDashboard,
-      description: 'Dashboard home'
+      label: 'Main',
+      items: [
+        { name: 'Overview', href: '/gc-dashboard/overview', icon: LayoutDashboard },
+        {
+          name: 'Projects',
+          href: '/gc-dashboard/my-projects',
+          icon: FolderOpen,
+          subItems: [
+            { name: 'Teams', href: '/gc-dashboard/my-projects?tab=team', icon: Users },
+            { name: 'Documents', href: '/gc-dashboard/my-projects?tab=documents', icon: FileText },
+          ]
+        },
+      ]
     },
     {
-      name: 'My Projects',
-      href: '/gc-dashboard/my-projects',
-      icon: FolderOpen,
-      description: 'Manage projects, bid, & documents'
+      label: 'Management',
+      items: [
+        { name: 'Bids', href: '/gc-dashboard/bids', icon: Gavel },
+        { name: 'Messages', href: '/gc-dashboard/communications', icon: MessageSquare },
+      ]
     },
     {
-      name: 'Communication',
-      href: '/gc-dashboard/communications',
-      icon: MessageSquare,
-      description: 'Messages & updates'
+      label: 'Platform',
+      items: [
+        { name: 'Project Finder', href: '/gc-dashboard/project-discovery', icon: Search },
+        {
+          name: 'Directory',
+          href: '/gc-dashboard/directory',
+          icon: Building,
+          subItems: [
+            { name: 'Sub Contractors', href: '/gc-dashboard/directory?tab=sc', icon: Building2 },
+            { name: 'Suppliers', href: '/gc-dashboard/directory?tab=suppliers', icon: Truck },
+          ]
+        },
+        { name: 'Marketplace', href: '/gc-dashboard/marketplace', icon: Sparkles },
+      ]
     },
     {
-      name: 'Project Discovery',
-      href: '/gc-dashboard/project-discovery',
-      icon: Search,
-      description: 'Find homeowner projects'
-    },
-    {
-      name: 'Sub Contractor Directory',
-      href: '/gc-dashboard/directory',
-      icon: Building,
-      description: 'Find subcontractors'
-    },
-  ];
-
-  const bottomItems = [
-    {
-      name: 'Settings',
-      href: '/gc-dashboard/settings',
-      icon: Settings,
-      description: 'Account settings'
-    },
-    {
-      name: 'Support',
-      href: '/gc-dashboard/help',
-      icon: HelpCircle,
-      description: 'Get assistance'
-    },
-  ];
-
-  const logoutItem = {
-    name: 'Logout',
-    href: '#',
-    icon: LogOut,
-    description: 'Sign out of account',
-    onClick: handleLogout
-  };
-
-  const renderNavItem = (item: any) => {
-    const sectionKey = item.name?.toLowerCase().replace(/\s+/g, '') || '';
-    const isActive = location.pathname === item.href ||
-      (item.subItems && item.subItems.some((sub: any) => location.pathname === sub.href));
-    const isExpanded = expandedSections[sectionKey] || false;
-
-    if (item.hasSubmenu) {
-      return (
-        <div key={item.name}>
-          <button
-            onClick={() => item.onClick ? item.onClick() : toggleSection(sectionKey)}
-            className={cn(
-              "group w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 relative overflow-hidden",
-              isActive
-                ? "bg-yellow-400 dark:bg-yellow-500 text-gray-900 shadow-[0_0_20px_rgba(234,179,8,0.3)]"
-                : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white",
-              isCollapsed ? 'justify-center px-3' : ''
-            )}
-          >
-            <item.icon className={cn(
-              "w-5 h-5 transition-all duration-300 relative z-10",
-              isActive && "scale-110"
-            )} />
-            {!isCollapsed && (
-              <>
-                <div className="flex-1 min-w-0 relative z-10 text-left">
-                  <div className="flex items-center justify-between">
-                    <span className={cn(
-                      "truncate transition-all duration-300",
-                      isActive && "font-bold"
-                    )}>
-                      {item.name}
-                    </span>
-                    {isExpanded ? (
-                      <ChevronUp className="w-4 h-4" />
-                    ) : (
-                      <ChevronDown className="w-4 h-4" />
-                    )}
-                  </div>
-                  <p className={cn(
-                    "text-xs truncate transition-all duration-300",
-                    isActive ? "text-gray-800" : "text-gray-500 dark:text-gray-400"
-                  )}>
-                    {item.description}
-                  </p>
-                </div>
-              </>
-            )}
-          </button>
-          {!isCollapsed && isExpanded && item.subItems && (
-            <div className="ml-4 mt-1 space-y-1 border-l-2 border-gray-200 dark:border-gray-700 pl-4">
-              {item.subItems.map((subItem: any) => {
-                const isSubActive = location.pathname === subItem.href;
-                return (
-                  <Link
-                    key={subItem.name}
-                    to={subItem.href}
-                    onClick={onClose}
-                    className={cn(
-                      "group flex items-center gap-3 px-4 py-2 rounded-lg text-sm transition-all duration-300",
-                      isSubActive
-                        ? "bg-yellow-100 dark:bg-yellow-900/30 text-gray-900 dark:text-white font-medium"
-                        : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white"
-                    )}
-                  >
-                    <subItem.icon className="w-4 h-4" />
-                    <span>{subItem.name}</span>
-                  </Link>
-                );
-              })}
-            </div>
-          )}
-        </div>
-      );
+      label: 'System',
+      items: [
+        { name: 'Talk to Sales', href: '#', icon: PhoneCall, onClick: () => toast({ title: "Sales Connection", description: "Request received. A dedicated representative will reach out shortly." }) },
+        { name: 'Settings', href: '/gc-dashboard/settings', icon: Settings },
+      ]
     }
-
-    return (
-      <Link
-        key={item.name}
-        to={item.href}
-        onClick={(e) => {
-          if (item.onClick) {
-            e.preventDefault();
-            item.onClick();
-          } else {
-            onClose();
-          }
-        }}
-        className={cn(
-          "group flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 relative overflow-hidden",
-          isActive
-            ? "bg-yellow-400 dark:bg-yellow-500 text-gray-900 shadow-[0_0_20px_rgba(234,179,8,0.3)]"
-            : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white",
-          isCollapsed ? 'justify-center px-3' : ''
-        )}
-      >
-        <item.icon className={cn(
-          "w-5 h-5 transition-all duration-300 relative z-10",
-          isActive && "scale-110"
-        )} />
-        {!isCollapsed && (
-          <>
-            <div className="flex-1 min-w-0 relative z-10">
-              <div className="flex items-center gap-2">
-                <span className={cn(
-                  "truncate transition-all duration-300",
-                  isActive && "font-bold"
-                )}>
-                  {item.name}
-                </span>
-              </div>
-              <p className={cn(
-                "text-xs truncate transition-all duration-300",
-                isActive ? "text-gray-800" : "text-gray-500 dark:text-gray-400"
-              )}>
-                {item.description}
-              </p>
-            </div>
-          </>
-        )}
-      </Link>
-    );
-  };
+  ];
 
   return (
     <>
@@ -267,13 +117,12 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                 <h1 className="text-lg font-bold tracking-tight text-gray-900 dark:text-white truncate">
                   GC Dashboard
                 </h1>
-                <p className="text-xs text-gray-600 dark:text-gray-400 truncate">General Contractor</p>
+                <p className="text-xs text-gray-600 dark:text-gray-400 truncate font-bold">General Contractor</p>
               </div>
             </div>
           )}
 
           <div className={cn("flex items-center gap-1", isCollapsed ? "absolute top-1/2 -translate-y-1/2 -right-3 z-50 pointer-events-auto" : "")}>
-            {/* Desktop Collapse Toggle */}
             <Button
               variant="ghost"
               size="sm"
@@ -290,7 +139,6 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
               )}
             </Button>
 
-            {/* Mobile Close */}
             <Button
               variant="ghost"
               size="sm"
@@ -303,16 +151,87 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
         </div>
 
         {/* Navigation */}
-        <div className={cn("flex-1 flex flex-col gap-4 overflow-y-auto duration-300 custom-scrollbar", isCollapsed ? "p-2 items-center" : "p-6")}>
-          <div className="space-y-1 w-full">
-            {navigationItems.map((item) => renderNavItem(item))}
-          </div>
-        </div>
+        <div className={cn("flex-1 flex flex-col gap-6 overflow-y-auto overflow-x-hidden p-4 scrollbar-hide", isCollapsed ? "items-center" : "")}>
+          {navGroups.map((group) => (
+            <div key={group.label} className="space-y-1 w-full">
+              {!isCollapsed && (
+                <h3 className="px-4 text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 dark:text-gray-600 mb-2">
+                  {group.label}
+                </h3>
+              )}
+              {group.items.map((item: any) => {
+                const isActive = location.pathname === item.href;
+                const hasSubItems = item.subItems && item.subItems.length > 0;
 
-        {/* Bottom section */}
-        <div className={cn("border-t border-gray-200 dark:border-gray-800 space-y-1 duration-300", isCollapsed ? "p-2 items-center" : "p-6")}>
-          {bottomItems.map((item) => renderNavItem(item))}
-          {renderNavItem(logoutItem)}
+                return (
+                  <div key={item.name} className="space-y-1">
+                    <Link
+                      to={item.href}
+                      onClick={(e: any) => {
+                        if (item.onClick) {
+                          e.preventDefault();
+                          item.onClick();
+                        }
+                        if (!hasSubItems) {
+                          onClose();
+                        }
+                      }}
+                      className={cn(
+                        "group flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 relative",
+                        isActive
+                          ? "bg-yellow-400 text-black shadow-lg shadow-yellow-400/20"
+                          : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-white",
+                        isCollapsed ? 'justify-center px-0 h-10 w-10 mx-auto' : ''
+                      )}
+                      title={isCollapsed ? item.name : ''}
+                    >
+                      <item.icon className={cn(
+                        "w-5 h-5 transition-all duration-200 shrink-0",
+                        isActive && "scale-110"
+                      )} />
+                      {!isCollapsed && (
+                        <span className="truncate">{item.name}</span>
+                      )}
+                      {isActive && !isCollapsed && (
+                        <div className="absolute left-0 w-1 h-4 bg-black rounded-r-full" />
+                      )}
+                      {!isCollapsed && hasSubItems && (
+                        <ChevronRight className={cn(
+                          "w-4 h-4 ml-auto transition-transform duration-200 text-gray-400",
+                          isActive && "rotate-90 text-black"
+                        )} />
+                      )}
+                    </Link>
+
+                    {!isCollapsed && hasSubItems && (isActive || location.pathname.startsWith(item.href)) && (
+                      <div className="ml-9 space-y-1 mt-1 border-l border-gray-200 dark:border-white/5 pl-2 animate-in slide-in-from-left-2 duration-200">
+                        {item.subItems.map((subItem: any) => {
+                          const isSubActive = (location.pathname + location.search) === subItem.href;
+                          return (
+                            <Link
+                              key={subItem.name}
+                              to={subItem.href}
+                              onClick={onClose}
+                              className={cn(
+                                "flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-bold transition-all duration-200",
+                                isSubActive
+                                  ? "bg-yellow-400/10 text-yellow-600 dark:text-yellow-400"
+                                  : "text-gray-500 dark:text-gray-500 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5"
+                              )}
+                            >
+                              <subItem.icon className="w-4 h-4" />
+                              <span>{subItem.name}</span>
+                            </Link>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          ))}
+
         </div>
       </aside>
     </>

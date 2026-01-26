@@ -24,15 +24,15 @@ const HelpSupport = () => {
       name: 'Live Chat',
       description: 'Get instant help from our support team',
       icon: MessageCircle,
-      color: 'bg-blue-100 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400',
+      color: 'bg-yellow-100 dark:bg-yellow-500/10 text-yellow-600 dark:text-yellow-400',
       status: 'Online',
-      statusColor: 'bg-green-100 dark:bg-green-500/10 text-green-600 dark:text-green-400 border-green-200 dark:border-green-500/20'
+      statusColor: 'bg-yellow-100 dark:bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border-yellow-200 dark:border-yellow-500/20'
     },
     {
       name: 'Phone Support',
       description: 'Call us for immediate assistance',
       icon: Phone,
-      color: 'bg-purple-100 dark:bg-purple-500/10 text-purple-600 dark:text-purple-400',
+      color: 'bg-gray-100 dark:bg-white/10 text-gray-900 dark:text-white',
       contact: '1-800-CONTRACTOR',
       statusColor: 'bg-gray-100 dark:bg-white/5 text-gray-500 dark:text-gray-300 border-gray-200 dark:border-white/10'
     },
@@ -40,7 +40,7 @@ const HelpSupport = () => {
       name: 'Email Support',
       description: 'Send us a detailed message',
       icon: Mail,
-      color: 'bg-orange-100 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400',
+      color: 'bg-gray-100 dark:bg-white/10 text-gray-900 dark:text-white',
       contact: 'support@contractorlist.com',
       statusColor: 'bg-gray-100 dark:bg-white/5 text-gray-500 dark:text-gray-300 border-gray-200 dark:border-white/10'
     }
@@ -152,7 +152,7 @@ const HelpSupport = () => {
                 <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">{action.description}</p>
                 {action.status && (
                   <Badge className={action.statusColor}>
-                    <div className="w-2 h-2 bg-green-500 rounded-full mr-2 shadow-[0_0_5px_rgba(34,197,94,0.5)] animate-pulse"></div>
+                    <div className="w-2 h-2 bg-yellow-400 rounded-full mr-2 shadow-[0_0_5px_rgba(250,204,21,0.5)] animate-pulse"></div>
                     {action.status}
                   </Badge>
                 )}
@@ -217,7 +217,7 @@ const HelpSupport = () => {
             <Card className="border-gray-200 dark:border-white/5 bg-white dark:bg-[#1c1e24] shadow-sm">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
-                  <PlayCircle className="w-5 h-5 text-red-500" />
+                  <PlayCircle className="w-5 h-5 text-gray-900 dark:text-white" />
                   Video Tutorials
                 </CardTitle>
               </CardHeader>
@@ -301,21 +301,21 @@ const HelpSupport = () => {
               <CardContent className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-500 dark:text-gray-400">Platform</span>
-                  <Badge className="bg-green-100 dark:bg-green-500/10 text-green-600 dark:text-green-400 border-green-200 dark:border-green-500/20">
+                  <Badge className="bg-gray-100 dark:bg-white/10 text-black dark:text-white border-black dark:border-white">
                     <CheckCircle className="w-3 h-3 mr-1" />
                     Operational
                   </Badge>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-500 dark:text-gray-400">Bid System</span>
-                  <Badge className="bg-green-100 dark:bg-green-500/10 text-green-600 dark:text-green-400 border-green-200 dark:border-green-500/20">
+                  <Badge className="bg-gray-100 dark:bg-white/10 text-black dark:text-white border-black dark:border-white">
                     <CheckCircle className="w-3 h-3 mr-1" />
                     Online
                   </Badge>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-500 dark:text-gray-400">Document Storage</span>
-                  <Badge className="bg-green-100 dark:bg-green-500/10 text-green-600 dark:text-green-400 border-green-200 dark:border-green-500/20">
+                  <Badge className="bg-gray-100 dark:bg-white/10 text-black dark:text-white border-black dark:border-white">
                     <CheckCircle className="w-3 h-3 mr-1" />
                     Online
                   </Badge>

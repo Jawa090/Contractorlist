@@ -205,7 +205,7 @@ const ProjectDocuments = ({ projectId }: ProjectDocumentsProps) => {
                     </tbody>
                 </table>
             </div>
-        </div>
+        </div >
     );
 };
 

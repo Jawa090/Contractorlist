@@ -22,6 +22,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useToast } from '@/hooks/use-toast';
 
 interface HeaderProps {
   onMenuClick: () => void;
@@ -32,6 +33,7 @@ const Header = ({ onMenuClick }: HeaderProps) => {
   const location = useLocation();
   const [isDark, setIsDark] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const { toast } = useToast();
 
   // Check theme on mount
   useEffect(() => {
@@ -72,6 +74,15 @@ const Header = ({ onMenuClick }: HeaderProps) => {
     return 'GC Dashboard';
   };
 
+  const handleLogout = () => {
+    toast({
+      title: "Logged out",
+      description: "You have been successfully logged out.",
+      variant: "default",
+    });
+    navigate('/login');
+  };
+
   return (
     <header className="sticky top-0 z-40 bg-gray-50 dark:bg-[#0f1115] border-b border-gray-200 dark:border-white/5">
       <div className="px-4 sm:px-6 py-3">
@@ -89,9 +100,9 @@ const Header = ({ onMenuClick }: HeaderProps) => {
               <Menu className="w-5 h-5" />
             </Button>
 
-        
 
-         
+
+
           </div>
 
           {/* Right Section - Actions, Theme & Profile */}
@@ -164,7 +175,10 @@ const Header = ({ onMenuClick }: HeaderProps) => {
                   Settings
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className="text-red-600 dark:text-red-400 p-3 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg cursor-pointer">
+                <DropdownMenuItem
+                  className="text-gray-900 dark:text-white p-3 hover:bg-gray-100 dark:hover:bg-white/10 rounded-lg cursor-pointer"
+                  onClick={handleLogout}
+                >
                   <LogOut className="w-4 h-4 mr-3" />
                   Sign Out
                 </DropdownMenuItem>

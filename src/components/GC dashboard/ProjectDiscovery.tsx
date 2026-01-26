@@ -1,11 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import {
   Dialog,
@@ -16,34 +13,38 @@ import {
   DialogFooter
 } from '@/components/ui/dialog';
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Search,
   MapPin,
-  Filter,
   Building2,
-  Calendar,
-  ArrowUpRight,
-  DollarSign,
-  Briefcase,
   Star,
-  Zap,
   List as ListIcon,
-  Gavel,
-  Clock,
-  FileText,
-  Users,
-  Grid3x3,
-  X,
-  Phone,
-  Mail,
-  Square,
-  Ruler,
-  HardHat,
   CheckCircle2,
   AlertCircle,
   TrendingUp,
-  Compass,
   Layers,
-  MoreHorizontal
+  MoreHorizontal,
+  Globe,
+  Navigation,
+  Hammer,
+  RotateCcw,
+  Clock,
+  Briefcase,
+  DollarSign,
+  Phone,
+  Mail,
+  Calendar,
+  ShieldCheck,
+  Tag,
+  Bookmark,
+  FileSearch,
+  ChevronDown
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
@@ -52,456 +53,684 @@ const ProjectDiscovery = () => {
   const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState('');
   const [locationSearch, setLocationSearch] = useState('');
-  const [zipCode, setZipCode] = useState('');
-  const [selectedLocation, setSelectedLocation] = useState('austin');
-  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
-  const [selectedBudgetRange, setSelectedBudgetRange] = useState<string[]>([]);
-  const [selectedTrade, setSelectedTrade] = useState<string[]>([]);
+  const [selectedSources, setSelectedSources] = useState<string[]>([]);
+  const [selectedProjectTypes, setSelectedProjectTypes] = useState<string[]>([]);
+  const [maxMileage, setMaxMileage] = useState<string>('100');
+  const [selectedTrades, setSelectedTrades] = useState<string[]>([]);
   const [selectedStatus, setSelectedStatus] = useState<string[]>([]);
+  const [nigpCode, setNigpCode] = useState('');
   const [viewMode, setViewMode] = useState<'table' | 'card'>('card');
   const [selectedProject, setSelectedProject] = useState<any>(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
-  const [showBidModal, setShowBidModal] = useState(false);
-  const [bidAmount, setBidAmount] = useState('');
-  const [bidDuration, setBidDuration] = useState('');
-  const [bidProposal, setBidProposal] = useState('');
+  const [showAllTrades, setShowAllTrades] = useState(false);
+  const [minBudget, setMinBudget] = useState('');
+  const [maxBudget, setMaxBudget] = useState('');
+  const [minSize, setMinSize] = useState('');
+  const [maxSize, setMaxSize] = useState('');
+  const [dueWithin, setDueWithin] = useState('any');
+  const [multipleKeywords, setMultipleKeywords] = useState('');
 
-  const projects = [
+  // Mock projects with industry-standard data points (PlanHub inspired)
+  const [projects] = useState([
     {
       id: 1,
       name: 'Downtown Commercial Plaza Renovation',
       location: 'Austin, TX',
-      zipCode: '78701',
+      distanceValue: 2.4,
       distance: '2.4 mi',
       budget: '$2.4M - $3.1M',
-      budgetMin: 2400000,
-      budgetMax: 3100000,
-      type: 'Commercial',
+      category: 'Commercial',
+      projectType: 'Renovation',
+      source: 'PlanHub',
       posted: '2 days ago',
-      deadline: 'Oct 30, 2024',
-      matchScore: 94,
-      isHot: true,
-      tags: ['Renovation', 'Electrical', 'HVAC'],
-      trade: ['Electrical', 'HVAC', 'General Construction'],
-      description: 'Complete renovation of 3-story commercial plaza including new electrical systems, HVAC overhaul, and exterior facade updates. Project requires GC with experience in commercial renovations.',
+      deadline: '2026-02-15',
+      nigpCode: '910-00',
+      matchScore: 98,
+      isProfileMatch: true,
+      trades: ['Electrical', 'HVAC', 'General Construction'],
+      description: 'Complete renovation of 3-story commercial plaza. Project requires GC with experience in commercial renovations. Interior fit-out and exterior facade.',
       owner: 'Metro Properties LLC',
-      ownerEmail: 'contact@metroproperties.com',
-      ownerPhone: '(512) 555-0100',
       sqft: '45,000',
       duration: '12-18 months',
-      status: 'Bidding',
-      requirements: ['Commercial license', '5+ years experience', 'Bonding capacity $3M+'],
-      documents: ['Project Plans.pdf', 'Specifications.pdf', 'Bid Package.zip']
+      status: 'Bidding'
     },
     {
       id: 2,
       name: 'Oak Ridge Medical Center Annex',
       location: 'Round Rock, TX',
-      zipCode: '78681',
+      distanceValue: 15,
       distance: '15 mi',
       budget: '$8.5M - $10M',
-      budgetMin: 8500000,
-      budgetMax: 10000000,
-      type: 'Healthcare',
+      category: 'Healthcare',
+      projectType: 'New Project',
+      source: 'Dodge Construction',
       posted: '5 hours ago',
-      deadline: 'Nov 15, 2024',
+      deadline: '2026-03-01',
+      nigpCode: '906-00',
       matchScore: 88,
-      isHot: false,
-      tags: ['New Construction', 'Healthcare'],
-      trade: ['General Construction', 'Plumbing', 'Electrical'],
-      description: 'New construction of a 20,000 sq ft medical annex. Requires specialized healthcare construction experience and medical gas certification.',
+      isProfileMatch: true,
+      trades: ['General Construction', 'Plumbing', 'Electrical'],
+      description: 'New construction of a 20,000 sq ft medical annex. Requires specialized healthcare construction experience and medical gas line installation.',
       owner: 'Oak Ridge Health',
-      ownerEmail: 'facilities@oakridge.org',
-      ownerPhone: '(512) 555-0250',
       sqft: '20,000',
       duration: '18 months',
-      status: 'Open',
-      requirements: ['Healthcare construction certification', 'Safety record < 0.8 EMR'],
-      documents: ['Schematics.pdf']
+      status: 'Open'
     },
     {
       id: 3,
       name: 'Residential Complex Phase 2',
       location: 'San Marcos, TX',
-      zipCode: '78666',
+      distanceValue: 30,
       distance: '30 mi',
       budget: '$12M - $15M',
-      budgetMin: 12000000,
-      budgetMax: 15000000,
-      type: 'Multi-Family',
+      category: 'Multi-Family',
+      projectType: 'New Project',
+      source: 'PlanHub',
       posted: '1 week ago',
-      deadline: 'Nov 01, 2024',
+      deadline: '2026-02-10',
+      nigpCode: '909-00',
       matchScore: 76,
-      isHot: true,
-      tags: ['New Construction', 'Residential'],
-      trade: ['General Construction', 'Concrete', 'Framing'],
+      isProfileMatch: false,
+      trades: ['General Construction', 'Concrete', 'Framing'],
       description: 'Phase 2 of Riverside Apartments. 4 buildings, 120 units total. Wood frame construction on slab on grade.',
       owner: 'Riverside Development',
-      ownerEmail: 'bids@riverside.com',
       sqft: '145,000',
       duration: '24 months',
-      status: 'Bidding',
-      requirements: ['Multi-family experience', 'Bonding capacity $15M+'],
-      documents: []
+      status: 'Bidding'
+    },
+    {
+      id: 4,
+      name: 'Public Library Modernization',
+      location: 'Austin, TX',
+      distanceValue: 4.8,
+      distance: '4.8 mi',
+      budget: '$5.5M',
+      category: 'Government',
+      projectType: 'Renovation',
+      source: 'Dodge Construction',
+      posted: 'Yesterday',
+      deadline: '2026-02-28',
+      nigpCode: '910-65',
+      matchScore: 94,
+      isProfileMatch: true,
+      trades: ['Asbestos Abatement', 'IT Infrastructure', 'Interior Finishes'],
+      description: 'Public works project for city library. Requires strict adherence to public procurement guidelines and prevailing wage.',
+      owner: 'City of Austin',
+      sqft: '32,000',
+      duration: '12 months',
+      status: 'Open'
     }
+  ]);
+
+  const projectCategories = ['Commercial', 'Residential', 'Industrial', 'Healthcare', 'Educational', 'Multi-Family', 'Government'];
+  const sources = ['PlanHub', 'Dodge Construction'];
+  const projectStatuses = ['Open', 'Bidding', 'Awarded', 'Closed'];
+  const mileageOptions = ['10', '25', '50', '100', '250'];
+  const trades = [
+    'Procurement & Contracting',
+    'General Requirements',
+    'Existing Conditions',
+    'Concrete',
+    'Masonry',
+    'Metals',
+    'Wood, Plastics & Composites',
+    'Thermal & Moisture Protection',
+    'Openings',
+    'Finishes',
+    'Specialties',
+    'Equipment',
+    'Furnishings',
+    'Special Construction',
+    'Conveying Equipment',
+    'Fire Suppression',
+    'Plumbing',
+    'HVAC',
+    'Integrated Automation',
+    'Electrical',
+    'Communications',
+    'Electronic Safety & Security',
+    'Earthwork',
+    'Exterior Improvements',
+    'Utilities',
+    'Transportation',
+    'Waterway & Marine',
+    'Process Interconnections',
+    'Material Processing',
+    'Process Heating/Cooling',
+    'Gas/Liquid Handling',
+    'Pollution Control',
+    'Electrical Power Generation'
   ];
 
-  const projectTypes = ['Commercial', 'Residential', 'Industrial', 'Healthcare', 'Educational', 'Multi-Family', 'Government'];
-  const budgetRanges = [
-    { label: '< $100k', value: '0-100000' },
-    { label: '$100k - $500k', value: '100000-500000' },
-    { label: '$500k - $1M', value: '500000-1000000' },
-    { label: '$1M - $5M', value: '1000000-5000000' },
-    { label: '$5M+', value: '5000000+' }
-  ];
-  const tradeCategories = ['General Construction', 'Electrical', 'Plumbing', 'HVAC', 'Concrete', 'Masonry', 'Roofing', 'Flooring', 'Painting', 'Landscaping'];
+  // Consolidated Advanced Filtering Logic
+  const filteredProjects = projects
+    .filter(p => {
+      // 1. Header Search Phrase (OR match across title/description/trades)
+      const matchesSearch = !searchQuery ||
+        p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.trades.some(t => t.toLowerCase().includes(searchQuery.toLowerCase()));
 
-  const [selectedTiers, setSelectedTiers] = useState<string[]>([]);
+      // 2. Multiple Keywords (AND match - all terms must exist somewhere)
+      const keywordsList = multipleKeywords.split(',').map(k => k.trim().toLowerCase()).filter(k => k !== '');
+      const matchesMultipleKeywords = keywordsList.length === 0 ||
+        keywordsList.every(k =>
+          p.name.toLowerCase().includes(k) ||
+          p.description.toLowerCase().includes(k) ||
+          p.trades.some(t => t.toLowerCase().includes(k))
+        );
 
-  const filteredProjects = projects.filter(p => {
-    // Search filter
-    const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.owner.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.description.toLowerCase().includes(searchQuery.toLowerCase());
+      // 3. Service Region
+      const matchesLocation = !locationSearch || locationSearch === 'AllRegions' ||
+        p.location.toLowerCase().includes(locationSearch.toLowerCase());
 
-    // Project Type filter
-    const matchesType = selectedTypes.length === 0 || selectedTypes.includes(p.type);
+      // 4. NIGP Code (Prefix match)
+      const matchesNigp = !nigpCode || p.nigpCode.includes(nigpCode);
 
-    // Location filter
-    const matchesLocation = locationSearch === '' || p.location.toLowerCase().includes(locationSearch.toLowerCase());
+      // 5. Project Category
+      const matchesType = selectedProjectTypes.length === 0 || selectedProjectTypes.includes(p.category);
 
-    // Budget filter
-    const matchesBudget = selectedBudgetRange.length === 0 || selectedBudgetRange.some(range => {
-      const [min, max] = range.split('-').map(Number);
-      const projMax = p.budgetMax || 0;
-      if (range === '5000000+') return projMax >= 5000000;
-      return projMax >= min && projMax <= max;
+      // 6. Solicitation Status
+      const matchesStatus = selectedStatus.length === 0 || selectedStatus.includes(p.status);
+
+      // 7. Marketplace Source
+      const matchesSource = selectedSources.length === 0 || selectedSources.includes(p.source);
+
+      // 8. Operational Radius
+      const matchesMileage = p.distanceValue <= parseInt(maxMileage);
+
+      // 9. CSI Divisions / Trades
+      const matchesTrades = selectedTrades.length === 0 || p.trades.some(t => selectedTrades.includes(t));
+
+      // 10. Budget Range
+      const getBudgetValue = (b: string) => {
+        // Handle "$2.4M", "$100k", etc.
+        const numeric = parseFloat(b.replace(/[^0-9.]/g, ''));
+        if (isNaN(numeric)) return 0;
+        if (b.toLowerCase().includes('m')) return numeric * 1000000;
+        if (b.toLowerCase().includes('k')) return numeric * 1000;
+        return numeric;
+      };
+      // For range values take the min
+      const projectPrice = getBudgetValue(p.budget.split('-')[0]);
+      const filterMin = minBudget ? parseFloat(minBudget) : -Infinity;
+      const filterMax = maxBudget ? parseFloat(maxBudget) : Infinity;
+      const matchesBudget = projectPrice >= filterMin && projectPrice <= filterMax;
+
+      // 11. Size Range (SQFT)
+      const projectSqft = parseInt(p.sqft.replace(/[^0-9]/g, '')) || 0;
+      const filterMinSize = minSize ? parseInt(minSize) : -Infinity;
+      const filterMaxSize = maxSize ? parseInt(maxSize) : Infinity;
+      const matchesSize = projectSqft >= filterMinSize && projectSqft <= filterMaxSize;
+
+      // 12. Bid Due Urgency
+      const deadlineDate = new Date(p.deadline);
+      const today = new Date();
+      const diffDays = Math.ceil((deadlineDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+      const matchesUrgency = dueWithin === 'any' ||
+        (dueWithin === '7' && diffDays <= 7) ||
+        (dueWithin === '30' && diffDays <= 30);
+
+      return matchesSearch && matchesMultipleKeywords && matchesLocation && matchesNigp &&
+        matchesType && matchesStatus && matchesSource && matchesMileage &&
+        matchesTrades && matchesBudget && matchesSize && matchesUrgency;
+    })
+    .sort((a, b) => {
+      // Prioritize Profile Matches, then by score
+      if (a.isProfileMatch && !b.isProfileMatch) return -1;
+      if (!a.isProfileMatch && b.isProfileMatch) return 1;
+      return b.matchScore - a.matchScore;
     });
 
-    // Tier/Compliance filter (using tags or other props if available, or just mocking for now)
-    // For this mock, we'll assume tiers match some project tags or properties
-    const matchesTier = selectedTiers.length === 0 || selectedTiers.some(tier =>
-      p.tags.includes(tier) || p.type.includes(tier) // Mocking tier matching
-    );
-
-    return matchesSearch && matchesType && matchesLocation && matchesBudget && matchesTier;
-  });
-
-  const handleViewDetails = (project: any) => {
-    setSelectedProject(project);
-    setShowDetailsModal(true);
+  const toggleFilter = (item: string, state: string[], setState: (val: string[]) => void) => {
+    setState(state.includes(item) ? state.filter(i => i !== item) : [...state, item]);
   };
 
-  const handleAddBid = (project: any) => {
-    setSelectedProject(project);
-    setShowBidModal(true);
-  };
-
-  const submitBid = () => {
+  const handleSaveSearch = () => {
     toast({
-      title: "Bid Submitted Successfully",
-      description: `Your bid of $${parseFloat(bidAmount).toLocaleString()} has been submitted for ${selectedProject?.name}.`,
+      title: "Search Criteria Saved",
+      description: "You will receive alerts for new projects matching these industry filters.",
     });
-    setShowBidModal(false);
-    setBidAmount('');
-    setBidDuration('');
-    setBidProposal('');
   };
 
   return (
     <div className="flex h-full w-full flex-col bg-white dark:bg-[#0f1115] text-gray-900 dark:text-white transition-colors duration-500 overflow-hidden font-sans">
 
-      {/* Dynamic Background */}
-      <div className="fixed inset-0 pointer-events-none opacity-50">
-        <div className="absolute top-[10%] right-[10%] w-[600px] h-[600px] bg-yellow-400/10 dark:bg-yellow-500/5 blur-[120px] rounded-full animate-pulse" />
-        <div className="absolute bottom-[20%] left-[5%] w-[400px] h-[400px] bg-blue-400/5 dark:bg-blue-600/5 blur-[100px] rounded-full" />
-      </div>
-
-      {/* Header & Search Banner */}
-      <div className="relative bg-gray-50 dark:bg-[#1c1e24] border-b border-gray-200 dark:border-white/5 px-8 py-6 z-20">
+      {/* Re-themed Industry Search Header */}
+      <div className="relative bg-gray-50/80 dark:bg-[#1c1e24]/80 border-b border-gray-200 dark:border-white/5 px-8 py-8 z-20 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto">
-
-
-          {/* Unified Search Bar */}
-          <div className="flex flex-col md:flex-row gap-4 p-1.5 bg-white dark:bg-black/40 rounded-2xl border border-gray-200 dark:border-white/5 shadow-xl backdrop-blur-xl">
-            <div className="flex-1 relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-600 w-4 h-4" />
-              <Input
-                placeholder="Keywords (e.g. 'Renovation', 'Steel')"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 h-12 border-none bg-transparent text-base focus-visible:ring-0 focus-visible:ring-offset-0 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-700"
-              />
+          <div className="flex flex-wrap items-end gap-6">
+            {/* Search Phrase */}
+            <div className="flex-1 min-w-[280px] space-y-2">
+              <label className="text-[10px] font-black uppercase tracking-widest text-gray-400">Search Phrase</label>
+              <div className="relative">
+                <Input
+                  placeholder="Enter keywords..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="h-11 bg-white dark:bg-black/20 border-gray-200 dark:border-white/10 rounded-xl text-gray-900 dark:text-white placeholder:text-gray-400 focus-visible:ring-2 focus-visible:ring-yellow-400 pr-10 shadow-sm"
+                />
+                <Search className="absolute right-3 top-1/2 -translate-y-1/2 text-yellow-600 w-5 h-5 pointer-events-none" />
+              </div>
             </div>
-            <div className="hidden md:block w-[1px] h-6 bg-gray-200 dark:bg-white/10 self-center" />
-            <div className="w-full md:w-[220px] relative">
-              <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-600 w-4 h-4" />
-              <Input
-                placeholder="Search Location"
+
+
+            {/* Region Dropdown */}
+            <div className="w-64 space-y-2">
+              <label className="text-[10px] font-black uppercase tracking-widest text-gray-400">Service Region</label>
+              <Select
                 value={locationSearch}
-                onChange={(e) => setLocationSearch(e.target.value)}
-                className="pl-10 h-12 border-none bg-transparent text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-700 focus-visible:ring-0 focus-visible:ring-offset-0 text-sm"
-              />
+                onValueChange={setLocationSearch}
+              >
+                <SelectTrigger className="h-11 bg-white dark:bg-black/20 border-gray-200 dark:border-white/10 rounded-xl text-gray-900 dark:text-white focus:ring-2 focus:ring-yellow-400 shadow-sm">
+                  <SelectValue placeholder="Select Region" />
+                </SelectTrigger>
+                <SelectContent className="dark:bg-[#1c1e24] dark:border-white/10">
+                  <SelectItem value="AllRegions">All Regions</SelectItem>
+                  <SelectItem value="Austin">Austin, TX</SelectItem>
+                  <SelectItem value="Round Rock">Round Rock, TX</SelectItem>
+                  <SelectItem value="San Marcos">San Marcos, TX</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
-            <Button size="sm" className="h-12 px-8 bg-yellow-400 hover:bg-yellow-500 dark:bg-yellow-500 dark:hover:bg-yellow-400 text-black font-black uppercase text-xs tracking-tighter rounded-xl shadow-lg active:scale-95 transition-all">
-              Search Projects
-            </Button>
+
+            {/* Action Buttons */}
+            <div className="flex flex-col items-end gap-2">
+              <Button
+                className="h-11 px-10 bg-yellow-400 hover:bg-yellow-500 text-black font-black uppercase text-[11px] tracking-widest rounded-xl shadow-lg shadow-yellow-400/20 transition-all"
+                onClick={() => {
+                  toast({
+                    title: "Fetching Results",
+                    description: "Updating bid feed with real-time market signals.",
+                  });
+                }}
+              >
+                Search Market
+              </Button>
+              <button
+                onClick={() => {
+                  setSearchQuery('');
+                  setSelectedProjectTypes([]);
+                  setSelectedSources([]);
+                  setSelectedStatus([]);
+                  setSelectedTrades([]);
+                  setLocationSearch('');
+                  setNigpCode('');
+                  setMinBudget('');
+                  setMaxBudget('');
+                  setMinSize('');
+                  setMaxSize('');
+                  setDueWithin('any');
+                  setMultipleKeywords('');
+                }}
+                className="text-yellow-600 dark:text-yellow-500 text-[10px] font-black uppercase tracking-widest hover:underline flex items-center gap-1"
+              >
+                Clear Search
+              </button>
+            </div>
+
+            {/* View Toggles */}
+            <div className="ml-auto flex items-center self-center gap-2 bg-gray-100 dark:bg-black/20 p-1 rounded-lg border border-gray-200 dark:border-white/10">
+              <Button variant="ghost" size="sm" onClick={() => setViewMode('card')} className={cn("rounded-md h-8 w-8 p-0", viewMode === 'card' ? "bg-white dark:bg-white/10 text-gray-900 dark:text-white shadow-sm" : "text-gray-400")}><Layers size={16} /></Button>
+              <Button variant="ghost" size="sm" onClick={() => setViewMode('table')} className={cn("rounded-md h-8 w-8 p-0", viewMode === 'table' ? "bg-white dark:bg-white/10 text-gray-900 dark:text-white shadow-sm" : "text-gray-400")}><ListIcon size={16} /></Button>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Main Grid View */}
       <div className="flex-1 flex overflow-hidden relative z-10">
-        {/* Left Filters - Slimmer Premium Version */}
-        <aside className="hidden xl:flex w-80 flex-col border-r border-gray-200 dark:border-white/5 bg-gray-50/50 dark:bg-black/20 overflow-y-auto p-8 custom-scrollbar">
-          <div className="flex items-center justify-between mb-8">
-            <h3 className="text-xl font-black tracking-tight">FILTERS</h3>
-            <button
-              onClick={() => {
-                setSelectedTypes([]);
-                setSelectedBudgetRange([]);
-                setSelectedTiers([]);
-                setSearchQuery('');
-                setLocationSearch('');
-              }}
-              className="text-[10px] font-black uppercase text-yellow-600 dark:text-yellow-500 hover:underline"
-            >
-              Reset
-            </button>
+        {/* Industry Advanced Filters Sidebar */}
+        <aside className="hidden xl:flex w-80 flex-col border-r border-gray-200 dark:border-white/5 bg-gray-50/50 dark:bg-black/10 overflow-y-auto p-6 scrollbar-hide space-y-8">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-[10px] font-black uppercase tracking-widest text-gray-400">Advanced Filters</h3>
+            <Button variant="link" size="sm" onClick={() => {
+              setSelectedProjectTypes([]); setSelectedSources([]); setSelectedStatus([]);
+              setSelectedTrades([]); setMaxMileage('100'); setNigpCode('');
+              setMinBudget(''); setMaxBudget(''); setMinSize(''); setMaxSize('');
+              setDueWithin('any'); setMultipleKeywords('');
+            }} className="text-[9px] uppercase font-bold text-yellow-600">Reset Signals</Button>
           </div>
 
-          <div className="space-y-10">
-            <div>
-              <Label className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4 block underline decoration-yellow-500/30 underline-offset-4">Project Categories</Label>
-              <div className="space-y-3">
-                {projectTypes.map(type => (
-                  <div key={type} className="flex items-center group cursor-pointer" onClick={() => {
-                    setSelectedTypes(prev => prev.includes(type) ? prev.filter(t => t !== type) : [...prev, type]);
-                  }}>
-                    <div className={cn(
-                      "w-5 h-5 rounded-md border flex items-center justify-center transition-all duration-200 mr-3",
-                      selectedTypes.includes(type) ? "bg-yellow-500 border-yellow-500 text-black" : "border-gray-300 dark:border-white/10 group-hover:border-yellow-400"
-                    )}>
-                      {selectedTypes.includes(type) && <CheckCircle2 className="w-3.5 h-3.5" />}
-                    </div>
-                    <span className={cn("text-xs font-bold transition-all", selectedTypes.includes(type) ? "text-gray-900 dark:text-white" : "text-gray-500 dark:text-gray-400 group-hover:pl-1")}>{type}</span>
-                  </div>
+          <div className="space-y-7">
+            {/* NIGP / Category Codes */}
+            <div className="space-y-3 p-4 rounded-2xl bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10">
+              <Label className="text-[10px] font-black uppercase tracking-widest text-gray-900 dark:text-white flex items-center gap-2">
+                <Tag size={12} /> NIGP/Classification Code
+              </Label>
+              <Input
+                placeholder="Ex: 910-00, 906-00"
+                value={nigpCode}
+                onChange={(e) => setNigpCode(e.target.value)}
+                className="h-9 bg-white dark:bg-black/20 border-gray-200 dark:border-white/10 text-xs rounded-xl"
+              />
+              <p className="text-[9px] text-gray-500 italic">Standardized Procurement Codes</p>
+            </div>
+
+            {/* Keyword Search (Multiple) */}
+            <div className="space-y-3">
+              <Label className="text-[10px] font-black uppercase tracking-widest text-gray-400 flex items-center gap-2">
+                <FileSearch size={12} className="text-yellow-600" /> Multiple Key Terms
+              </Label>
+              <Input
+                placeholder="Comma separated: retail, HVAC, hospital"
+                value={multipleKeywords}
+                onChange={(e) => setMultipleKeywords(e.target.value)}
+                className="h-9 bg-white dark:bg-black/20 border-gray-200 dark:border-white/10 text-xs rounded-xl"
+              />
+            </div>
+
+            {/* Budget Range (PlanHub centric) */}
+            <div className="space-y-3">
+              <Label className="text-[10px] font-black uppercase tracking-widest text-gray-400 flex items-center gap-2">
+                <DollarSign size={12} className="text-yellow-600" /> Project Value Range
+              </Label>
+              <div className="grid grid-cols-2 gap-2">
+                <Input
+                  placeholder="Min $"
+                  value={minBudget}
+                  onChange={(e) => setMinBudget(e.target.value)}
+                  className="h-9 bg-white dark:bg-black/20 border-gray-200 dark:border-white/10 text-xs rounded-xl"
+                />
+                <Input
+                  placeholder="Max $"
+                  value={maxBudget}
+                  onChange={(e) => setMaxBudget(e.target.value)}
+                  className="h-9 bg-white dark:bg-black/20 border-gray-200 dark:border-white/10 text-xs rounded-xl"
+                />
+              </div>
+            </div>
+
+            {/* Project Size Range */}
+            <div className="space-y-3">
+              <Label className="text-[10px] font-black uppercase tracking-widest text-gray-400 flex items-center gap-2">
+                <Building2 size={12} className="text-yellow-600" /> Size Range (SQFT)
+              </Label>
+              <div className="grid grid-cols-2 gap-2">
+                <Input
+                  placeholder="Min SQFT"
+                  value={minSize}
+                  onChange={(e) => setMinSize(e.target.value)}
+                  className="h-9 bg-white dark:bg-black/20 border-gray-200 dark:border-white/10 text-xs rounded-xl"
+                />
+                <Input
+                  placeholder="Max SQFT"
+                  value={maxSize}
+                  onChange={(e) => setMaxSize(e.target.value)}
+                  className="h-9 bg-white dark:bg-black/20 border-gray-200 dark:border-white/10 text-xs rounded-xl"
+                />
+              </div>
+            </div>
+
+            {/* Bid Urgency */}
+            <div className="space-y-3">
+              <Label className="text-[10px] font-black uppercase tracking-widest text-gray-400 flex items-center gap-2">
+                <Clock size={12} className="text-yellow-600" /> Bid Due Urgency
+              </Label>
+              <Select value={dueWithin} onValueChange={setDueWithin}>
+                <SelectTrigger className="h-9 bg-white dark:bg-black/20 border-gray-200 dark:border-white/10 text-xs rounded-xl">
+                  <SelectValue placeholder="All Timelines" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="any">All Timelines</SelectItem>
+                  <SelectItem value="7">Due within 7 days</SelectItem>
+                  <SelectItem value="30">Due within 30 days</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* PlanHub Style: Proximity/Mileage */}
+            <div className="space-y-3">
+              <Label className="text-[10px] font-black uppercase tracking-widest text-gray-400 flex items-center gap-2">
+                <Navigation size={12} className="text-yellow-600" /> Operational Radius
+              </Label>
+              <div className="flex flex-wrap gap-1.5">
+                {mileageOptions.map(m => (
+                  <button
+                    key={m}
+                    onClick={() => setMaxMileage(m)}
+                    className={cn(
+                      "px-3 py-1.5 rounded-lg text-[9px] font-bold border transition-all",
+                      maxMileage === m ? "bg-yellow-400 border-yellow-400 text-black" : "border-gray-200 dark:border-white/5 text-gray-500 hover:border-yellow-400"
+                    )}
+                  >
+                    {m} mi
+                  </button>
                 ))}
               </div>
             </div>
 
-            <div>
-              <Label className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4 block underline decoration-yellow-500/30 underline-offset-4">Financial Class</Label>
-              <div className="space-y-3">
-                {budgetRanges.map(range => (
-                  <div key={range.value} className="flex items-center group cursor-pointer" onClick={() => {
-                    setSelectedBudgetRange(prev => prev.includes(range.value) ? prev.filter(r => r !== range.value) : [...prev, range.value]);
-                  }}>
-                    <div className={cn(
-                      "w-5 h-5 rounded-md border flex items-center justify-center transition-all duration-200 mr-3",
-                      selectedBudgetRange.includes(range.value) ? "bg-yellow-500 border-yellow-500 text-black" : "border-gray-300 dark:border-white/10 group-hover:border-yellow-400"
-                    )}>
-                      {selectedBudgetRange.includes(range.value) && <CheckCircle2 className="w-3.5 h-3.5" />}
-                    </div>
-                    <span className={cn("text-xs font-bold transition-all", selectedBudgetRange.includes(range.value) ? "text-gray-900 dark:text-white" : "text-gray-500 dark:text-gray-400 group-hover:pl-1")}>{range.label}</span>
-                  </div>
+            {/* Status Filters */}
+            <div className="space-y-3">
+              <Label className="text-[10px] font-black uppercase tracking-widest text-gray-400 flex items-center gap-2">
+                <ShieldCheck size={12} className="text-yellow-600" /> Solictation Status
+              </Label>
+              <div className="grid grid-cols-2 gap-2">
+                {projectStatuses.map(status => (
+                  <button
+                    key={status}
+                    onClick={() => toggleFilter(status, selectedStatus, setSelectedStatus)}
+                    className={cn(
+                      "py-1.5 rounded-lg text-[9px] font-bold border transition-all",
+                      selectedStatus.includes(status) ? "bg-black dark:bg-white border-black dark:border-white text-white dark:text-black" : "border-gray-200 dark:border-white/5 text-gray-500"
+                    )}
+                  >
+                    {status}
+                  </button>
                 ))}
               </div>
             </div>
 
-            <div>
-              <Label className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4 block underline decoration-yellow-500/30 underline-offset-4">Compliance Tiers</Label>
-              <div className="space-y-3">
-                {['Public Works Only', 'Union Signatory', 'HUB / Minority Owned'].map(tier => (
-                  <div key={tier} className="flex items-center group cursor-pointer" onClick={() => {
-                    setSelectedTiers(prev => prev.includes(tier) ? prev.filter(t => t !== tier) : [...prev, tier]);
-                  }}>
-                    <div className={cn(
-                      "w-5 h-5 rounded-md border flex items-center justify-center transition-all duration-200 mr-3",
-                      selectedTiers.includes(tier) ? "bg-yellow-500 border-yellow-500 text-black" : "border-gray-300 dark:border-white/10 group-hover:border-yellow-400"
-                    )}>
-                      {selectedTiers.includes(tier) && <CheckCircle2 className="w-3.5 h-3.5" />}
+            {/* Project Categories (PlanHub style) */}
+            <div className="space-y-3">
+              <Label className="text-[10px] font-black uppercase tracking-widest text-gray-400 flex items-center gap-2">
+                <Building2 size={12} className="text-yellow-600" /> Project Categories
+              </Label>
+              <div className="flex flex-wrap gap-2">
+                {['Commercial', 'Residential', 'Industrial', 'Institutional', 'Infrastructure', 'Healthcare'].map(cat => (
+                  <button
+                    key={cat}
+                    onClick={() => toggleFilter(cat, selectedProjectTypes, setSelectedProjectTypes)}
+                    className={cn(
+                      "px-3 py-1.5 rounded-lg text-[9px] font-bold border transition-all",
+                      selectedProjectTypes.includes(cat) ? "bg-black dark:bg-white border-black dark:border-white text-white dark:text-black" : "border-gray-200 dark:border-white/5 text-gray-500"
+                    )}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+
+
+            {/* Trade Specialty (PlanHub centric) */}
+            <div className="space-y-3">
+              <Label className="text-[10px] font-black uppercase tracking-widest text-gray-400 flex items-center gap-2">
+                <Hammer size={12} className="text-yellow-600" /> Trades
+              </Label>
+              <div className="grid grid-cols-1 gap-1">
+                {(showAllTrades ? trades : trades.slice(0, 10)).map(t => (
+                  <div key={t} className="flex items-center gap-2 cursor-pointer group py-1" onClick={() => toggleFilter(t, selectedTrades, setSelectedTrades)}>
+                    <div className={cn("w-3.5 h-3.5 rounded border flex items-center justify-center transition-all", selectedTrades.includes(t) ? "bg-yellow-500 border-yellow-500" : "border-gray-300 dark:border-white/10 group-hover:border-yellow-400")}>
+                      {selectedTrades.includes(t) && <CheckCircle2 size={10} className="text-black" />}
                     </div>
-                    <span className={cn("text-xs font-bold transition-all", selectedTiers.includes(tier) ? "text-gray-900 dark:text-white" : "text-gray-500 dark:text-gray-400 group-hover:pl-1")}>{tier}</span>
+                    <span className={cn("text-[11px] font-bold transition-all", selectedTrades.includes(t) ? "text-gray-900 dark:text-white" : "text-gray-500 dark:text-gray-400 group-hover:pl-0.5")}>{t}</span>
                   </div>
                 ))}
+                <Button
+                  variant="link"
+                  size="sm"
+                  onClick={(e) => { e.stopPropagation(); setShowAllTrades(!showAllTrades); }}
+                  className="h-auto p-0 text-[10px] font-black uppercase text-yellow-600 dark:text-yellow-500 hover:no-underline flex items-center gap-1 mt-2 w-fit"
+                >
+                  {showAllTrades ? 'Show Less' : `+${trades.length - 10} More Divisions`}
+                </Button>
               </div>
             </div>
           </div>
         </aside>
 
-        {/* Middle Feed */}
-        <main className="flex-1 overflow-y-auto p-8 custom-scrollbar">
-          <div className="max-w-6xl mx-auto">
-            <div className="flex items-center justify-between mb-8">
+        {/* Project Feed */}
+        <main className="flex-1 overflow-y-auto p-8 custom-scrollbar bg-white dark:bg-[#0f1115]">
+          <div className="max-w-7xl mx-auto space-y-8">
+            <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <TrendingUp className="w-5 h-5 text-green-500" />
-                <span className="text-sm font-bold text-gray-500">Trending in <span className="text-gray-900 dark:text-white underline decoration-yellow-500 decoration-2 underline-offset-4">{locationSearch || 'Central Texas'}</span></span>
-              </div>
-
-              <div className="flex items-center bg-gray-100 dark:bg-black/40 p-1.5 rounded-2xl border border-gray-200 dark:border-white/5">
-                <button onClick={() => setViewMode('card')} className={cn("p-2 rounded-xl transition-all", viewMode === 'card' ? "bg-white dark:bg-[#1c1e24] text-black dark:text-white shadow-xl" : "text-gray-400 hover:text-black dark:hover:text-white")}>
-                  <Grid3x3 className="w-4 h-4" />
-                </button>
-                <button onClick={() => setViewMode('table')} className={cn("p-2 rounded-xl transition-all", viewMode === 'table' ? "bg-white dark:bg-[#1c1e24] text-black dark:text-white shadow-xl" : "text-gray-400 hover:text-black dark:hover:text-white")}>
-                  <ListIcon className="w-4 h-4" />
-                </button>
+                <TrendingUp className="w-5 h-5 text-yellow-500" />
+                <h2 className="text-xl font-black">Consolidated Bid Feed</h2>
+                <div className="flex gap-2">
+                  <Badge variant="outline" className="text-[9px] border-none text-gray-500 bg-gray-100 dark:bg-white/5 px-3 py-1 uppercase">{filteredProjects.length} Projects Available</Badge>
+                  {selectedSources.length > 0 && <Badge className="bg-black dark:bg-white text-white dark:text-black text-[9px] px-2">{selectedSources.join(' + ')}</Badge>}
+                </div>
               </div>
             </div>
 
-            {filteredProjects.length > 0 ? (
-              <div className={cn("grid gap-8", viewMode === 'card' ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3" : "grid-cols-1")}>
-                {filteredProjects.map((project) => (
-                  <Card
-                    key={project.id}
-                    className={cn(
-                      "group relative overflow-hidden bg-white dark:bg-[#1c1e24] border border-gray-200 dark:border-white/5 transition-all duration-500 hover:scale-[1.02] cursor-pointer rounded-[2.5rem] hover:shadow-[0_30px_60px_rgba(0,0,0,0.12)] cursor-pointer",
-                      viewMode === 'table' ? "flex flex-row items-center p-2 rounded-3xl" : ""
-                    )}
-                    onClick={() => handleViewDetails(project)}
-                  >
-                    {/* Status Badges Overlay */}
-                    <div className="px-8 pt-6 flex justify-between items-start">
-                      <div className="flex gap-2">
-                        {project.isHot && (
-                          <Badge className="bg-red-500 text-white font-black text-[10px] uppercase tracking-tighter border-none px-2 shadow-lg">HOT</Badge>
-                        )}
-                        <Badge className="bg-yellow-400/10 text-yellow-600 dark:text-yellow-500 font-black text-[10px] uppercase tracking-tighter border-none px-2">{project.type}</Badge>
+            <div className={cn("grid gap-8", viewMode === 'card' ? "grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3" : "grid-cols-1")}>
+              {filteredProjects.map((p) => (
+                <Card
+                  key={p.id}
+                  className={cn(
+                    "group relative overflow-hidden bg-white dark:bg-[#1c1e24] border-gray-200 dark:border-white/5 transition-all duration-500 hover:scale-[1.02] cursor-pointer rounded-[2rem] hover:shadow-2xl",
+                    p.isProfileMatch ? "ring-2 ring-yellow-400/30" : ""
+                  )}
+                  onClick={() => { setSelectedProject(p); setShowDetailsModal(true); }}
+                >
+                  <div className="absolute top-0 right-0 p-4 flex gap-2">
+                    {p.isProfileMatch && (
+                      <div className="bg-yellow-400 text-black text-[8px] font-black px-2 py-0.5 rounded-full shadow-lg flex items-center gap-1">
+                        <Star size={9} className="fill-current" /> PROFILE MATCH
                       </div>
-                      <div className="flex items-center gap-1.5 text-yellow-500 font-black text-xs uppercase tracking-widest">
-                        <Star className="w-3.5 h-3.5 fill-current" />
-                        {project.matchScore}% Match
+                    )}
+                    <div className="bg-black/60 backdrop-blur-md text-white text-[8px] font-black px-2 py-0.5 rounded-full">
+                      DUE: {p.deadline}
+                    </div>
+                  </div>
+
+                  <CardContent className="p-8">
+                    <div className="flex flex-col h-full gap-6">
+                      <div className="flex justify-between items-start">
+                        <Badge className="bg-gray-100 dark:bg-white/10 text-gray-900 dark:text-white border-none font-black text-[9px] h-5 tracking-widest">{p.source.toUpperCase()}</Badge>
+                        <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">{p.posted}</span>
+                      </div>
+
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2 text-[10px] text-gray-400 font-mono">
+                          NIGP: {p.nigpCode}
+                        </div>
+                        <h3 className="text-xl font-black text-gray-900 dark:text-white tracking-tight leading-tight group-hover:text-yellow-600 transition-colors line-clamp-2">{p.name}</h3>
+                        <div className="flex flex-wrap items-center gap-3 text-[11px] font-bold text-gray-400">
+                          <span className="flex items-center gap-1"><MapPin size={12} className="text-yellow-600" /> {p.location} ({p.distance})</span>
+                          <span>•</span>
+                          <span className="flex items-center gap-1 text-gray-900 dark:text-white"><ShieldCheck size={12} /> {p.status}</span>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-wrap gap-1.5">
+                        {p.trades.map(t => (
+                          <span key={t} className="text-[9px] font-bold px-2 py-0.5 rounded-md bg-gray-100 dark:bg-white/5 text-gray-500">{t}</span>
+                        ))}
+                      </div>
+
+                      <div className="pt-6 border-t border-gray-100 dark:border-white/5 flex items-center justify-between">
+                        <div>
+                          <p className="text-[9px] font-black uppercase text-gray-400 tracking-widest mb-1">Project Valuation</p>
+                          <p className="text-lg font-black font-mono text-gray-900 dark:text-white">{p.budget}</p>
+                        </div>
+                        <Button className="h-10 px-6 rounded-xl bg-black dark:bg-yellow-500 text-white dark:text-black font-black uppercase text-[10px] tracking-widest">View Bid Package</Button>
                       </div>
                     </div>
+                  </CardContent>
+                </Card>
+              ))}
 
-                    <CardContent className={cn("px-8 pb-8 pt-4", viewMode === 'table' ? "flex-1 py-4" : "")}>
-                      <div className="flex flex-col h-full">
-                        <div className="mb-6 flex-1">
-                          <div className="flex items-center gap-2 text-[10px] font-black uppercase text-yellow-600 dark:text-yellow-500 tracking-widest mb-2">
-                            <Layers className="w-3.5 h-3.5" />
-                            ID: #DISC-{project.id}0922
-                          </div>
-                          <h4 className="text-xl font-black text-gray-900 dark:text-white leading-tight mb-2 group-hover:text-yellow-600 dark:group-hover:text-yellow-400 transition-colors">
-                            {project.name}
-                          </h4>
-                          <div className="flex items-center gap-3 text-xs text-gray-400 font-bold">
-                            <span className="flex items-center gap-1"><MapPin className="w-3 h-3" /> {project.location}</span>
-                            <span>•</span>
-                            <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {project.posted}</span>
-                          </div>
-                        </div>
-
-                        <div className="space-y-4 pt-4 border-t border-gray-100 dark:border-white/5">
-                          <div className="flex justify-between items-end">
-                            <div>
-                              <p className="text-[10px] font-black uppercase text-gray-400 tracking-widest mb-1">Target Budget</p>
-                              <p className="text-lg font-black font-mono">{project.budget}</p>
-                            </div>
-                            <Button variant="ghost" size="icon" className="h-10 w-10 rounded-xl bg-gray-50 dark:bg-white/5 text-gray-400 hover:text-black dark:hover:text-white">
-                              <MoreHorizontal className="w-4 h-4" />
-                            </Button>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Button className="flex-1 bg-black dark:bg-yellow-500 text-white dark:text-black font-black uppercase text-[10px] tracking-widest rounded-xl hover:bg-yellow-500 dark:hover:bg-yellow-400 transition-all h-10 shadow-lg" onClick={(e) => { e.stopPropagation(); handleAddBid(project) }}>
-                              Submit Intent
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            ) : (
-              <div className="flex flex-col items-center justify-center py-32 bg-gray-50/50 dark:bg-black/20 rounded-[3rem] border-4 border-dashed border-gray-200 dark:border-white/5">
-                <AlertCircle className="w-16 h-16 text-gray-200 dark:text-white/5 mb-6" />
-                <h3 className="text-2xl font-black tracking-tight mb-2">Expanding Feed...</h3>
-                <p className="text-gray-500 font-bold max-w-xs text-center">We couldn't find matches for this specific query. Try broadening your location or budget range.</p>
-                <Button variant="link" onClick={() => { setSearchQuery(''); setSelectedTypes([]); }} className="mt-4 text-yellow-500 font-black uppercase tracking-widest text-xs">Clear Signals</Button>
-              </div>
-            )}
+              {filteredProjects.length === 0 && (
+                <div className="col-span-full py-24 flex flex-col items-center justify-center text-center bg-gray-50 dark:bg-white/[0.02] rounded-[3rem] border-2 border-dashed border-gray-200 dark:border-white/5">
+                  <FileSearch size={48} className="text-gray-300 mb-4" />
+                  <h4 className="text-2xl font-black tracking-tight mb-2">No Market Signals Found</h4>
+                  <p className="text-gray-500 max-w-sm font-bold text-sm">No solicitations match your NIGP codes or multiple keyword criteria. Try clearing some industry signals.</p>
+                </div>
+              )}
+            </div>
           </div>
         </main>
       </div>
 
-      {/* Small & Minimal Project Detail Modal */}
+      {/* Industry Standard Details Modal */}
       <Dialog open={showDetailsModal} onOpenChange={setShowDetailsModal}>
-        <DialogContent className="max-w-md p-0 overflow-hidden bg-white dark:bg-[#111318] border-gray-200 dark:border-white/10 shadow-2xl rounded-[1.5rem]">
+        <DialogContent className="max-w-2xl p-0 overflow-hidden bg-white dark:bg-[#111318] border-gray-200 dark:border-white/10 shadow-3xl rounded-[2rem]">
           {selectedProject && (
             <div className="flex flex-col">
-              {/* Clean Header */}
-              <div className="px-6 py-5 border-b border-gray-100 dark:border-white/5 bg-gray-50/30">
-                <div className="flex flex-col gap-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <Badge variant="outline" className="text-[9px] font-black tracking-widest border-yellow-500/20 text-yellow-600 dark:text-yellow-500 bg-yellow-400/5">
-                      {selectedProject.type.toUpperCase()}
-                    </Badge>
-                    <span className="text-[9px] font-bold text-gray-400">#{selectedProject.id}0922</span>
+              <div className="bg-gray-100/50 dark:bg-black/30 p-8 border-b border-gray-100 dark:border-white/5">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex gap-2">
+                    <Badge className="bg-gray-100 dark:bg-white/10 text-gray-900 dark:text-white border-none font-black text-[9px] uppercase tracking-widest px-3">{selectedProject.source}</Badge>
+                    <Badge className="bg-yellow-400 text-black border-none font-black text-[9px] uppercase tracking-widest px-3">verified solicitation</Badge>
                   </div>
-                  <h2 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white leading-tight">
-                    {selectedProject.name}
-                  </h2>
-                  <p className="text-gray-500 flex items-center gap-1.5 text-xs">
-                    <MapPin className="w-3 h-3" /> {selectedProject.location}
-                  </p>
+                  <div className="flex items-center gap-2">
+                    <Clock className="w-3.5 h-3.5 text-black dark:text-white" />
+                    <span className="text-[10px] font-black uppercase text-black dark:text-white">Bids Due: {selectedProject.deadline}</span>
+                  </div>
+                </div>
+                <h2 className="text-3xl font-black tracking-tighter text-gray-900 dark:text-white leading-tight mb-2">
+                  {selectedProject.name}
+                </h2>
+                <div className="flex items-center gap-4 text-xs font-bold text-gray-500">
+                  <span className="flex items-center gap-1.5"><MapPin size={14} className="text-yellow-500" /> {selectedProject.location}</span>
+                  <span>•</span>
+                  <span className="flex items-center gap-1.5 border-l border-gray-300 dark:border-white/10 pl-4"><Tag size={14} className="text-gray-900 dark:text-white" /> NIGP Code: {selectedProject.nigpCode}</span>
                 </div>
               </div>
 
-              <div className="px-6 py-5 space-y-6">
-                {/* Compact Stats Row */}
-                <div className="grid grid-cols-3 gap-2 text-center pb-4 border-b border-gray-100 dark:border-white/5">
-                  <div>
-                    <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest mb-0.5">Budget</p>
-                    <p className="text-xs font-bold font-mono">{selectedProject.budget}</p>
+              <div className="p-8 space-y-8 max-h-[60vh] overflow-y-auto custom-scrollbar">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                  <div className="p-4 rounded-2xl bg-gray-50 dark:bg-white/[0.02] border border-gray-100 dark:border-white/5">
+                    <p className="text-[9px] font-black uppercase text-gray-400 tracking-widest mb-1">Est. Value</p>
+                    <p className="text-sm font-black font-mono">{selectedProject.budget}</p>
                   </div>
-                  <div className="border-l border-r border-gray-100 dark:border-white/5">
-                    <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest mb-0.5">Scale</p>
-                    <p className="text-xs font-bold font-mono">{selectedProject.sqft} sqft</p>
+                  <div className="p-4 rounded-2xl bg-gray-50 dark:bg-white/[0.02] border border-gray-100 dark:border-white/5">
+                    <p className="text-[9px] font-black uppercase text-gray-400 tracking-widest mb-1">Operational Area</p>
+                    <p className="text-sm font-black">{selectedProject.sqft} SQFT</p>
                   </div>
-                  <div>
-                    <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest mb-0.5">Duration</p>
-                    <p className="text-xs font-bold font-mono">{selectedProject.duration}</p>
+                  <div className="p-4 rounded-2xl bg-gray-50 dark:bg-white/[0.02] border border-gray-100 dark:border-white/5">
+                    <p className="text-[9px] font-black uppercase text-gray-400 tracking-widest mb-1">Phase</p>
+                    <p className="text-sm font-black uppercase text-gray-900 dark:text-white">{selectedProject.status}</p>
+                  </div>
+                  <div className="p-4 rounded-2xl bg-gray-50 dark:bg-white/[0.02] border border-gray-100 dark:border-white/5">
+                    <p className="text-[9px] font-black uppercase text-gray-400 tracking-widest mb-1">Urgency</p>
+                    <p className="text-sm font-black uppercase text-yellow-600 dark:text-yellow-500">Active</p>
                   </div>
                 </div>
 
                 <div className="space-y-4">
-                  <h4 className="text-[9px] font-black uppercase tracking-widest text-gray-400">Scope</h4>
-                  <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed font-semibold">
+                  <h4 className="text-[10px] font-black uppercase tracking-widest text-gray-400">Executive Summary</h4>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed font-semibold">
                     {selectedProject.description}
                   </p>
                 </div>
 
                 <div className="space-y-4">
-                  <div className="flex items-center gap-3 bg-gray-50 dark:bg-white/[0.02] p-2.5 rounded-xl border border-gray-100 dark:border-white/5">
-                    <div className="h-8 w-8 rounded-lg bg-yellow-400 flex items-center justify-center text-black font-bold text-xs shrink-0">
-                      {selectedProject.owner.charAt(0)}
+                  <h4 className="text-[10px] font-black uppercase tracking-widest text-gray-400">Classification Details</h4>
+                  <div className="flex flex-wrap gap-2">
+                    <div className="px-3 py-1.5 rounded-xl bg-gray-100 dark:bg-white/5 text-[10px] font-bold text-gray-500">
+                      NIGP Code: {selectedProject.nigpCode}
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs font-bold truncate">{selectedProject.owner}</p>
-                      <p className="text-[9px] text-gray-400">Project Owner</p>
+                    <div className="px-3 py-1.5 rounded-xl bg-gray-100 dark:bg-white/5 text-[10px] font-bold text-gray-500">
+                      Sector: {selectedProject.category}
                     </div>
-                    <div className="flex gap-1.5">
-                      <Button variant="outline" size="sm" className="h-7 w-7 p-0 rounded-md"><Mail className="w-3 h-3" /></Button>
-                      <Button variant="outline" size="sm" className="h-7 w-7 p-0 rounded-md"><Phone className="w-3 h-3" /></Button>
-                    </div>
+                  </div>
+                </div>
+
+                <div className="p-6 rounded-2xl bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 space-y-4">
+                  <h4 className="text-[10px] font-black uppercase tracking-widest text-gray-900 dark:text-white">Market Integration</h4>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-gray-500 font-bold italic">This lead is synchronized with external procurement networks. View matching documents below.</span>
+                    <Button variant="link" className="h-auto p-0 text-black dark:text-white font-black text-[10px] uppercase">Analyze Solicitation</Button>
                   </div>
                 </div>
               </div>
 
-              {/* Action Area */}
-              <div className="px-6 py-4 bg-gray-50/50 dark:bg-transparent border-t border-gray-100 dark:border-white/5 space-y-3">
-                <Button className="w-full h-10 bg-yellow-400 hover:bg-yellow-500 text-black font-black uppercase text-[10px] tracking-widest rounded-lg shadow-lg" onClick={() => { setShowDetailsModal(false); handleAddBid(selectedProject); }}>
-                  Submit Intent to Bid
-                </Button>
-                <div className="flex justify-between items-center px-1">
-                  <div className="flex items-center gap-1.5">
-                    <div className="w-1 h-1 rounded-full bg-green-500" />
-                    <span className="text-[8px] font-black text-gray-400 uppercase">Verified Opportunity</span>
-                  </div>
-                  <button onClick={() => setShowDetailsModal(false)} className="text-[9px] font-black uppercase text-gray-400 hover:text-black dark:hover:text-white transition-colors">
-                    Dismiss
-                  </button>
-                </div>
+              <div className="p-8 bg-gray-100 dark:bg-black/30 border-t border-gray-100 dark:border-white/5 flex gap-4">
+                <Button onClick={() => setShowDetailsModal(false)} variant="outline" className="flex-1 h-12 rounded-xl text-[10px] font-black uppercase tracking-widest dark:border-white/10">Dismiss</Button>
+                <Button className="flex-[2] h-12 rounded-xl bg-yellow-400 hover:bg-yellow-500 text-black font-black uppercase text-[10px] tracking-widest shadow-xl">Submit Intent To Bid</Button>
               </div>
             </div>
           )}

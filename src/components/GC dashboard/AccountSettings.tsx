@@ -22,13 +22,17 @@ import {
   Mail,
   Phone,
   FileText,
-  Plus
+  Plus,
+  Smartphone,
+  RefreshCw
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 const AccountSettings = () => {
   const { toast } = useToast();
   const [isEditing, setIsEditing] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [syncStatus, setSyncStatus] = useState<null | 'success' | 'error'>(null);
   const [activeNotifications, setActiveNotifications] = useState<Record<string, boolean>>({
     'New Bid Opportunities': true,
     'Project Updates': true,
@@ -43,6 +47,21 @@ const AccountSettings = () => {
       title: "Profile Updated",
       description: "Your company information has been successfully saved.",
     });
+  };
+
+  const handleSync = () => {
+    setIsSyncing(true);
+    setSyncStatus(null);
+
+    // Simulate sync process
+    setTimeout(() => {
+      setIsSyncing(false);
+      setSyncStatus('success');
+      toast({
+        title: "Directory Synced",
+        description: "Your phone contacts have been successfully imported and matched.",
+      });
+    }, 2000);
   };
 
   const toggleNotification = (title: string) => {
@@ -61,7 +80,6 @@ const AccountSettings = () => {
       name: 'General Contractor License',
       details: 'State of Texas • #GC-994821',
       status: 'Active',
-      statusColor: 'green',
       expiryDate: 'Dec 31, 2025',
       icon: Shield
     },
@@ -69,7 +87,6 @@ const AccountSettings = () => {
       name: 'OSHA 30 Certification',
       details: 'Safety Compliance • Exp: Dec 2024',
       status: 'Expires Soon',
-      statusColor: 'yellow',
       expiryDate: 'Dec 15, 2024',
       icon: Shield
     },
@@ -77,7 +94,6 @@ const AccountSettings = () => {
       name: 'Workers Compensation Insurance',
       details: 'Active Coverage • Policy #WC-4521',
       status: 'Active',
-      statusColor: 'green',
       expiryDate: 'Mar 31, 2025',
       icon: Shield
     }
@@ -154,6 +170,7 @@ const AccountSettings = () => {
             <TabsTrigger value="profile" className="data-[state=active]:bg-yellow-400 dark:data-[state=active]:bg-yellow-500 data-[state=active]:text-black text-gray-500 dark:text-gray-400 rounded-lg transition-all font-medium">Company Profile</TabsTrigger>
             <TabsTrigger value="licenses" className="data-[state=active]:bg-yellow-400 dark:data-[state=active]:bg-yellow-500 data-[state=active]:text-black text-gray-500 dark:text-gray-400 rounded-lg transition-all font-medium">Licenses</TabsTrigger>
             <TabsTrigger value="notifications" className="data-[state=active]:bg-yellow-400 dark:data-[state=active]:bg-yellow-500 data-[state=active]:text-black text-gray-500 dark:text-gray-400 rounded-lg transition-all font-medium">Notifications</TabsTrigger>
+            <TabsTrigger value="integrations" className="data-[state=active]:bg-yellow-400 dark:data-[state=active]:bg-yellow-500 data-[state=active]:text-black text-gray-500 dark:text-gray-400 rounded-lg transition-all font-medium">Integrations</TabsTrigger>
           </TabsList>
 
           {/* Company Profile Tab */}
@@ -280,8 +297,8 @@ const AccountSettings = () => {
                     className="flex items-start justify-between p-4 border border-gray-200 dark:border-white/5 rounded-xl bg-gray-50 dark:bg-black/20 hover:border-yellow-400 dark:hover:border-yellow-500/20 transition-all"
                   >
                     <div className="flex items-start gap-4">
-                      <div className={`p-3 rounded-lg ${license.statusColor === 'green'
-                        ? 'bg-green-100 dark:bg-green-500/10 text-green-600 dark:text-green-500'
+                      <div className={`p-3 rounded-lg ${license.status === 'Active'
+                        ? 'bg-gray-100 dark:bg-white/10 text-black dark:text-white'
                         : 'bg-yellow-100 dark:bg-yellow-500/10 text-yellow-600 dark:text-yellow-500'
                         }`}>
                         <license.icon className="w-5 h-5" />
@@ -299,8 +316,8 @@ const AccountSettings = () => {
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Badge className={`${license.statusColor === 'green'
-                        ? 'bg-green-100 dark:bg-green-500/10 text-green-600 dark:text-green-500 border-green-200 dark:border-green-500/20'
+                      <Badge className={`${license.status === 'Active'
+                        ? 'bg-gray-100 dark:bg-white/10 text-black dark:text-white border-black dark:border-white'
                         : 'bg-yellow-100 dark:bg-yellow-500/10 text-yellow-600 dark:text-yellow-500 border-yellow-200 dark:border-yellow-500/20'
                         }`}>
                         {license.status === 'Active' && <CheckCircle2 className="w-3 h-3 mr-1" />}
@@ -362,6 +379,79 @@ const AccountSettings = () => {
                     />
                   </div>
                 ))}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Integrations Tab */}
+          <TabsContent value="integrations" className="space-y-6">
+            <Card className="border-gray-200 dark:border-white/5 bg-white dark:bg-[#1c1e24] shadow-sm">
+              <CardHeader>
+                <CardTitle className="text-gray-900 dark:text-white">Sync & Integrations</CardTitle>
+                <CardDescription className="text-gray-500 dark:text-gray-400">
+                  Connect external tools and sync your data with the platform
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="flex flex-col md:flex-row items-center justify-between p-6 border border-gray-200 dark:border-white/5 rounded-2xl bg-gray-50/50 dark:bg-black/10 gap-6">
+                  <div className="flex items-center gap-6">
+                    <div className="p-4 bg-yellow-100 dark:bg-yellow-500/10 rounded-2xl text-yellow-600 dark:text-yellow-500 shadow-sm">
+                      <Smartphone className="w-8 h-8" />
+                    </div>
+                    <div>
+                      <h4 className="text-lg font-bold text-gray-900 dark:text-white mb-1">
+                        Phone Directory Sync
+                      </h4>
+                      <p className="text-sm text-gray-500 dark:text-gray-400 max-w-sm">
+                        Import your mobile contacts to easily manage and invite sub-contractors or team members.
+                      </p>
+                      {syncStatus === 'success' && (
+                        <div className="flex items-center gap-2 mt-3 text-yellow-600 dark:text-yellow-400 text-sm font-medium">
+                          <CheckCircle2 className="w-4 h-4" />
+                          Last synced: Just now
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <Button
+                    onClick={handleSync}
+                    disabled={isSyncing}
+                    className="w-full md:w-auto bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 font-bold px-8 h-12 rounded-xl transition-all"
+                  >
+                    {isSyncing ? (
+                      <>
+                        <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                        Syncing...
+                      </>
+                    ) : (
+                      <>
+                        <RefreshCw className="w-4 h-4 mr-2" />
+                        Sync Contacts
+                      </>
+                    )}
+                  </Button>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Card className="bg-white dark:bg-black/20 border-gray-200 dark:border-white/5 p-4 rounded-xl">
+                    <div className="flex items-center gap-3 mb-2">
+                      <Shield className="w-5 h-5 text-gray-900 dark:text-white" />
+                      <h5 className="font-bold text-sm dark:text-white">Privacy & Security</h5>
+                    </div>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      We never store your raw contact list. We only hash phone numbers to find matches within our network.
+                    </p>
+                  </Card>
+                  <Card className="bg-white dark:bg-black/20 border-gray-200 dark:border-white/5 p-4 rounded-xl">
+                    <div className="flex items-center gap-3 mb-2">
+                      <Users className="w-5 h-5 text-gray-900 dark:text-white" />
+                      <h5 className="font-bold text-sm dark:text-white">Smart Match</h5>
+                    </div>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      Automatically identify which of your contacts are already verified sub-contractors on the platform.
+                    </p>
+                  </Card>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>

@@ -91,13 +91,13 @@ const EnhancedDocuments = () => {
     switch (type) {
       case 'pdf':
       case 'doc':
-        return <FileText className="w-5 h-5 text-red-500 dark:text-red-400" />;
+        return <FileText className="w-5 h-5 text-gray-900 dark:text-gray-100" />;
       case 'image':
-        return <Image className="w-5 h-5 text-green-600 dark:text-green-400" />;
+        return <Image className="w-5 h-5 text-gray-900 dark:text-gray-100" />;
       case 'video':
-        return <Video className="w-5 h-5 text-purple-600 dark:text-purple-400" />;
+        return <Video className="w-5 h-5 text-gray-900 dark:text-gray-100" />;
       case 'archive':
-        return <Archive className="w-5 h-5 text-orange-600 dark:text-orange-400" />;
+        return <Archive className="w-5 h-5 text-gray-900 dark:text-gray-100" />;
       default:
         return <File className="w-5 h-5 text-gray-500 dark:text-gray-400" />;
     }
@@ -122,8 +122,8 @@ const EnhancedDocuments = () => {
             </p>
             <div className="flex items-center gap-4 mt-3">
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-green-500 rounded-full shadow-[0_0_8px_rgba(34,197,94,0.6)] animate-pulse"></div>
-                <span className="text-sm font-medium text-green-600 dark:text-green-400">Cloud Storage Active</span>
+                <div className="w-2 h-2 bg-yellow-500 rounded-full shadow-[0_0_8px_rgba(234,179,8,0.6)] animate-pulse"></div>
+                <span className="text-sm font-medium text-yellow-600 dark:text-yellow-400">Cloud Storage Active</span>
               </div>
               <div className="text-sm text-gray-400 dark:text-gray-500">
                 2.1TB of 5TB used
@@ -152,10 +152,10 @@ const EnhancedDocuments = () => {
           <Card className="bg-white dark:bg-[#1c1e24] border border-gray-200 dark:border-white/5 shadow-sm hover:border-yellow-400 dark:hover:border-yellow-500/20 transition-all cursor-pointer group">
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-blue-100 dark:bg-blue-500/10 rounded-xl group-hover:bg-blue-200 dark:group-hover:bg-blue-500/20 transition-colors">
-                  <FileText className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                <div className="p-3 bg-gray-100 dark:bg-white/5 rounded-xl group-hover:bg-gray-200 dark:group-hover:bg-white/10 transition-colors">
+                  <FileText className="w-6 h-6 text-gray-900 dark:text-white" />
                 </div>
-                <Badge className="bg-blue-100 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-500/20">
+                <Badge className="bg-gray-100 dark:bg-white/5 text-gray-900 dark:text-white border-gray-200 dark:border-white/10">
                   +12 Today
                 </Badge>
               </div>
@@ -170,10 +170,10 @@ const EnhancedDocuments = () => {
           <Card className="bg-white dark:bg-[#1c1e24] border border-gray-200 dark:border-white/5 shadow-sm hover:border-yellow-400 dark:hover:border-yellow-500/20 transition-all cursor-pointer group">
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-green-100 dark:bg-green-500/10 rounded-xl group-hover:bg-green-200 dark:group-hover:bg-green-500/20 transition-colors">
-                  <Share2 className="w-6 h-6 text-green-600 dark:text-green-400" />
+                <div className="p-3 bg-gray-100 dark:bg-white/5 rounded-xl group-hover:bg-gray-200 dark:group-hover:bg-white/10 transition-colors">
+                  <Share2 className="w-6 h-6 text-gray-900 dark:text-white" />
                 </div>
-                <Badge className="bg-green-100 dark:bg-green-500/10 text-green-600 dark:text-green-400 border-green-200 dark:border-green-500/20">
+                <Badge className="bg-gray-100 dark:bg-white/5 text-gray-900 dark:text-white border-gray-200 dark:border-white/10">
                   Active
                 </Badge>
               </div>
@@ -188,10 +188,10 @@ const EnhancedDocuments = () => {
           <Card className="bg-white dark:bg-[#1c1e24] border border-gray-200 dark:border-white/5 shadow-sm hover:border-yellow-400 dark:hover:border-yellow-500/20 transition-all cursor-pointer group">
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-purple-100 dark:bg-purple-500/10 rounded-xl group-hover:bg-purple-200 dark:group-hover:bg-purple-500/20 transition-colors">
-                  <Folder className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+                <div className="p-3 bg-gray-100 dark:bg-white/5 rounded-xl group-hover:bg-gray-200 dark:group-hover:bg-white/10 transition-colors">
+                  <Folder className="w-6 h-6 text-gray-900 dark:text-white" />
                 </div>
-                <Badge className="bg-purple-100 dark:bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-200 dark:border-purple-500/20">
+                <Badge className="bg-gray-100 dark:bg-white/5 text-gray-900 dark:text-white border-gray-200 dark:border-white/10">
                   24 Projects
                 </Badge>
               </div>
@@ -206,10 +206,10 @@ const EnhancedDocuments = () => {
           <Card className="bg-white dark:bg-[#1c1e24] border border-gray-200 dark:border-white/5 shadow-sm hover:border-yellow-400 dark:hover:border-yellow-500/20 transition-all cursor-pointer group">
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-orange-100 dark:bg-orange-500/10 rounded-xl group-hover:bg-orange-200 dark:group-hover:bg-orange-500/20 transition-colors">
-                  <Archive className="w-6 h-6 text-orange-600 dark:text-orange-400" />
+                <div className="p-3 bg-gray-100 dark:bg-white/5 rounded-xl group-hover:bg-gray-200 dark:group-hover:bg-white/10 transition-colors">
+                  <Archive className="w-6 h-6 text-gray-900 dark:text-white" />
                 </div>
-                <Badge className="bg-orange-100 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-200 dark:border-orange-500/20">
+                <Badge className="bg-gray-100 dark:bg-white/5 text-gray-900 dark:text-white border-gray-200 dark:border-white/10">
                   2.1TB Used
                 </Badge>
               </div>
@@ -295,7 +295,7 @@ const EnhancedDocuments = () => {
                               {doc.category}
                             </Badge>
                             {doc.starred && <Star className="w-4 h-4 text-yellow-500 fill-current" />}
-                            {doc.shared && <Share2 className="w-4 h-4 text-blue-500 dark:text-blue-400" />}
+                            {doc.shared && <Share2 className="w-4 h-4 text-gray-500 dark:text-gray-400" />}
                           </div>
 
                           <div className="flex gap-1 opaicty-0 group-hover:opacity-100 transition-opacity">
@@ -392,21 +392,21 @@ const EnhancedDocuments = () => {
                 <div className="space-y-2 text-sm text-gray-500 dark:text-gray-400">
                   <div className="flex justify-between">
                     <span className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-blue-500 dark:bg-blue-400 rounded-full"></div>
+                      <div className="w-2 h-2 bg-gray-900 dark:bg-white rounded-full"></div>
                       Documents
                     </span>
                     <span>1.2TB</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-green-500 dark:bg-green-400 rounded-full"></div>
+                      <div className="w-2 h-2 bg-gray-500 dark:bg-gray-400 rounded-full"></div>
                       Images
                     </span>
                     <span>650GB</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-purple-500 dark:bg-purple-400 rounded-full"></div>
+                      <div className="w-2 h-2 bg-gray-300 dark:bg-gray-600 rounded-full"></div>
                       Videos
                     </span>
                     <span>250GB</span>
@@ -423,21 +423,21 @@ const EnhancedDocuments = () => {
               <CardContent>
                 <div className="space-y-4">
                   <div className="flex items-start gap-3">
-                    <div className="w-2 h-2 bg-green-500 rounded-full mt-2 shadow-[0_0_5px_rgba(34,197,94,0.5)]"></div>
+                    <div className="w-2 h-2 bg-yellow-500 rounded-full mt-2 shadow-[0_0_5px_rgba(234,179,8,0.5)]"></div>
                     <div>
                       <p className="text-sm font-medium text-gray-900 dark:text-white">Document uploaded</p>
                       <p className="text-xs text-gray-500">Architectural Plans.pdf - 2 hours ago</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 shadow-[0_0_5px_rgba(59,130,246,0.5)]"></div>
+                    <div className="w-2 h-2 bg-gray-500 rounded-full mt-2 shadow-[0_0_5px_rgba(107,114,128,0.5)]"></div>
                     <div>
                       <p className="text-sm font-medium text-gray-900 dark:text-white">Document shared</p>
                       <p className="text-xs text-gray-500">With Austin Medical Group - 4 hours ago</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <div className="w-2 h-2 bg-purple-500 rounded-full mt-2 shadow-[0_0_5px_rgba(168,85,247,0.5)]"></div>
+                    <div className="w-2 h-2 bg-black dark:bg-white rounded-full mt-2 shadow-[0_0_5px_rgba(0,0,0,0.5)]"></div>
                     <div>
                       <p className="text-sm font-medium text-gray-900 dark:text-white">Folder created</p>
                       <p className="text-xs text-gray-500">Office Complex Phase 2 - 1 day ago</p>

@@ -3,7 +3,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
 import {
   Dialog,
   DialogContent,
@@ -12,6 +12,13 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Search,
   Filter,
@@ -27,21 +34,50 @@ import {
   ArrowRight,
   Target,
   Briefcase,
-  CheckCircle2
+  CheckCircle2,
+  Globe,
+  Navigation,
+  Layers,
+  DollarSign,
+  ShieldCheck,
+  Tag,
+  FileSearch,
+  ChevronDown,
+  TrendingUp,
+  RotateCcw,
+  Mail,
+  Smartphone,MoreHorizontal
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { scDashboardService, Bid } from '@/services/scDashboardService';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 const FindProjects = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [savedProjectIds, setSavedProjectIds] = useState<string[]>([]);
+
+  // Advanced Filter States (Synced from GC Directory)
   const [searchQuery, setSearchQuery] = useState('');
-  const [tradeFilter, setTradeFilter] = useState('all');
-  const [missionFilter, setMissionFilter] = useState('all');
+  const [locationSearch, setLocationSearch] = useState('');
+  const [selectedProjectTypes, setSelectedProjectTypes] = useState<string[]>([]);
+  const [selectedSources, setSelectedSources] = useState<string[]>([]);
+  const [selectedStatus, setSelectedStatus] = useState<string[]>([]);
+  const [selectedTrades, setSelectedTrades] = useState<string[]>([]);
+  const [maxMileage, setMaxMileage] = useState<string>('100');
+  const [minBudget, setMinBudget] = useState('');
+  const [maxBudget, setMaxBudget] = useState('');
+  const [minSize, setMinSize] = useState('');
+  const [maxSize, setMaxSize] = useState('');
+  const [dueWithin, setDueWithin] = useState('any');
+  const [multipleKeywords, setMultipleKeywords] = useState('');
+  const [nigpCode, setNigpCode] = useState('');
+
+  const [viewMode, setViewMode] = useState<'card' | 'table'>('card');
   const [sortBy, setSortBy] = useState('match');
+  const [showAllTrades, setShowAllTrades] = useState(false);
 
   // Modal State
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
@@ -62,59 +98,111 @@ const FindProjects = () => {
     });
   };
 
+  const projectCategories = ['Commercial', 'Residential', 'Industrial', 'Healthcare', 'Educational', 'Multi-Family', 'Government'];
+  const sources = ['PlanHub', 'Dodge Construction'];
+  const projectStatuses = ['Open', 'Bidding', 'Awarded', 'Closed'];
+  const mileageOptions = ['10', '25', '50', '100', '250'];
+  const trades = [
+    'HVAC',
+    'Plumbing',
+    'Electrical',
+    'Concrete',
+    'Roofing',
+    'Masonry',
+    'Metals',
+    'Wood & Plastics',
+    'Finishes',
+    'Specialties',
+    'Fire Suppression',
+    'Communications',
+    'Electronic Safety',
+    'Earthwork',
+    'Exterior Improvements'
+  ];
+
   const rawProjects = [
     {
       id: 'project-101',
       title: 'Austin Tech Center - HVAC Installation',
       location: 'Austin, TX',
+      distanceValue: 2.4,
+      distance: '2.4 mi',
       gc: 'Turner Construction',
       gcRating: 4.8,
-      type: 'Commercial',
+      category: 'Commercial',
+      projectType: 'Commercial',
       trade: 'HVAC',
+      trades: ['HVAC', 'Controls', 'Ductwork'],
       match: 98,
+      matchScore: 98,
       budget: '$2.4M - $3M',
       budgetValue: 2400000,
-      deadline: 'Oct 30, 2024',
+      deadline: '2024-10-30',
       deadlineDate: new Date('2024-10-30'),
       posted: '2 hours ago',
       views: 124,
       bids: 8,
+      isProfileMatch: true,
+      nigpCode: '914-00',
+      sqft: '45,000',
+      status: 'Bidding',
+      source: 'PlanHub',
       description: 'Comprehensive HVAC installation for a new 10-story tech hub. Requires high-efficiency variable refrigerant flow (VRF) systems and advanced building automation interfaces.'
     },
     {
       id: 'project-202',
       title: 'University Annex - Climate Control Upgrade',
       location: 'San Marcos, TX',
+      distanceValue: 15,
+      distance: '15 mi',
       gc: 'Skanska',
       gcRating: 4.9,
-      type: 'Education',
+      category: 'Educational',
+      projectType: 'Educational',
       trade: 'HVAC',
+      trades: ['HVAC', 'Refrigeration'],
       match: 92,
+      matchScore: 92,
       budget: '$850k',
       budgetValue: 850000,
-      deadline: 'Nov 05, 2024',
+      deadline: '2024-11-05',
       deadlineDate: new Date('2024-11-05'),
       posted: '1 day ago',
       views: 45,
       bids: 3,
+      isProfileMatch: true,
+      nigpCode: '910-36',
+      sqft: '20,000',
+      status: 'Open',
+      source: 'Dodge Construction',
       description: 'Upgrade of legacy climate control systems across 4 dormitory wings. Implementation of energy-efficient heat pumps and central monitoring station.'
     },
     {
       id: 'project-303',
       title: 'Downtown Austin Plaza - Maintenance Retrofit',
       location: 'Austin, TX',
+      distanceValue: 4.8,
+      distance: '4.8 mi',
       gc: 'Beck Group',
       gcRating: 4.7,
-      type: 'Public Works',
+      category: 'Government',
+      projectType: 'Government',
       trade: 'HVAC',
+      trades: ['HVAC', 'Plumbing'],
       match: 85,
+      matchScore: 85,
       budget: '$1.2M',
       budgetValue: 1200000,
-      deadline: 'Nov 12, 2024',
+      deadline: '2024-11-12',
       deadlineDate: new Date('2024-11-12'),
       posted: '3 days ago',
       views: 210,
       bids: 15,
+      isProfileMatch: false,
+      nigpCode: '914-68',
+      sqft: '32,000',
+      status: 'Bidding',
+      source: 'PlanHub',
       description: 'Full retrofit of existing ventilation and chiller systems for the North Plaza complex. Project emphasizes non-disruptive installation during business hours.'
     }
   ];
@@ -122,11 +210,65 @@ const FindProjects = () => {
   const filteredProjects = useMemo(() => {
     return rawProjects
       .filter(p => {
-        const matchesSearch = p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          p.gc.toLowerCase().includes(searchQuery.toLowerCase());
-        const matchesTrade = tradeFilter === 'all' || p.trade.toLowerCase() === tradeFilter.toLowerCase();
-        const matchesMission = missionFilter === 'all' || p.type.toLowerCase().includes(missionFilter.toLowerCase());
-        return matchesSearch && matchesTrade && matchesMission;
+        // 1. Header Search Phrase
+        const matchesSearch = !searchQuery ||
+          p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          p.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          p.trades.some(t => t.toLowerCase().includes(searchQuery.toLowerCase()));
+
+        // 2. Multiple Keywords
+        const keywordsList = multipleKeywords.split(',').map(k => k.trim().toLowerCase()).filter(k => k !== '');
+        const matchesMultipleKeywords = keywordsList.length === 0 ||
+          keywordsList.every(k =>
+            p.title.toLowerCase().includes(k) ||
+            p.description.toLowerCase().includes(k) ||
+            p.trades.some(t => t.toLowerCase().includes(k))
+          );
+
+        // 3. Service Region
+        const matchesLocation = !locationSearch ||
+          p.location.toLowerCase().includes(locationSearch.toLowerCase());
+
+        // 4. NIGP Code
+        const matchesNigp = !nigpCode || p.nigpCode.includes(nigpCode);
+
+        // 5. Project Category
+        const matchesType = selectedProjectTypes.length === 0 || selectedProjectTypes.includes(p.category);
+
+        // 6. Solicitation Status
+        const matchesStatus = selectedStatus.length === 0 || selectedStatus.includes(p.status);
+
+        // 7. Marketplace Source
+        const matchesSource = selectedSources.length === 0 || selectedSources.includes(p.source);
+
+        // 8. Operational Radius
+        const matchesMileage = p.distanceValue <= parseInt(maxMileage);
+
+        // 9. Trades
+        const matchesTrades = selectedTrades.length === 0 || p.trades.some(t => selectedTrades.includes(t));
+
+        // 10. Budget Range
+        const filterMin = minBudget ? parseFloat(minBudget) : -Infinity;
+        const filterMax = maxBudget ? parseFloat(maxBudget) : Infinity;
+        const matchesBudget = p.budgetValue >= filterMin && p.budgetValue <= filterMax;
+
+        // 11. Size Range (SQFT)
+        const projectSqft = parseInt(p.sqft.replace(/[^0-9]/g, '')) || 0;
+        const filterMinSize = minSize ? parseInt(minSize) : -Infinity;
+        const filterMaxSize = maxSize ? parseInt(maxSize) : Infinity;
+        const matchesSize = projectSqft >= filterMinSize && projectSqft <= filterMaxSize;
+
+        // 12. Bid Due Urgency
+        const deadlineDate = new Date(p.deadline);
+        const today = new Date();
+        const diffDays = Math.ceil((deadlineDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+        const matchesUrgency = dueWithin === 'any' ||
+          (dueWithin === '7' && diffDays <= 7) ||
+          (dueWithin === '30' && diffDays <= 30);
+
+        return matchesSearch && matchesMultipleKeywords && matchesLocation && matchesNigp &&
+          matchesType && matchesStatus && matchesSource && matchesMileage &&
+          matchesTrades && matchesBudget && matchesSize && matchesUrgency;
       })
       .sort((a, b) => {
         if (sortBy === 'match') return b.match - a.match;
@@ -134,7 +276,7 @@ const FindProjects = () => {
         if (sortBy === 'deadline') return a.deadlineDate.getTime() - b.deadlineDate.getTime();
         return 0;
       });
-  }, [searchQuery, tradeFilter, missionFilter, sortBy]);
+  }, [searchQuery, multipleKeywords, locationSearch, nigpCode, selectedProjectTypes, selectedStatus, selectedSources, maxMileage, selectedTrades, minBudget, maxBudget, minSize, maxSize, dueWithin, sortBy]);
 
   const handleInitiateBid = (project: any) => {
     const newBid: Bid = {
@@ -158,258 +300,329 @@ const FindProjects = () => {
     setIsSuccessModalOpen(true);
   };
 
+  const toggleFilter = (item: string, state: string[], setState: (val: string[]) => void) => {
+    setState(state.includes(item) ? state.filter(i => i !== item) : [...state, item]);
+  };
+
   return (
-    <div className="min-h-full bg-gray-50 dark:bg-[#0f1115] p-4 sm:p-6 transition-colors duration-300">
-      <div className="max-w-7xl mx-auto space-y-6">
+    <div className="flex h-full w-full flex-col bg-white dark:bg-[#0f1115] text-gray-900 dark:text-white transition-colors duration-500 overflow-hidden font-sans">
 
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
-          <div className="space-y-1">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="p-1.5 bg-yellow-400 rounded-lg">
-                <Target className="w-4 h-4 text-black" />
+      {/* Dynamic Header Section */}
+      <div className="relative bg-gray-50/80 dark:bg-[#1c1e24]/80 border-b border-gray-200 dark:border-white/5 px-8 py-8 z-20 backdrop-blur-xl">
+        <div className="max-w-[1600px] mx-auto">
+          <div className="flex flex-wrap items-center justify-between gap-6">
+            <div className="flex items-center gap-5">
+              <div className="w-14 h-14 bg-yellow-400 rounded-2xl flex items-center justify-center shadow-xl shadow-yellow-400/20 rotate-3">
+                <Target className="text-black" size={28} />
               </div>
-              <h1 className="text-xl font-bold uppercase tracking-tight text-gray-900 dark:text-white">Mission Discovery</h1>
+              <div>
+                <h1 className="text-3xl font-black tracking-tighter uppercase mb-1">Mission <span className="text-yellow-600">Discovery</span></h1>
+                <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] flex items-center gap-2">
+                  <Globe size={12} className="text-yellow-600" /> Bidding Terminal & Opportunity Feed
+                </p>
+              </div>
             </div>
-            <p className="text-gray-500 dark:text-gray-400 font-bold text-xs uppercase tracking-wide max-w-xl">
-              Discover opportunities optimized for your trade and profile.
-            </p>
-          </div>
-          <div className="flex items-center gap-3 w-full md:w-auto">
-            <Button
-              variant="outline"
-              className="flex-1 md:flex-none h-10 px-5 border-gray-200 dark:border-white/10 text-gray-900 dark:text-white hover:bg-gray-50 font-bold rounded-xl transition-all uppercase tracking-widest text-[10px]"
-              onClick={() => {
-                toast({
-                  title: "Recovery List Active",
-                  description: `Showing ${savedProjectIds.length} locked targets.`
-                });
-              }}
-            >
-              <Filter className="w-4 h-4 mr-2" /> RECOVERY LIST ({savedProjectIds.length})
-            </Button>
-          </div>
-        </div>
 
-        <Card className="bg-white dark:bg-[#1c1e24] border-gray-200 dark:border-white/5 shadow-sm rounded-xl overflow-hidden">
-          <CardContent className="p-4">
-            <div className="flex flex-col lg:flex-row gap-4">
-              <div className="flex-1 relative group">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-yellow-500 transition-colors w-4 h-4" />
+            <div className="flex items-center gap-3 bg-white dark:bg-black/20 p-2 rounded-[2rem] shadow-sm border border-gray-200 dark:border-white/10">
+              <div className="relative group">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-yellow-600 transition-colors w-4 h-4" />
                 <Input
-                  placeholder="Search projects or GC terminals..."
-                  className="w-full h-10 pl-11 bg-gray-50 dark:bg-white/5 border-transparent focus:border-yellow-400 focus:ring-yellow-400 rounded-xl text-sm font-medium"
+                  placeholder="Keywords (HVAC, Austin, expansion...)"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-72 h-12 bg-transparent border-none focus-visible:ring-0 text-sm font-bold pl-11"
                 />
               </div>
-              <div className="grid grid-cols-2 lg:flex gap-4">
-                <Select value={tradeFilter} onValueChange={setTradeFilter}>
-                  <SelectTrigger className="h-10 lg:w-48 bg-gray-50 dark:bg-white/5 border-transparent rounded-xl font-bold uppercase text-[9px] tracking-widest">
-                    <SelectValue placeholder="Trade Focus" />
+              <div className="w-px h-8 bg-gray-200 dark:bg-white/10"></div>
+              <div className="relative group">
+                <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-yellow-600 transition-colors w-4 h-4" />
+                <Input
+                  placeholder="Region"
+                  value={locationSearch}
+                  onChange={(e) => setLocationSearch(e.target.value)}
+                  className="w-48 h-12 bg-transparent border-none focus-visible:ring-0 text-sm font-bold pl-11"
+                />
+              </div>
+              <Button className="bg-black dark:bg-yellow-400 text-white dark:text-black rounded-[1.5rem] px-8 h-12 font-black uppercase text-[10px] tracking-widest hover:scale-105 transition-all shadow-lg active:scale-95">
+                Save Criteria
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex-1 flex overflow-hidden">
+        {/* Advanced Filter Sidebar */}
+        <aside className="w-[320px] bg-gray-50/50 dark:bg-black/10 border-r border-gray-200 dark:border-white/5 overflow-y-auto hidden xl:block z-10">
+          <ScrollArea className="h-full">
+            <div className="p-8 space-y-10 pb-20">
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-[10px] font-black uppercase tracking-widest text-gray-400">Signal Filters</h3>
+                <Button variant="link" size="sm" onClick={() => {
+                  setSearchQuery(''); setLocationSearch(''); setMultipleKeywords('');
+                  setSelectedProjectTypes([]); setSelectedSources([]); setSelectedStatus([]);
+                  setSelectedTrades([]); setMaxMileage('100'); setMinBudget('');
+                  setMaxBudget(''); setMinSize(''); setMaxSize(''); setDueWithin('any');
+                  setNigpCode('');
+                }} className="text-[9px] uppercase font-bold text-yellow-600">Reset All</Button>
+              </div>
+
+              <div className="space-y-4">
+                <Label className="text-[10px] font-black uppercase tracking-widest text-gray-400 flex items-center gap-2">
+                  <Layers size={14} className="text-yellow-600" /> Complex Keywords (AND)
+                </Label>
+                <Input
+                  placeholder="HVAC, Austin, Phase 2..."
+                  value={multipleKeywords}
+                  onChange={(e) => setMultipleKeywords(e.target.value)}
+                  className="bg-white dark:bg-white/5 border-gray-200 dark:border-white/10 text-xs font-bold rounded-xl h-10"
+                />
+              </div>
+
+              <div className="space-y-4">
+                <Label className="text-[10px] font-black uppercase tracking-widest text-gray-400 flex items-center gap-2">
+                  <Navigation size={14} className="text-yellow-600" /> Search Radius
+                </Label>
+                <div className="grid grid-cols-5 gap-1.5 p-1 bg-white dark:bg-white/5 rounded-xl border border-gray-200 dark:border-white/5 shadow-sm">
+                  {mileageOptions.map(m => (
+                    <button
+                      key={m}
+                      onClick={() => setMaxMileage(m)}
+                      className={cn(
+                        "py-2 text-[9px] font-bold rounded-lg transition-all",
+                        maxMileage === m ? "bg-yellow-400 text-black shadow-sm" : "text-gray-400 hover:text-gray-600"
+                      )}
+                    >{m}m</button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <Label className="text-[10px] font-black uppercase tracking-widest text-gray-400">Trade Segments</Label>
+                <div className="flex flex-wrap gap-2">
+                  {trades.slice(0, showAllTrades ? undefined : 8).map(t => (
+                    <Badge
+                      key={t}
+                      onClick={() => toggleFilter(t, selectedTrades, setSelectedTrades)}
+                      className={cn(
+                        "cursor-pointer px-3 py-1 text-[9px] font-bold uppercase tracking-tight border-none transition-all",
+                        selectedTrades.includes(t) ? "bg-yellow-400 text-black" : "bg-gray-100 dark:bg-white/5 text-gray-500 hover:bg-gray-200 dark:hover:bg-white/10"
+                      )}
+                    >{t}</Badge>
+                  ))}
+                  <button onClick={() => setShowAllTrades(!showAllTrades)} className="text-[9px] font-bold text-yellow-600 uppercase hover:underline p-1">
+                    {showAllTrades ? '- Less' : '+ More'}
+                  </button>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <Label className="text-[10px] font-black uppercase tracking-widest text-gray-400 flex items-center gap-2">
+                  <DollarSign size={14} className="text-yellow-600" /> Revenue Potential
+                </Label>
+                <div className="grid grid-cols-2 gap-3">
+                  <Input placeholder="Min $" value={minBudget} onChange={(e) => setMinBudget(e.target.value)} className="bg-white dark:bg-white/5 border-gray-200 dark:border-white/10 h-10 text-[11px] font-bold" />
+                  <Input placeholder="Max $" value={maxBudget} onChange={(e) => setMaxBudget(e.target.value)} className="bg-white dark:bg-white/5 border-gray-200 dark:border-white/10 h-10 text-[11px] font-bold" />
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <Label className="text-[10px] font-black uppercase tracking-widest text-gray-400 flex items-center gap-2">
+                  <Clock size={14} className="text-yellow-600" /> Bid Timeline
+                </Label>
+                <Select value={dueWithin} onValueChange={setDueWithin}>
+                  <SelectTrigger className="h-10 bg-white dark:bg-white/5 border-gray-200 dark:border-white/10 rounded-xl text-[11px] font-bold">
+                    <SelectValue />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">ALL DEPARTMENTS</SelectItem>
-                    <SelectItem value="hvac">HVAC SPECIALIST</SelectItem>
-                    <SelectItem value="plumbing">PLUMBING SYSTEMS</SelectItem>
-                    <SelectItem value="electrical">ELECTRICAL GRID</SelectItem>
-                  </SelectContent>
-                </Select>
-                <Select value={missionFilter} onValueChange={setMissionFilter}>
-                  <SelectTrigger className="h-10 lg:w-48 bg-gray-50 dark:bg-white/5 border-transparent rounded-xl font-bold uppercase text-[9px] tracking-widest">
-                    <SelectValue placeholder="Mission Type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">ALL MISSIONS</SelectItem>
-                    <SelectItem value="commercial">COMMERCIAL BATTLE</SelectItem>
-                    <SelectItem value="residential">RESIDENTIAL SITE</SelectItem>
-                    <SelectItem value="public">PUBLIC WORKS</SelectItem>
+                  <SelectContent className="bg-white dark:bg-[#1c1e24] border-none text-xs font-bold">
+                    <SelectItem value="any">ANYTIME</SelectItem>
+                    <SelectItem value="7">NEXT 7 DAYS</SelectItem>
+                    <SelectItem value="30">NEXT 30 DAYS</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
-            </div>
-          </CardContent>
-        </Card>
 
-        {/* Project List */}
-        <div className="space-y-6">
-          <div className="flex justify-between items-center px-2">
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">
-              Active Opportunities Found: <span className="text-yellow-600 dark:text-yellow-500">{filteredProjects.length} UNITS</span>
-            </p>
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Sort:</span>
-              <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="bg-transparent border-none p-0 h-auto gap-1 text-[10px] font-bold uppercase tracking-widest outline-none">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="match">HIGHEST MATCH</SelectItem>
-                  <SelectItem value="budget">MAX REVENUE</SelectItem>
-                  <SelectItem value="deadline">URGENT BIDS</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
+              <div className="space-y-4">
+                <Label className="text-[10px] font-black uppercase tracking-widest text-gray-400">Solicitation Status</Label>
+                <div className="flex flex-wrap gap-2">
+                  {projectStatuses.map(s => (
+                    <Badge
+                      key={s}
+                      onClick={() => toggleFilter(s, selectedStatus, setSelectedStatus)}
+                      className={cn(
+                        "cursor-pointer px-3 py-1 text-[9px] font-bold uppercase tracking-tight border-none transition-all",
+                        selectedStatus.includes(s) ? "bg-black dark:bg-white text-white dark:text-black" : "bg-gray-100 dark:bg-white/5 text-gray-400"
+                      )}
+                    >{s}</Badge>
+                  ))}
+                </div>
+              </div>
 
-          <div className="grid grid-cols-1 gap-4">
-            {filteredProjects.length > 0 ? (
-              filteredProjects.map((project) => (
+              <div className="space-y-4">
+                <Label className="text-[10px] font-black uppercase tracking-widest text-gray-400 flex items-center gap-2">
+                  <Tag size={14} className="text-yellow-600" /> NIGP Industry Codes
+                </Label>
+                <Input
+                  placeholder="e.g. 914-00..."
+                  value={nigpCode}
+                  onChange={(e) => setNigpCode(e.target.value)}
+                  className="bg-white dark:bg-white/5 border-gray-200 dark:border-white/10 text-xs font-bold rounded-xl h-10"
+                />
+              </div>
+            </div>
+          </ScrollArea>
+        </aside>
+
+        {/* Main Opportunity Feed */}
+        <main className="flex-1 overflow-y-auto px-8 py-10 bg-gray-50/10">
+          <div className="max-w-[1200px] mx-auto">
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="text-xl font-black uppercase tracking-tight flex items-center gap-2">
+                <TrendingUp className="text-yellow-600" size={20} />
+                Live Opportunity Feed <span className="text-gray-400 ml-4 font-mono text-sm opacity-50">/ {filteredProjects.length} Verified Records</span>
+              </h2>
+              <div className="flex items-center gap-2 bg-gray-100 dark:bg-white/5 p-1 rounded-xl">
+                <Button variant="ghost" size="sm" onClick={() => setViewMode('card')} className={cn("h-8 px-4 font-black text-[9px] uppercase tracking-widest", viewMode === 'card' ? "bg-white dark:bg-white/10 text-yellow-600 shadow-md" : "text-gray-400")}><Layers size={14} className="mr-2" />Card</Button>
+                <Button variant="ghost" size="sm" onClick={() => setViewMode('table')} className={cn("h-8 px-4 font-black text-[9px] uppercase tracking-widest", viewMode === 'table' ? "bg-white dark:bg-white/10 text-yellow-600 shadow-md" : "text-gray-400")}><RotateCcw size={14} className="mr-2" />Table</Button>
+              </div>
+            </div>
+
+            <div className="space-y-6 pb-20">
+              {filteredProjects.map((p) => (
                 <Card
-                  key={project.id}
-                  className="group relative bg-white dark:bg-[#1c1e24] border-gray-200 dark:border-white/5 hover:border-yellow-400/50 transition-all duration-300 rounded-xl overflow-hidden shadow-sm hover:shadow-md"
+                  key={p.id}
+                  className="group relative overflow-hidden bg-white dark:bg-[#1c1e24] border-gray-200 dark:border-white/5 hover:border-yellow-400/40 transition-all duration-500 rounded-[2.5rem] shadow-sm hover:shadow-2xl hover:scale-[1.01]"
                 >
-                  <CardContent className="p-0">
-                    <div className="flex flex-col lg:flex-row">
-                      {/* Project Status & Match */}
-                      <div className="lg:w-16 bg-gray-50 dark:bg-white/5 flex lg:flex-col items-center justify-center p-3 gap-3 border-b lg:border-b-0 lg:border-r border-gray-100 dark:border-white/5">
-                        <div className="flex flex-col items-center">
-                          <span className="text-[11px] font-bold text-yellow-600 dark:text-yellow-500 tabular-nums">{project.match}%</span>
-                          <div className="w-1 h-10 bg-gray-200 dark:bg-white/10 rounded-full relative overflow-hidden hidden lg:block mt-1.5">
-                            <div className="absolute top-0 left-0 w-full bg-yellow-400 rounded-full transition-all duration-1000" style={{ height: `${project.match}%` }} />
+                  <CardContent className="p-10">
+                    <div className="flex flex-col lg:flex-row justify-between gap-8 h-full">
+                      <div className="flex items-start gap-8 flex-1">
+                        <div className="relative shrink-0">
+                          <div className="w-16 h-16 rounded-2xl bg-gray-50 dark:bg-white/5 flex items-center justify-center transition-all group-hover:bg-yellow-400 overflow-hidden shadow-lg border border-gray-100 dark:border-white/10 group-hover:rotate-3">
+                            <Briefcase className="text-gray-400 group-hover:text-black transition-colors" size={28} />
                           </div>
-                          <Bot className="w-4 h-4 text-gray-400 mt-1.5" />
+                          {p.isProfileMatch && (
+                            <div className="absolute -top-3 -left-3 bg-black dark:bg-yellow-400 text-white dark:text-black text-[8px] font-black uppercase tracking-widest px-2.5 py-1.5 rounded-full shadow-xl flex items-center gap-1.5 z-10 border-2 border-white dark:border-[#1c1e24]">
+                              <Bot size={10} className="animate-pulse" /> Signal Match
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="flex-1">
+                          <div className="flex flex-wrap gap-2 mb-4">
+                            <Badge className="bg-indigo-100 dark:bg-indigo-500/10 text-indigo-600 border-none font-black text-[9px] uppercase tracking-widest px-3 py-1">{p.category}</Badge>
+                            <Badge className="bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 border-none font-black text-[9px] uppercase tracking-widest px-3 py-1 flex items-center gap-1"><ShieldCheck size={10} /> {p.status}</Badge>
+                            <Badge variant="outline" className="text-[9px] border-gray-200 dark:border-white/10 uppercase font-black text-gray-400">{p.posted}</Badge>
+                          </div>
+
+                          <h3 className="text-2xl font-black tracking-tight leading-tight group-hover:text-yellow-600 transition-colors mb-3 uppercase">{p.title}</h3>
+
+                          <div className="flex flex-wrap items-center gap-6 text-[10px] font-black text-gray-500 uppercase tracking-widest mb-6 border-b border-gray-100 dark:border-white/5 pb-4">
+                            <div className="flex items-center gap-2"><MapPin size={14} className="text-yellow-600" /> {p.location}</div>
+                            <div className="flex items-center gap-2"><Building size={14} className="text-blue-500" /> GC: {p.gc}</div>
+                            <div className="flex items-center gap-2"><Star size={14} className="text-yellow-400 fill-current" /> {p.gcRating}</div>
+                            <div className="flex items-center gap-2"><Tag size={14} className="text-purple-500" /> NIGP {p.nigpCode}</div>
+                          </div>
+
+                          <div className="flex flex-wrap gap-2">
+                            {p.trades.map(t => (
+                              <div key={t} className="px-3 py-1.5 bg-gray-50 dark:bg-white/5 rounded-xl text-[9px] font-black uppercase tracking-widest text-gray-400 border border-gray-100 dark:border-white/5 group-hover:border-yellow-400/20 group-hover:text-yellow-600/80 transition-all">{t}</div>
+                            ))}
+                          </div>
                         </div>
                       </div>
 
-                      <div className="flex-1 p-4">
-                        <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-3">
-                          <div className="space-y-1">
-                            <div className="flex flex-wrap gap-1.5 mb-1.5 text-primary">
-                              <Badge className="bg-yellow-400/10 text-yellow-600 dark:text-yellow-500 border-none font-bold text-[8px] uppercase tracking-widest">
-                                {project.type}
-                              </Badge>
-                              <Badge className="bg-gray-100 dark:bg-white/5 text-gray-600 dark:text-gray-400 border-none font-bold text-[8px] uppercase tracking-widest">
-                                {project.trade}
-                              </Badge>
-                            </div>
-                            <h3 className="text-base font-bold text-gray-900 dark:text-white group-hover:text-yellow-500 transition-colors uppercase tracking-tight">
-                              {project.title}
-                            </h3>
-                            <div className="flex flex-wrap items-center gap-4 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                              <span className="flex items-center gap-1.5">
-                                <MapPin className="w-3 h-3 text-yellow-500" />
-                                {project.location}
-                              </span>
-                              <span className="flex items-center gap-1.5">
-                                <Building className="w-3 h-3 text-yellow-500" />
-                                {project.gc}
-                              </span>
-                              <span className="flex items-center gap-1.5">
-                                <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
-                                {project.gcRating}
-                              </span>
-                            </div>
-                          </div>
-
-                          <div className="flex flex-col items-end">
-                            <span className="text-[8px] font-bold text-gray-400 uppercase tracking-widest leading-none mb-1">Estimate</span>
-                            <span className="text-xl font-bold text-gray-900 dark:text-white tabular-nums font-mono">{project.budget}</span>
-                          </div>
+                      <div className="flex flex-col items-end justify-between min-w-[240px] gap-6 pl-8 border-l border-gray-100 dark:border-white/5">
+                        <div className="text-right">
+                          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-2">Estimate Capacity</p>
+                          <p className="text-3xl font-black font-mono tracking-tighter text-gray-900 dark:text-white group-hover:text-yellow-600 transition-colors uppercase">{p.budget}</p>
                         </div>
 
-                        <p className="text-gray-500 dark:text-gray-400 text-[11px] leading-relaxed mb-5 font-medium line-clamp-2 max-w-4xl">
-                          {project.description}
-                        </p>
-
-                        <div className="flex flex-col sm:flex-row items-center justify-between pt-4 border-t border-gray-100 dark:border-white/5 gap-4">
-                          <div className="flex flex-wrap items-center gap-5">
-                            <div className="flex items-center gap-1.5">
-                              <Calendar className="w-3.5 h-3.5 text-gray-400" />
-                              <div className="flex flex-col">
-                                <span className="text-[8px] font-bold text-gray-400 uppercase tracking-tighter">Deadline</span>
-                                <span className="text-[10px] font-bold text-gray-900 dark:text-white uppercase">{project.deadline}</span>
-                              </div>
-                            </div>
-                            <div className="flex items-center gap-1.5">
-                              <Clock className="w-3.5 h-3.5 text-gray-400" />
-                              <div className="flex flex-col">
-                                <span className="text-[8px] font-bold text-gray-400 uppercase tracking-tighter">Posted</span>
-                                <span className="text-[10px] font-bold text-gray-900 dark:text-white uppercase">{project.posted}</span>
-                              </div>
-                            </div>
-                            <div className="flex items-center gap-1.5">
-                              <Briefcase className="w-3.5 h-3.5 text-gray-400" />
-                              <div className="flex flex-col">
-                                <span className="text-[8px] font-bold text-gray-400 uppercase tracking-tighter">Active</span>
-                                <span className="text-[10px] font-bold text-green-500 uppercase">{project.bids} BIDS</span>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="flex items-center gap-2 w-full sm:w-auto">
+                        <div className="flex flex-col gap-3 w-full">
+                          <Button
+                            onClick={() => handleInitiateBid(p)}
+                            className="h-12 bg-black dark:bg-yellow-400 text-white dark:text-black font-black uppercase text-[11px] tracking-widest rounded-2xl shadow-xl hover:scale-[1.03] active:scale-95 transition-all w-full flex gap-3"
+                          >
+                            Initiate Protocol <Zap size={18} />
+                          </Button>
+                          <div className="flex gap-2">
                             <Button
                               variant="ghost"
-                              size="icon"
-                              onClick={() => toggleSave(project.id)}
+                              onClick={(e) => { e.stopPropagation(); toggleSave(p.id); }}
                               className={cn(
-                                "h-10 w-10 rounded-xl transition-all",
-                                savedProjectIds.includes(project.id)
-                                  ? "bg-yellow-400/20 text-yellow-600 dark:text-yellow-500"
-                                  : "bg-gray-50 dark:bg-white/5 text-gray-400 hover:text-yellow-500 hover:bg-yellow-400/10"
+                                "h-12 flex-1 flex items-center justify-center gap-2 font-black text-[9px] uppercase tracking-widest rounded-2xl transition-all border border-gray-100 dark:border-white/5",
+                                savedProjectIds.includes(p.id) ? "bg-yellow-400 text-black border-none" : "bg-white dark:bg-white/5 text-gray-400 hover:text-yellow-600"
                               )}
                             >
-                              {savedProjectIds.includes(project.id) ? <BookmarkCheck className="w-5 h-5" /> : <Bookmark className="w-5 h-5" />}
+                              {savedProjectIds.includes(p.id) ? <BookmarkCheck size={16} /> : <Bookmark size={16} />}
+                              {savedProjectIds.includes(p.id) ? 'Locked' : 'Save'}
                             </Button>
-                            <Button
-                              onClick={() => handleInitiateBid(project)}
-                              className="flex-1 sm:flex-none h-10 px-6 bg-black dark:bg-yellow-400 text-white dark:text-black font-bold uppercase tracking-widest text-[10px] rounded-xl hover:scale-[1.02] active:scale-[0.98] transition-all group"
-                            >
-                              INITIATE BID <ArrowRight className="w-3.5 h-3.5 ml-1.5 group-hover:translate-x-1 transition-transform" />
+                            <Button variant="ghost" className="h-12 w-12 rounded-2xl bg-white dark:bg-white/5 border border-gray-100 dark:border-white/5 text-gray-400 hover:text-indigo-500 overflow-hidden relative group/icon">
+                              <div className="absolute inset-0 bg-indigo-500 translate-y-full group-hover/icon:translate-y-0 transition-transform"></div>
+                              <MoreHorizontal size={18} className="relative z-10 group-hover/icon:text-white" />
                             </Button>
                           </div>
                         </div>
                       </div>
                     </div>
                   </CardContent>
+
+                  {/* Status Interaction Bar */}
+                  <div className="bg-gray-50/50 dark:bg-black/20 px-10 py-4 flex items-center justify-between border-t border-gray-100 dark:border-white/5">
+                    <div className="flex gap-8 text-[9px] font-black uppercase tracking-widest text-gray-400">
+                      <span className="flex items-center gap-2"><Calendar size={14} className="text-red-500" /> Bid Due: {p.deadline}</span>
+                      <span className="flex items-center gap-2"><Smartphone size={14} className="text-blue-500" /> {p.views} Terminal Views</span>
+                      <span className="flex items-center gap-2"><Tag size={14} /> Via {p.source}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="flex -space-x-2 mr-3">
+                        {[1, 2, 3].map(i => (
+                          <div key={i} className="w-5 h-5 rounded-full border-2 border-white dark:border-[#1c1e24] bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-[8px] font-black text-white">{i}</div>
+                        ))}
+                      </div>
+                      <span className="text-[9px] font-black uppercase tracking-widest text-emerald-600">{p.bids} Competing Bidders</span>
+                    </div>
+                  </div>
                 </Card>
-              ))
-            ) : (
-              <Card className="p-20 text-center bg-white dark:bg-[#1c1e24] border-gray-200 dark:border-white/5 rounded-xl">
-                <Target className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white uppercase tracking-tight">No Missions Found</h3>
-                <p className="text-gray-500 dark:text-gray-400 font-medium">Try adjusting your signal filters or search query.</p>
-                <Button variant="link" className="mt-4 text-yellow-600 dark:text-yellow-500 font-bold uppercase text-xs" onClick={() => { setSearchQuery(''); setTradeFilter('all'); setMissionFilter('all'); }}>
-                  RESET TRANSMISSION
-                </Button>
-              </Card>
+              ))}
+            </div>
+
+            {filteredProjects.length === 0 && (
+              <div className="py-32 flex flex-col items-center justify-center text-center">
+                <Target size={60} className="text-gray-200 dark:text-white/5 mb-8 animate-pulse" />
+                <h3 className="text-2xl font-black uppercase tracking-tighter mb-4">No Opportunity Detected</h3>
+                <p className="text-gray-500 max-w-sm font-bold text-sm tracking-wide leading-relaxed uppercase opacity-60">Adjust your industry signals or search query to re-establish the connection to active marketplace bids.</p>
+                <Button variant="link" onClick={() => { setSearchQuery(''); setLocationSearch(''); }} className="mt-8 text-yellow-600 font-black uppercase tracking-widest text-xs underline decoration-2 underline-offset-8">Reset Detection Grid</Button>
+              </div>
             )}
           </div>
-
-          {/* Load More Section */}
-          <div className="flex flex-col items-center py-6 gap-4">
-            <div className="h-px w-24 bg-gray-200 dark:bg-white/10" />
-            <Button variant="ghost" className="font-bold text-[10px] uppercase tracking-[0.4em] text-gray-400 hover:text-yellow-500 hover:bg-transparent">
-              Download More Records
-            </Button>
-          </div>
-        </div>
+        </main>
       </div>
 
       {/* Success Modal */}
       <Dialog open={isSuccessModalOpen} onOpenChange={setIsSuccessModalOpen}>
-        <DialogContent className="sm:max-w-[400px] bg-white dark:bg-[#1c1e24] border-gray-100 dark:border-white/5 rounded-3xl p-8 text-center">
-          <div className="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
-            <CheckCircle2 className="w-10 h-10 text-green-500 animate-bounce" />
+        <DialogContent className="sm:max-w-[400px] bg-white dark:bg-[#1c1e24] border-none rounded-[3rem] p-10 text-center shadow-3xl">
+          <div className="w-24 h-24 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-8 border-4 border-green-500/20">
+            <CheckCircle2 className="w-12 h-12 text-green-500 animate-bounce" />
           </div>
           <DialogHeader>
-            <DialogTitle className="text-2xl font-bold uppercase tracking-tight text-center">Protocol Initiated</DialogTitle>
-            <DialogDescription className="text-center font-medium text-gray-500 dark:text-gray-400">
-              Draft asset for <span className="text-yellow-600 dark:text-yellow-500 font-bold">{lastInitiatedProject}</span> has been successfully logged to your terminal.
+            <DialogTitle className="text-2xl font-black tracking-tight text-center uppercase">Protocol Locked</DialogTitle>
+            <DialogDescription className="text-center font-bold text-gray-500 dark:text-gray-400 mt-2">
+              Mission for <span className="text-yellow-600 font-black">{lastInitiatedProject}</span> has been synchronized with your bid terminal.
             </DialogDescription>
           </DialogHeader>
-          <div className="flex flex-col gap-3 mt-6">
+          <div className="flex flex-col gap-4 mt-10">
             <Button
-              className="h-12 bg-black dark:bg-yellow-400 text-white dark:text-black font-bold uppercase text-xs tracking-widest rounded-xl"
+              className="h-14 bg-black dark:bg-yellow-400 text-white dark:text-black font-black uppercase text-[11px] tracking-[0.2em] rounded-2xl shadow-2xl hover:scale-105 active:scale-95 transition-all"
               onClick={() => navigate('/subcontractor-dashboard/bid-management')}
             >
-              GO TO PROTOCOLS
+              Go to Bid Management
             </Button>
             <Button
               variant="ghost"
-              className="h-12 font-bold uppercase text-xs tracking-widest text-gray-500"
+              className="h-14 font-black uppercase text-[11px] tracking-widest text-gray-400"
               onClick={() => setIsSuccessModalOpen(false)}
             >
-              CONTINUE DISCOVERY
+              Keep Searching
             </Button>
           </div>
         </DialogContent>

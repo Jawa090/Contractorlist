@@ -27,7 +27,11 @@ import {
   Crown,
   LogOut,
   Building2,
-  User
+  User,
+  Sparkles,
+  Truck,
+  PhoneCall,
+  Gavel
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -67,9 +71,21 @@ const SubcontractorSidebar = ({ isOpen, onClose }: SubcontractorSidebarProps) =>
     {
       name: 'Bid Management',
       href: '/subcontractor-dashboard/bid-management',
-      icon: FileText,
+      icon: Gavel,
       description: 'Track & manage bids',
       badge: '0'
+    },
+    {
+      name: 'Marketplace',
+      href: '/subcontractor-dashboard/marketplace',
+      icon: Sparkles,
+      description: 'AI & Managed Services'
+    },
+    {
+      name: 'Suppliers',
+      href: '/subcontractor-dashboard/suppliers',
+      icon: Truck,
+      description: 'Material procurement'
     },
     {
       name: 'My Projects',
@@ -86,8 +102,14 @@ const SubcontractorSidebar = ({ isOpen, onClose }: SubcontractorSidebarProps) =>
     },
   ];
 
-
   const bottomItems = [
+    {
+      name: 'Talk to Sales',
+      href: '#',
+      icon: PhoneCall,
+      description: 'Connect with us',
+      onClick: () => toast({ title: "Sales Contact", description: "Request received. We will reach out to you within 24 hours." })
+    },
     {
       name: 'My Profile',
       href: '/subcontractor-dashboard/my-profile',
@@ -109,7 +131,13 @@ const SubcontractorSidebar = ({ isOpen, onClose }: SubcontractorSidebarProps) =>
       <Link
         key={item.name}
         to={item.href}
-        onClick={onClose}
+        onClick={(e) => {
+          if (item.onClick) {
+            e.preventDefault();
+            item.onClick();
+          }
+          onClose();
+        }}
         className={cn(
           "group flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 relative overflow-hidden",
           isActive
