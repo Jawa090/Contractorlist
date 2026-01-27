@@ -7,7 +7,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Provider, useDispatch } from "react-redux";
 import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from "@/store";
-import { setUser } from "@/store/slices/authSlice";
+import { useAppDispatch } from "@/store/hooks";
+import { fetchUserProfile, setUser } from "@/store/slices/authSlice";
 import authService from "@/services/authService";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import AIChatbot from "@/components/AIChatbot";
@@ -59,32 +60,23 @@ const queryClient = new QueryClient();
 
 // Component to initialize user data on app load
 const AppInitializer = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     const initializeAuth = async () => {
-      // MOCK AUTH INITIALIZATION - BYPASS BACKEND
-      // const accessToken = localStorage.getItem('accessToken');
+      // With cookie-based auth, we try to fetch the profile on load.
+      // If we have a 'user' in localStorage, we definitely want to validate it.
+      const savedUser = authService.getCurrentUser();
 
-      // // If we have a token but no user data in Redux, fetch user profile
-      // if (accessToken) {
-      //   try {
-      //     const response = await authService.getProfile();
-      //     if (response.data) {
-      //       dispatch(setUser({
-      //         id: response.data.id.toString(),
-      //         name: response.data.name,
-      //         email: response.data.email,
-      //         role: response.data.role,
-      //       }));
-      //     }
-      //   } catch (error) {
-      //     // If token is invalid, clear it
-      //     console.error('Failed to fetch user profile:', error);
-      //     localStorage.removeItem('accessToken');
-      //     localStorage.removeItem('refreshToken');
-      //   }
-      // }
+      if (savedUser) {
+        try {
+          await dispatch(fetchUserProfile()).unwrap();
+        } catch (error) {
+          console.error('Session validation failed:', error);
+          // authService handle cleanup in interceptors, but extra safety:
+          // authService.logout();
+        }
+      }
     };
 
     initializeAuth();
@@ -130,16 +122,55 @@ const AppRoutes = () => {
         <Route path="/serve/commercial-companies" element={<ServeCommercialCompanies />} />
         <Route path="/contractors" element={<Contractors />} />
         <Route path="/contractors/:id" element={<ContractorDetails />} />
-            <Route path="/companies/:id" element={<CompanyDetails />} />
-            <Route path="/contractor/update/:token" element={<ContractorUpdate />} />
+        <Route path="/companies/:id" element={<CompanyDetails />} />
+        <Route path="/contractor/update/:token" element={<ContractorUpdate />} />
         <Route path="/projects" element={<Projects />} />
         <Route path="/contact-us" element={<ContactUs />} />
-        <Route path="/gc-dashboard/*" element={<GCDashboard />} />
-        <Route path="/subcontractor-dashboard/*" element={<SubcontractorDashboard />} />
-        <Route path="/supplier-dashboard/*" element={<SupplierDashboard />} />
-        <Route path="/homeowner-dashboard/*" element={<HomeownerDashboard />} />
-        <Route path="/settings" element={<Settings />} />
-        <Route path="/subscription" element={<Subscription />} />
+
+        {/* Protected Dashboard Routes */}
+        <Route
+          path="/gc-dashboard/*"
+          element={
+            <ProtectedRoute allowedRoles={['general-contractor']}>
+              <GCDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/subcontractor-dashboard/*"
+          element={
+            <ProtectedRoute allowedRoles={['subcontractor']}>
+              <SubcontractorDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/supplier-dashboard/*"
+          element={
+            <ProtectedRoute allowedRoles={['vendor']}>
+              <SupplierDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/homeowner-dashboard/*"
+          element={
+            <ProtectedRoute allowedRoles={['client', 'homeowner']}>
+              <HomeownerDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route path="/settings" element={
+          <ProtectedRoute>
+            <Settings />
+          </ProtectedRoute>
+        } />
+        <Route path="/subscription" element={
+          <ProtectedRoute>
+            <Subscription />
+          </ProtectedRoute>
+        } />
         <Route path="/terms" element={<TermsOfService />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
 

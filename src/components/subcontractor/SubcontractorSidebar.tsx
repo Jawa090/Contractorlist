@@ -46,13 +46,7 @@ const SubcontractorSidebar = ({ isOpen, onClose }: SubcontractorSidebarProps) =>
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const handleLogout = () => {
-    toast({
-      title: "Logging out...",
-      description: "You are being safely redirected to the login page.",
-    });
-    setTimeout(() => navigate('/'), 1500);
-  };
+
 
   const navigationItems = [
     {
@@ -76,16 +70,22 @@ const SubcontractorSidebar = ({ isOpen, onClose }: SubcontractorSidebarProps) =>
       badge: '0'
     },
     {
-      name: 'Marketplace',
-      href: '/subcontractor-dashboard/marketplace',
-      icon: Sparkles,
-      description: 'AI & Managed Services'
-    },
-    {
       name: 'Suppliers',
       href: '/subcontractor-dashboard/suppliers',
       icon: Truck,
       description: 'Material procurement'
+    },
+    {
+      name: 'Products',
+      href: '/subcontractor-dashboard/products',
+      icon: Sparkles,
+      description: 'AI Tools & Software'
+    },
+    {
+      name: 'Services',
+      href: '/subcontractor-dashboard/services',
+      icon: Briefcase,
+      description: 'Growth & Support'
     },
     {
       name: 'My Projects',
@@ -257,16 +257,7 @@ const SubcontractorSidebar = ({ isOpen, onClose }: SubcontractorSidebarProps) =>
         {/* Bottom section */}
         <div className={cn("border-t border-gray-200 dark:border-gray-800 p-6 space-y-1 duration-300", isCollapsed && "px-2")}>
           {bottomItems.map(item => renderNavItem(item))}
-          <button
-            onClick={handleLogout}
-            className={cn(
-              "group w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 transition-all duration-300",
-              isCollapsed && "justify-center px-3"
-            )}
-          >
-            <LogOut className="w-5 h-5 shrink-0" />
-            {!isCollapsed && <span className="truncate">Logout Terminal</span>}
-          </button>
+
         </div>
       </aside>
     </>

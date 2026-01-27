@@ -24,6 +24,9 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useToast } from '@/hooks/use-toast';
 
+import { useAppDispatch } from '@/store/hooks';
+import { logoutUser } from '@/store/slices/authSlice';
+
 interface HeaderProps {
   onMenuClick: () => void;
 }
@@ -31,6 +34,7 @@ interface HeaderProps {
 const Header = ({ onMenuClick }: HeaderProps) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useAppDispatch();
   const [isDark, setIsDark] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const { toast } = useToast();
@@ -74,7 +78,8 @@ const Header = ({ onMenuClick }: HeaderProps) => {
     return 'GC Dashboard';
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await dispatch(logoutUser());
     toast({
       title: "Logged out",
       description: "You have been successfully logged out.",

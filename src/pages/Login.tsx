@@ -3,8 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Eye, EyeOff, Mail, Lock, ArrowLeft, Copy, Check } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, ArrowLeft } from "lucide-react";
 import { useAppDispatch } from "@/store/hooks";
+import { loginUser } from "@/store/slices/authSlice"; // Added import
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,7 +18,6 @@ import {
   CardFooter
 } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { MOCK_ACCOUNTS } from "@/data/mockUsers";
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -30,7 +30,6 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [copiedRole, setCopiedRole] = useState<string | null>(null);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -49,98 +48,71 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      // 1. Check for specific MOCK ACCOUNTS first
-      const mockAccount = MOCK_ACCOUNTS.find(
-        (acc) => acc.email === data.email && acc.password === data.password
-      );
+      /* 
+       * REMOVED: Mock account check and bypass logic.
+       * Now exclusively using real API authentication.
+       */
+      const resultAction = await dispatch(loginUser(data));
 
-      if (mockAccount) {
-        // Simulate API delay
-        await new Promise((resolve) => setTimeout(resolve, 500));
-
-        // Dispatch setUser action
-        const { setUser } = await import("@/store/slices/authSlice");
-        dispatch(
-          setUser({
-            id: `mock-${mockAccount.role}-${Date.now()}`,
-            name: mockAccount.name,
-            email: mockAccount.email,
-            role: mockAccount.role as any,
-            phone: "(555) 000-0000",
-            company: "Demo Company Inc.",
-            is_verified: true,
-          })
-        );
+      if (loginUser.fulfilled.match(resultAction)) {
+        const user = resultAction.payload.user;
 
         toast({
-          title: "Demo Login Successful! 🚀",
-          description: `Welcome back, ${mockAccount.name}`,
+          title: "Login Successful! 🎉",
+          description: `Welcome back, ${user.firstName || (user as any).name}`,
         });
 
-        navigate(mockAccount.redirectPath);
-        return;
+        // Determine redirect path based on role
+        let redirectPath = '/dashboard'; // Default fallback
+
+        switch (user.role) {
+          case 'vendor':
+            redirectPath = '/supplier-dashboard';
+            break;
+          case 'client':
+          case 'homeowner': // handling potential variations
+            redirectPath = '/homeowner-dashboard';
+            break;
+          case 'general-contractor':
+            redirectPath = '/gc-dashboard';
+            break;
+          case 'subcontractor':
+            redirectPath = '/subcontractor-dashboard';
+            break;
+          case 'admin':
+            redirectPath = '/admin-dashboard';
+            break;
+          default:
+            redirectPath = '/subcontractor-dashboard';
+        }
+
+
+
+        navigate(redirectPath);
+      } else {
+        // Login failed
+        const errorMessage = typeof resultAction.payload === 'string'
+          ? resultAction.payload
+          : "Login failed. Please check your credentials.";
+        setError(errorMessage);
       }
-
-      // 2. Fallback to existing logic or show error if not using mock
-      let userRole: 'contractor' | 'client' | 'homeowner' | 'admin' | 'vendor' = 'contractor';
-      let userName = 'Demo User';
-      let redirectPath = '/subcontractor-dashboard';
-
-      if (data.email.includes('supplier') || data.email.includes('vendor')) {
-        userRole = 'vendor';
-        userName = 'Demo Supplier';
-        redirectPath = '/supplier-dashboard';
-      } else if (data.email.includes('homeowner') || data.email.includes('client')) {
-        userRole = 'homeowner';
-        userName = 'Demo Homeowner';
-        redirectPath = '/homeowner-dashboard';
-      } else if (data.email.includes('gc') || data.email.includes('general')) {
-        userRole = 'contractor';
-        userName = 'Demo General Contractor';
-        redirectPath = '/gc-dashboard';
-      }
-
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      // Dispatch setUser action to update Redux state
-      const { setUser } = await import('@/store/slices/authSlice');
-      dispatch(setUser({
-        id: '1',
-        name: userName,
-        email: data.email,
-        role: userRole,
-        phone: '(555) 123-4567',
-        company: 'Demo Company',
-        is_verified: true,
-      }));
-
-      toast({
-        title: "Login Successful! 🎉",
-        description: `Welcome ${userName}! (Demo Account - No API)`,
-      });
-
-      // Redirect to appropriate dashboard
-      navigate(redirectPath);
-
     } catch (err: any) {
-      const errorMessage = err.message || "Login failed. Please check your credentials.";
-      setError(errorMessage);
+      console.error("Unexpected login error:", err);
+      setError("An unexpected error occurred. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const copyToClipboard = (email: string, pass: string, role: string) => {
-    setValue("email", email);
-    setValue("password", pass);
-    toast({
-      title: "Credentials Filled! ⚡",
-      description: `Ready to login as ${role}`,
-    });
-    setCopiedRole(role);
-    setTimeout(() => setCopiedRole(null), 2000);
-  };
+  // Removed copyToClipboard as it was used for the helper buttons which are likely not needed if mock accounts are gone,
+  // but if the UI still has them, I should remove them too. 
+  // Looking at the view_file output, there are no buttons invoking copyToClipboard in the JSX shown (wait, let me check the full file again).
+  // Ah, I don't see the buttons in the JSX I read? 
+  // Let me double check the JSX content. lines 145-306.
+  // I don't see the mock account buttons in the JSX I read previously. 
+  // Wait, local variable `copiedRole` and function `copyToClipboard` were defined (lines 33, 134).
+  // If they are not used in JSX, I should remove them too to clean up.
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-orange-50 flex items-center justify-center p-4">

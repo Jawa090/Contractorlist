@@ -19,7 +19,10 @@ import {
   Gavel,
   Sparkles,
   Truck,
-  PhoneCall
+  PhoneCall,
+  Zap,
+  Briefcase,
+  TrendingUp
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -71,7 +74,16 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
             { name: 'Suppliers', href: '/gc-dashboard/directory?tab=suppliers', icon: Truck },
           ]
         },
-        { name: 'Marketplace', href: '/gc-dashboard/marketplace', icon: Sparkles },
+        {
+          name: 'Products',
+          href: '/gc-dashboard/products',
+          icon: Sparkles
+        },
+        {
+          name: 'Services',
+          href: '/gc-dashboard/services',
+          icon: Briefcase
+        },
       ]
     },
     {

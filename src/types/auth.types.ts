@@ -41,7 +41,7 @@ export interface User {
   firstName: string;
   lastName: string;
   email: string;
-  role: 'contractor' | 'client' | 'vendor' | 'admin';
+  role: 'general-contractor' | 'subcontractor' | 'client' | 'vendor' | 'admin';
   phone?: string;
   // ... rest of fields can be updated or kept as optional compatible
   company?: string;
@@ -58,8 +58,6 @@ export interface LoginData {
 
 export interface AuthResponse {
   user: User;
-  token: string;
-  refreshToken: string;
 }
 
 export interface ForgotPasswordData {

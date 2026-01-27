@@ -40,6 +40,10 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
+import { useDispatch } from 'react-redux';
+import { logoutUser } from '@/store/slices/authSlice';
+import { AppDispatch } from '@/store';
+
 interface SupplierHeaderProps {
   onMenuClick: () => void;
 }
@@ -54,6 +58,7 @@ const searchResults = [
 
 const SupplierHeader = ({ onMenuClick }: SupplierHeaderProps) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
   const [isDark, setIsDark] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearchResults, setShowSearchResults] = useState(false);
@@ -103,8 +108,8 @@ const SupplierHeader = ({ onMenuClick }: SupplierHeaderProps) => {
 
   const filteredResults = searchQuery
     ? searchResults.filter(item =>
-        item.name.toLowerCase().includes(searchQuery.toLowerCase())
-      )
+      item.name.toLowerCase().includes(searchQuery.toLowerCase())
+    )
     : [];
 
   // Keyboard shortcut for search (Cmd/Ctrl + K)
@@ -136,6 +141,11 @@ const SupplierHeader = ({ onMenuClick }: SupplierHeaderProps) => {
   const toggleTheme = () => {
     setIsDark(!isDark);
     document.documentElement.classList.toggle('dark');
+  };
+
+  const handleLogout = async () => {
+    await dispatch(logoutUser());
+    navigate('/login');
   };
 
   return (
@@ -420,7 +430,10 @@ const SupplierHeader = ({ onMenuClick }: SupplierHeaderProps) => {
                 Business Analytics
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-red-600 p-3 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg">
+              <DropdownMenuItem
+                className="text-red-600 p-3 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg"
+                onClick={handleLogout}
+              >
                 <LogOut className="w-4 h-4 mr-3" />
                 Sign Out
               </DropdownMenuItem>

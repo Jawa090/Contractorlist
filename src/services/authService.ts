@@ -16,15 +16,14 @@ class AuthService {
   /**
    * Register a new user
    */
+  /**
+   * Register a new user
+   */
   async register(data: RegisterData): Promise<ApiResponse<AuthResponse>> {
     try {
-      // Assuming RegisterData now contains firstName and lastName instead of a single name field.
-      // The 'data' object will be sent as-is to the API.
       const response = await api.post<ApiResponse<AuthResponse>>('/auth/register', data);
 
-      if (response.data.success) {
-        localStorage.setItem('token', response.data.data.token);
-        localStorage.setItem('refreshToken', response.data.data.refreshToken);
+      if (response.data.success && response.data.data.user) {
         localStorage.setItem('user', JSON.stringify(response.data.data.user));
       }
 
@@ -41,9 +40,7 @@ class AuthService {
     try {
       const response = await api.post<ApiResponse<AuthResponse>>('/auth/login', data);
 
-      if (response.data.success) {
-        localStorage.setItem('token', response.data.data.token);
-        localStorage.setItem('refreshToken', response.data.data.refreshToken);
+      if (response.data.success && response.data.data.user) {
         localStorage.setItem('user', JSON.stringify(response.data.data.user));
       }
 
@@ -151,10 +148,22 @@ class AuthService {
   /**
    * Logout user
    */
-  logout(): void {
-    localStorage.removeItem('token');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('user');
+  async logout(): Promise<void> {
+    try {
+      await api.post('/auth/logout');
+    } catch (error) {
+      console.error('Logout failed', error);
+    } finally {
+      // Exhaustive cleanup of any potential token keys
+      const tokenKeys = ['token', 'refreshToken', 'accessToken', 'access_token', 'refresh_token', 'id_token'];
+      tokenKeys.forEach(key => localStorage.removeItem(key));
+
+      localStorage.removeItem('user');
+      // Reset theme to light on logout
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+      // Force reload or redirect handled by component/store
+    }
   }
 
   /**
@@ -174,16 +183,17 @@ class AuthService {
 
   /**
    * Check if user is authenticated
+   * Now relies on existence of user profile in storage + valid cookie (validated by API calls)
    */
   isAuthenticated(): boolean {
-    return !!localStorage.getItem('token');
+    return !!localStorage.getItem('user');
   }
 
   /**
-   * Get token
+   * Get token - No longer accessible via JS
    */
   getToken(): string | null {
-    return localStorage.getItem('token');
+    return null;
   }
   /**
    * Check if email exists

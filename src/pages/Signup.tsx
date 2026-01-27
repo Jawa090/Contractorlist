@@ -108,50 +108,32 @@ const Signup = () => {
     dispatch(clearError());
 
     try {
-      // Check if vendor role - create demo account
-      if (data.role === 'vendor') {
-        // Simulate API delay
-        await new Promise(resolve => setTimeout(resolve, 1500));
+      // Split name into first and last name
+      const nameParts = data.name.trim().split(' ');
+      const firstName = nameParts[0];
+      const lastName = nameParts.slice(1).join(' ') || '';
 
-        // Create demo vendor account (store in localStorage)
-        const demoVendor = {
-          id: Date.now(),
-          name: data.name,
-          email: data.email,
-          role: 'vendor',
-          phone: data.phone || '',
-          company: data.company || 'My Store',
-          is_verified: true,
-          createdAt: new Date().toISOString(),
-        };
+      // Map role to workType
+      let workType: 'client' | 'subcontractor' | 'general-contractor' | 'supplier' = 'client';
+      if (data.role === 'vendor') workType = 'supplier';
+      else if (data.role === 'contractor') workType = 'subcontractor'; // Defaulting to subcontractor 
 
-        // Store demo account (but don't log in yet)
-        localStorage.setItem('demoVendorAccount', JSON.stringify(demoVendor));
-
-        toast({
-          title: "Vendor Account Created! 🎉",
-          description: "Your vendor account is ready. Please login to continue.",
-        });
-
-        // Redirect to login page
-        navigate("/login");
-        return;
-      }
-
-      // For client and contractor - call real backend API
+      // Call real backend API
       const response = await authService.register({
-        name: data.name,
+        firstName,
+        lastName,
         email: data.email,
         password: data.password,
-        role: data.role,
+        workType, // Correct field for backend
         phone: data.phone || '',
-        company: data.company,
-        licenseNumber: data.licenseNumber,
-        businessAddress: data.businessAddress,
-        yearsExperience: data.yearsExperience ? Number(data.yearsExperience) : undefined,
-        specialties: data.specialties ? data.specialties.split(',').map(s => s.trim()) : undefined,
+        companyName: data.company, // Map company -> companyName
+        address: data.businessAddress, // Map businessAddress -> address
+        yearsInBusiness: data.yearsExperience ? Number(data.yearsExperience) : undefined, // Map yearsExperience -> yearsInBusiness
+        trades: data.specialties ? data.specialties.split(',').map(s => s.trim()) : undefined, // Map specialties -> trades
         projectType: data.projectType,
-        budget: data.budget,
+        budgetRange: data.budget, // Map budget -> budgetRange
+        // Add other fields mapping if necessary
+        role: data.role // Pass original role just in case
       });
 
       toast({
@@ -220,11 +202,10 @@ const Signup = () => {
                   {/* Client Option */}
                   <label
                     htmlFor="client"
-                    className={`relative flex flex-col items-center p-5 border-2 rounded-2xl cursor-pointer transition-all ${
-                      selectedRole === 'client'
+                    className={`relative flex flex-col items-center p-5 border-2 rounded-2xl cursor-pointer transition-all ${selectedRole === 'client'
                         ? 'border-green-400 bg-green-50 shadow-lg'
                         : 'border-gray-200 hover:border-green-300 hover:bg-green-50'
-                    }`}
+                      }`}
                   >
                     <input
                       type="radio"
@@ -244,11 +225,10 @@ const Signup = () => {
                   {/* Contractor Option */}
                   <label
                     htmlFor="contractor"
-                    className={`relative flex flex-col items-center p-5 border-2 rounded-2xl cursor-pointer transition-all ${
-                      selectedRole === 'contractor'
+                    className={`relative flex flex-col items-center p-5 border-2 rounded-2xl cursor-pointer transition-all ${selectedRole === 'contractor'
                         ? 'border-blue-400 bg-blue-50 shadow-lg'
                         : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50'
-                    }`}
+                      }`}
                   >
                     <input
                       type="radio"
@@ -268,11 +248,10 @@ const Signup = () => {
                   {/* Vendor Option */}
                   <label
                     htmlFor="vendor"
-                    className={`relative flex flex-col items-center p-5 border-2 rounded-2xl cursor-pointer transition-all ${
-                      selectedRole === 'vendor'
+                    className={`relative flex flex-col items-center p-5 border-2 rounded-2xl cursor-pointer transition-all ${selectedRole === 'vendor'
                         ? 'border-purple-400 bg-purple-50 shadow-lg'
                         : 'border-gray-200 hover:border-purple-300 hover:bg-purple-50'
-                    }`}
+                      }`}
                   >
                     <input
                       type="radio"

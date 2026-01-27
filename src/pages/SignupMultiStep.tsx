@@ -351,53 +351,73 @@ const SignupMultiStep = () => {
   const handleSubmit = async () => {
     setIsLoading(true);
     try {
-      // DUMMY SIGNUP - NO API CALLS
-      const roleMap: Record<string, string> = {
-        "subcontractor": "contractor",
-        "general-contractor": "gc",
-        "supplier": "supplier",
-        "client": "homeowner",
-      };
-
-      await authService.register({
+      const basePayload = {
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
         password: formData.password,
-        workType: formData.workType as any,
+        workType: formData.workType,
         phone: formData.phone,
-
-        // Common Fields
-        companyName: formData.companyName,
-        companySize: formData.companySize,
-        address: formData.address,
-        role: formData.role, // role within company
-        yearsInBusiness: formData.yearsInBusiness,
-
-        // Contractor Specific
-        projectSizeRange: formData.projectSizeRange,
-        serviceArea: formData.serviceArea,
-
-        // Supplier Specific
-        businessType: formData.businessType,
-        deliveryRadius: formData.deliveryRadius,
-        minOrderValue: formData.minOrderValue,
-        offerCreditTerms: formData.offerCreditTerms,
-
-        // Client Specific
-        projectType: formData.projectType,
-        budgetRange: formData.budget, // mapping 'budget' state to 'budgetRange' api field if needed, or rename state
-        timeline: formData.timeline,
-        propertySize: formData.propertySize,
-        financingStatus: formData.financingStatus,
-
-        trades: formData.trades,
         goals: formData.goals,
-      } as any);
+      };
+
+      let payload = { ...basePayload } as any;
+
+      if (formData.workType === 'client') {
+        payload = {
+          ...payload,
+          projectType: formData.projectType,
+          budgetRange: formData.budget,
+          timeline: formData.timeline,
+          propertySize: formData.propertySize,
+          financingStatus: formData.financingStatus,
+          address: formData.address, // Property address
+          companyName: formData.companyName, // Optional for client
+          role: formData.role // Optional for client
+        };
+      } else if (formData.workType === 'general-contractor') {
+        payload = {
+          ...payload,
+          companyName: formData.companyName,
+          companySize: formData.companySize,
+          yearsInBusiness: formData.yearsInBusiness,
+          projectSizeRange: formData.projectSizeRange,
+          address: formData.address,
+          role: formData.role,
+          trades: formData.trades
+        };
+      } else if (formData.workType === 'subcontractor') {
+        payload = {
+          ...payload,
+          companyName: formData.companyName,
+          companySize: formData.companySize,
+          yearsInBusiness: formData.yearsInBusiness,
+          serviceArea: formData.serviceArea,
+          address: formData.address,
+          role: formData.role,
+          trades: formData.trades
+        };
+      } else if (formData.workType === 'supplier') {
+        payload = {
+          ...payload,
+          companyName: formData.companyName,
+          companySize: formData.companySize,
+          yearsInBusiness: formData.yearsInBusiness,
+          businessType: formData.businessType,
+          deliveryRadius: formData.deliveryRadius,
+          minOrderValue: formData.minOrderValue,
+          offerCreditTerms: formData.offerCreditTerms,
+          address: formData.address,
+          role: formData.role,
+          trades: formData.trades // representing product categories
+        };
+      }
+
+      await authService.register(payload);
 
       toast({
         title: "Account Created Successfully! 🎉",
-        description: "Welcome to ContractorList (Demo Account - No API)",
+        description: "Your account has been successfully created. Please login to continue.",
       });
 
       navigate("/login");

@@ -33,6 +33,10 @@ import {
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
+import { useDispatch } from 'react-redux';
+import { logoutUser } from '@/store/slices/authSlice';
+import { AppDispatch } from '@/store';
+
 interface SubcontractorHeaderProps {
   onMenuClick: () => void;
 }
@@ -40,6 +44,7 @@ interface SubcontractorHeaderProps {
 const SubcontractorHeader = ({ onMenuClick }: SubcontractorHeaderProps) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch<AppDispatch>();
   const [isDark, setIsDark] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -63,6 +68,11 @@ const SubcontractorHeader = ({ onMenuClick }: SubcontractorHeaderProps) => {
 
   const handleNewProposal = () => {
     navigate('/subcontractor-dashboard/find-projects');
+  };
+
+  const handleLogout = async () => {
+    await dispatch(logoutUser());
+    navigate('/login');
   };
 
   return (
@@ -163,7 +173,10 @@ const SubcontractorHeader = ({ onMenuClick }: SubcontractorHeaderProps) => {
                   <span className="text-xs font-bold uppercase tracking-widest">Terminal Settings</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className="bg-gray-100 dark:bg-white/5" />
-                <DropdownMenuItem className="text-red-500 p-3 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl cursor-pointer group">
+                <DropdownMenuItem
+                  className="text-red-500 p-3 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl cursor-pointer group"
+                  onClick={handleLogout}
+                >
                   <LogOut className="w-4 h-4 mr-3 text-red-400 group-hover:text-red-500" />
                   <span className="text-xs font-bold uppercase tracking-widest">Sign Out Terminal</span>
                 </DropdownMenuItem>

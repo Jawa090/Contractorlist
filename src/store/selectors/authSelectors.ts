@@ -1,78 +1,65 @@
-import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from '../index';
 
-// Base selectors
-const selectAuthState = (state: RootState) => state.auth;
+/**
+ * Auth Selectors
+ * Reusable selectors for accessing auth state
+ */
 
-// Memoized selectors
-export const selectUser = createSelector(
-  [selectAuthState],
-  (auth) => auth.user
-);
+// User selectors
+export const selectUser = (state: RootState) => state.auth.user;
+export const selectUserId = (state: RootState) => state.auth.user?.id;
+export const selectUserEmail = (state: RootState) => state.auth.user?.email;
+export const selectUserRole = (state: RootState) => state.auth.user?.role;
+export const selectUserName = (state: RootState) => state.auth.user?.name;
+export const selectUserCompany = (state: RootState) => state.auth.user?.company;
 
-export const selectIsAuthenticated = createSelector(
-  [selectAuthState],
-  (auth) => auth.isAuthenticated
-);
+// Authentication status selectors
+export const selectIsAuthenticated = (state: RootState) => state.auth.isAuthenticated;
+export const selectIsLoading = (state: RootState) => state.auth.isLoading;
+export const selectAuthError = (state: RootState) => state.auth.error;
 
-export const selectAuthLoading = createSelector(
-  [selectAuthState],
-  (auth) => auth.isLoading
-);
+// Async state selectors
+export const selectLoginState = (state: RootState) => state.auth.loginState;
+export const selectRegisterState = (state: RootState) => state.auth.registerState;
+export const selectLogoutState = (state: RootState) => state.auth.logoutState;
+export const selectDeleteAccountState = (state: RootState) => state.auth.deleteAccountState;
 
-export const selectAuthError = createSelector(
-  [selectAuthState],
-  (auth) => auth.error
-);
+// Session selectors
+export const selectSessionExpiry = (state: RootState) => state.auth.sessionExpiry;
+export const selectRefreshTokenExpiry = (state: RootState) => state.auth.refreshTokenExpiry;
 
-export const selectUserRole = createSelector(
-  [selectUser],
-  (user) => user?.role
-);
+// Computed selectors
+export const selectIsSessionValid = (state: RootState) => {
+  const expiry = state.auth.sessionExpiry;
+  if (!expiry) return false;
+  return Date.now() < expiry;
+};
 
-export const selectUserName = createSelector(
-  [selectUser],
-  (user) => user?.name
-);
+export const selectUserInitials = (state: RootState) => {
+  const user = state.auth.user;
+  if (!user?.name) return 'U';
 
-export const selectUserEmail = createSelector(
-  [selectUser],
-  (user) => user?.email
-);
+  const names = user.name.split(' ');
+  if (names.length >= 2) {
+    return `${names[0][0]}${names[1][0]}`.toUpperCase();
+  }
+  return user.name[0].toUpperCase();
+};
 
-export const selectIsContractor = createSelector(
-  [selectUserRole],
-  (role) => role === 'contractor'
-);
+export const selectIsContractor = (state: RootState) => {
+  const role = state.auth.user?.role;
+  return role === 'general-contractor' || role === 'subcontractor';
+};
 
-export const selectIsClient = createSelector(
-  [selectUserRole],
-  (role) => role === 'client'
-);
+export const selectIsClient = (state: RootState) => {
+  const role = state.auth.user?.role;
+  return role === 'client' || role === 'homeowner';
+};
 
-export const selectIsAdmin = createSelector(
-  [selectUserRole],
-  (role) => role === 'admin'
-);
+export const selectIsVendor = (state: RootState) => {
+  return state.auth.user?.role === 'vendor';
+};
 
-// Complex selectors
-export const selectAuthStatus = createSelector(
-  [selectIsAuthenticated, selectAuthLoading, selectAuthError],
-  (isAuthenticated, isLoading, error) => ({
-    isAuthenticated,
-    isLoading,
-    hasError: !!error,
-    error,
-  })
-);
-
-export const selectUserProfile = createSelector(
-  [selectUser],
-  (user) => user ? {
-    id: user.id,
-    name: user.name,
-    email: user.email,
-    avatar: user.avatar,
-    role: user.role,
-  } : null
-);
+export const selectIsAdmin = (state: RootState) => {
+  return state.auth.user?.role === 'admin';
+};

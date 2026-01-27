@@ -14,9 +14,10 @@ const HelpSupport = lazy(() => import('@/components/GC dashboard/HelpSupport'));
 const ProjectDiscovery = lazy(() => import('@/components/GC dashboard/ProjectDiscovery'));
 const EnterpriseTeamManagement = lazy(() => import('@/components/GC dashboard/EnterpriseTeamManagement'));
 const EnhancedDocuments = lazy(() => import('@/components/GC dashboard/EnhancedDocuments'));
-const Marketplace = lazy(() => import('@/components/GC dashboard/Marketplace'));
 const BidManagement = lazy(() => import('@/components/GC dashboard/BidManagement'));
 const Suppliers = lazy(() => import('@/components/GC dashboard/Suppliers'));
+const ProductsOverview = lazy(() => import('@/components/GC dashboard/Products/ProductsOverview'));
+const ServicesOverview = lazy(() => import('@/components/GC dashboard/Services/ServicesOverview'));
 
 // Loading fallback component
 const PageSkeleton = () => (
@@ -125,9 +126,10 @@ const GCDashboard = () => {
                 <Route path="/communications" element={<CleanCommunications />} />
                 <Route path="/project-discovery" element={<ProjectDiscovery />} />
                 <Route path="/directory" element={<Directory />} />
-                <Route path="/marketplace" element={<Marketplace />} />
                 <Route path="/bids" element={<BidManagement />} />
                 <Route path="/suppliers" element={<Suppliers />} />
+                <Route path="/products" element={<ProductsOverview />} />
+                <Route path="/services" element={<ServicesOverview />} />
                 <Route path="/team" element={<EnterpriseTeamManagement />} />
                 <Route path="/documents" element={<EnhancedDocuments />} />
                 <Route path="/settings" element={<AccountSettings />} />

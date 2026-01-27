@@ -6,8 +6,8 @@ import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'ax
  * - Development: Uses proxy (relative URL)
  * - Production: Uses environment variable or fallback
  */
-const BASE_URL = import.meta.env.DEV 
-  ? '/api' 
+const BASE_URL = import.meta.env.DEV
+  ? '/api'
   : import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 // API timeout in milliseconds
@@ -22,22 +22,17 @@ const api: AxiosInstance = axios.create({
     'Content-Type': 'application/json',
   },
   timeout: API_TIMEOUT,
-  withCredentials: false, // Set to true if using cookies
+  withCredentials: true, // Enable cookies
 });
 
 /**
  * Request Interceptor
- * - Adds authentication token to requests
  * - Logs requests in development mode
  */
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    // Add authentication token
-    const token = localStorage.getItem('token');
-    if (token && config.headers) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    
+    // Token is now sent via HttpOnly cookie automatically
+
     // Log API calls in development
     if (import.meta.env.DEV) {
       console.log('🚀 API Request:', {
@@ -47,7 +42,7 @@ api.interceptors.request.use(
         params: config.params,
       });
     }
-    
+
     return config;
   },
   (error: AxiosError) => {
@@ -90,24 +85,19 @@ api.interceptors.response.use(
     // Handle 401 Unauthorized - Token expired
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      
+
       try {
-        const refreshToken = localStorage.getItem('refreshToken');
-        if (refreshToken) {
-          // TODO: Implement token refresh logic when backend supports it
-          // const response = await axios.post(`${BASE_URL}/auth/refresh`, { refreshToken });
-          // localStorage.setItem('token', response.data.token);
-          // originalRequest.headers.Authorization = `Bearer ${response.data.token}`;
-          // return api(originalRequest);
-        }
+        // With cookie-based auth, we just call the refresh endpoint
+        // The backend will read the refreshToken cookie
+        await api.post('/token/refresh');
+
+        // After successful refresh, retry the original request
+        return api(originalRequest);
       } catch (refreshError) {
         // If refresh fails, logout user
         handleLogout();
         return Promise.reject(refreshError);
       }
-      
-      // If no refresh token, logout
-      handleLogout();
     }
 
     // Handle 403 Forbidden
@@ -133,11 +123,16 @@ api.interceptors.response.use(
  * Helper function to handle logout
  */
 function handleLogout() {
-  localStorage.removeItem('token');
-  localStorage.removeItem('refreshToken');
+  // Exhaustive cleanup of any potential token keys
+  const tokenKeys = ['token', 'refreshToken', 'accessToken', 'access_token', 'refresh_token', 'id_token'];
+  tokenKeys.forEach(key => localStorage.removeItem(key));
+
   localStorage.removeItem('user');
-  localStorage.removeItem('accessToken');
-  
+
+  // Reset theme to light on logout
+  document.documentElement.classList.remove('dark');
+  localStorage.setItem('theme', 'light');
+
   // Redirect to login page
   if (window.location.pathname !== '/login') {
     window.location.href = '/login';

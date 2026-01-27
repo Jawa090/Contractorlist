@@ -15,8 +15,9 @@ const Messages = lazy(() => import('@/components/subcontractor/Messages'));
 const AccountSettings = lazy(() => import('@/components/subcontractor/AccountSettings'));
 const HelpSupport = lazy(() => import('@/components/subcontractor/HelpSupport'));
 const AIAssistant = lazy(() => import('@/components/subcontractor/AIAssistant'));
-const Marketplace = lazy(() => import('@/components/GC dashboard/Marketplace'));
 const Suppliers = lazy(() => import('@/components/GC dashboard/Suppliers'));
+const ProductsOverview = lazy(() => import('@/components/GC dashboard/Products/ProductsOverview'));
+const ServicesOverview = lazy(() => import('@/components/GC dashboard/Services/ServicesOverview'));
 
 // ... (PageSkeleton and ErrorBoundary remain unchanged)
 
@@ -136,7 +137,8 @@ const SubcontractorDashboard = () => {
                 <Route path="/find-projects" element={<FindProjects />} />
                 <Route path="/project-discovery" element={<ProjectDiscovery />} />
                 <Route path="/messages" element={<Messages />} />
-                <Route path="/marketplace" element={<Marketplace />} />
+                <Route path="/products" element={<ProductsOverview />} />
+                <Route path="/services" element={<ServicesOverview />} />
                 <Route path="/suppliers" element={<Suppliers />} />
                 <Route path="/settings" element={<AccountSettings />} />
                 <Route path="/help-support" element={<HelpSupport />} />

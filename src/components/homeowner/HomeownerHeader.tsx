@@ -4,10 +4,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import { 
-  Search, 
-  Bell, 
-  Plus, 
+import {
+  Search,
+  Bell,
+  Plus,
   Menu,
   Moon,
   Sun,
@@ -39,6 +39,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useDispatch } from 'react-redux';
+import { logoutUser } from '@/store/slices/authSlice';
+import { AppDispatch } from '@/store';
 import {
   Dialog,
   DialogContent,
@@ -65,6 +68,7 @@ const searchResults = [
 
 const HomeownerHeader = ({ onMenuClick }: HomeownerHeaderProps) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
   const [searchFocused, setSearchFocused] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearchResults, setShowSearchResults] = useState(false);
@@ -88,7 +92,7 @@ const HomeownerHeader = ({ onMenuClick }: HomeownerHeaderProps) => {
     const savedTheme = localStorage.getItem('theme');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     const shouldBeDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
-    
+
     if (shouldBeDark) {
       document.documentElement.classList.add('dark');
       setIsDark(true);
@@ -101,7 +105,7 @@ const HomeownerHeader = ({ onMenuClick }: HomeownerHeaderProps) => {
   const toggleTheme = () => {
     const newTheme = !isDark;
     setIsDark(newTheme);
-    
+
     if (newTheme) {
       document.documentElement.classList.add('dark');
       localStorage.setItem('theme', 'dark');
@@ -111,10 +115,15 @@ const HomeownerHeader = ({ onMenuClick }: HomeownerHeaderProps) => {
     }
   };
 
+  const handleLogout = async () => {
+    await dispatch(logoutUser());
+    navigate('/login');
+  };
+
   const filteredResults = searchQuery
     ? searchResults.filter(item =>
-        item.name.toLowerCase().includes(searchQuery.toLowerCase())
-      )
+      item.name.toLowerCase().includes(searchQuery.toLowerCase())
+    )
     : [];
 
   // Keyboard shortcut for search (Cmd/Ctrl + K)
@@ -168,9 +177,8 @@ const HomeownerHeader = ({ onMenuClick }: HomeownerHeaderProps) => {
         {/* Enhanced Search Bar - Desktop */}
         <div ref={searchRef} className="hidden md:flex flex-1 max-w-xl mx-4">
           <div className="relative w-full">
-            <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 transition-colors ${
-              searchFocused ? 'text-orange-500' : 'text-gray-400'
-            }`} />
+            <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 transition-colors ${searchFocused ? 'text-orange-500' : 'text-gray-400'
+              }`} />
             <Input
               ref={inputRef}
               placeholder="Find contractors, services, or projects..."
@@ -288,7 +296,7 @@ const HomeownerHeader = ({ onMenuClick }: HomeownerHeaderProps) => {
               </div>
             </div>
             <div className="max-h-96 overflow-y-auto">
-              <div 
+              <div
                 className={cn(
                   "p-4 border-b hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer",
                   "bg-blue-50/50 dark:bg-blue-900/10"
@@ -315,7 +323,7 @@ const HomeownerHeader = ({ onMenuClick }: HomeownerHeaderProps) => {
                   </div>
                 </div>
               </div>
-              <div 
+              <div
                 className="p-4 border-b hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer"
                 onClick={() => navigate('/homeowner-dashboard/projects')}
               >
@@ -336,7 +344,7 @@ const HomeownerHeader = ({ onMenuClick }: HomeownerHeaderProps) => {
                   </div>
                 </div>
               </div>
-              <div 
+              <div
                 className="p-4 border-b hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer"
                 onClick={() => navigate('/homeowner-dashboard/projects')}
               >
@@ -359,9 +367,9 @@ const HomeownerHeader = ({ onMenuClick }: HomeownerHeaderProps) => {
               </div>
             </div>
             <div className="p-3 border-t border-gray-200 dark:border-gray-800">
-              <Button 
-                variant="ghost" 
-                size="sm" 
+              <Button
+                variant="ghost"
+                size="sm"
                 className="w-full text-xs text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
                 onClick={() => {
                   // Could navigate to a notifications page if it exists
@@ -392,7 +400,7 @@ const HomeownerHeader = ({ onMenuClick }: HomeownerHeaderProps) => {
         </Button>
 
         {/* Post Project Button */}
-        <Button 
+        <Button
           onClick={() => setShowPostProjectDialog(true)}
           className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white shadow-lg transition-all hover:shadow-xl font-semibold"
         >
@@ -415,7 +423,7 @@ const HomeownerHeader = ({ onMenuClick }: HomeownerHeaderProps) => {
                 Create a new project listing to get bids from qualified contractors
               </DialogDescription>
             </DialogHeader>
-            
+
             <div className="space-y-4 py-4">
               {/* Project Title */}
               <div className="space-y-2">
@@ -594,13 +602,13 @@ const HomeownerHeader = ({ onMenuClick }: HomeownerHeaderProps) => {
                     alert('Please fill in all required fields');
                     return;
                   }
-                  
+
                   // Simulate posting project
                   console.log('Posting project:', projectForm);
-                  
+
                   // Show success message
                   alert('Project posted successfully! Contractors will be able to view and bid on your project.');
-                  
+
                   // Reset form and close dialog
                   setProjectForm({
                     title: '',
@@ -612,7 +620,7 @@ const HomeownerHeader = ({ onMenuClick }: HomeownerHeaderProps) => {
                     urgency: 'medium'
                   });
                   setShowPostProjectDialog(false);
-                  
+
                   // Navigate to projects page
                   navigate('/homeowner-dashboard/projects');
                 }}
@@ -644,21 +652,21 @@ const HomeownerHeader = ({ onMenuClick }: HomeownerHeaderProps) => {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem 
+            <DropdownMenuItem
               className="cursor-pointer text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
               onClick={() => navigate('/homeowner-dashboard/settings')}
             >
               <User className="mr-2 h-4 w-4" />
               <span>Profile</span>
             </DropdownMenuItem>
-            <DropdownMenuItem 
+            <DropdownMenuItem
               className="cursor-pointer text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
               onClick={() => navigate('/homeowner-dashboard/settings')}
             >
               <Settings className="mr-2 h-4 w-4" />
               <span>Settings</span>
             </DropdownMenuItem>
-            <DropdownMenuItem 
+            <DropdownMenuItem
               className="cursor-pointer text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
               onClick={() => navigate('/homeowner-dashboard/help')}
             >
@@ -666,14 +674,9 @@ const HomeownerHeader = ({ onMenuClick }: HomeownerHeaderProps) => {
               <span>Help & Support</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator className="bg-gray-200 dark:bg-gray-800" />
-            <DropdownMenuItem 
+            <DropdownMenuItem
               className="cursor-pointer text-red-600 dark:text-red-400 focus:text-red-600 dark:focus:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
-              onClick={() => {
-                // Handle logout
-                console.log('Logging out...');
-                // In a real app, this would clear auth state and redirect
-                navigate('/login');
-              }}
+              onClick={handleLogout}
             >
               <LogOut className="mr-2 h-4 w-4" />
               <span>Log out</span>

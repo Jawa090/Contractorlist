@@ -18,7 +18,7 @@ const Directory = () => {
   }, [searchParams]);
 
   return (
-    <div className="flex h-full w-full flex-col bg-white dark:bg-[#0f1115] text-gray-900 dark:text-white transition-colors duration-500 overflow-hidden font-sans p-8 pt-6">
+    <div className="flex h-full w-full flex-col bg-white dark:bg-[#0f1115] text-gray-900 dark:text-white transition-colors duration-500 font-sans p-8 pt-6">
 
       {/* Background Ambience */}
       <div className="fixed inset-0 pointer-events-none opacity-50">
@@ -26,8 +26,8 @@ const Directory = () => {
         <div className="absolute bottom-[10%] right-[5%] w-[400px] h-[400px] bg-gray-400/5 dark:bg-white/5 blur-[100px] rounded-full" />
       </div>
 
-      <div className="max-w-7xl mx-auto w-full space-y-6 relative z-10">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div className="max-w-7xl mx-auto w-full space-y-6 relative z-10 flex flex-col h-full">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 flex-shrink-0">
           <div>
             <div className="flex items-center gap-8 mb-1">
               <button
@@ -57,13 +57,13 @@ const Directory = () => {
           </div>
         </div>
 
-        <div className="mt-4 flex-1 overflow-hidden flex flex-col">
+        <div className="mt-4 flex-1 flex flex-col min-h-0">
           {activeTab === 'sc' ? (
-            <div className="animate-in fade-in slide-in-from-bottom-2 duration-400 h-full overflow-hidden flex flex-col">
+            <div className="animate-in fade-in slide-in-from-bottom-2 duration-400 h-full flex flex-col">
               <SubcontractorDirectory />
             </div>
           ) : (
-            <div className="animate-in fade-in slide-in-from-bottom-2 duration-400">
+            <div className="animate-in fade-in slide-in-from-bottom-2 duration-400 h-full flex flex-col">
               <Suppliers />
             </div>
           )}
