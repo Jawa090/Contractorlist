@@ -23,6 +23,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useToast } from '@/hooks/use-toast';
+import { useTheme } from '@/hooks/useTheme';
 
 import { useAppDispatch } from '@/store/hooks';
 import { logoutUser } from '@/store/slices/authSlice';
@@ -35,27 +36,10 @@ const Header = ({ onMenuClick }: HeaderProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useAppDispatch();
-  const [isDark, setIsDark] = useState(false);
+  const { isDark, toggleTheme } = useTheme();
   const [searchQuery, setSearchQuery] = useState('');
   const { toast } = useToast();
 
-  // Check theme on mount
-  useEffect(() => {
-    const isDarkMode = document.documentElement.classList.contains('dark');
-    setIsDark(isDarkMode);
-  }, []);
-
-  const toggleTheme = () => {
-    const newTheme = !isDark;
-    setIsDark(newTheme);
-    if (newTheme) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
-  };
 
   const handleNewProject = () => {
     navigate('/gc-dashboard/my-projects');

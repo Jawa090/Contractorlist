@@ -83,7 +83,25 @@ api.interceptors.response.use(
     const originalRequest = error.config as any;
 
     // Handle 401 Unauthorized - Token expired
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    // BUT: Don't try to refresh if:
+    // 1. This is already a retry attempt
+    // 2. The request is to login/register/refresh endpoints (would cause infinite loop)
+    // 3. User is not authenticated (no point in refreshing)
+    if (
+      error.response?.status === 401 &&
+      !originalRequest._retry &&
+      !originalRequest.url?.includes('/auth/login') &&
+      !originalRequest.url?.includes('/auth/register') &&
+      !originalRequest.url?.includes('/token/refresh')
+    ) {
+      // Check if user is authenticated before attempting refresh
+      const user = localStorage.getItem('user');
+      if (!user) {
+        // No user session, don't try to refresh
+        handleLogout();
+        return Promise.reject(error);
+      }
+
       originalRequest._retry = true;
 
       try {

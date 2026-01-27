@@ -39,6 +39,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useTheme } from '@/hooks/useTheme';
 import { useDispatch } from 'react-redux';
 import { logoutUser } from '@/store/slices/authSlice';
 import { AppDispatch } from '@/store';
@@ -69,13 +70,13 @@ const searchResults = [
 const HomeownerHeader = ({ onMenuClick }: HomeownerHeaderProps) => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
+  const { isDark, toggleTheme } = useTheme();
   const [searchFocused, setSearchFocused] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearchResults, setShowSearchResults] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [notifications] = useState(3); // Mock notification count
-  const [isDark, setIsDark] = useState(false);
   const [showPostProjectDialog, setShowPostProjectDialog] = useState(false);
   const [projectForm, setProjectForm] = useState({
     title: '',
@@ -86,34 +87,6 @@ const HomeownerHeader = ({ onMenuClick }: HomeownerHeaderProps) => {
     timeline: '',
     urgency: 'medium'
   });
-
-  // Initialize theme on mount
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const shouldBeDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
-
-    if (shouldBeDark) {
-      document.documentElement.classList.add('dark');
-      setIsDark(true);
-    } else {
-      document.documentElement.classList.remove('dark');
-      setIsDark(false);
-    }
-  }, []);
-
-  const toggleTheme = () => {
-    const newTheme = !isDark;
-    setIsDark(newTheme);
-
-    if (newTheme) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
-  };
 
   const handleLogout = async () => {
     await dispatch(logoutUser());

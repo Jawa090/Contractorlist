@@ -11,6 +11,7 @@ import { useAppDispatch } from "@/store/hooks";
 import { fetchUserProfile, setUser } from "@/store/slices/authSlice";
 import authService from "@/services/authService";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import RouteThemeManager from "@/components/RouteThemeManager";
 import AIChatbot from "@/components/AIChatbot";
 import NotificationSystem from "@/components/NotificationSystem";
 import Index from "./pages/Index";
@@ -90,6 +91,7 @@ const AppRoutes = () => {
   return (
     <>
       <AppInitializer />
+      <RouteThemeManager />
       <Routes>
         <Route path="/" element={<Index />} />
         <Route path="/login" element={<Login />} />

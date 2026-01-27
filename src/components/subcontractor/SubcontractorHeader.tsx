@@ -32,6 +32,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useTheme } from '@/hooks/useTheme';
 
 import { useDispatch } from 'react-redux';
 import { logoutUser } from '@/store/slices/authSlice';
@@ -45,26 +46,8 @@ const SubcontractorHeader = ({ onMenuClick }: SubcontractorHeaderProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch<AppDispatch>();
-  const [isDark, setIsDark] = useState(false);
+  const { isDark, toggleTheme } = useTheme();
   const [searchQuery, setSearchQuery] = useState('');
-
-  // Check theme on mount
-  useEffect(() => {
-    const isDarkMode = document.documentElement.classList.contains('dark');
-    setIsDark(isDarkMode);
-  }, []);
-
-  const toggleTheme = () => {
-    const newTheme = !isDark;
-    setIsDark(newTheme);
-    if (newTheme) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
-  };
 
   const handleNewProposal = () => {
     navigate('/subcontractor-dashboard/find-projects');

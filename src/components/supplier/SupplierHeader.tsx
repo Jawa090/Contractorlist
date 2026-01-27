@@ -39,6 +39,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useTheme } from '@/hooks/useTheme';
 
 import { useDispatch } from 'react-redux';
 import { logoutUser } from '@/store/slices/authSlice';
@@ -59,7 +60,7 @@ const searchResults = [
 const SupplierHeader = ({ onMenuClick }: SupplierHeaderProps) => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-  const [isDark, setIsDark] = useState(false);
+  const { isDark, toggleTheme } = useTheme();
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
@@ -137,11 +138,6 @@ const SupplierHeader = ({ onMenuClick }: SupplierHeaderProps) => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
-
-  const toggleTheme = () => {
-    setIsDark(!isDark);
-    document.documentElement.classList.toggle('dark');
-  };
 
   const handleLogout = async () => {
     await dispatch(logoutUser());

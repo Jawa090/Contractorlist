@@ -159,9 +159,12 @@ class AuthService {
       tokenKeys.forEach(key => localStorage.removeItem(key));
 
       localStorage.removeItem('user');
-      // Reset theme to light on logout
+
+      // Reset to light theme for public pages (login, etc.)
+      // Dashboard theme preference is preserved in 'dashboardTheme' key
       document.documentElement.classList.remove('dark');
       localStorage.setItem('theme', 'light');
+
       // Force reload or redirect handled by component/store
     }
   }
