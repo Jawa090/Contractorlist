@@ -78,13 +78,13 @@ class ErrorBoundary extends Component<
             <div className="flex gap-3 justify-center">
               <button
                 onClick={() => window.location.reload()}
-                className="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg transition-colors"
+                className="px-6 py-3 bg-secondary hover:bg-secondary/80 text-secondary-foreground font-semibold rounded-lg transition-colors"
               >
                 Refresh Page
               </button>
               <button
                 onClick={this.reset}
-                className="px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-black font-semibold rounded-lg transition-colors"
+                className="px-6 py-3 bg-accent hover:bg-accent/80 text-accent-foreground font-semibold rounded-lg transition-colors"
               >
                 Try again
               </button>

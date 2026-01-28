@@ -120,14 +120,14 @@ const SupplierSidebar = ({ isOpen, onClose }: SupplierSidebarProps) => {
         <div className="flex items-center justify-between p-4 border-b border-border-light dark:border-border-dark bg-gradient-to-r from-gray-50 to-white dark:from-gray-800 dark:to-gray-900">
           {!isCollapsed && (
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center shadow-lg">
-                <Truck className="w-5 h-5 text-black" />
+              <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center shadow-lg shadow-accent/20">
+                <Truck className="w-5 h-5 text-accent-foreground" />
               </div>
               <div>
                 <h2 className="font-bold text-base text-gray-900 dark:text-white">BuildMart Supply</h2>
                 <div className="flex items-center gap-2">
                   <p className="text-xs text-gray-600 dark:text-gray-400">Material Supplier</p>
-                  <Badge className="bg-green-100 text-green-800 text-xs px-2 py-0.5">
+                  <Badge variant="outline" className="bg-accent/10 text-accent border-accent/20 text-xs px-2 py-0.5">
                     <Activity className="w-3 h-3 mr-1" />
                     Active
                   </Badge>
@@ -180,19 +180,19 @@ const SupplierSidebar = ({ isOpen, onClose }: SupplierSidebarProps) => {
                   className={cn(
                     "group flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 relative overflow-hidden",
                     active
-                      ? "bg-gradient-to-r from-yellow-400 via-orange-500 to-yellow-500 text-black shadow-lg shadow-yellow-500/30 transform scale-[1.02]"
-                      : "text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 dark:hover:from-gray-800 dark:hover:to-gray-700 hover:text-gray-900 dark:hover:text-white hover:shadow-md",
+                      ? "bg-accent text-accent-foreground shadow-lg shadow-accent/30 transform scale-[1.02]"
+                      : "text-gray-700 dark:text-gray-300 hover:bg-accent/10 hover:text-accent dark:hover:text-accent hover:shadow-md",
                     isCollapsed ? 'justify-center px-3' : ''
                   )}
                 >
                   {/* Active indicator background animation */}
                   {active && (
-                    <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/20 to-orange-500/20 animate-pulse" />
+                    <div className="absolute inset-0 bg-white/10 animate-pulse" />
                   )}
 
                   <div className={cn(
                     "flex items-center justify-center w-5 h-5 transition-all duration-300 relative z-10",
-                    item.isPro && !active && "text-purple-500",
+                    item.isPro && !active && "text-accent",
                     active && "scale-110",
                     "group-hover:scale-110"
                   )}>
@@ -215,13 +215,13 @@ const SupplierSidebar = ({ isOpen, onClose }: SupplierSidebarProps) => {
                             <Crown className={cn(
                               "w-3 h-3 transition-transform duration-300",
                               "group-hover:scale-125",
-                              active ? "text-black" : "text-purple-500"
+                              active ? "text-accent-foreground" : "text-accent"
                             )} />
                           )}
                         </div>
                         <p className={cn(
                           "text-xs truncate transition-all duration-300",
-                          active ? "text-black/70" : "text-gray-500 dark:text-gray-400"
+                          active ? "text-accent-foreground/70" : "text-gray-500 dark:text-gray-400 group-hover:text-accent/70"
                         )}>
                           {item.description}
                         </p>
@@ -232,9 +232,11 @@ const SupplierSidebar = ({ isOpen, onClose }: SupplierSidebarProps) => {
                           className={cn(
                             "text-xs px-2 py-1 font-semibold transition-all duration-300 relative z-10",
                             active && 'bg-black/20 text-black border-black/20 shadow-md',
-                            item.badge === 'Pro' && !active && "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 group-hover:scale-110",
+                            item.badge === 'Pro' && !active && "bg-accent/10 text-accent dark:bg-accent/20 dark:text-accent group-hover:scale-110",
                             item.badge === 'New' && !active && "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300 group-hover:scale-110 animate-pulse",
-                            !active && !['Pro', 'New'].includes(item.badge) && "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 group-hover:scale-105"
+                            item.badge === 'Live' && !active && "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300 group-hover:scale-110 animate-pulse",
+                            item.badge === 'Active' && !active && "bg-accent/10 text-accent border-accent/20 group-hover:scale-110",
+                            !active && !['Pro', 'New', 'Live', 'Active'].includes(item.badge!) && "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 group-hover:scale-105"
                           )}
                         >
                           {item.badge}
@@ -244,8 +246,8 @@ const SupplierSidebar = ({ isOpen, onClose }: SupplierSidebarProps) => {
                   )}
                   {active && (
                     <>
-                      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-black rounded-r-full shadow-lg" />
-                      <div className="absolute right-2 top-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-black rounded-full animate-ping" />
+                      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-black/20 rounded-r-full shadow-lg" />
+                      <div className="absolute right-2 top-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-black/20 rounded-full animate-ping" />
                     </>
                   )}
                 </Link>

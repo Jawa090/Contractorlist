@@ -26,7 +26,7 @@ const SupplierAnalytics = () => {
       trend: 'up',
       period: 'vs last quarter',
       icon: TrendingUp,
-      color: 'text-green-600'
+      color: 'text-accent'
     },
     {
       title: 'Order Fulfillment Rate',
@@ -34,7 +34,7 @@ const SupplierAnalytics = () => {
       trend: 'up',
       period: 'this month',
       icon: Target,
-      color: 'text-blue-600'
+      color: 'text-gray-600 dark:text-gray-400'
     },
     {
       title: 'Customer Retention',
@@ -42,7 +42,7 @@ const SupplierAnalytics = () => {
       trend: 'up',
       period: 'vs last year',
       icon: Users,
-      color: 'text-purple-600'
+      color: 'text-gray-600 dark:text-gray-400'
     },
     {
       title: 'Average Order Value',
@@ -50,7 +50,7 @@ const SupplierAnalytics = () => {
       trend: 'down',
       period: 'vs last month',
       icon: DollarSign,
-      color: 'text-orange-600'
+      color: 'text-accent'
     }
   ];
 
@@ -63,9 +63,9 @@ const SupplierAnalytics = () => {
   ];
 
   const customerSegments = [
-    { segment: 'Large Contractors', percentage: 45, revenue: '$125,400', color: 'bg-blue-500' },
-    { segment: 'Medium Contractors', percentage: 35, revenue: '$89,200', color: 'bg-green-500' },
-    { segment: 'Small Contractors', percentage: 20, revenue: '$45,800', color: 'bg-yellow-500' }
+    { segment: 'Large Contractors', percentage: 45, revenue: '$125,400', color: 'bg-black dark:bg-white' },
+    { segment: 'Medium Contractors', percentage: 35, revenue: '$89,200', color: 'bg-gray-500' },
+    { segment: 'Small Contractors', percentage: 20, revenue: '$45,800', color: 'bg-accent' }
   ];
 
   const monthlyData = [
@@ -98,7 +98,7 @@ const SupplierAnalytics = () => {
             <Calendar className="w-4 h-4 mr-2" />
             Date Range
           </Button>
-          <Button className="bg-primary hover:bg-yellow-400 text-black">
+          <Button className="bg-accent hover:bg-accent/90 text-accent-foreground">
             <Download className="w-4 h-4 mr-2" />
             Export Report
           </Button>
@@ -129,7 +129,7 @@ const SupplierAnalytics = () => {
                     </span>
                   </div>
                 </div>
-                <div className="size-12 rounded-lg bg-primary/10 flex items-center justify-center">
+                <div className="size-12 rounded-lg bg-accent/10 flex items-center justify-center">
                   <metric.icon className={`w-6 h-6 ${metric.color}`} />
                 </div>
               </div>
@@ -154,8 +154,8 @@ const SupplierAnalytics = () => {
                   <div className="flex items-center gap-3">
                     <span className="text-sm font-medium w-8">{data.month}</span>
                     <div className="flex-1">
-                      <Progress 
-                        value={(data.revenue / 140000) * 100} 
+                      <Progress
+                        value={(data.revenue / 140000) * 100}
                         className="h-2 w-32"
                       />
                     </div>
@@ -189,8 +189,8 @@ const SupplierAnalytics = () => {
                     <span className="text-sm font-semibold">{segment.percentage}%</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <Progress 
-                      value={segment.percentage} 
+                    <Progress
+                      value={segment.percentage}
                       className="flex-1 h-2"
                     />
                     <span className="text-sm text-text-secondary-light dark:text-text-secondary-dark">
@@ -217,8 +217,8 @@ const SupplierAnalytics = () => {
             {topProducts.map((product, index) => (
               <div key={product.name} className="flex items-center justify-between p-4 border border-border-light dark:border-border-dark rounded-lg">
                 <div className="flex items-center gap-4">
-                  <div className="size-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <Package className="w-4 h-4 text-primary" />
+                  <div className="size-8 rounded-lg bg-accent/10 flex items-center justify-center">
+                    <Package className="w-4 h-4 text-accent" />
                   </div>
                   <div>
                     <p className="font-medium text-text-primary-light dark:text-text-primary-dark">
@@ -242,10 +242,10 @@ const SupplierAnalytics = () => {
       </Card>
 
       {/* AI Insights */}
-      <Card className="bg-gradient-to-r from-primary/5 to-blue-500/5 border-primary/20">
+      <Card className="bg-gradient-to-r from-accent/5 to-blue-500/5 border-accent/20">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Target className="w-5 h-5 text-primary" />
+            <Target className="w-5 h-5 text-accent" />
             AI-Powered Insights
           </CardTitle>
         </CardHeader>

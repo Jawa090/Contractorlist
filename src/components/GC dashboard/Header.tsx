@@ -99,7 +99,7 @@ const Header = ({ onMenuClick }: HeaderProps) => {
             {/* Primary Action - New Project */}
             <Button
               onClick={handleNewProject}
-              className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold h-9 hidden sm:flex"
+              className="bg-accent hover:bg-accent/80 text-accent-foreground font-semibold h-9 hidden sm:flex"
             >
               <Plus className="w-4 h-4 mr-2" />
               New Project
@@ -113,7 +113,7 @@ const Header = ({ onMenuClick }: HeaderProps) => {
               aria-label="Toggle theme"
             >
               {isDark ? (
-                <Sun className="w-4 h-4 text-yellow-500" />
+                <Sun className="w-4 h-4 text-accent" />
               ) : (
                 <Moon className="w-4 h-4 text-gray-700" />
               )}
@@ -127,9 +127,9 @@ const Header = ({ onMenuClick }: HeaderProps) => {
                   size="sm"
                   className="flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-800 p-1.5 rounded-lg h-9"
                 >
-                  <Avatar className="w-8 h-8 cursor-pointer ring-2 ring-transparent group-hover:ring-yellow-400 dark:group-hover:ring-yellow-500 transition-all">
+                  <Avatar className="w-8 h-8 cursor-pointer ring-2 ring-transparent group-hover:ring-accent transition-all">
                     <AvatarImage src="https://images.unsplash.com/photo-1599305445671-ac291c95aaa9?auto=format&fit=crop&q=80&w=150&h=150" className="object-cover" />
-                    <AvatarFallback className="bg-yellow-400 dark:bg-yellow-500 text-black font-semibold">AC</AvatarFallback>
+                    <AvatarFallback className="bg-accent text-accent-foreground font-semibold">AC</AvatarFallback>
                   </Avatar>
                   <span className="hidden lg:block text-sm font-medium text-gray-900 dark:text-white">
                     Profile
@@ -139,7 +139,7 @@ const Header = ({ onMenuClick }: HeaderProps) => {
               <DropdownMenuContent align="end" className="w-56">
                 <DropdownMenuLabel className="p-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-yellow-400 dark:bg-yellow-500 flex items-center justify-center text-gray-900 shadow-md">
+                    <div className="w-10 h-10 rounded-full bg-accent flex items-center justify-center text-accent-foreground shadow-md">
                       <User className="w-5 h-5" />
                     </div>
                     <div className="flex-1">

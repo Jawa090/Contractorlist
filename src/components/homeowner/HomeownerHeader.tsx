@@ -133,21 +133,21 @@ const HomeownerHeader = ({ onMenuClick }: HomeownerHeaderProps) => {
           variant="ghost"
           size="sm"
           onClick={onMenuClick}
-          className="lg:hidden hover:bg-[#fce011]/10"
+          className="lg:hidden hover:bg-accent/10"
         >
           <Menu className="w-5 h-5" />
         </Button>
 
         <div className="flex items-center gap-2 lg:hidden">
-          <div className="size-8 rounded-lg bg-[#fce011] flex items-center justify-center shadow-sm">
-            <span className="text-black font-bold text-sm">C</span>
+          <div className="size-8 rounded-lg bg-accent flex items-center justify-center shadow-sm">
+            <span className="text-accent-foreground font-bold text-sm">C</span>
           </div>
           <span className="font-bold text-sm text-gray-900 dark:text-white">ContractorsList</span>
         </div>
 
         <div ref={searchRef} className="hidden md:flex flex-1 max-w-xl mx-4 relative">
           <div className="relative w-full">
-            <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 transition-colors ${searchFocused ? 'text-[#fce011]' : 'text-gray-400'}`} />
+            <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 transition-colors ${searchFocused ? 'text-accent' : 'text-gray-400'}`} />
             <Input
               ref={inputRef}
               placeholder="Find contractors, services, or projects..."
@@ -157,7 +157,7 @@ const HomeownerHeader = ({ onMenuClick }: HomeownerHeaderProps) => {
                 setShowSearchResults(true);
               }}
               className={cn(
-                "pl-10 pr-20 bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 focus:bg-white dark:focus:bg-gray-900 focus:border-[#fce011] dark:focus:border-[#fce011] focus:ring-2 focus:ring-[#fce011]/20 dark:focus:ring-[#fce011]/10 transition-all",
+                "pl-10 pr-20 bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 focus:bg-white dark:focus:bg-gray-900 focus:border-accent dark:focus:border-accent focus:ring-2 focus:ring-accent/20 dark:focus:ring-accent/10 transition-all",
                 searchFocused && "shadow-sm"
               )}
               onFocus={() => {
@@ -203,8 +203,8 @@ const HomeownerHeader = ({ onMenuClick }: HomeownerHeaderProps) => {
                       }}
                       className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-left"
                     >
-                      <div className="p-2 bg-[#fce011]/10 dark:bg-[#fce011]/20 rounded-lg">
-                        <Icon className="w-4 h-4 text-[#fce011]" />
+                      <div className="p-2 bg-accent/10 dark:bg-accent/20 rounded-lg">
+                        <Icon className="w-4 h-4 text-accent" />
                       </div>
                       <div className="flex-1">
                         <p className="text-sm font-medium text-gray-900 dark:text-white">{result.name}</p>
@@ -226,17 +226,17 @@ const HomeownerHeader = ({ onMenuClick }: HomeownerHeaderProps) => {
         <Button
           variant="ghost"
           size="sm"
-          className="md:hidden hover:bg-[#fce011]/10"
+          className="md:hidden hover:bg-accent/10"
         >
           <Search className="w-5 h-5" />
         </Button>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="sm" className="relative hover:bg-[#fce011]/10">
+            <Button variant="ghost" size="sm" className="relative hover:bg-accent/10">
               <Bell className="w-5 h-5" />
               {notifications > 0 && (
-                <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 text-xs bg-[#fce011] border-2 border-white text-black">
+                <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 text-xs bg-accent border-2 border-white text-accent-foreground">
                   {notifications}
                 </Badge>
               )}
@@ -252,8 +252,8 @@ const HomeownerHeader = ({ onMenuClick }: HomeownerHeaderProps) => {
             <div className="max-h-96 overflow-y-auto">
               <div className="p-4 border-b hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer" onClick={() => navigate('/homeowner-dashboard/bids')}>
                 <div className="flex items-start gap-3">
-                  <div className="p-2 bg-[#fce011]/10 dark:bg-[#fce011]/20 rounded-lg">
-                    <CheckCircle2 className="w-4 h-4 text-[#fce011]" />
+                  <div className="p-2 bg-accent/10 dark:bg-accent/20 rounded-lg">
+                    <CheckCircle2 className="w-4 h-4 text-accent" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold text-gray-900 dark:text-white">New bid received</p>
@@ -271,12 +271,12 @@ const HomeownerHeader = ({ onMenuClick }: HomeownerHeaderProps) => {
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <Button variant="ghost" size="sm" onClick={toggleTheme} className="hidden sm:flex hover:bg-[#fce011]/10 dark:hover:bg-gray-800 relative">
+        <Button variant="ghost" size="sm" onClick={toggleTheme} className="hidden sm:flex hover:bg-accent/10 dark:hover:bg-gray-800 relative">
           <Sun className={cn("w-5 h-5 transition-all", isDark ? "rotate-90 scale-0 absolute" : "rotate-0 scale-100")} />
           <Moon className={cn("w-5 h-5 transition-all", isDark ? "rotate-0 scale-100" : "rotate-90 scale-0 absolute")} />
         </Button>
 
-        <Button onClick={() => setShowPostProjectDialog(true)} className="bg-[#fce011] hover:bg-[#fce011]/90 text-black shadow-lg transition-all hover:shadow-xl font-semibold">
+        <Button onClick={() => setShowPostProjectDialog(true)} className="bg-accent hover:bg-accent/90 text-accent-foreground shadow-lg transition-all hover:shadow-xl font-semibold">
           <Plus className="w-4 h-4 mr-2" />
           <span className="hidden sm:inline">Post Project</span>
           <span className="sm:hidden">Post</span>
@@ -286,8 +286,8 @@ const HomeownerHeader = ({ onMenuClick }: HomeownerHeaderProps) => {
           <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800">
             <DialogHeader>
               <DialogTitle className="text-2xl font-bold flex items-center gap-2 text-gray-900 dark:text-white">
-                <div className="w-10 h-10 rounded-xl bg-[#fce011] flex items-center justify-center">
-                  <Plus className="w-5 h-5 text-white" />
+                <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center">
+                  <Plus className="w-5 h-5 text-accent-foreground" />
                 </div>
                 Post New Project
               </DialogTitle>
@@ -327,9 +327,9 @@ const HomeownerHeader = ({ onMenuClick }: HomeownerHeaderProps) => {
                   </Select>
                 </div>
               </div>
-              <div className="p-4 bg-[#fce011]/10 dark:bg-[#fce011]/20 rounded-lg border border-[#fce011]/20 dark:border-[#fce011]/30">
+              <div className="p-4 bg-accent/10 dark:bg-accent/20 rounded-lg border border-accent/20 dark:border-accent/30">
                 <div className="flex items-start gap-3">
-                  <Sparkles className="w-5 h-5 text-[#fce011]" />
+                  <Sparkles className="w-5 h-5 text-accent" />
                   <div className="flex-1">
                     <h4 className="font-semibold text-sm text-gray-900 dark:text-white mb-1">AI Suggestion</h4>
                     <p className="text-xs text-gray-600 dark:text-gray-400">Detailed requirements help get accurate bids.</p>
@@ -340,16 +340,16 @@ const HomeownerHeader = ({ onMenuClick }: HomeownerHeaderProps) => {
 
             <DialogFooter className="gap-2">
               <Button variant="outline" onClick={() => setShowPostProjectDialog(false)}>Cancel</Button>
-              <Button onClick={() => setShowPostProjectDialog(false)} className="bg-[#fce011] hover:bg-[#fce011]/90 text-black font-semibold">Post Project</Button>
+              <Button onClick={() => setShowPostProjectDialog(false)} className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold">Post Project</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="relative h-10 w-10 rounded-full p-0 hover:ring-2 hover:ring-[#fce011]/20">
-              <div className="size-8 rounded-full bg-[#fce011] border-2 border-white shadow-lg flex items-center justify-center">
-                <span className="text-black font-semibold text-sm">A</span>
+            <Button variant="ghost" className="relative h-10 w-10 rounded-full p-0 hover:ring-2 hover:ring-accent/20">
+              <div className="size-8 rounded-full bg-accent border-2 border-white shadow-lg flex items-center justify-center">
+                <span className="text-accent-foreground font-semibold text-sm">A</span>
               </div>
             </Button>
           </DropdownMenuTrigger>

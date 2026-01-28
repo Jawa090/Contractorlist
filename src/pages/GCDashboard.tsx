@@ -75,7 +75,7 @@ class ErrorBoundary extends Component<
             <p className="text-gray-600 dark:text-gray-400 mb-6">{this.state.error.message}</p>
             <button
               onClick={this.reset}
-              className="px-6 py-3 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold rounded-lg transition-colors"
+              className="px-6 py-3 bg-accent hover:bg-accent/80 text-accent-foreground font-semibold rounded-lg transition-colors"
             >
               Try again
             </button>

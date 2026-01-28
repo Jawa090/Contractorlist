@@ -162,13 +162,13 @@ const ProductCatalog = () => {
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-wrap items-center justify-between gap-6">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-indigo-500 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-500/20">
-                <Boxes className="text-white" size={24} />
+              <div className="w-12 h-12 bg-accent rounded-2xl flex items-center justify-center shadow-lg shadow-accent/20">
+                <Boxes className="text-accent-foreground" size={24} />
               </div>
               <div>
                 <h1 className="text-3xl font-black tracking-tight uppercase mb-1">Live Inventory Management</h1>
                 <p className="text-xs font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
-                  <History size={14} className="text-yellow-600" /> Auto-sync enabled for Real-Time Marketplace Bids
+                  <History size={14} className="text-accent" /> Auto-sync enabled for Real-Time Marketplace Bids
                 </p>
               </div>
             </div>
@@ -196,10 +196,10 @@ const ProductCatalog = () => {
                   </div>
                   <p className="text-2xl font-black mt-1">{products.filter(p => p.status === 'in-stock').length}</p>
                 </Card>
-                <Card className="bg-white dark:bg-black/20 border-yellow-500/20 shadow-sm p-4">
+                <Card className="bg-white dark:bg-black/20 border-accent/20 shadow-sm p-4">
                   <div className="flex justify-between items-center">
-                    <p className="text-[10px] font-black uppercase text-yellow-600">Low Stock</p>
-                    <AlertTriangle size={14} className="text-yellow-600" />
+                    <p className="text-[10px] font-black uppercase text-accent">Low Stock</p>
+                    <AlertTriangle size={14} className="text-accent" />
                   </div>
                   <p className="text-2xl font-black mt-1">{products.filter(p => p.status === 'low-stock').length}</p>
                 </Card>
@@ -229,7 +229,7 @@ const ProductCatalog = () => {
                       onClick={() => setSelectedCategory(cat.value)}
                       className={cn(
                         "w-full text-left px-3 py-2 rounded-lg text-[11px] font-bold uppercase tracking-tight transition-all",
-                        selectedCategory === cat.value ? "bg-indigo-500 text-white shadow-md" : "text-gray-500 hover:bg-gray-100 dark:hover:bg-white/5"
+                        selectedCategory === cat.value ? "bg-accent text-accent-foreground shadow-md" : "text-gray-500 hover:bg-gray-100 dark:hover:bg-white/5"
                       )}
                     >
                       {cat.label}
@@ -246,7 +246,7 @@ const ProductCatalog = () => {
           <div className="grid gap-6">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
-                <BarChart3 className="w-5 h-5 text-indigo-500" />
+                <BarChart3 className="w-5 h-5 text-accent" />
                 <h2 className="text-xl font-black uppercase tracking-tight">Product Catalog</h2>
                 <Badge className="bg-gray-100 dark:bg-white/5 text-gray-500 border-none font-bold ml-2">{filteredProducts.length} Items</Badge>
               </div>
@@ -282,7 +282,7 @@ const ProductCatalog = () => {
                           <Badge className={cn(
                             "text-[9px] font-black uppercase tracking-widest px-3 py-1 border-none",
                             p.status === 'in-stock' ? "bg-green-100 dark:bg-green-500/10 text-green-600" :
-                              p.status === 'low-stock' ? "bg-yellow-100 dark:bg-yellow-500/10 text-yellow-600" :
+                              p.status === 'low-stock' ? "bg-accent/10 dark:bg-accent/10 text-accent" :
                                 "bg-red-100 dark:bg-red-500/10 text-red-600"
                           )}>
                             {p.status}
@@ -307,7 +307,7 @@ const ProductCatalog = () => {
                             <Button
                               variant="ghost"
                               size="sm"
-                              className="h-9 w-9 p-0 rounded-xl hover:bg-yellow-400 hover:text-black transition-all"
+                              className="h-9 w-9 p-0 rounded-xl hover:bg-accent hover:text-accent-foreground transition-all"
                               onClick={() => handleEditClick(p)}
                             >
                               <Edit size={16} />
@@ -340,9 +340,9 @@ const ProductCatalog = () => {
           {editingProduct && (
             <div className="flex flex-col">
               {/* Modal Header */}
-              <div className="p-8 bg-indigo-500 text-white flex justify-between items-start">
+              <div className="p-8 bg-accent text-accent-foreground flex justify-between items-start">
                 <div>
-                  <Badge className="bg-white/20 text-white border-none font-black text-[9px] uppercase tracking-widest mb-3">{editingProduct.category}</Badge>
+                  <Badge className="bg-white/20 text-accent-foreground border-none font-black text-[9px] uppercase tracking-widest mb-3">{editingProduct.category}</Badge>
                   <h2 className="text-3xl font-black uppercase tracking-tight leading-none mb-1">Edit SKU: {editingProduct.sku}</h2>
                   <p className="text-xs font-bold opacity-60 uppercase tracking-widest">Master Inventory Sync Module</p>
                 </div>
@@ -376,12 +376,12 @@ const ProductCatalog = () => {
                   <div className="space-y-3">
                     <Label className="text-[10px] font-black uppercase tracking-widest text-gray-400">On Hand Stock</Label>
                     <div className="relative">
-                      <Boxes className="absolute left-3 top-1/2 -translate-y-1/2 text-indigo-500 w-4 h-4" />
+                      <Boxes className="absolute left-3 top-1/2 -translate-y-1/2 text-accent w-4 h-4" />
                       <Input
                         type="number"
                         value={editingProduct.stock}
                         onChange={(e) => setEditingProduct({ ...editingProduct, stock: parseInt(e.target.value) })}
-                        className="h-12 pl-10 bg-indigo-500/5 border-indigo-500/20 rounded-2xl text-sm font-black font-mono focus:ring-indigo-500"
+                        className="h-12 pl-10 bg-accent/5 border-accent/20 rounded-2xl text-sm font-black font-mono focus:ring-accent"
                       />
                     </div>
                   </div>
@@ -417,7 +417,7 @@ const ProductCatalog = () => {
                     rows={3}
                     value={editingProduct.description}
                     onChange={(e) => setEditingProduct({ ...editingProduct, description: e.target.value })}
-                    className="w-full p-4 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-2xl text-sm font-semibold resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full p-4 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-2xl text-sm font-semibold resize-none focus:outline-none focus:ring-2 focus:ring-accent"
                   />
                 </div>
               </div>

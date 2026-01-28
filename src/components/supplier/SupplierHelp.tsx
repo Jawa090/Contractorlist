@@ -4,12 +4,12 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { 
-  HelpCircle, 
-  MessageSquare, 
-  Phone, 
-  Mail, 
-  FileText, 
+import {
+  HelpCircle,
+  MessageSquare,
+  Phone,
+  Mail,
+  FileText,
   Video,
   Search,
   ChevronRight,
@@ -50,7 +50,7 @@ const SupplierHelp = () => {
       created: "2 hours ago"
     },
     {
-      id: "SUP-002", 
+      id: "SUP-002",
       subject: "Payment processing question",
       status: "Resolved",
       priority: "Medium",
@@ -96,7 +96,7 @@ const SupplierHelp = () => {
                   className="pl-10"
                 />
               </div>
-              
+
               <div className="space-y-4">
                 {faqs.map((faq, index) => (
                   <div key={index} className="border rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
@@ -126,16 +126,16 @@ const SupplierHelp = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                  <Phone className="h-5 w-5 text-blue-600" />
+                  <Phone className="h-5 w-5 text-accent" />
                   <div>
                     <p className="font-medium">Phone Support</p>
                     <p className="text-sm text-gray-600 dark:text-gray-400">1-800-SUPPLIER</p>
                     <p className="text-xs text-gray-500">Mon-Fri, 9AM-6PM EST</p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                  <Mail className="h-5 w-5 text-green-600" />
+                  <Mail className="h-5 w-5 text-accent" />
                   <div>
                     <p className="font-medium">Email Support</p>
                     <p className="text-sm text-gray-600 dark:text-gray-400">supplier-support@company.com</p>
@@ -144,11 +144,11 @@ const SupplierHelp = () => {
                 </div>
 
                 <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                  <MessageSquare className="h-5 w-5 text-purple-600" />
+                  <MessageSquare className="h-5 w-5 text-accent" />
                   <div>
                     <p className="font-medium">Live Chat</p>
                     <p className="text-sm text-gray-600 dark:text-gray-400">Available 24/7</p>
-                    <Button size="sm" className="mt-2">Start Chat</Button>
+                    <Button size="sm" className="mt-2 bg-accent hover:bg-accent/90 text-accent-foreground">Start Chat</Button>
                   </div>
                 </div>
               </CardContent>
@@ -164,7 +164,7 @@ const SupplierHelp = () => {
                   <label className="text-sm font-medium mb-2 block">Subject</label>
                   <Input placeholder="Brief description of your issue" />
                 </div>
-                
+
                 <div>
                   <label className="text-sm font-medium mb-2 block">Priority</label>
                   <select className="w-full p-2 border rounded-md bg-background">
@@ -177,13 +177,13 @@ const SupplierHelp = () => {
 
                 <div>
                   <label className="text-sm font-medium mb-2 block">Description</label>
-                  <Textarea 
+                  <Textarea
                     placeholder="Please provide detailed information about your issue..."
                     rows={4}
                   />
                 </div>
 
-                <Button className="w-full">Submit Ticket</Button>
+                <Button className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">Submit Ticket</Button>
               </CardContent>
             </Card>
           </div>
@@ -203,7 +203,7 @@ const SupplierHelp = () => {
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2">
                           <span className="font-mono text-sm text-gray-500">{ticket.id}</span>
-                          <Badge 
+                          <Badge
                             variant={ticket.status === 'Resolved' ? 'default' : 'secondary'}
                             className="text-xs"
                           >
@@ -214,7 +214,7 @@ const SupplierHelp = () => {
                             )}
                             {ticket.status}
                           </Badge>
-                          <Badge 
+                          <Badge
                             variant={ticket.priority === 'High' ? 'destructive' : 'outline'}
                             className="text-xs"
                           >
@@ -238,7 +238,7 @@ const SupplierHelp = () => {
             <Card className="hover:shadow-lg transition-shadow cursor-pointer">
               <CardContent className="p-6">
                 <div className="flex items-center gap-3 mb-4">
-                  <FileText className="h-8 w-8 text-blue-600" />
+                  <FileText className="h-8 w-8 text-accent" />
                   <div>
                     <h3 className="font-semibold">User Guide</h3>
                     <p className="text-sm text-gray-600 dark:text-gray-400">Complete supplier dashboard guide</p>
@@ -253,7 +253,7 @@ const SupplierHelp = () => {
             <Card className="hover:shadow-lg transition-shadow cursor-pointer">
               <CardContent className="p-6">
                 <div className="flex items-center gap-3 mb-4">
-                  <Video className="h-8 w-8 text-green-600" />
+                  <Video className="h-8 w-8 text-accent" />
                   <div>
                     <h3 className="font-semibold">Video Tutorials</h3>
                     <p className="text-sm text-gray-600 dark:text-gray-400">Step-by-step video guides</p>
@@ -268,7 +268,7 @@ const SupplierHelp = () => {
             <Card className="hover:shadow-lg transition-shadow cursor-pointer">
               <CardContent className="p-6">
                 <div className="flex items-center gap-3 mb-4">
-                  <HelpCircle className="h-8 w-8 text-purple-600" />
+                  <HelpCircle className="h-8 w-8 text-accent" />
                   <div>
                     <h3 className="font-semibold">API Documentation</h3>
                     <p className="text-sm text-gray-600 dark:text-gray-400">Integration and API reference</p>
@@ -282,7 +282,7 @@ const SupplierHelp = () => {
           </div>
         </TabsContent>
       </Tabs>
-    </div>
+    </div >
   );
 };
 

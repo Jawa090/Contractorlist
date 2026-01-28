@@ -75,7 +75,7 @@ const SubcontractorHeader = ({ onMenuClick }: SubcontractorHeaderProps) => {
 
             {/* Terminal Indicator */}
             <div className="hidden md:flex items-center gap-3 px-4 py-1.5 rounded-full bg-white dark:bg-white/5 border border-gray-200 dark:border-white/5 shadow-sm font-bold">
-              <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse" />
+              <div className="w-2 h-2 bg-accent rounded-full animate-pulse" />
               <span className="text-[10px] uppercase tracking-[0.2em] text-gray-900 dark:text-white">Active Terminal</span>
             </div>
           </div>
@@ -95,7 +95,7 @@ const SubcontractorHeader = ({ onMenuClick }: SubcontractorHeaderProps) => {
             {/* Primary Action */}
             <Button
               onClick={handleNewProposal}
-              className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold h-9 px-4 rounded-xl hidden sm:flex uppercase text-[10px] tracking-widest shadow-lg shadow-yellow-500/20"
+              className="bg-accent hover:bg-accent/80 text-accent-foreground font-bold h-9 px-4 rounded-xl hidden sm:flex uppercase text-[10px] tracking-widest shadow-lg shadow-accent/20"
             >
               <Plus className="w-4 h-4 mr-2" />
               New Proposal
@@ -111,7 +111,7 @@ const SubcontractorHeader = ({ onMenuClick }: SubcontractorHeaderProps) => {
               className="hover:bg-gray-100 dark:hover:bg-gray-800 h-9 w-9 rounded-xl transition-all"
             >
               {isDark ? (
-                <Sun className="w-4 h-4 text-yellow-500" />
+                <Sun className="w-4 h-4 text-accent" />
               ) : (
                 <Moon className="w-4 h-4 text-gray-700" />
               )}
@@ -125,8 +125,8 @@ const SubcontractorHeader = ({ onMenuClick }: SubcontractorHeaderProps) => {
                   size="sm"
                   className="flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-800 p-1 rounded-xl h-10 transition-all"
                 >
-                  <Avatar className="w-8 h-8 rounded-lg ring-2 ring-transparent group-hover:ring-yellow-400 transition-all">
-                    <AvatarFallback className="bg-yellow-400 text-black font-bold text-xs uppercase">AC</AvatarFallback>
+                  <Avatar className="w-8 h-8 rounded-lg ring-2 ring-transparent group-hover:ring-accent transition-all">
+                    <AvatarFallback className="bg-accent text-accent-foreground font-bold text-xs uppercase">AC</AvatarFallback>
                   </Avatar>
                   <div className="hidden lg:block text-left">
                     <p className="text-[10px] font-bold uppercase tracking-widest text-gray-900 dark:text-white leading-none mb-1">Acme Construction</p>
@@ -137,7 +137,7 @@ const SubcontractorHeader = ({ onMenuClick }: SubcontractorHeaderProps) => {
               <DropdownMenuContent align="end" className="w-64 p-2 bg-white dark:bg-[#1c1e24] border-gray-200 dark:border-white/5 rounded-2xl shadow-2xl">
                 <DropdownMenuLabel className="p-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-xl bg-yellow-400 flex items-center justify-center text-black font-black shadow-lg">
+                    <div className="w-12 h-12 rounded-xl bg-accent flex items-center justify-center text-accent-foreground font-black shadow-lg">
                       AC
                     </div>
                     <div>
@@ -148,11 +148,11 @@ const SubcontractorHeader = ({ onMenuClick }: SubcontractorHeaderProps) => {
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator className="bg-gray-100 dark:bg-white/5" />
                 <DropdownMenuItem className="p-3 hover:bg-gray-50 dark:hover:bg-white/5 rounded-xl cursor-pointer group" onClick={() => navigate('/subcontractor-dashboard/my-profile')}>
-                  <User className="w-4 h-4 mr-3 text-gray-400 group-hover:text-yellow-500" />
+                  <User className="w-4 h-4 mr-3 text-gray-400 group-hover:text-accent" />
                   <span className="text-xs font-bold uppercase tracking-widest">My Profile</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem className="p-3 hover:bg-gray-50 dark:hover:bg-white/5 rounded-xl cursor-pointer group" onClick={() => navigate('/subcontractor-dashboard/settings')}>
-                  <Settings className="w-4 h-4 mr-3 text-gray-400 group-hover:text-yellow-500" />
+                  <Settings className="w-4 h-4 mr-3 text-gray-400 group-hover:text-accent" />
                   <span className="text-xs font-bold uppercase tracking-widest">Terminal Settings</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className="bg-gray-100 dark:bg-white/5" />

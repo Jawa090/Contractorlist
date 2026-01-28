@@ -141,7 +141,7 @@ const SubcontractorSidebar = ({ isOpen, onClose }: SubcontractorSidebarProps) =>
         className={cn(
           "group flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 relative overflow-hidden",
           isActive
-            ? "bg-yellow-400 dark:bg-yellow-500 text-gray-900 shadow-[0_0_20px_rgba(234,179,8,0.3)]"
+            ? "bg-accent text-accent-foreground shadow-lg shadow-accent/20"
             : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white",
           isCollapsed ? 'justify-center px-3' : ''
         )}
@@ -163,18 +163,18 @@ const SubcontractorSidebar = ({ isOpen, onClose }: SubcontractorSidebarProps) =>
                 {item.isPro && (
                   <Crown className={cn(
                     "w-3 h-3 ml-2",
-                    isActive ? "text-gray-900" : "text-yellow-500"
+                    isActive ? "text-accent-foreground" : "text-accent"
                   )} />
                 )}
                 {item.badge && !isActive && (
-                  <Badge variant="secondary" className="bg-yellow-400/10 text-yellow-600 dark:bg-yellow-500/10 dark:text-yellow-500 border-none px-1.5 h-4 text-[10px] font-bold">
+                  <Badge variant="secondary" className="bg-accent/10 text-accent dark:bg-accent/20 dark:text-accent border-none px-1.5 h-4 text-[10px] font-bold">
                     {item.badge}
                   </Badge>
                 )}
               </div>
               <p className={cn(
                 "text-[10px] truncate transition-all duration-300 uppercase tracking-widest",
-                isActive ? "text-gray-800" : "text-gray-500 dark:text-gray-400"
+                isActive ? "text-accent-foreground/70" : "text-gray-500 dark:text-gray-400"
               )}>
                 {item.description}
               </p>
@@ -206,21 +206,19 @@ const SubcontractorSidebar = ({ isOpen, onClose }: SubcontractorSidebarProps) =>
           isCollapsed ? "justify-center px-2" : "px-6"
         )}>
           {isCollapsed ? (
-            <div className="w-10 h-10 rounded-xl bg-yellow-400 dark:bg-yellow-500 flex items-center justify-center text-gray-900 shadow-md shrink-0">
+            <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center text-accent-foreground shadow-md shrink-0">
               <Building2 className="w-6 h-6" />
             </div>
           ) : (
             <div className="flex items-center gap-3 overflow-hidden">
-              <div className="w-10 h-10 rounded-xl bg-yellow-400 dark:bg-yellow-500 flex items-center justify-center text-gray-900 shadow-md shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center text-accent-foreground shadow-md shrink-0">
                 <Building2 className="w-6 h-6" />
               </div>
               <div className="min-w-0 text-left">
                 <h1 className="text-sm font-bold tracking-tight text-gray-900 dark:text-white truncate uppercase">
                   Sub Contractor
-
-
                 </h1>
-                <p className="text-[10px] font-black text-yellow-600 dark:text-yellow-500 truncate uppercase tracking-widest">HVAC Partner • Active</p>
+                <p className="text-[10px] font-black text-accent dark:text-accent truncate uppercase tracking-widest">HVAC Partner • Active</p>
               </div>
             </div>
           )}

@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
+import { Badge } from '@/components/ui/badge';
 import {
   Dialog,
   DialogContent,
@@ -47,8 +48,8 @@ const CleanOverview = () => {
       subtext: 'All Systems Operational',
       icon: Building2,
       progress: 100,
-      color: '#FFD700', // Gold
-      textColor: 'text-yellow-400'
+      color: '#fce011', // Theme Yellow
+      textColor: 'text-accent'
     },
     {
       title: 'Pending Bids',
@@ -121,7 +122,7 @@ const CleanOverview = () => {
         {stats.map((stat, index) => (
           <div
             key={index}
-            className={`glass-card rounded-3xl p-6 relative overflow-hidden group hover:border-yellow-400 dark:hover:border-yellow-500/50 transition-all cursor-pointer bg-white dark:bg-[#1c1e24] border border-gray-200 dark:border-white/5 shadow-sm ${stat.progress > 0 ? 'dark:glow-yellow shadow-md' : ''}`}
+            className={`glass-card rounded-3xl p-6 relative overflow-hidden group hover:border-accent dark:hover:border-accent/50 transition-all cursor-pointer bg-white dark:bg-[#1c1e24] border border-gray-200 dark:border-white/5 shadow-sm ${stat.progress > 0 ? 'dark:glow-yellow shadow-md' : ''}`}
             onClick={() => {
               if (stat.title === 'Active Projects') setProjectFilter('Active');
               if (stat.title === 'Team Members') navigate('/gc-dashboard/team');
@@ -129,13 +130,13 @@ const CleanOverview = () => {
             }}
           >
             {/* Background Glow Effect - Light Mode: subtle gradient, Dark Mode: glow */}
-            <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-yellow-50/50 to-transparent dark:from-yellow-500/10 dark:to-transparent rounded-bl-full -mr-4 -mt-4 pointer-events-none`}></div>
+            <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-accent/10 to-transparent dark:from-accent/10 dark:to-transparent rounded-bl-full -mr-4 -mt-4 pointer-events-none`}></div>
 
             <div className="flex justify-between items-start mb-4 relative z-10">
               <div>
                 <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">{stat.title}</h3>
                 <div className="text-4xl font-bold font-sans text-gray-900 dark:text-white mb-2">{stat.value}</div>
-                <div className={`text-xs font-medium tracking-wide ${stat.progress > 0 ? "text-yellow-600 dark:text-yellow-400" : "text-gray-400 dark:text-gray-500"}`}>
+                <div className={`text-xs font-medium tracking-wide ${stat.progress > 0 ? "text-accent" : "text-gray-400 dark:text-gray-500"}`}>
                   {stat.subtext}
                 </div>
               </div>
@@ -151,7 +152,7 @@ const CleanOverview = () => {
                   })}
                 />
                 <div className="absolute inset-0 flex items-center justify-center text-gray-400 dark:text-gray-500">
-                  <stat.icon className="w-6 h-6" style={{ color: stat.progress > 0 ? '#EAB308' : 'currentColor' }} />
+                  <stat.icon className="w-6 h-6" style={{ color: stat.progress > 0 ? '#fce011' : 'currentColor' }} />
                 </div>
               </div>
             </div>
@@ -172,7 +173,7 @@ const CleanOverview = () => {
                 className={cn(
                   "px-4 py-1.5 text-xs font-medium rounded-full transition-all duration-300",
                   projectFilter === tab
-                    ? "bg-yellow-400 dark:bg-yellow-500 text-black shadow-sm"
+                    ? "bg-accent text-accent-foreground shadow-sm"
                     : "text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white"
                 )}
               >
@@ -193,7 +194,7 @@ const CleanOverview = () => {
               className="glass-card rounded-2xl p-6 hover:bg-gray-50 dark:hover:bg-white/10 transition-colors group cursor-pointer relative overflow-hidden bg-white dark:bg-[#1c1e24] border border-gray-200 dark:border-white/5 shadow-sm hover:shadow-md"
             >
               {/* Hover Gradient */}
-              <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
 
               <div className="flex justify-between items-start mb-6">
                 <div>
@@ -209,13 +210,13 @@ const CleanOverview = () => {
                 <div>
                   <p className="text-xs text-gray-400 dark:text-gray-500 mb-1">Location</p>
                   <p className="text-gray-700 dark:text-gray-300 flex items-center gap-1">
-                    <MapPin className="w-3 h-3 text-yellow-500" />
+                    <MapPin className="w-3 h-3 text-accent" />
                     {project.location}
                   </p>
                 </div>
                 <div className="text-right">
                   <p className="text-xs text-gray-400 dark:text-gray-500 mb-1">Status</p>
-                  <span className="text-yellow-600 dark:text-yellow-400 font-medium">{project.status}</span>
+                  <span className="text-accent font-medium">{project.status}</span>
                 </div>
                 <div>
                   <p className="text-xs text-gray-400 dark:text-gray-500 mb-1">Budget</p>
@@ -235,7 +236,7 @@ const CleanOverview = () => {
                 </div>
                 <div className="h-1.5 w-full bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-yellow-400 dark:bg-yellow-500 rounded-full dark:glow-yellow"
+                    className="h-full bg-accent rounded-full dark:glow-yellow"
                     style={{ width: `${project.progress}%` }}
                   ></div>
                 </div>
@@ -252,7 +253,7 @@ const CleanOverview = () => {
             <>
               <DialogHeader>
                 <div className="flex items-center gap-2 mb-2">
-                  <Badge variant="outline" className="bg-yellow-400/10 text-yellow-600 dark:text-yellow-400 border-yellow-400/20">
+                  <Badge variant="outline" className="bg-accent/10 text-accent border-accent/20">
                     {selectedProject.status}
                   </Badge>
                   <span className="text-sm text-gray-500">{selectedProject.client}</span>
@@ -307,7 +308,7 @@ const CleanOverview = () => {
               </div>
 
               <DialogFooter>
-                <Button className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-bold" onClick={() => navigate('/gc-dashboard/my-projects')}>
+                <Button className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-bold" onClick={() => navigate('/gc-dashboard/my-projects')}>
                   Manage Full Project <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
               </DialogFooter>

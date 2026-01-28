@@ -128,7 +128,7 @@ const ProjectLeads = () => {
 
             <div className="flex items-center gap-4">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-yellow-600 w-4 h-4" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-accent w-4 h-4" />
                 <Input
                   placeholder="Search projects, GCs, or locations..."
                   value={searchTerm}
@@ -141,7 +141,7 @@ const ProjectLeads = () => {
                   variant="ghost"
                   size="sm"
                   onClick={() => setViewMode('grid')}
-                  className={cn("h-8 px-3 rounded-lg", viewMode === 'grid' ? "bg-white dark:bg-white/10 text-yellow-600 shadow-sm" : "text-gray-400")}
+                  className={cn("h-8 px-3 rounded-lg", viewMode === 'grid' ? "bg-white dark:bg-white/10 text-accent shadow-sm" : "text-gray-400")}
                 >
                   <LayoutGrid size={16} />
                 </Button>
@@ -149,7 +149,7 @@ const ProjectLeads = () => {
                   variant="ghost"
                   size="sm"
                   onClick={() => setViewMode('list')}
-                  className={cn("h-8 px-3 rounded-lg", viewMode === 'list' ? "bg-white dark:bg-white/10 text-yellow-600 shadow-sm" : "text-gray-400")}
+                  className={cn("h-8 px-3 rounded-lg", viewMode === 'list' ? "bg-white dark:bg-white/10 text-accent shadow-sm" : "text-gray-400")}
                 >
                   <ListIcon size={16} />
                 </Button>
@@ -169,20 +169,20 @@ const ProjectLeads = () => {
             {leads.map((lead) => (
               <Card
                 key={lead.id}
-                className="group relative overflow-hidden bg-white dark:bg-[#1c1e24] border-gray-200 dark:border-white/5 hover:border-yellow-400/50 transition-all duration-500 rounded-[2rem] hover:shadow-2xl hover:scale-[1.02] cursor-pointer"
+                className="group relative overflow-hidden bg-white dark:bg-[#1c1e24] border-gray-200 dark:border-white/5 hover:border-accent/50 transition-all duration-500 rounded-[2rem] hover:shadow-2xl hover:scale-[1.02] cursor-pointer"
                 onClick={() => { setSelectedLead(lead); setShowContactModal(true); }}
               >
                 <div className="absolute top-0 right-0 p-4">
-                  <Badge className="bg-yellow-400 text-black font-black text-[9px] px-2 py-0.5 rounded-full">{lead.metrics.match}% MATCH</Badge>
+                  <Badge className="bg-accent text-accent-foreground font-black text-[9px] px-2 py-0.5 rounded-full">{lead.metrics.match}% MATCH</Badge>
                 </div>
 
                 <CardContent className="p-8">
                   <div className="flex flex-col h-full gap-6">
                     <div className="space-y-2">
                       <Badge variant="outline" className="text-[9px] border-none bg-indigo-100 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 uppercase font-black">{lead.category}</Badge>
-                      <h3 className="text-xl font-black tracking-tight leading-tight group-hover:text-yellow-600 transition-colors">{lead.title}</h3>
+                      <h3 className="text-xl font-black tracking-tight leading-tight group-hover:text-accent transition-colors">{lead.title}</h3>
                       <div className="flex items-center gap-3 text-[11px] font-bold text-gray-400">
-                        <span className="flex items-center gap-1"><MapPin size={12} className="text-yellow-600" /> {lead.location}</span>
+                        <span className="flex items-center gap-1"><MapPin size={12} className="text-accent" /> {lead.location}</span>
                         <span>•</span>
                         <span className="flex items-center gap-1"><ShieldCheck size={12} className="text-green-500" /> {lead.status}</span>
                       </div>
@@ -204,7 +204,7 @@ const ProjectLeads = () => {
                         <p className="text-[9px] font-black uppercase text-gray-400 tracking-widest mb-1">Project Valuation</p>
                         <p className="text-lg font-black font-mono text-gray-900 dark:text-white">{lead.valuation}</p>
                       </div>
-                      <Button className="h-10 px-6 rounded-xl bg-black dark:bg-yellow-400 text-white dark:text-black font-black uppercase text-[10px] tracking-widest">Reach Out</Button>
+                      <Button className="h-10 px-6 rounded-xl bg-black dark:bg-accent text-white dark:text-accent-foreground font-black uppercase text-[10px] tracking-widest">Reach Out</Button>
                     </div>
                   </div>
                 </CardContent>
@@ -219,7 +219,7 @@ const ProjectLeads = () => {
         <DialogContent className="max-w-3xl bg-white dark:bg-[#1c1e24] border-gray-200 dark:border-white/10 rounded-[2.5rem] p-0 overflow-hidden shadow-2xl">
           {selectedLead && (
             <div className="flex flex-col h-full">
-              <div className="p-8 bg-black dark:bg-yellow-400 text-white dark:text-black">
+              <div className="p-8 bg-black dark:bg-accent text-white dark:text-accent-foreground">
                 <div className="flex justify-between items-start mb-4">
                   <Badge className="bg-white/20 dark:bg-black/10 text-white dark:text-black border-none font-black text-[10px] uppercase tracking-widest">{selectedLead.category}</Badge>
                   <p className="text-[10px] font-bold opacity-60 uppercase tracking-widest">Posted {selectedLead.posted}</p>
@@ -236,7 +236,7 @@ const ProjectLeads = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                   <div className="space-y-8">
                     <div>
-                      <h4 className="text-[10px] font-black uppercase text-yellow-600 dark:text-yellow-500 tracking-widest mb-4">Project Overview</h4>
+                      <h4 className="text-[10px] font-black uppercase text-accent tracking-widest mb-4">Project Overview</h4>
                       <p className="text-sm font-medium text-gray-600 dark:text-gray-300 leading-relaxed">{selectedLead.description}</p>
                     </div>
 
@@ -259,12 +259,12 @@ const ProjectLeads = () => {
                   </div>
 
                   <div className="space-y-8">
-                    <h4 className="text-[10px] font-black uppercase text-yellow-600 dark:text-yellow-500 tracking-widest mb-4">Reach Bidding General Contractors</h4>
+                    <h4 className="text-[10px] font-black uppercase text-accent tracking-widest mb-4">Reach Bidding General Contractors</h4>
                     <div className="space-y-4">
                       {selectedLead.biddingGCs.map(gc => (
                         <div key={gc.name} className="p-6 bg-white dark:bg-black/20 rounded-3xl border border-gray-100 dark:border-white/10 shadow-sm relative group overflow-hidden">
-                          <div className="absolute top-0 right-0 w-16 h-16 bg-yellow-400/10 rounded-bl-[2rem] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                            <TrendingUp size={24} className="text-yellow-600" />
+                          <div className="absolute top-0 right-0 w-16 h-16 bg-accent/10 rounded-bl-[2rem] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <TrendingUp size={24} className="text-accent" />
                           </div>
 
                           <p className="text-[8px] font-black uppercase text-indigo-500 mb-1">{gc.role}</p>
@@ -272,7 +272,7 @@ const ProjectLeads = () => {
                           <div className="space-y-3">
                             <p className="text-[10px] font-bold text-gray-400 flex items-center gap-2"><Users size={12} /> {gc.contact}</p>
                             <div className="flex gap-2 pt-2">
-                              <Button variant="outline" className="h-9 flex-1 rounded-xl text-[10px] font-black uppercase tracking-wider gap-2 hover:bg-yellow-400 hover:text-black transition-all" onClick={() => handleContactAction('email', gc)}>
+                              <Button variant="outline" className="h-9 flex-1 rounded-xl text-[10px] font-black uppercase tracking-wider gap-2 hover:bg-accent hover:text-accent-foreground transition-all" onClick={() => handleContactAction('email', gc)}>
                                 <Mail size={14} /> Email
                               </Button>
                               <Button variant="outline" className="h-9 flex-1 rounded-xl text-[10px] font-black uppercase tracking-wider gap-2 hover:bg-green-500 hover:text-white transition-all" onClick={() => handleContactAction('whatsapp', gc)}>

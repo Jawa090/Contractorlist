@@ -148,13 +148,13 @@ const ReduxHeader = () => {
           {/* Logo */}
           <Link
             to="/"
-            className="flex items-center select-none flex-shrink-0 -ml-24"
+            className="flex items-center justify-center select-none flex-shrink-0 ml-22"
             onClick={() => dispatch(closeMobileMenu())}
           >
             <img
               src="/logo1.png"
               alt="Contractorlist Logo"
-              className="h-96 w-auto"
+              className="h-12 w-auto"
             />
           </Link>
 

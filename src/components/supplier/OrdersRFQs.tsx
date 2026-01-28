@@ -131,11 +131,11 @@ const OrdersRFQs = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'pending': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
+      case 'pending': return 'bg-accent/20 text-accent-foreground border-accent/20';
       case 'confirmed': return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200';
       case 'delivered': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
       case 'cancelled': return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
-      case 'pending-quote': return 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200';
+      case 'pending-quote': return 'bg-accent/10 text-accent border-accent/20';
       case 'quoted': return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200';
       default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200';
     }
@@ -144,7 +144,7 @@ const OrdersRFQs = () => {
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case 'high': return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
-      case 'medium': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
+      case 'medium': return 'bg-accent/20 text-accent-foreground border-accent/20';
       case 'low': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
       default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200';
     }
@@ -183,11 +183,11 @@ const OrdersRFQs = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark">Pending Orders</p>
-                <p className="text-2xl font-bold text-yellow-600">
+                <p className="text-2xl font-bold text-accent">
                   {orders.filter(o => o.status === 'pending').length}
                 </p>
               </div>
-              <Clock className="w-8 h-8 text-yellow-600" />
+              <Clock className="w-8 h-8 text-accent" />
             </div>
           </CardContent>
         </Card>
@@ -196,11 +196,11 @@ const OrdersRFQs = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark">Active RFQs</p>
-                <p className="text-2xl font-bold text-orange-600">
+                <p className="text-2xl font-bold text-accent">
                   {rfqs.filter(r => r.status === 'pending-quote').length}
                 </p>
               </div>
-              <FileText className="w-8 h-8 text-orange-600" />
+              <FileText className="w-8 h-8 text-accent" />
             </div>
           </CardContent>
         </Card>
@@ -390,14 +390,14 @@ const OrdersRFQs = () => {
                         </div>
                       </DialogContent>
                     </Dialog>
-                    
+
                     {order.status === 'pending' && (
-                      <Button size="sm" className="bg-primary hover:bg-yellow-400 text-black">
+                      <Button size="sm" className="bg-accent hover:bg-accent/90 text-accent-foreground">
                         <CheckCircle className="w-4 h-4 mr-2" />
                         Confirm Order
                       </Button>
                     )}
-                    
+
                     <Button variant="outline" size="sm">
                       <Download className="w-4 h-4 mr-2" />
                       Download Invoice
@@ -483,7 +483,7 @@ const OrdersRFQs = () => {
                     {rfq.status === 'pending-quote' && (
                       <Dialog>
                         <DialogTrigger asChild>
-                          <Button className="bg-primary hover:bg-yellow-400 text-black">
+                          <Button className="bg-accent hover:bg-accent/90 text-accent-foreground">
                             <Send className="w-4 h-4 mr-2" />
                             Submit Quote
                           </Button>
@@ -510,7 +510,7 @@ const OrdersRFQs = () => {
                             </div>
                             <div className="flex justify-end gap-2">
                               <Button variant="outline">Save Draft</Button>
-                              <Button className="bg-primary hover:bg-yellow-400 text-black">
+                              <Button className="bg-accent hover:bg-accent/90 text-accent-foreground">
                                 Submit Quote
                               </Button>
                             </div>
@@ -518,7 +518,7 @@ const OrdersRFQs = () => {
                         </DialogContent>
                       </Dialog>
                     )}
-                    
+
                     <Button variant="outline" size="sm">
                       <Eye className="w-4 h-4 mr-2" />
                       View Details

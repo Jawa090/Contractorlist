@@ -28,7 +28,7 @@ import {
   List,
   UserPlus,
   ArrowRight,
-  Avatar, MessageSquare, FileText, Users, FolderOpen, Users2
+  MessageSquare, FileText, Users, FolderOpen, Users2
 } from 'lucide-react';
 import { Avatar as UIAvatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
@@ -194,7 +194,7 @@ const MyProjects = () => {
   return (
     <div className="min-h-full bg-gray-50 dark:bg-[#0f1115] text-gray-900 dark:text-white p-6 font-sans transition-colors duration-300 relative">
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-[20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-yellow-400/5 dark:bg-yellow-600/5 blur-[120px]" />
+        <div className="absolute top-[20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-accent/5 dark:bg-accent/5 blur-[120px]" />
       </div>
 
       <div className="max-w-7xl mx-auto space-y-6 relative z-10">
@@ -220,7 +220,7 @@ const MyProjects = () => {
                 <button onClick={() => setViewMode('card')} className={`p-1.5 rounded-md transition-all ${viewMode === 'card' ? 'bg-gray-100 dark:bg-white/10 text-black dark:text-white' : 'text-gray-400 dark:text-gray-500 hover:text-black dark:hover:text-white'}`}><Grid3x3 size={18} /></button>
                 <button onClick={() => setViewMode('table')} className={`p-1.5 rounded-md transition-all ${viewMode === 'table' ? 'bg-gray-100 dark:bg-white/10 text-black dark:text-white' : 'text-gray-400 dark:text-gray-500 hover:text-black dark:hover:text-white'}`}><List size={18} /></button>
               </div>
-              <Button onClick={() => { resetForm(); setShowNewProject(true); }} className="h-11 bg-yellow-400 hover:bg-yellow-500 text-black font-bold rounded-xl px-6"><Plus size={18} className="mr-2" /> New Project</Button>
+              <Button onClick={() => { resetForm(); setShowNewProject(true); }} className="h-11 bg-accent hover:bg-accent/90 text-accent-foreground font-bold rounded-xl px-6"><Plus size={18} className="mr-2" /> New Project</Button>
             </div>
           )}
         </div>
@@ -229,14 +229,14 @@ const MyProjects = () => {
           viewMode === 'card' ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredProjects.map((project, index) => (
-                <div key={project.id || index} className="group relative bg-white dark:bg-[#1c1e24]/80 backdrop-blur-md rounded-2xl border border-gray-200 dark:border-white/5 hover:border-yellow-400 dark:hover:border-yellow-500/30 transition-all duration-300 overflow-hidden cursor-pointer hover:shadow-lg dark:hover:shadow-yellow-500/5" onClick={() => handleViewDetails(project)}>
-                  <div className={`absolute left-0 top-0 bottom-0 w-1 ${project.status === 'On Track' ? 'bg-black dark:bg-white' : project.status === 'Planning' ? 'bg-yellow-500' : project.status === 'Delayed' ? 'bg-gray-500' : 'bg-gray-500'}`} />
+                <div key={project.id || index} className="group relative bg-white dark:bg-[#1c1e24]/80 backdrop-blur-md rounded-2xl border border-gray-200 dark:border-white/5 hover:border-accent dark:hover:border-accent/30 transition-all duration-300 overflow-hidden cursor-pointer hover:shadow-lg dark:hover:shadow-accent/5" onClick={() => handleViewDetails(project)}>
+                  <div className={`absolute left-0 top-0 bottom-0 w-1 ${project.status === 'On Track' ? 'bg-black dark:bg-white' : project.status === 'Planning' ? 'bg-accent' : project.status === 'Delayed' ? 'bg-gray-500' : 'bg-gray-500'}`} />
                   <div className="p-6">
                     <div className="mb-4">
                       <div className="flex justify-between items-start mb-1">
-                        <h3 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-yellow-600 dark:group-hover:text-yellow-400 transition-colors line-clamp-1 pr-2">{project.name}</h3>
+                        <h3 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-yellow-600 dark:group-hover:text-accent transition-colors line-clamp-1 pr-2">{project.name}</h3>
                         <div className="flex items-center gap-2">
-                          <Badge variant="outline" className={`border-0 bg-gray-100 dark:bg-white/5 whitespace-nowrap ${project.status === 'On Track' ? 'text-black dark:text-white' : project.status === 'Planning' ? 'text-yellow-600 dark:text-yellow-400' : project.status === 'Delayed' ? 'text-gray-500 dark:text-gray-400' : 'text-gray-500 dark:text-gray-400'}`}>{project.status}</Badge>
+                          <Badge variant="outline" className={`border-0 bg-gray-100 dark:bg-white/5 whitespace-nowrap ${project.status === 'On Track' ? 'text-black dark:text-white' : project.status === 'Planning' ? 'text-yellow-600 dark:text-accent' : project.status === 'Delayed' ? 'text-gray-500 dark:text-gray-400' : 'text-gray-500 dark:text-gray-400'}`}>{project.status}</Badge>
                           <Button
                             variant="ghost"
                             size="icon"
@@ -265,12 +265,12 @@ const MyProjects = () => {
                     <div className="flex items-center justify-between">
                       <div className="flex-1 mr-4">
                         <div className="flex justify-between text-xs mb-1.5"><span className="text-gray-500">Completion</span><span className="text-gray-900 dark:text-white">{project.completion}</span></div>
-                        <Progress value={project.progress} className="h-1.5 bg-gray-100 dark:bg-white/10"><div className="h-full bg-gradient-to-r from-yellow-400 to-yellow-500 dark:from-yellow-600 dark:to-yellow-400" style={{ width: `${project.progress}%` }} /></Progress>
+                        <Progress value={project.progress} className="h-1.5 bg-gray-100 dark:bg-white/10"><div className="h-full bg-gradient-to-r from-accent to-accent/80 dark:from-accent dark:to-accent/80" style={{ width: `${project.progress}%` }} /></Progress>
                       </div>
                       <div className="relative w-10 h-10 flex items-center justify-center">
                         <svg className="w-full h-full transform -rotate-90">
                           <circle cx="20" cy="20" r="18" stroke="currentColor" strokeWidth="3" fill="transparent" className="text-gray-200 dark:text-gray-800" />
-                          <circle cx="20" cy="20" r="18" stroke="currentColor" strokeWidth="3" fill="transparent" className="text-yellow-500" strokeDasharray={113.1} strokeDashoffset={113.1 - (113.1 * project.progress) / 100} />
+                          <circle cx="20" cy="20" r="18" stroke="currentColor" strokeWidth="3" fill="transparent" className="text-accent" strokeDasharray={113.1} strokeDashoffset={113.1 - (113.1 * project.progress) / 100} />
                         </svg>
                         <span className="absolute text-[9px] font-bold text-gray-900 dark:text-white">{project.progress}%</span>
                       </div>
@@ -295,9 +295,9 @@ const MyProjects = () => {
                 <tbody className="divide-y divide-gray-100 dark:divide-white/5">
                   {filteredProjects.map((project) => (
                     <tr key={project.id} className="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors cursor-pointer group" onClick={() => handleViewDetails(project)}>
-                      <td className="px-6 py-4"><div className="text-sm font-medium text-gray-900 dark:text-white group-hover:text-yellow-600 dark:group-hover:text-yellow-400 transition-colors">{project.name}</div><div className="text-xs text-gray-500">{project.location}</div></td>
+                      <td className="px-6 py-4"><div className="text-sm font-medium text-gray-900 dark:text-white group-hover:text-yellow-600 dark:group-hover:text-accent transition-colors">{project.name}</div><div className="text-xs text-gray-500">{project.location}</div></td>
                       <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{project.client}</td>
-                      <td className="px-6 py-4"><Badge variant="outline" className={`border-0 bg-gray-100 dark:bg-white/5 ${project.status === 'On Track' ? 'text-black dark:text-white' : project.status === 'Planning' ? 'text-yellow-600 dark:text-yellow-400' : 'text-gray-500 dark:text-gray-400'}`}>{project.status}</Badge></td>
+                      <td className="px-6 py-4"><Badge variant="outline" className={`border-0 bg-gray-100 dark:bg-white/5 ${project.status === 'On Track' ? 'text-black dark:text-white' : project.status === 'Planning' ? 'text-yellow-600 dark:text-accent' : 'text-gray-500 dark:text-gray-400'}`}>{project.status}</Badge></td>
                       <td className="px-6 py-4 text-sm text-gray-900 dark:text-white font-mono">{typeof project.budget === 'object' && project.budget !== null ? project.budget.estimated || '$0.00' : project.budget}</td>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-2"><Progress value={project.progress} className="w-24 h-1.5 bg-gray-200 dark:bg-white/10" /><span className="text-xs text-gray-500 whitespace-nowrap">{project.progress}%</span></div>
@@ -305,7 +305,7 @@ const MyProjects = () => {
                       </td>
                       <td className="px-6 py-4 text-right" onClick={(e) => e.stopPropagation()}>
                         <div className="flex justify-end gap-2">
-                          <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-yellow-500" onClick={(e) => handleEditClick(e, project)}><FileText size={16} /></Button>
+                          <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-accent" onClick={(e) => handleEditClick(e, project)}><FileText size={16} /></Button>
                           <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 dark:text-gray-500 hover:text-black dark:hover:text-white"><MoreHorizontal size={16} /></Button>
                         </div>
                       </td>
@@ -326,10 +326,10 @@ const MyProjects = () => {
           <DialogContent className="bg-white dark:bg-[#1c1e24] border-gray-200 dark:border-white/10 text-gray-900 dark:text-white sm:max-w-2xl overflow-hidden">
             {selectedProjectData && (
               <>
-                <div className="absolute top-0 right-0 w-48 h-48 bg-yellow-400/5 blur-3xl rounded-full pointer-events-none"></div>
+                <div className="absolute top-0 right-0 w-48 h-48 bg-accent/5 blur-3xl rounded-full pointer-events-none"></div>
                 <DialogHeader className="relative z-10">
                   <div className="flex items-center gap-2 mb-2">
-                    <Badge className="bg-yellow-400 dark:bg-yellow-500 text-black border-none font-bold">{selectedProjectData.status}</Badge>
+                    <Badge className="bg-accent text-accent-foreground border-none font-bold">{selectedProjectData.status}</Badge>
                     <span className="text-sm text-gray-500">{selectedProjectData.client}</span>
                   </div>
                   <DialogTitle className="text-3xl font-bold tracking-tight">{selectedProjectData.name}</DialogTitle>
@@ -342,7 +342,7 @@ const MyProjects = () => {
                     <div><p className="text-xs text-gray-400 uppercase tracking-wider mb-1">Target Completion</p><p className="text-lg font-semibold text-gray-900 dark:text-white">{selectedProjectData.completion}</p></div>
                   </div>
                   <div className="space-y-4">
-                    <div><p className="text-xs text-gray-400 uppercase tracking-wider mb-1">Current Progress</p><div className="flex items-center gap-3"><div className="relative w-12 h-12 flex items-center justify-center"><svg className="w-full h-full transform -rotate-90"><circle cx="24" cy="24" r="20" stroke="currentColor" strokeWidth="4" fill="transparent" className="text-gray-100 dark:text-white/5" /><circle cx="24" cy="24" r="20" stroke="currentColor" strokeWidth="4" fill="transparent" className="text-yellow-500" strokeDasharray={125.6} strokeDashoffset={125.6 - (125.6 * selectedProjectData.progress) / 100} /></svg><span className="absolute text-[10px] font-bold">{selectedProjectData.progress}%</span></div><span className="text-sm font-medium text-gray-500">On Schedule</span></div></div>
+                    <div><p className="text-xs text-gray-400 uppercase tracking-wider mb-1">Current Progress</p><div className="flex items-center gap-3"><div className="relative w-12 h-12 flex items-center justify-center"><svg className="w-full h-full transform -rotate-90"><circle cx="24" cy="24" r="20" stroke="currentColor" strokeWidth="4" fill="transparent" className="text-gray-100 dark:text-white/5" /><circle cx="24" cy="24" r="20" stroke="currentColor" strokeWidth="4" fill="transparent" className="text-accent" strokeDasharray={125.6} strokeDashoffset={125.6 - (125.6 * selectedProjectData.progress) / 100} /></svg><span className="absolute text-[10px] font-bold">{selectedProjectData.progress}%</span></div><span className="text-sm font-medium text-gray-500">On Schedule</span></div></div>
                     <div><p className="text-xs text-gray-400 uppercase tracking-wider mb-1">Lead Contact</p><div className="flex items-center gap-2"><UIAvatar className="h-6 w-6"><AvatarFallback className="text-[10px]">PM</AvatarFallback></UIAvatar><span className="text-sm">John Project Manager</span></div></div>
                   </div>
                 </div>
@@ -354,16 +354,16 @@ const MyProjects = () => {
                       <Users2 className="w-5 h-5 text-gray-400 group-hover:text-black dark:group-hover:text-white" />
                       <span className="text-[10px] font-bold">Project Chat</span>
                     </Button>
-                    <Button variant="outline" className="flex flex-col h-auto py-3 gap-2 border-gray-200 dark:border-white/5 hover:bg-yellow-400/10 hover:border-yellow-400/30 group" onClick={() => navigate('/gc-dashboard/communications')}>
-                      <MessageSquare className="w-5 h-5 text-gray-400 group-hover:text-yellow-500" />
+                    <Button variant="outline" className="flex flex-col h-auto py-3 gap-2 border-gray-200 dark:border-white/5 hover:bg-accent/10 hover:border-accent/30 group" onClick={() => navigate('/gc-dashboard/communications')}>
+                      <MessageSquare className="w-5 h-5 text-gray-400 group-hover:text-accent" />
                       <span className="text-[10px] font-bold">Messages</span>
                     </Button>
-                    <Button variant="outline" className="flex flex-col h-auto py-3 gap-2 border-gray-200 dark:border-white/5 hover:bg-yellow-400/10 hover:border-yellow-400/30 group">
-                      <FileText className="w-5 h-5 text-gray-400 group-hover:text-yellow-500" />
+                    <Button variant="outline" className="flex flex-col h-auto py-3 gap-2 border-gray-200 dark:border-white/5 hover:bg-accent/10 hover:border-accent/30 group">
+                      <FileText className="w-5 h-5 text-gray-400 group-hover:text-accent" />
                       <span className="text-[10px] font-bold">Documents</span>
                     </Button>
-                    <Button variant="outline" className="flex flex-col h-auto py-3 gap-2 border-gray-200 dark:border-white/5 hover:bg-yellow-400/10 hover:border-yellow-400/30 group" onClick={() => navigate('/gc-dashboard/directory')}>
-                      <Users className="w-5 h-5 text-gray-400 group-hover:text-yellow-500" />
+                    <Button variant="outline" className="flex flex-col h-auto py-3 gap-2 border-gray-200 dark:border-white/5 hover:bg-accent/10 hover:border-accent/30 group" onClick={() => navigate('/gc-dashboard/directory')}>
+                      <Users className="w-5 h-5 text-gray-400 group-hover:text-accent" />
                       <span className="text-[10px] font-bold">Find Subs</span>
                     </Button>
                   </div>
@@ -371,7 +371,7 @@ const MyProjects = () => {
 
                 <DialogFooter className="border-t border-gray-100 dark:border-white/5 pt-4">
                   <Button variant="ghost" onClick={() => setShowProjectDetails(false)}>Close</Button>
-                  <Button className="bg-yellow-400 hover:bg-yellow-500 text-black font-bold h-11 px-8">Open Project Dashboard</Button>
+                  <Button className="bg-accent hover:bg-accent/90 text-accent-foreground font-bold h-11 px-8">Open Project Dashboard</Button>
                 </DialogFooter>
               </>
             )}
@@ -407,7 +407,7 @@ const MyProjects = () => {
             </div>
             <div className="flex justify-end gap-3">
               <Button variant="ghost" onClick={() => setShowNewProject(false)}>Cancel</Button>
-              <Button onClick={handleSaveProject} className="bg-yellow-400 hover:bg-yellow-500 text-black">{isEditing ? 'Save Changes' : 'Create Project'}</Button>
+              <Button onClick={handleSaveProject} className="bg-accent hover:bg-accent/90 text-accent-foreground">{isEditing ? 'Save Changes' : 'Create Project'}</Button>
             </div>
           </DialogContent>
         </Dialog>
@@ -416,7 +416,7 @@ const MyProjects = () => {
         <Dialog open={showInviteModal} onOpenChange={setShowInviteModal}>
           <DialogContent className="bg-white dark:bg-[#1c1e24] border-gray-200 dark:border-white/10 text-gray-900 dark:text-white sm:max-w-lg">
             <DialogHeader>
-              <div className="mx-auto bg-yellow-100 dark:bg-yellow-400/20 p-3 rounded-full mb-4"><UserPlus className="w-8 h-8 text-yellow-600 dark:text-yellow-400" /></div>
+              <div className="mx-auto bg-accent/20 p-3 rounded-full mb-4"><UserPlus className="w-8 h-8 text-yellow-600 dark:text-accent" /></div>
               <DialogTitle className="text-xl font-bold text-center">Assign Team Members</DialogTitle>
               <DialogDescription className="text-center text-gray-500 dark:text-gray-400">Select from your existing team to assign them to this project.</DialogDescription>
             </DialogHeader>
@@ -425,14 +425,14 @@ const MyProjects = () => {
                 {existingTeamMembers.map(member => (
                   <div key={member.id} className="flex items-center justify-between p-3 border-b border-gray-200 dark:border-white/5 last:border-0 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">
                     <div className="flex items-center gap-3"><UIAvatar className='h-8 w-8'><AvatarFallback>{member.name.charAt(0)}</AvatarFallback></UIAvatar><div><p className="text-sm font-medium">{member.name}</p><p className="text-xs text-gray-500">{member.role}</p></div></div>
-                    <Button size="sm" variant={invitedMembers.includes(member.id) ? "secondary" : "outline"} className={`h-8 text-xs ${invitedMembers.includes(member.id) ? 'bg-yellow-100 text-yellow-900 dark:bg-yellow-500/20 dark:text-yellow-400' : ''}`} onClick={() => toggleInvite(member.id)}>{invitedMembers.includes(member.id) ? 'Assigned' : 'Assign'}</Button>
+                    <Button size="sm" variant={invitedMembers.includes(member.id) ? "secondary" : "outline"} className={`h-8 text-xs ${invitedMembers.includes(member.id) ? 'bg-accent/20 text-yellow-900 dark:text-accent' : ''}`} onClick={() => toggleInvite(member.id)}>{invitedMembers.includes(member.id) ? 'Assigned' : 'Assign'}</Button>
                   </div>
                 ))}
               </div>
-              <div className="flex items-center justify-between text-xs text-gray-500 pt-2"><p>Don't see who you need?</p><Button variant="link" onClick={() => { setShowInviteModal(false); navigate('/gc-dashboard/team'); }} className="h-auto p-0 text-yellow-600">Add new members to team</Button></div>
+              <div className="flex items-center justify-between text-xs text-gray-500 pt-2"><p>Don't see who you need?</p><Button variant="link" onClick={() => { setShowInviteModal(false); navigate('/gc-dashboard/team'); }} className="h-auto p-0 text-yellow-600 dark:text-accent">Add new members to team</Button></div>
               <div className="grid grid-cols-2 gap-3 pt-2">
                 <Button variant="ghost" onClick={() => setShowInviteModal(false)}>Skip for now</Button>
-                <Button className="bg-yellow-400 hover:bg-yellow-500 text-black" onClick={() => { toast({ title: "Team Invitation Sent", description: `${invitedMembers.length} members have been assigned.` }); setShowInviteModal(false); }}>Done</Button>
+                <Button className="bg-accent hover:bg-accent/90 text-accent-foreground" onClick={() => { toast({ title: "Team Invitation Sent", description: `${invitedMembers.length} members have been assigned.` }); setShowInviteModal(false); }}>Done</Button>
               </div>
             </div>
           </DialogContent>

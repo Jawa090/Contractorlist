@@ -148,16 +148,12 @@
   scrollbar-width: thin;
 }
 
-/* Firefox */
+/* Firefox scrollbar styling */
 * {
-  scrollbar-width: none;
-}
-
-*:hover {
   scrollbar-width: thin;
   scrollbar-color: theme('colors.gray.300') transparent;
 }
 
-.dark *:hover {
+.dark * {
   scrollbar-color: theme('colors.gray.700') transparent;
 }

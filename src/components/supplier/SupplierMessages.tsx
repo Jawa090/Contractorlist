@@ -125,7 +125,7 @@ const SupplierMessages = () => {
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case 'high': return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
-      case 'medium': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
+      case 'medium': return 'bg-accent/20 text-accent-foreground border-accent/20';
       case 'low': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
       default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200';
     }
@@ -163,7 +163,7 @@ const SupplierMessages = () => {
             <Filter className="w-4 h-4 mr-2" />
             Filter
           </Button>
-          <Button className="bg-primary hover:bg-yellow-400 text-black">
+          <Button className="bg-accent hover:bg-accent/90 text-accent-foreground">
             <MessageSquare className="w-4 h-4 mr-2" />
             New Message
           </Button>
@@ -176,7 +176,7 @@ const SupplierMessages = () => {
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
               <span>Conversations</span>
-              <Badge className="bg-primary/20 text-primary">
+              <Badge className="bg-accent/20 text-accent">
                 {conversations.filter(c => c.unread > 0).length} unread
               </Badge>
             </CardTitle>
@@ -196,7 +196,7 @@ const SupplierMessages = () => {
                   onClick={() => setSelectedConversation(index)}
                   className={`
                     p-4 cursor-pointer border-b border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors
-                    ${selectedConversation === index ? 'bg-primary/10 border-l-4 border-l-primary' : ''}
+                    ${selectedConversation === index ? 'bg-accent/10 border-l-4 border-l-accent' : ''}
                   `}
                 >
                   <div className="flex items-start gap-3">
@@ -277,8 +277,8 @@ const SupplierMessages = () => {
                 >
                   <div className={`
                     max-w-[70%] p-3 rounded-lg
-                    ${message.isSupplier 
-                      ? 'bg-primary text-black' 
+                    ${message.isSupplier
+                      ? 'bg-accent text-accent-foreground'
                       : 'bg-gray-100 dark:bg-gray-800 text-text-primary-light dark:text-text-primary-dark'
                     }
                   `}>
@@ -321,9 +321,9 @@ const SupplierMessages = () => {
                 <Button variant="outline" size="sm">
                   <Paperclip className="w-4 h-4" />
                 </Button>
-                <Button 
+                <Button
                   onClick={handleSendMessage}
-                  className="bg-primary hover:bg-yellow-400 text-black"
+                  className="bg-accent hover:bg-accent/90 text-accent-foreground"
                   disabled={!newMessage.trim()}
                 >
                   <Send className="w-4 h-4" />

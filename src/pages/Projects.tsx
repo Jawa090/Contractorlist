@@ -13,7 +13,7 @@ import {
   ChevronLeft,
   ChevronRight
 } from "lucide-react";
-import ProductServiceTemplate from "@/components/landing/ProductServiceTemplate";
+import ProductServiceTemplate from "@/components/projects/ProductServiceTemplate";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -392,7 +392,7 @@ const Projects = () => {
           window.scrollTo(0, 0);
         }}
         secondaryCtaText="View Pricing"
-        secondaryCtaLink="/pricing"
+        secondaryCtaLink="/subscription"
         accentColor="accent"
         heroImage="/assets/projects-hero.png"
         secondaryImage="/assets/benefits-image.png"

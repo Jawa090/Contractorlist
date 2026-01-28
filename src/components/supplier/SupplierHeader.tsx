@@ -184,7 +184,7 @@ const SupplierHeader = ({ onMenuClick }: SupplierHeaderProps) => {
                 onBlur={() => setIsSearchFocused(false)}
                 className={cn(
                   "pl-10 pr-20 w-full transition-all duration-200",
-                  isSearchFocused && "ring-2 ring-yellow-400 border-yellow-400"
+                  isSearchFocused && "ring-2 ring-accent border-accent"
                 )}
               />
               <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
@@ -228,8 +228,8 @@ const SupplierHeader = ({ onMenuClick }: SupplierHeaderProps) => {
                         }}
                         className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-left"
                       >
-                        <div className="p-2 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
-                          <Icon className="w-4 h-4 text-yellow-600 dark:text-yellow-400" />
+                        <div className="p-2 bg-accent/10 dark:bg-accent/10 rounded-lg">
+                          <Icon className="w-4 h-4 text-accent" />
                         </div>
                         <div className="flex-1">
                           <p className="text-sm font-medium text-gray-900 dark:text-white">{result.name}</p>
@@ -265,17 +265,17 @@ const SupplierHeader = ({ onMenuClick }: SupplierHeaderProps) => {
                 <span className="text-gray-600 dark:text-gray-400 ml-1">Products</span>
               </div>
             </div>
-            <div className="flex items-center gap-2 px-3 py-2 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
-              <TrendingUp className="w-4 h-4 text-orange-600" />
+            <div className="flex items-center gap-2 px-3 py-2 bg-accent/10 dark:bg-accent/10 rounded-lg">
+              <TrendingUp className="w-4 h-4 text-accent" />
               <div>
-                <span className="font-bold text-orange-600">+{stats.monthlyGrowth}%</span>
+                <span className="font-bold text-accent">+{stats.monthlyGrowth}%</span>
                 <span className="text-gray-600 dark:text-gray-400 ml-1">Growth</span>
               </div>
             </div>
           </div>
 
           {/* AI Assistant Quick Access */}
-          <Button variant="ghost" size="sm" className="text-orange-600 hover:bg-orange-50 border border-orange-200 hidden sm:flex">
+          <Button variant="ghost" size="sm" className="text-accent hover:bg-accent/10 border border-accent/20 hidden sm:flex">
             <Zap className="w-4 h-4" />
           </Button>
 
@@ -334,13 +334,13 @@ const SupplierHeader = ({ onMenuClick }: SupplierHeaderProps) => {
                         <div className={cn(
                           "p-2 rounded-lg",
                           notif.type === 'order' && "bg-green-100 dark:bg-green-900/20",
-                          notif.type === 'inventory' && "bg-yellow-100 dark:bg-yellow-900/20",
+                          notif.type === 'inventory' && "bg-accent/20 dark:bg-accent/20",
                           notif.type === 'payment' && "bg-blue-100 dark:bg-blue-900/20"
                         )}>
                           <Icon className={cn(
                             "w-4 h-4",
                             notif.type === 'order' && "text-green-600 dark:text-green-400",
-                            notif.type === 'inventory' && "text-yellow-600 dark:text-yellow-400",
+                            notif.type === 'inventory' && "text-accent",
                             notif.type === 'payment' && "text-blue-600 dark:text-blue-400"
                           )} />
                         </div>
@@ -387,8 +387,8 @@ const SupplierHeader = ({ onMenuClick }: SupplierHeaderProps) => {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="sm" className="flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-gray-800 p-2 rounded-lg">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center shadow-lg">
-                  <User className="w-5 h-5 text-black" />
+                <div className="w-10 h-10 rounded-full bg-accent flex items-center justify-center shadow-lg">
+                  <User className="w-5 h-5 text-accent-foreground" />
                 </div>
                 <div className="hidden sm:block text-left">
                   <p className="text-sm font-bold text-gray-900 dark:text-white">BuildMart Supply</p>
@@ -399,8 +399,8 @@ const SupplierHeader = ({ onMenuClick }: SupplierHeaderProps) => {
             <DropdownMenuContent align="end" className="w-64 p-2">
               <DropdownMenuLabel className="p-3">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center shadow-lg">
-                    <User className="w-6 h-6 text-black" />
+                  <div className="w-12 h-12 rounded-full bg-accent flex items-center justify-center shadow-lg">
+                    <User className="w-6 h-6 text-accent-foreground" />
                   </div>
                   <div>
                     <p className="font-bold text-gray-900 dark:text-white">BuildMart Supply</p>

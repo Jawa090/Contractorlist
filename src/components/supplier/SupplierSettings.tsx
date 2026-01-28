@@ -161,7 +161,7 @@ const SupplierSettings = () => {
                   </div>
                 </div>
                 <div className="flex gap-2">
-                  <Button className="bg-primary hover:bg-yellow-400 text-black font-semibold">
+                  <Button className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold">
                     <Save className="w-4 h-4 mr-2" />
                     Save Changes
                   </Button>
@@ -229,7 +229,7 @@ const SupplierSettings = () => {
                   </div>
                 </div>
 
-                <Button className="bg-primary hover:bg-yellow-400 text-black font-semibold">
+                <Button className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold">
                   <Save className="w-4 h-4 mr-2" />
                   Save Catalog Settings
                 </Button>
@@ -313,7 +313,7 @@ const SupplierSettings = () => {
                   </div>
                 </div>
 
-                <Button className="bg-primary hover:bg-yellow-400 text-black font-semibold">
+                <Button className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold">
                   <Save className="w-4 h-4 mr-2" />
                   Save Preferences
                 </Button>
@@ -372,7 +372,8 @@ const SupplierSettings = () => {
                 </div>
 
                 <div className="flex gap-2">
-                  <Button className="bg-primary hover:bg-yellow-400 text-black font-semibold">
+                  <Button className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold">
+                    <Save className="w-4 h-4 mr-2" />
                     Update Password
                   </Button>
                   <Button variant="outline">Cancel</Button>

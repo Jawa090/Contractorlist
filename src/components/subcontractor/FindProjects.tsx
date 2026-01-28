@@ -312,8 +312,8 @@ const FindProjects = () => {
         <div className="max-w-[1600px] mx-auto">
           <div className="flex flex-wrap items-center justify-between gap-6">
             <div className="flex items-center gap-5">
-              <div className="w-14 h-14 bg-yellow-400 rounded-2xl flex items-center justify-center shadow-xl shadow-yellow-400/20 rotate-3">
-                <Target className="text-black" size={28} />
+              <div className="w-14 h-14 bg-accent rounded-2xl flex items-center justify-center shadow-xl shadow-accent/20 rotate-3">
+                <Target className="text-accent-foreground" size={28} />
               </div>
               <div>
                 <h1 className="text-3xl font-black tracking-tighter uppercase mb-1">Mission <span className="text-yellow-600">Discovery</span></h1>
@@ -343,7 +343,7 @@ const FindProjects = () => {
                   className="w-48 h-12 bg-transparent border-none focus-visible:ring-0 text-sm font-bold pl-11"
                 />
               </div>
-              <Button className="bg-black dark:bg-yellow-400 text-white dark:text-black rounded-[1.5rem] px-8 h-12 font-black uppercase text-[10px] tracking-widest hover:scale-105 transition-all shadow-lg active:scale-95">
+              <Button className="bg-black dark:bg-accent text-white dark:text-accent-foreground rounded-[1.5rem] px-8 h-12 font-black uppercase text-[10px] tracking-widest hover:scale-105 transition-all shadow-lg active:scale-95">
                 Save Criteria
               </Button>
             </div>
@@ -390,7 +390,7 @@ const FindProjects = () => {
                       onClick={() => setMaxMileage(m)}
                       className={cn(
                         "py-2 text-[9px] font-bold rounded-lg transition-all",
-                        maxMileage === m ? "bg-yellow-400 text-black shadow-sm" : "text-gray-400 hover:text-gray-600"
+                        maxMileage === m ? "bg-accent text-accent-foreground shadow-sm" : "text-gray-400 hover:text-gray-600"
                       )}
                     >{m}m</button>
                   ))}
@@ -406,7 +406,7 @@ const FindProjects = () => {
                       onClick={() => toggleFilter(t, selectedTrades, setSelectedTrades)}
                       className={cn(
                         "cursor-pointer px-3 py-1 text-[9px] font-bold uppercase tracking-tight border-none transition-all",
-                        selectedTrades.includes(t) ? "bg-yellow-400 text-black" : "bg-gray-100 dark:bg-white/5 text-gray-500 hover:bg-gray-200 dark:hover:bg-white/10"
+                        selectedTrades.includes(t) ? "bg-accent text-accent-foreground" : "bg-gray-100 dark:bg-white/5 text-gray-500 hover:bg-gray-200 dark:hover:bg-white/10"
                       )}
                     >{t}</Badge>
                   ))}
@@ -491,17 +491,17 @@ const FindProjects = () => {
               {filteredProjects.map((p) => (
                 <Card
                   key={p.id}
-                  className="group relative overflow-hidden bg-white dark:bg-[#1c1e24] border-gray-200 dark:border-white/5 hover:border-yellow-400/40 transition-all duration-500 rounded-[2.5rem] shadow-sm hover:shadow-2xl hover:scale-[1.01]"
+                  className="group relative overflow-hidden bg-white dark:bg-[#1c1e24] border-gray-200 dark:border-white/5 hover:border-accent/40 transition-all duration-500 rounded-[2.5rem] shadow-sm hover:shadow-2xl hover:scale-[1.01]"
                 >
                   <CardContent className="p-10">
                     <div className="flex flex-col lg:flex-row justify-between gap-8 h-full">
                       <div className="flex items-start gap-8 flex-1">
                         <div className="relative shrink-0">
-                          <div className="w-16 h-16 rounded-2xl bg-gray-50 dark:bg-white/5 flex items-center justify-center transition-all group-hover:bg-yellow-400 overflow-hidden shadow-lg border border-gray-100 dark:border-white/10 group-hover:rotate-3">
-                            <Briefcase className="text-gray-400 group-hover:text-black transition-colors" size={28} />
+                          <div className="w-16 h-16 rounded-2xl bg-gray-50 dark:bg-white/5 flex items-center justify-center transition-all group-hover:bg-accent overflow-hidden shadow-lg border border-gray-100 dark:border-white/10 group-hover:rotate-3">
+                            <Briefcase className="text-gray-400 group-hover:text-accent-foreground transition-colors" size={28} />
                           </div>
                           {p.isProfileMatch && (
-                            <div className="absolute -top-3 -left-3 bg-black dark:bg-yellow-400 text-white dark:text-black text-[8px] font-black uppercase tracking-widest px-2.5 py-1.5 rounded-full shadow-xl flex items-center gap-1.5 z-10 border-2 border-white dark:border-[#1c1e24]">
+                            <div className="absolute -top-3 -left-3 bg-black dark:bg-accent text-white dark:text-accent-foreground text-[8px] font-black uppercase tracking-widest px-2.5 py-1.5 rounded-full shadow-xl flex items-center gap-1.5 z-10 border-2 border-white dark:border-[#1c1e24]">
                               <Bot size={10} className="animate-pulse" /> Signal Match
                             </div>
                           )}
@@ -525,7 +525,7 @@ const FindProjects = () => {
 
                           <div className="flex flex-wrap gap-2">
                             {p.trades.map(t => (
-                              <div key={t} className="px-3 py-1.5 bg-gray-50 dark:bg-white/5 rounded-xl text-[9px] font-black uppercase tracking-widest text-gray-400 border border-gray-100 dark:border-white/5 group-hover:border-yellow-400/20 group-hover:text-yellow-600/80 transition-all">{t}</div>
+                              <div key={t} className="px-3 py-1.5 bg-gray-50 dark:bg-white/5 rounded-xl text-[9px] font-black uppercase tracking-widest text-gray-400 border border-gray-100 dark:border-white/5 group-hover:border-accent/20 group-hover:text-yellow-600/80 transition-all">{t}</div>
                             ))}
                           </div>
                         </div>
@@ -540,7 +540,7 @@ const FindProjects = () => {
                         <div className="flex flex-col gap-3 w-full">
                           <Button
                             onClick={() => handleInitiateBid(p)}
-                            className="h-12 bg-black dark:bg-yellow-400 text-white dark:text-black font-black uppercase text-[11px] tracking-widest rounded-2xl shadow-xl hover:scale-[1.03] active:scale-95 transition-all w-full flex gap-3"
+                            className="h-12 bg-black dark:bg-accent text-white dark:text-accent-foreground font-black uppercase text-[11px] tracking-widest rounded-2xl shadow-xl hover:scale-[1.03] active:scale-95 transition-all w-full flex gap-3"
                           >
                             Initiate Protocol <Zap size={18} />
                           </Button>
@@ -550,15 +550,15 @@ const FindProjects = () => {
                               onClick={(e) => { e.stopPropagation(); toggleSave(p.id); }}
                               className={cn(
                                 "h-12 flex-1 flex items-center justify-center gap-2 font-black text-[9px] uppercase tracking-widest rounded-2xl transition-all border border-gray-100 dark:border-white/5",
-                                savedProjectIds.includes(p.id) ? "bg-yellow-400 text-black border-none" : "bg-white dark:bg-white/5 text-gray-400 hover:text-yellow-600"
+                                savedProjectIds.includes(p.id) ? "bg-accent text-accent-foreground border-none" : "bg-white dark:bg-white/5 text-gray-400 hover:text-yellow-600"
                               )}
                             >
                               {savedProjectIds.includes(p.id) ? <BookmarkCheck size={16} /> : <Bookmark size={16} />}
                               {savedProjectIds.includes(p.id) ? 'Locked' : 'Save'}
                             </Button>
                             <Button variant="ghost" className="h-12 w-12 rounded-2xl bg-white dark:bg-white/5 border border-gray-100 dark:border-white/5 text-gray-400 hover:text-yellow-600 overflow-hidden relative group/icon">
-                              <div className="absolute inset-0 bg-yellow-400 translate-y-full group-hover/icon:translate-y-0 transition-transform"></div>
-                              <MoreHorizontal size={18} className="relative z-10 group-hover/icon:text-black" />
+                              <div className="absolute inset-0 bg-accent translate-y-full group-hover/icon:translate-y-0 transition-transform"></div>
+                              <MoreHorizontal size={18} className="relative z-10 group-hover/icon:text-accent-foreground" />
                             </Button>
                           </div>
                         </div>
@@ -601,8 +601,8 @@ const FindProjects = () => {
       {/* Success Modal */}
       <Dialog open={isSuccessModalOpen} onOpenChange={setIsSuccessModalOpen}>
         <DialogContent className="sm:max-w-[400px] bg-white dark:bg-[#1c1e24] border-none rounded-[3rem] p-10 text-center shadow-3xl">
-          <div className="w-24 h-24 bg-yellow-500/10 rounded-full flex items-center justify-center mx-auto mb-8 border-4 border-yellow-500/20">
-            <CheckCircle2 className="w-12 h-12 text-[#fce011] animate-bounce" />
+          <div className="w-24 h-24 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-8 border-4 border-accent/20">
+            <CheckCircle2 className="w-12 h-12 text-accent animate-bounce" />
           </div>
           <DialogHeader>
             <DialogTitle className="text-2xl font-black tracking-tight text-center uppercase">Protocol Locked</DialogTitle>
@@ -612,7 +612,7 @@ const FindProjects = () => {
           </DialogHeader>
           <div className="flex flex-col gap-4 mt-10">
             <Button
-              className="h-14 bg-black dark:bg-yellow-400 text-white dark:text-black font-black uppercase text-[11px] tracking-[0.2em] rounded-2xl shadow-2xl hover:scale-105 active:scale-95 transition-all"
+              className="h-14 bg-black dark:bg-accent text-white dark:text-accent-foreground font-black uppercase text-[11px] tracking-[0.2em] rounded-2xl shadow-2xl hover:scale-105 active:scale-95 transition-all"
               onClick={() => navigate('/subcontractor-dashboard/bid-management')}
             >
               Go to Bid Management

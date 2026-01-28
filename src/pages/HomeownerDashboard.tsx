@@ -67,13 +67,13 @@ class ErrorBoundary extends Component<
             <div className="flex gap-3 justify-center">
               <button
                 onClick={() => window.location.reload()}
-                className="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg transition-colors"
+                className="px-6 py-3 bg-secondary hover:bg-secondary/80 text-secondary-foreground font-semibold rounded-lg transition-colors"
               >
                 Refresh Page
               </button>
               <button
                 onClick={this.reset}
-                className="px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-black font-semibold rounded-lg transition-colors"
+                className="px-6 py-3 bg-accent hover:bg-accent/80 text-accent-foreground font-semibold rounded-lg transition-colors"
               >
                 Try again
               </button>
@@ -111,10 +111,10 @@ const HomeownerDashboard = () => {
   return (
     <div className="flex h-screen w-full overflow-hidden bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900">
       <HomeownerSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-      
+
       <main className="flex-1 flex flex-col h-full relative overflow-hidden bg-slate-50/50 dark:bg-slate-950/50 transition-all duration-300">
         <HomeownerHeader onMenuClick={() => setSidebarOpen(true)} />
-        
+
         <div className="flex-1 overflow-y-auto scroll-smooth">
           <ErrorBoundary>
             <Suspense fallback={<PageSkeleton />}>

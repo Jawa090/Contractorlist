@@ -117,12 +117,12 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
           isCollapsed ? "justify-center px-2" : "px-6"
         )}>
           {isCollapsed ? (
-            <div className="w-10 h-10 rounded-xl bg-yellow-400 dark:bg-yellow-500 flex items-center justify-center text-gray-900 shadow-md shrink-0 mb-2 mt-2">
+            <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center text-accent-foreground shadow-md shrink-0 mb-2 mt-2">
               <Building2 className="w-6 h-6" />
             </div>
           ) : (
             <div className="flex items-center gap-3 overflow-hidden">
-              <div className="w-10 h-10 rounded-xl bg-yellow-400 dark:bg-yellow-500 flex items-center justify-center text-gray-900 shadow-md shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center text-accent-foreground shadow-md shrink-0">
                 <Building2 className="w-6 h-6" />
               </div>
               <div className="min-w-0">
@@ -191,7 +191,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                       className={cn(
                         "group flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 relative",
                         isActive
-                          ? "bg-yellow-400 text-black shadow-lg shadow-yellow-400/20"
+                          ? "bg-accent text-accent-foreground shadow-lg shadow-accent/20"
                           : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-white",
                         isCollapsed ? 'justify-center px-0 h-10 w-10 mx-auto' : ''
                       )}
@@ -205,12 +205,12 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                         <span className="truncate">{item.name}</span>
                       )}
                       {isActive && !isCollapsed && (
-                        <div className="absolute left-0 w-1 h-4 bg-black rounded-r-full" />
+                        <div className="absolute left-0 w-1 h-4 bg-accent-foreground/50 rounded-r-full" />
                       )}
                       {!isCollapsed && hasSubItems && (
                         <ChevronRight className={cn(
                           "w-4 h-4 ml-auto transition-transform duration-200 text-gray-400",
-                          isActive && "rotate-90 text-black"
+                          isActive && "rotate-90 text-accent-foreground"
                         )} />
                       )}
                     </Link>
@@ -227,7 +227,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                               className={cn(
                                 "flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-bold transition-all duration-200",
                                 isSubActive
-                                  ? "bg-yellow-400/10 text-yellow-600 dark:text-yellow-400"
+                                  ? "bg-accent/10 text-accent-foreground dark:text-accent"
                                   : "text-gray-500 dark:text-gray-500 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5"
                               )}
                             >

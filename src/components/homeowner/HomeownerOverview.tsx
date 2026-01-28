@@ -113,8 +113,8 @@ const HomeownerOverview = () => {
       change: '+2',
       changeType: 'positive' as const,
       icon: Clock,
-      color: 'text-[#fce011]',
-      bgColor: 'bg-[#fce011]/10'
+      color: 'text-accent',
+      bgColor: 'bg-accent/10'
     },
     {
       title: 'Budget Used',
@@ -210,15 +210,15 @@ const HomeownerOverview = () => {
             </Badge>
           </div>
           <p className="text-gray-600 dark:text-gray-400 text-lg">
-            You have <span className="font-semibold text-[#fce011] dark:text-[#fce011]">3 active projects</span> and <span className="font-semibold text-blue-600 dark:text-blue-400">5 pending bids</span>
+            You have <span className="font-semibold text-accent dark:text-accent">3 active projects</span> and <span className="font-semibold text-blue-600 dark:text-blue-400">5 pending bids</span>
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <Button variant="outline" className="gap-2 border-[#fce011]/20 text-[#fce011] hover:bg-[#fce011]/10 dark:border-[#fce011]/30 dark:text-[#fce011]">
+          <Button variant="outline" className="gap-2 border-accent/20 text-accent hover:bg-accent/10 dark:border-accent/30 dark:text-accent">
             <MoreHorizontal className="w-4 h-4" />
             Filter
           </Button>
-          <Button className="bg-[#fce011] hover:bg-[#fce011]/90 text-black font-semibold gap-2 shadow-lg">
+          <Button className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold gap-2 shadow-lg">
             <Plus className="w-5 h-5" />
             New Project
           </Button>
@@ -265,7 +265,7 @@ const HomeownerOverview = () => {
                 <p className="text-3xl font-bold text-gray-900 dark:text-white mb-1 transition-all duration-300">
                   {stat.value}
                   {isLive && stat.title === 'Pending Bids' && (
-                    <span className="ml-2 inline-block w-2 h-2 bg-[#fce011] rounded-full animate-pulse"></span>
+                    <span className="ml-2 inline-block w-2 h-2 bg-accent rounded-full animate-pulse"></span>
                   )}
                 </p>
               </div>
@@ -393,7 +393,7 @@ const HomeownerOverview = () => {
         <div className="lg:col-span-2 space-y-6">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Active Projects</h2>
-            <Button variant="outline" size="sm" className="text-[#fce011] border-[#fce011]/20 hover:bg-[#fce011]/10 dark:border-[#fce011]/30 dark:text-[#fce011]">
+            <Button variant="outline" size="sm" className="text-accent border-accent/20 hover:bg-accent/10 dark:border-accent/30 dark:text-accent">
               <Eye className="w-4 h-4 mr-2" />
               View All
             </Button>
@@ -411,7 +411,7 @@ const HomeownerOverview = () => {
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between mb-4">
                     <div>
-                      <h3 className="font-semibold text-lg text-gray-900 dark:text-white mb-1 group-hover:text-[#fce011] transition-colors">
+                      <h3 className="font-semibold text-lg text-gray-900 dark:text-white mb-1 group-hover:text-accent transition-colors">
                         {project.name}
                       </h3>
                       <p className="text-sm text-gray-600 dark:text-gray-400">{project.contractor}</p>
@@ -442,7 +442,7 @@ const HomeownerOverview = () => {
                       <div
                         className={cn(
                           "absolute top-0 left-0 h-2.5 rounded-full transition-all duration-1000",
-                          "bg-[#fce011]",
+                          "bg-accent",
                           isLive && project.status === 'In Progress' && "animate-pulse"
                         )}
                         style={{ width: `${project.progress}%` }}
@@ -474,7 +474,7 @@ const HomeownerOverview = () => {
                     key={index}
                     className={cn(
                       "flex items-center justify-between p-4 border border-gray-100 dark:border-gray-800 rounded-lg",
-                      "hover:border-[#fce011]/50 dark:hover:border-[#fce011]/50 hover:shadow-md transition-all cursor-pointer"
+                      "hover:border-accent/50 dark:hover:border-accent/50 hover:shadow-md transition-all cursor-pointer"
                     )}
                   >
                     <div className="flex-1">
@@ -482,7 +482,7 @@ const HomeownerOverview = () => {
                       <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{pro.specialty}</p>
                       <div className="flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400">
                         <div className="flex items-center gap-1">
-                          <Star className="w-3 h-3 fill-[#fce011] text-[#fce011]" />
+                          <Star className="w-3 h-3 fill-accent text-accent" />
                           <span className="font-semibold">{pro.rating}</span>
                         </div>
                         <div className="flex items-center gap-1">
@@ -493,7 +493,7 @@ const HomeownerOverview = () => {
                     </div>
                     <Button
                       size="sm"
-                      className="bg-[#fce011] hover:bg-[#fce011]/90 text-black shadow-sm"
+                      className="bg-accent hover:bg-accent/90 text-accent-foreground shadow-sm"
                     >
                       Contact
                     </Button>
@@ -502,7 +502,7 @@ const HomeownerOverview = () => {
 
                 <Button
                   variant="outline"
-                  className="w-full mt-4 text-[#fce011] border-[#fce011]/20 hover:bg-[#fce011]/10 dark:border-[#fce011]/80 dark:text-[#fce011]"
+                  className="w-full mt-4 text-accent border-accent/20 hover:bg-accent/10 dark:border-accent/80 dark:text-accent"
                 >
                   Browse All Contractors
                   <ArrowRight className="w-4 h-4 ml-2" />

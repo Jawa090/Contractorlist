@@ -65,7 +65,7 @@ const revenueData = [
 
 const orderStatusData = [
   { name: 'Delivered', value: 45, color: '#10b981' },
-  { name: 'Pending', value: 18, color: '#f59e0b' },
+  { name: 'Pending', value: 18, color: '#fce011' },
   { name: 'Confirmed', value: 12, color: '#3b82f6' },
   { name: 'Cancelled', value: 3, color: '#ef4444' },
 ];
@@ -73,7 +73,7 @@ const orderStatusData = [
 const SupplierOverview = () => {
   const [isLive, setIsLive] = useState(true);
   const [lastUpdate, setLastUpdate] = useState(new Date());
-  
+
   // Real-time data state
   const [realTimeStats, setRealTimeStats] = useState({
     monthlyRevenue: 156240,
@@ -128,8 +128,8 @@ const SupplierOverview = () => {
       changeType: 'positive' as const,
       icon: ShoppingCart,
       description: 'awaiting fulfillment',
-      color: 'text-orange-600',
-      bgColor: 'bg-orange-50'
+      color: 'text-accent',
+      bgColor: 'bg-accent/10'
     },
     {
       title: 'Active Contractors',
@@ -193,7 +193,7 @@ const SupplierOverview = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'pending': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      case 'pending': return 'bg-accent/20 text-accent-foreground border-accent/20';
       case 'confirmed': return 'bg-blue-100 text-blue-800 border-blue-200';
       case 'delivered': return 'bg-green-100 text-green-800 border-green-200';
       default: return 'bg-gray-100 text-gray-800 border-gray-200';
@@ -203,7 +203,7 @@ const SupplierOverview = () => {
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case 'high': return 'border-l-red-500';
-      case 'medium': return 'border-l-yellow-500';
+      case 'medium': return 'border-l-accent';
       case 'low': return 'border-l-green-500';
       default: return 'border-l-gray-300';
     }
@@ -231,15 +231,15 @@ const SupplierOverview = () => {
             </Badge>
           </div>
           <p className="text-gray-600 text-lg">
-            You have <span className="font-semibold text-orange-600">18 pending orders</span> and <span className="font-semibold text-blue-600">3 low stock alerts</span>
+            You have <span className="font-semibold text-accent">18 pending orders</span> and <span className="font-semibold text-blue-600">3 low stock alerts</span>
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <Button variant="outline" className="gap-2 border-orange-200 text-orange-700 hover:bg-orange-50">
+          <Button variant="outline" className="gap-2 border-accent/20 text-accent hover:bg-accent/10">
             <Filter className="w-4 h-4" />
             Filter Orders
           </Button>
-          <Button className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-semibold gap-2 shadow-lg">
+          <Button className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold gap-2 shadow-lg">
             <Plus className="w-5 h-5" />
             Add Product
           </Button>
@@ -249,8 +249,8 @@ const SupplierOverview = () => {
       {/* Enhanced Stats Grid with Real-time Updates */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat) => (
-          <Card 
-            key={stat.title} 
+          <Card
+            key={stat.title}
             className={cn(
               "bg-white dark:bg-slate-900 hover:shadow-xl transition-all duration-300 border-0 shadow-sm",
               "group hover:scale-[1.02] cursor-pointer"
@@ -286,7 +286,7 @@ const SupplierOverview = () => {
                 <p className="text-3xl font-bold text-gray-900 dark:text-white mb-1 transition-all duration-300">
                   {stat.value}
                   {isLive && stat.title === 'Pending Orders' && (
-                    <span className="ml-2 inline-block w-2 h-2 bg-orange-500 rounded-full animate-pulse"></span>
+                    <span className="ml-2 inline-block w-2 h-2 bg-accent rounded-full animate-pulse"></span>
                   )}
                 </p>
                 <p className="text-xs text-gray-500 dark:text-gray-400">{stat.description}</p>
@@ -338,27 +338,27 @@ const SupplierOverview = () => {
               <AreaChart data={revenueData}>
                 <defs>
                   <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.8}/>
-                    <stop offset="95%" stopColor="#f59e0b" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="#fce011" stopOpacity={0.8} />
+                    <stop offset="95%" stopColor="#fce011" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" className="stroke-gray-200 dark:stroke-gray-700" />
                 <XAxis dataKey="name" className="text-xs" />
                 <YAxis className="text-xs" />
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: 'white', 
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: 'white',
                     border: '1px solid #e5e7eb',
                     borderRadius: '8px'
-                  }} 
+                  }}
                 />
-                <Area 
-                  type="monotone" 
-                  dataKey="value" 
-                  stroke="#f59e0b" 
+                <Area
+                  type="monotone"
+                  dataKey="value"
+                  stroke="#fce011"
                   strokeWidth={2}
-                  fillOpacity={1} 
-                  fill="url(#colorRevenue)" 
+                  fillOpacity={1}
+                  fill="url(#colorRevenue)"
                 />
               </AreaChart>
             </ResponsiveContainer>
@@ -376,16 +376,16 @@ const SupplierOverview = () => {
                 <div key={item.name} className="space-y-2">
                   <div className="flex items-center justify-between text-sm">
                     <div className="flex items-center gap-2">
-                      <div 
-                        className="w-3 h-3 rounded-full" 
+                      <div
+                        className="w-3 h-3 rounded-full"
                         style={{ backgroundColor: item.color }}
                       />
                       <span className="font-medium text-gray-700 dark:text-gray-300">{item.name}</span>
                     </div>
                     <span className="font-bold text-gray-900 dark:text-white">{item.value}</span>
                   </div>
-                  <Progress 
-                    value={(item.value / 78) * 100} 
+                  <Progress
+                    value={(item.value / 78) * 100}
                     className="h-2"
                     style={{
                       backgroundColor: `${item.color}20`,
@@ -404,20 +404,20 @@ const SupplierOverview = () => {
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold text-gray-900">Recent Orders</h2>
             <div className="flex items-center gap-3">
-              <Badge variant="secondary" className="bg-orange-100 text-orange-800 font-semibold">
+              <Badge variant="secondary" className="bg-accent/20 text-accent-foreground font-semibold">
                 18 Pending
               </Badge>
-              <Button variant="outline" size="sm" className="text-orange-600 border-orange-200 hover:bg-orange-50">
+              <Button variant="outline" size="sm" className="text-accent border-accent/20 hover:bg-accent/10">
                 <Eye className="w-4 h-4 mr-2" />
                 View All
               </Button>
             </div>
           </div>
-          
+
           <div className="space-y-4">
             {recentOrders.map((order) => (
-              <Card 
-                key={order.id} 
+              <Card
+                key={order.id}
                 className={cn(
                   "bg-white dark:bg-slate-900 hover:shadow-xl transition-all duration-300 border-l-4 group cursor-pointer",
                   getPriorityColor(order.priority),
@@ -439,11 +439,11 @@ const SupplierOverview = () => {
                           <p className="text-2xl font-bold text-green-600">{order.value}</p>
                         </div>
                       </div>
-                      
-                      <h3 className="font-semibold text-xl text-gray-900 mb-3 group-hover:text-orange-600 transition-colors">
+
+                      <h3 className="font-semibold text-xl text-gray-900 mb-3 group-hover:text-accent transition-colors">
                         {order.contractor}
                       </h3>
-                      
+
                       <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-4">
                         <div className="flex items-center gap-1">
                           <Package className="w-4 h-4" />
@@ -463,7 +463,7 @@ const SupplierOverview = () => {
                         </div>
                       </div>
                     </div>
-                    
+
                     <div className="flex flex-col justify-between gap-3">
                       <div className="flex gap-2">
                         <Button variant="outline" size="sm" className="gap-1">
@@ -471,7 +471,7 @@ const SupplierOverview = () => {
                           View
                         </Button>
                         {order.status === 'pending' && (
-                          <Button className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-semibold gap-1">
+                          <Button className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold gap-1">
                             <CheckCircle className="w-4 h-4" />
                             Confirm
                           </Button>
@@ -491,7 +491,7 @@ const SupplierOverview = () => {
           <Card className="bg-white shadow-sm">
             <CardHeader className="pb-4">
               <CardTitle className="flex items-center gap-2">
-                <AlertTriangle className="w-5 h-5 text-orange-500" />
+                <AlertTriangle className="w-5 h-5 text-accent" />
                 <span className="text-lg font-bold">Low Stock Alerts</span>
               </CardTitle>
             </CardHeader>
@@ -505,8 +505,8 @@ const SupplierOverview = () => {
                     </Badge>
                   </div>
                   <div className="space-y-2">
-                    <Progress 
-                      value={(item.current / item.minimum) * 100} 
+                    <Progress
+                      value={(item.current / item.minimum) * 100}
                       className="h-3"
                     />
                     <div className="flex justify-between text-xs text-gray-600">
@@ -516,7 +516,7 @@ const SupplierOverview = () => {
                   </div>
                 </div>
               ))}
-              <Button className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-semibold">
+              <Button className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-semibold">
                 <Plus className="w-4 h-4 mr-2" />
                 Reorder Items
               </Button>
@@ -528,7 +528,7 @@ const SupplierOverview = () => {
             <CardHeader className="pb-4">
               <CardTitle className="flex items-center justify-between">
                 <span className="text-lg font-bold">Top Products</span>
-                <Button variant="ghost" size="sm" className="text-orange-600">
+                <Button variant="ghost" size="sm" className="text-accent">
                   <BarChart3 className="w-4 h-4" />
                 </Button>
               </CardTitle>
@@ -561,15 +561,15 @@ const SupplierOverview = () => {
         <CardHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center shadow-lg">
-                <Bot className="w-5 h-5 text-black" />
+              <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center shadow-lg">
+                <Bot className="w-5 h-5 text-accent-foreground" />
               </div>
               <div>
                 <CardTitle className="text-lg font-bold">AI Supply Intelligence</CardTitle>
                 <CardDescription>Smart insights powered by AI</CardDescription>
               </div>
             </div>
-            <Badge className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black font-semibold">
+            <Badge className="bg-accent text-accent-foreground font-semibold">
               Enhanced
             </Badge>
           </div>
@@ -589,7 +589,7 @@ const SupplierOverview = () => {
                 </div>
               </div>
             </div>
-            
+
             <div className="p-4 bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 rounded-xl border border-blue-200 dark:border-blue-800 hover:shadow-md transition-all">
               <div className="flex items-start gap-3">
                 <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
@@ -603,7 +603,7 @@ const SupplierOverview = () => {
                 </div>
               </div>
             </div>
-            
+
             <div className="p-4 bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 rounded-xl border border-purple-200 dark:border-purple-800 hover:shadow-md transition-all">
               <div className="flex items-start gap-3">
                 <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
@@ -618,10 +618,10 @@ const SupplierOverview = () => {
               </div>
             </div>
           </div>
-          
+
           <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-            <Button 
-              className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black font-semibold shadow-lg"
+            <Button
+              className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-semibold shadow-lg"
               size="lg"
             >
               <MessageSquare className="w-4 h-4 mr-2" />
