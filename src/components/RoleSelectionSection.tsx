@@ -25,8 +25,8 @@ const RoleSelectionSection = () => {
       bgColor: "bg-white",
       textColor: "text-gray-900",
       descColor: "text-gray-600",
-      iconBg: "bg-orange-50",
-      iconColor: "text-orange-600",
+      iconBg: "bg-[#fce011]/10",
+      iconColor: "text-[#fce011]",
       features: [
         { icon: CheckCircle, text: "Verified Contractors" },
         { icon: FileText, text: "Free Project Posting" },
@@ -35,7 +35,7 @@ const RoleSelectionSection = () => {
       ],
       buttonText: "Get Started",
       buttonClass:
-        "bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black",
+        "bg-[#fce011] hover:bg-[#fce011]/90 text-black",
       subtitle: null,
     },
     {
@@ -47,7 +47,7 @@ const RoleSelectionSection = () => {
       textColor: "text-white",
       descColor: "text-gray-300",
       iconBg: "bg-slate-700",
-      iconColor: "text-orange-500",
+      iconColor: "text-[#fce011]",
       features: [
         { icon: Zap, text: "Priority Lead Access" },
         { icon: Brain, text: "AI Takeoff Tool" },
@@ -56,7 +56,7 @@ const RoleSelectionSection = () => {
       ],
       buttonText: "Join as Contractor",
       buttonClass:
-        "bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black",
+        "bg-[#fce011] hover:bg-[#fce011]/90 text-black",
       subtitle: "GC OR SUB",
     },
     {
@@ -64,11 +64,11 @@ const RoleSelectionSection = () => {
       description:
         "Connect with contractors and grow your network. Access commercial projects, manage bids efficiently, and expand your business reach.",
       icon: Package,
-      bgColor: "bg-gradient-to-br from-orange-50 to-yellow-50",
+      bgColor: "bg-white",
       textColor: "text-gray-900",
       descColor: "text-gray-700",
-      iconBg: "bg-orange-100",
-      iconColor: "text-orange-600",
+      iconBg: "bg-[#fce011]/10",
+      iconColor: "text-[#fce011]",
       features: [
         { icon: ShoppingCart, text: "Project Opportunities" },
         { icon: Truck, text: "Supply Chain Network" },
@@ -77,7 +77,7 @@ const RoleSelectionSection = () => {
       ],
       buttonText: "Get Started",
       buttonClass:
-        "bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black",
+        "bg-[#fce011] hover:bg-[#fce011]/90 text-black",
       subtitle: null,
     },
   ];

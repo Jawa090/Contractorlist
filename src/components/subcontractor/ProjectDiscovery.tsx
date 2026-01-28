@@ -495,8 +495,8 @@ const ProjectDiscovery = () => {
 
                         <div className="flex-1 min-w-0">
                           <div className="flex flex-wrap gap-2 mb-4">
-                            <Badge className="bg-indigo-100 dark:bg-indigo-500/10 text-indigo-600 border-none font-black text-[9px] uppercase tracking-widest px-3 py-1">{p.category}</Badge>
-                            <Badge className="bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 border-none font-black text-[9px] uppercase tracking-widest px-3 py-1 flex items-center gap-1"><ShieldCheck size={10} /> {p.status}</Badge>
+                            <Badge className="bg-yellow-100 dark:bg-yellow-500/10 text-yellow-600 border-none font-black text-[9px] uppercase tracking-widest px-3 py-1">{p.category}</Badge>
+                            <Badge className="bg-yellow-100 dark:bg-yellow-500/10 text-yellow-600 border-none font-black text-[9px] uppercase tracking-widest px-3 py-1 flex items-center gap-1"><ShieldCheck size={10} /> {p.status}</Badge>
                             <Badge variant="outline" className="text-[9px] border-gray-200 dark:border-white/10 uppercase font-black text-gray-400 tracking-widest">{p.posted}</Badge>
                           </div>
 
@@ -504,9 +504,9 @@ const ProjectDiscovery = () => {
 
                           <div className="flex flex-wrap items-center gap-6 text-[10px] font-black text-gray-500 uppercase tracking-widest mb-6">
                             <div className="flex items-center gap-2"><MapPin size={14} className="text-yellow-600" /> {p.location} <span className="text-[8px] opacity-40">({p.distance})</span></div>
-                            <div className="flex items-center gap-2"><Briefcase size={14} className="text-blue-500" /> {p.gc} <span className="flex items-center gap-1 text-yellow-500"><Star size={10} fill="currentColor" /> {p.gcRating}</span></div>
-                            <div className="flex items-center gap-2"><Tag size={14} className="text-purple-500" /> NIGP {p.nigpCode}</div>
-                            <div className="flex items-center gap-2"><Layers size={14} className="text-orange-500" /> {p.sqft} SQFT</div>
+                            <div className="flex items-center gap-2"><Briefcase size={14} className="text-yellow-600" /> {p.gc} <span className="flex items-center gap-1 text-yellow-500"><Star size={10} fill="currentColor" /> {p.gcRating}</span></div>
+                            <div className="flex items-center gap-2"><Tag size={14} className="text-yellow-600" /> NIGP {p.nigpCode}</div>
+                            <div className="flex items-center gap-2"><Layers size={14} className="text-yellow-600" /> {p.sqft} SQFT</div>
                           </div>
 
                           <div className="flex flex-wrap gap-2">
@@ -551,8 +551,8 @@ const ProjectDiscovery = () => {
                   {/* Status Bar */}
                   <div className="bg-gray-50/50 dark:bg-black/20 px-10 py-4 flex items-center justify-between border-t border-gray-100 dark:border-white/5 group-hover:bg-yellow-400/5 transition-colors">
                     <div className="flex gap-8 text-[9px] font-black uppercase tracking-widest text-gray-400">
-                      <span className="flex items-center gap-2"><Calendar size={14} className="text-red-500" /> Deadline: {new Date(p.deadline).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })}</span>
-                      <span className="flex items-center gap-2"><Clock size={14} className="text-blue-500" /> {p.bids} Active Bidders</span>
+                      <span className="flex items-center gap-2"><Calendar size={14} className="text-yellow-600" /> Deadline: {new Date(p.deadline).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                      <span className="flex items-center gap-2"><Clock size={14} className="text-yellow-600" /> {p.bids} Active Bidders</span>
                       <span className="flex items-center gap-2"><Tag size={14} /> From {p.source}</span>
                     </div>
                     <div className="flex items-center gap-2">
@@ -587,8 +587,8 @@ const ProjectDiscovery = () => {
               <div className="p-10 bg-black dark:bg-yellow-400 text-white dark:text-black">
                 <div className="flex justify-between items-start mb-6">
                   <div className="flex gap-2">
-                    <Badge className="bg-white/20 dark:bg-black/10 text-white dark:text-black border-none font-black text-[10px] uppercase tracking-widest px-4 py-1.5">{selectedProject.category}</Badge>
-                    <Badge className="bg-indigo-500 text-white border-none font-black text-[10px] uppercase tracking-widest px-4 py-1.5">GC: {selectedProject.gc}</Badge>
+                    <Badge className="bg-yellow-100 dark:bg-yellow-500/10 text-yellow-600 border-none font-black text-[10px] uppercase tracking-widest px-4 py-1.5">{selectedProject.category}</Badge>
+                    <Badge className="bg-yellow-400 text-black border-none font-black text-[10px] uppercase tracking-widest px-4 py-1.5">GC: {selectedProject.gc}</Badge>
                   </div>
                   <div className="flex items-center gap-4">
                     <div className="flex items-center gap-1.5 text-xs font-black uppercase tracking-widest">

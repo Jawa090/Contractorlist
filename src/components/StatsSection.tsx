@@ -15,7 +15,7 @@ const StatsSection = () => {
               key={index}
               className="text-center"
             >
-              <div className="text-lg sm:text-xl font-extrabold bg-gradient-to-br from-orange-600 to-yellow-500 bg-clip-text text-transparent mb-0.5">
+              <div className="text-lg sm:text-xl font-extrabold text-[#fce011] mb-0.5">
                 {stat.number}
               </div>
               <div className="text-gray-600 text-[10px] sm:text-xs font-medium">

@@ -45,6 +45,7 @@ import Contractors from "./pages/Contractors";
 import ContractorDetails from "./pages/ContractorDetails";
 import CompanyDetails from "./pages/CompanyDetails";
 import Projects from "./pages/Projects";
+import ProjectDetail from "./pages/ProjectDetail";
 import ContactUs from "./pages/ContactUs";
 import GCDashboard from "./pages/GCDashboard";
 import SubcontractorDashboard from "./pages/SubcontractorDashboard";
@@ -86,10 +87,13 @@ const AppInitializer = () => {
   return null;
 };
 
+import ScrollToTop from "@/components/ScrollToTop";
+
 // AppRoutes component that has access to router and store
 const AppRoutes = () => {
   return (
     <>
+      <ScrollToTop />
       <AppInitializer />
       <RouteThemeManager />
       <Routes>
@@ -127,6 +131,7 @@ const AppRoutes = () => {
         <Route path="/companies/:id" element={<CompanyDetails />} />
         <Route path="/contractor/update/:token" element={<ContractorUpdate />} />
         <Route path="/projects" element={<Projects />} />
+        <Route path="/projects/:id" element={<ProjectDetail />} />
         <Route path="/contact-us" element={<ContactUs />} />
 
         {/* Protected Dashboard Routes */}

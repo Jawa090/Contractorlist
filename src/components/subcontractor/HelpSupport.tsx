@@ -147,11 +147,11 @@ const HelpSupport = () => {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'open':
-        return <Badge className="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300">Open</Badge>;
+        return <Badge className="bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300">Open</Badge>;
       case 'in-progress':
         return <Badge className="bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300">In Progress</Badge>;
       case 'resolved':
-        return <Badge className="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300">Resolved</Badge>;
+        return <Badge className="bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300">Resolved</Badge>;
       default:
         return <Badge>{status}</Badge>;
     }
@@ -215,23 +215,23 @@ const HelpSupport = () => {
 
           <Card className="bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark hover:border-primary/50 transition-colors cursor-pointer">
             <CardContent className="p-5 text-center">
-              <Mail className="w-8 h-8 text-blue-600 mx-auto mb-3" />
+              <Mail className="w-8 h-8 text-[#fce011] mx-auto mb-3" />
               <h3 className="font-semibold mb-1">Email Support</h3>
               <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark mb-2">
                 Response within 24 hours
               </p>
-              <p className="font-bold text-blue-600">support@buildtx.com</p>
+              <p className="font-bold text-black">support@buildtx.com</p>
             </CardContent>
           </Card>
 
           <Card className="bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark hover:border-primary/50 transition-colors cursor-pointer">
             <CardContent className="p-5 text-center">
-              <MessageSquare className="w-8 h-8 text-green-600 mx-auto mb-3" />
+              <MessageSquare className="w-8 h-8 text-[#fce011] mx-auto mb-3" />
               <h3 className="font-semibold mb-1">Live Chat</h3>
               <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark mb-2">
                 Available 24/7
               </p>
-              <Badge className="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300">
+              <Badge className="bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300">
                 Online Now
               </Badge>
             </CardContent>
@@ -399,7 +399,7 @@ const HelpSupport = () => {
                   />
                 </div>
                 <div className="flex gap-2">
-                  <Button 
+                  <Button
                     onClick={handleSubmitTicket}
                     className="bg-primary hover:bg-yellow-400 text-black font-semibold"
                     disabled={!ticketSubject.trim() || !ticketMessage.trim()}

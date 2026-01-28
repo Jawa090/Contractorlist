@@ -21,11 +21,10 @@ const ContractorSection = () => {
           <button
             key={tab}
             onClick={() => setSelectedTab(tab)}
-            className={`pb-2 text-sm sm:text-base font-medium transition-colors ${
-              selectedTab === tab
-                ? "text-black border-b-2 border-yellow-400 font-semibold"
+            className={`pb-2 text-sm sm:text-base font-medium transition-colors ${selectedTab === tab
+                ? "text-black border-b-2 border-[#fce011] font-semibold"
                 : "text-gray-500 hover:text-black border-b-2 border-transparent"
-            }`}
+              }`}
           >
             {tab}
           </button>
@@ -74,10 +73,10 @@ const ContractorSection = () => {
 
             {/* Buttons */}
             <div className="flex space-x-4 justify-center mt-[10%]">
-              <button className="w-[40%] bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-black font-bold px-6 py-3 rounded-full text-sm shadow-[4px_6px_0px_#000000] transform hover:scale-105 transition-all duration-200">
+              <button className="w-[40%] bg-[#fce011] hover:bg-[#fce011]/90 text-black font-bold px-6 py-3 rounded-full text-sm shadow-[4px_6px_0px_#000000] transform hover:scale-105 transition-all duration-200">
                 Join Now
               </button>
-              <button className="w-[40%] bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-black font-bold px-6 py-3 rounded-full text-sm shadow-[4px_6px_0px_#000000] transform hover:scale-105 transition-all duration-200">
+              <button className="w-[40%] bg-[#fce011] hover:bg-[#fce011]/90 text-black font-bold px-6 py-3 rounded-full text-sm shadow-[4px_6px_0px_#000000] transform hover:scale-105 transition-all duration-200">
                 Learn More
               </button>
             </div>

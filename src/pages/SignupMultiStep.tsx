@@ -529,7 +529,7 @@ const SignupMultiStep = () => {
   return (
     <div className="min-h-screen flex">
       {/* Left Sidebar */}
-      <div className="w-72 bg-gradient-to-br from-yellow-400 via-yellow-500 to-orange-500 p-6 flex flex-col">
+      <div className="w-72 bg-[#fce011] p-6 flex flex-col">
         <div className="mb-8">
           <img src="/main-logo.png" alt="ContractorList" className="h-10 w-auto" />
         </div>
@@ -543,7 +543,7 @@ const SignupMultiStep = () => {
               <div className="flex items-center gap-3">
                 <div
                   className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold text-base transition-all flex-shrink-0 ${step.completed
-                    ? "bg-white text-yellow-500 shadow-md"
+                    ? "bg-white text-black shadow-md"
                     : currentStep === step.number
                       ? "bg-gray-900 text-white shadow-md"
                       : "bg-white/20 text-white/70"
@@ -581,7 +581,7 @@ const SignupMultiStep = () => {
             {currentStep === 1 && (
               <div className="space-y-8">
                 <div className="text-center">
-                  <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full mb-4">
+                  <div className="inline-flex items-center justify-center w-16 h-16 bg-[#fce011] rounded-full mb-4">
                     <User className="w-8 h-8 text-white" />
                   </div>
                   <h2 className="text-4xl font-bold text-gray-900 mb-3">Create Your Account</h2>
@@ -744,15 +744,15 @@ const SignupMultiStep = () => {
                     <label className="flex items-start gap-3 cursor-pointer">
                       <input
                         type="checkbox"
-                        className="mt-1 rounded border-gray-300 text-yellow-500 focus:ring-yellow-500 w-4 h-4"
+                        className="mt-1 rounded border-gray-300 text-black focus:ring-[#fce011] w-4 h-4"
                       />
                       <span className="text-sm text-gray-700">
                         I agree to the{" "}
-                        <a href="/terms" className="text-yellow-600 hover:text-yellow-700 font-medium underline">
+                        <a href="/terms" className="text-gray-900 hover:text-black font-medium underline">
                           Terms of Service
                         </a>{" "}
                         and{" "}
-                        <a href="/privacy" className="text-yellow-600 hover:text-yellow-700 font-medium underline">
+                        <a href="/privacy" className="text-gray-900 hover:text-black font-medium underline">
                           Privacy Policy
                         </a>
                       </span>
@@ -1432,7 +1432,7 @@ const SignupMultiStep = () => {
                 type="button"
                 onClick={handleNext}
                 disabled={isLoading}
-                className="ml-auto bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black font-bold px-10 h-12 text-base shadow-lg hover:shadow-xl transition-all"
+                className="ml-auto bg-[#fce011] hover:bg-[#ebd010] text-black font-bold px-10 h-12 text-base shadow-lg hover:shadow-xl transition-all"
               >
                 {currentStep === 4 ? (isLoading ? "Creating Account..." : "Complete Registration") : "Continue"}
               </Button>

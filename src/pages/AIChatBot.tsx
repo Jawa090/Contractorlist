@@ -100,7 +100,7 @@ const AIChatBot = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-yellow-50 relative overflow-hidden">
       {/* Animated Background */}
       <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%23fbbf24%22%20fill-opacity%3D%220.03%22%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2230%22%20r%3D%222%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] animate-pulse"></div>
 
@@ -111,13 +111,13 @@ const AIChatBot = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <div className="inline-flex items-center px-4 py-2 bg-purple-100 text-purple-800 rounded-full text-sm font-bold mb-6">
+              <div className="inline-flex items-center px-4 py-2 bg-[#fce011]/20 text-black rounded-full text-sm font-bold mb-6">
                 <Brain className="w-4 h-4 mr-2" />
                 GPT-4 Powered AI
               </div>
 
               <div className="flex items-center mb-6">
-                <div className="p-4 bg-gradient-to-br from-purple-500 to-violet-600 rounded-2xl mr-6 shadow-lg">
+                <div className="p-4 bg-[#fce011] rounded-2xl mr-6 shadow-lg">
                   <MessageCircle className="h-12 w-12 text-white" />
                   <Brain className="h-6 w-6 text-white/70 absolute -mt-2 ml-8" />
                 </div>
@@ -155,7 +155,7 @@ const AIChatBot = () => {
                   </span>
                 </div>
                 <div className="flex items-center">
-                  <Zap className="w-4 h-4 text-purple-500 mr-2" />
+                  <Zap className="w-4 h-4 text-black mr-2" />
                   <span className="text-sm font-medium text-gray-600">
                     {responseTime.toFixed(1)}s Response
                   </span>
@@ -165,7 +165,7 @@ const AIChatBot = () => {
 
             {/* Interactive Chat Demo */}
             <div className="bg-white/90 backdrop-blur-sm rounded-3xl shadow-2xl border border-gray-200 overflow-hidden">
-              <div className="bg-gradient-to-r from-purple-500 to-violet-600 p-4 text-white">
+              <div className="bg-[#fce011] p-4 text-black">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
                     <div className="w-3 h-3 bg-green-400 rounded-full mr-2 animate-pulse"></div>
@@ -179,20 +179,18 @@ const AIChatBot = () => {
                 {messages.map((message, index) => (
                   <div
                     key={index}
-                    className={`flex ${
-                      message.type === "user" ? "justify-end" : "justify-start"
-                    }`}
+                    className={`flex ${message.type === "user" ? "justify-end" : "justify-start"
+                      }`}
                   >
                     <div
-                      className={`max-w-xs lg:max-w-md px-4 py-2 rounded-2xl ${
-                        message.type === "user"
-                          ? "bg-[#fce011] text-black"
-                          : "bg-gray-100 text-gray-800"
-                      }`}
+                      className={`max-w-xs lg:max-w-md px-4 py-2 rounded-2xl ${message.type === "user"
+                        ? "bg-[#fce011] text-black"
+                        : "bg-gray-100 text-gray-800"
+                        }`}
                     >
                       <div className="flex items-start space-x-2">
                         {message.type === "bot" && (
-                          <Bot className="w-4 h-4 mt-1 text-purple-500 flex-shrink-0" />
+                          <Bot className="w-4 h-4 mt-1 text-black flex-shrink-0" />
                         )}
                         <span className="text-sm">{message.text}</span>
                         {message.type === "user" && (
@@ -206,7 +204,7 @@ const AIChatBot = () => {
                   <div className="flex justify-start">
                     <div className="bg-gray-100 px-4 py-2 rounded-2xl">
                       <div className="flex items-center space-x-1">
-                        <Bot className="w-4 h-4 text-purple-500" />
+                        <Bot className="w-4 h-4 text-black" />
                         <div className="flex space-x-1">
                           <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
                           <div
@@ -227,7 +225,7 @@ const AIChatBot = () => {
               <div className="p-4 border-t border-gray-200">
                 <Button
                   onClick={simulateChat}
-                  className="w-full bg-gradient-to-r from-[#fce011] to-yellow-400 hover:from-yellow-400 hover:to-[#fce011] text-black font-bold py-3 rounded-xl transition-all duration-300"
+                  className="w-full bg-[#fce011] hover:bg-[#ebd010] text-black font-bold py-3 rounded-xl transition-all duration-300"
                 >
                   <Play className="mr-2 h-5 w-5" />
                   Try Interactive Demo
@@ -256,7 +254,7 @@ const AIChatBot = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
             <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-gray-200">
               <div className="flex items-center justify-between mb-4">
-                <MessageCircle className="w-8 h-8 text-purple-500" />
+                <MessageCircle className="w-8 h-8 text-black" />
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
               </div>
               <div className="text-3xl font-bold text-black mb-2">
@@ -267,7 +265,7 @@ const AIChatBot = () => {
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div
-                  className="bg-purple-500 h-2 rounded-full transition-all duration-1000"
+                  className="bg-[#fce011] h-2 rounded-full transition-all duration-1000"
                   style={{ width: `${satisfaction}%` }}
                 ></div>
               </div>
@@ -306,7 +304,7 @@ const AIChatBot = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div>
               <h3 className="text-3xl font-bold text-black mb-8 flex items-center">
-                <Brain className="w-8 h-8 text-purple-500 mr-3" />
+                <Brain className="w-8 h-8 text-black mr-3" />
                 Conversational AI Engine
               </h3>
               <div className="space-y-6">
@@ -317,8 +315,8 @@ const AIChatBot = () => {
                       key={index}
                       className="flex items-start p-4 bg-white/60 backdrop-blur-sm rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300"
                     >
-                      <div className="p-3 bg-purple-100 rounded-lg mr-4 flex-shrink-0">
-                        <IconComponent className="w-6 h-6 text-purple-600" />
+                      <div className="p-3 bg-[#fce011]/10 rounded-lg mr-4 flex-shrink-0">
+                        <IconComponent className="w-6 h-6 text-black" />
                       </div>
                       <div>
                         <h4 className="font-bold text-black mb-2">
@@ -369,7 +367,7 @@ const AIChatBot = () => {
 
               <div className="space-y-4">
                 <Button
-                  className="w-full bg-gradient-to-r from-[#fce011] to-yellow-400 hover:from-yellow-400 hover:to-[#fce011] text-black font-bold py-3 rounded-xl"
+                  className="w-full bg-[#fce011] hover:bg-[#ebd010] text-black font-bold py-3 rounded-xl"
                   size="lg"
                 >
                   <MessageCircle className="mr-2 h-5 w-5" />

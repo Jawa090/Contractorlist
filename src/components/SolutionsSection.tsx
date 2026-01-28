@@ -11,7 +11,7 @@ const SolutionsSection = () => {
       name: "Mike",
       date: "16 August 2025",
       avatar: "M",
-      avatarBg: "bg-gradient-to-br from-teal-500 to-teal-600",
+      avatarBg: "bg-[#fce011]",
       rating: 5,
       review:
         "It’s such a relief to have a trusted resource when looking for reliable, honest, and professional contractors. The contractors are knowledgeable...",
@@ -20,7 +20,7 @@ const SolutionsSection = () => {
       name: "Adrian Charles",
       date: "16 August 2025",
       avatar: "A",
-      avatarBg: "bg-gradient-to-br from-orange-500 to-orange-600",
+      avatarBg: "bg-gradient-to-br from-[#fce011] to-[#fce011]/80",
       rating: 5,
       review:
         "What a blessing it is to have Randy and David providing such an amazing service for homeowners! Putting them first is why I chose...",
@@ -29,7 +29,7 @@ const SolutionsSection = () => {
       name: "Tactical Mav",
       date: "16 August 2025",
       avatar: "T",
-      avatarBg: "bg-gradient-to-br from-yellow-500 to-yellow-600",
+      avatarBg: "bg-[#fce011]",
       rating: 5,
       review:
         "The Good Contractors List is a top-tier service for homeowners! They vet contractors for licensing and reliability, ensuring quality work. The...",
@@ -38,7 +38,7 @@ const SolutionsSection = () => {
       name: "Cesar Gonzalez",
       date: "15 August 2025",
       avatar: "C",
-      avatarBg: "bg-gradient-to-br from-amber-600 to-amber-700",
+      avatarBg: "bg-gradient-to-br from-[#fce011] to-[#fce011]/80",
       rating: 5,
       review:
         "We learned of ways to service our customers and become a bigger blessing to them. Here at MOMENTOUS Construction Group we...",
@@ -47,7 +47,7 @@ const SolutionsSection = () => {
       name: "Admin office",
       date: "15 August 2025",
       avatar: "A",
-      avatarBg: "bg-gradient-to-br from-purple-600 to-purple-700",
+      avatarBg: "bg-[#fce011]",
       rating: 5,
       review:
         "Great company to be a part of. Randy and David were extremely informative and have a heart of protecting the consumer.",
@@ -142,7 +142,7 @@ const SolutionsSection = () => {
                   {[...Array(t.rating)].map((_, j) => (
                     <Star
                       key={j}
-                      className="w-4 h-4 text-yellow-400 fill-yellow-400"
+                      className="w-4 h-4 text-[#fce011] fill-[#fce011]"
                     />
                   ))}
                   <svg
@@ -158,7 +158,7 @@ const SolutionsSection = () => {
                 <p className="text-gray-700 text-sm text-center leading-snug line-clamp-3 mb-2">
                   {t.review}
                 </p>
-                <p className="text-center text-gray-500 text-xs font-medium cursor-pointer hover:text-yellow-500">
+                <p className="text-center text-gray-500 text-xs font-medium cursor-pointer hover:text-[#fce011]">
                   Read more
                 </p>
               </div>

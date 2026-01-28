@@ -64,7 +64,7 @@ const HeroSection = () => {
                 <div className="flex-[2] w-full">
                   <Input
                     placeholder="Search Contractors in your area"
-                    className="h-12 sm:h-14 rounded-full border border-yellow-400 bg-white placeholder:text-gray-400 focus:ring-0 focus:border-yellow-500"
+                    className="h-12 sm:h-14 rounded-full border border-[#fce011] bg-white placeholder:text-gray-400 focus:ring-0 focus:border-[#fce011]"
                     value={serviceQuery}
                     onChange={(e) => setServiceQuery(e.target.value)}
                   />
@@ -72,18 +72,17 @@ const HeroSection = () => {
                 <div className="flex-1 sm:max-w-xs w-full">
                   <Input
                     placeholder="Zip Code"
-                    className="h-12 sm:h-14 rounded-full border border-yellow-400 bg-white placeholder:text-gray-400 focus:ring-0 focus:border-yellow-500"
+                    className="h-12 sm:h-14 rounded-full border border-[#fce011] bg-white placeholder:text-gray-400 focus:ring-0 focus:border-[#fce011]"
                     value={zipCode}
                     onChange={(e) => setZipCode(e.target.value)}
                   />
                 </div>
                 <a
-                  className="inline-flex items-center justify-center whitespace-nowrap bg-[#fce011] hover:bg-[#fce011]/90 text-black font-semibold px-6 sm:px-8 h-12 sm:h-14 rounded-full border border-yellow-500/40 shadow-[0_6px_14px_rgba(0,0,0,0.25)] hover:shadow-[0_8px_18px_rgba(0,0,0,0.28)] transition-shadow"
-                  href={`/contractors?zip=${encodeURIComponent(zipCode)}${
-                    serviceQuery
+                  className="inline-flex items-center justify-center whitespace-nowrap bg-[#fce011] hover:bg-[#fce011]/90 text-black font-semibold px-6 sm:px-8 h-12 sm:h-14 rounded-full border border-[#fce011]/40 shadow-[0_6px_14px_rgba(0,0,0,0.25)] hover:shadow-[0_8px_18px_rgba(0,0,0,0.28)] transition-shadow"
+                  href={`/contractors?zip=${encodeURIComponent(zipCode)}${serviceQuery
                       ? `&service=${encodeURIComponent(serviceQuery)}`
                       : ""
-                  }`}
+                    }`}
                   onClick={(e) => {
                     if (!zipCode) e.preventDefault();
                   }}
@@ -115,7 +114,7 @@ const HeroSection = () => {
                     <Link
                       key={index}
                       to={`/contractors?service=${encodeURIComponent(category.service)}`}
-                      className="flex flex-col items-center justify-center w-[85px] h-[85px] border border-gray-300 rounded-lg bg-gray-300 hover:bg-yellow-400 hover:border-yellow-500 transition-all duration-300 cursor-pointer group"
+                      className="flex flex-col items-center justify-center w-[85px] h-[85px] border border-gray-300 rounded-lg bg-gray-300 hover:bg-[#fce011] hover:border-[#fce011] transition-all duration-300 cursor-pointer group"
                     >
                       <IconComponent className="w-6 h-6 text-black group-hover:text-yellow-900 mb-1 transition-colors duration-300" />
                       <span className="text-[10px] sm:text-xs font-medium text-gray-900 group-hover:text-yellow-900 text-center px-1 leading-tight transition-colors duration-300">

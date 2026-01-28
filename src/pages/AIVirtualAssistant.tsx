@@ -98,8 +98,8 @@ const AIVirtualAssistant = () => {
           task.status === "pending"
             ? { ...task, status: "in-progress" }
             : task.status === "in-progress"
-            ? { ...task, status: "completed" }
-            : task
+              ? { ...task, status: "completed" }
+              : task
         )
       );
       setIsProcessing(false);
@@ -107,7 +107,7 @@ const AIVirtualAssistant = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-orange-50 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-yellow-50 relative overflow-hidden">
       {/* Animated Background */}
       <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%23fbbf24%22%20fill-opacity%3D%220.03%22%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2230%22%20r%3D%222%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] animate-pulse"></div>
 
@@ -118,13 +118,13 @@ const AIVirtualAssistant = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <div className="inline-flex items-center px-4 py-2 bg-orange-100 text-orange-800 rounded-full text-sm font-bold mb-6">
+              <div className="inline-flex items-center px-4 py-2 bg-[#fce011]/20 text-black rounded-full text-sm font-bold mb-6">
                 <Cpu className="w-4 h-4 mr-2" />
                 Automation + Workflow Intelligence
               </div>
 
               <div className="flex items-center mb-6">
-                <div className="p-4 bg-gradient-to-br from-orange-500 to-red-600 rounded-2xl mr-6 shadow-lg">
+                <div className="p-4 bg-[#fce011] rounded-2xl mr-6 shadow-lg">
                   <Bot className="h-12 w-12 text-white" />
                   <Cpu className="h-6 w-6 text-white/70 absolute -mt-2 ml-8" />
                 </div>
@@ -162,7 +162,7 @@ const AIVirtualAssistant = () => {
                   </span>
                 </div>
                 <div className="flex items-center">
-                  <Settings className="w-4 h-4 text-orange-500 mr-2 animate-spin" />
+                  <Settings className="w-4 h-4 text-black mr-2 animate-spin" />
                   <span className="text-sm font-medium text-gray-600">
                     Auto-optimizing
                   </span>
@@ -172,7 +172,7 @@ const AIVirtualAssistant = () => {
 
             {/* Workflow Dashboard */}
             <div className="bg-white/90 backdrop-blur-sm rounded-3xl shadow-2xl border border-gray-200 overflow-hidden">
-              <div className="bg-gradient-to-r from-orange-500 to-red-600 p-4 text-white">
+              <div className="bg-[#fce011] p-4 text-black">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
                     <Bot className="w-6 h-6 mr-2" />
@@ -204,13 +204,12 @@ const AIVirtualAssistant = () => {
                       >
                         <div className="flex items-center space-x-3">
                           <div
-                            className={`w-3 h-3 rounded-full ${
-                              task.status === "completed"
-                                ? "bg-green-400"
-                                : task.status === "in-progress"
-                                ? "bg-blue-400 animate-pulse"
+                            className={`w-3 h-3 rounded-full ${task.status === "completed"
+                              ? "bg-green-400"
+                              : task.status === "in-progress"
+                                ? "bg-[#fce011] animate-pulse"
                                 : "bg-gray-300"
-                            }`}
+                              }`}
                           ></div>
                           <span className="text-sm font-medium text-gray-800">
                             {task.title}
@@ -229,13 +228,13 @@ const AIVirtualAssistant = () => {
                     <span className="text-sm font-medium text-gray-600">
                       Productivity Score
                     </span>
-                    <span className="text-sm font-bold text-orange-600">
+                    <span className="text-sm font-bold text-black">
                       {productivity.toFixed(1)}%
                     </span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
                     <div
-                      className="bg-gradient-to-r from-orange-400 to-red-500 h-2 rounded-full transition-all duration-1000"
+                      className="bg-[#fce011] h-2 rounded-full transition-all duration-1000"
                       style={{ width: `${productivity}%` }}
                     ></div>
                   </div>
@@ -244,7 +243,7 @@ const AIVirtualAssistant = () => {
                 <Button
                   onClick={simulateWorkflow}
                   disabled={isProcessing}
-                  className="w-full bg-gradient-to-r from-[#fce011] to-yellow-400 hover:from-yellow-400 hover:to-[#fce011] text-black font-bold py-3 rounded-xl transition-all duration-300 transform hover:scale-105"
+                  className="w-full bg-[#fce011] hover:bg-[#ebd010] text-black font-bold py-3 rounded-xl transition-all duration-300 transform hover:scale-105"
                 >
                   <Play className="mr-2 h-5 w-5" />
                   {isProcessing
@@ -274,7 +273,7 @@ const AIVirtualAssistant = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
             <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-gray-200">
               <div className="flex items-center justify-between mb-4">
-                <Zap className="w-8 h-8 text-orange-500" />
+                <Zap className="w-8 h-8 text-black" />
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
               </div>
               <div className="text-3xl font-bold text-black mb-2">5x</div>
@@ -282,14 +281,14 @@ const AIVirtualAssistant = () => {
                 Productivity Increase
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
-                <div className="bg-orange-500 h-2 rounded-full w-full"></div>
+                <div className="bg-[#fce011] h-2 rounded-full w-full"></div>
               </div>
             </div>
 
             <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-gray-200">
               <div className="flex items-center justify-between mb-4">
-                <CheckSquare className="w-8 h-8 text-blue-500" />
-                <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
+                <CheckSquare className="w-8 h-8 text-black" />
+                <div className="w-2 h-2 bg-[#fce011] rounded-full animate-pulse"></div>
               </div>
               <div className="text-3xl font-bold text-black mb-2">
                 {automatedTasks}
@@ -298,13 +297,13 @@ const AIVirtualAssistant = () => {
                 Tasks Automated Today
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
-                <div className="bg-blue-500 h-2 rounded-full w-4/5 animate-pulse"></div>
+                <div className="bg-[#fce011] h-2 rounded-full w-4/5 animate-pulse"></div>
               </div>
             </div>
 
             <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-gray-200">
               <div className="flex items-center justify-between mb-4">
-                <Clock className="w-8 h-8 text-green-500" />
+                <Clock className="w-8 h-8 text-black" />
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
               </div>
               <div className="text-3xl font-bold text-black mb-2">50%</div>
@@ -312,7 +311,7 @@ const AIVirtualAssistant = () => {
                 Time Saved Weekly
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
-                <div className="bg-green-500 h-2 rounded-full w-1/2"></div>
+                <div className="bg-[#fce011] h-2 rounded-full w-1/2"></div>
               </div>
             </div>
           </div>
@@ -321,7 +320,7 @@ const AIVirtualAssistant = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div>
               <h3 className="text-3xl font-bold text-black mb-8 flex items-center">
-                <Brain className="w-8 h-8 text-orange-500 mr-3" />
+                <Brain className="w-8 h-8 text-black mr-3" />
                 Intelligent Automation Engine
               </h3>
               <div className="space-y-6">
@@ -332,8 +331,8 @@ const AIVirtualAssistant = () => {
                       key={index}
                       className="flex items-start p-4 bg-white/60 backdrop-blur-sm rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300"
                     >
-                      <div className="p-3 bg-orange-100 rounded-lg mr-4 flex-shrink-0">
-                        <IconComponent className="w-6 h-6 text-orange-600" />
+                      <div className="p-3 bg-[#fce011]/10 rounded-lg mr-4 flex-shrink-0">
+                        <IconComponent className="w-6 h-6 text-[#fce011]" />
                       </div>
                       <div>
                         <h4 className="font-bold text-black mb-2">

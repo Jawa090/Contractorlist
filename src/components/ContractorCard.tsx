@@ -34,13 +34,13 @@ interface ContractorCardProps {
   featured?: boolean;
 }
 
-const ContractorCard = ({ 
-  contractor, 
-  onViewProfile, 
-  onCall, 
-  onEmail, 
+const ContractorCard = ({
+  contractor,
+  onViewProfile,
+  onCall,
+  onEmail,
   onWebsite,
-  featured = false 
+  featured = false
 }: ContractorCardProps) => {
   const photo = '/images.png';
   const rating = contractor.rating?.average ?? contractor.rating ?? 4.8;
@@ -76,22 +76,21 @@ const ContractorCard = ({
       'flooring': Home,
       'landscaping': Home
     };
-    
+
     const key = service.toLowerCase();
     return iconMap[key] || Wrench;
   };
 
   return (
-    <Card className={`bg-white border hover:shadow-xl transition-all duration-300 cursor-pointer group relative overflow-hidden ${
-      featured ? 'ring-2 ring-yellow-400 shadow-lg' : ''
-    }`}>
+    <Card className={`bg-white border hover:shadow-xl transition-all duration-300 cursor-pointer group relative overflow-hidden ${featured ? 'ring-2 ring-[#fce011] shadow-lg' : ''
+      }`}>
       {featured && (
-        <div className="absolute top-0 right-0 bg-gradient-to-l from-yellow-400 to-yellow-500 text-black px-3 py-1 text-xs font-bold">
+        <div className="absolute top-0 right-0 bg-[#fce011] text-black px-3 py-1 text-xs font-bold">
           <Award className="w-3 h-3 inline mr-1" />
           FEATURED
         </div>
       )}
-      
+
       <CardContent className="p-6">
         <div className="flex gap-6">
           {/* Contractor Image */}
@@ -100,7 +99,7 @@ const ContractorCard = ({
               <img
                 src={photo}
                 alt={contractor.name}
-                className="w-28 h-28 rounded-xl object-cover border-2 border-gray-200 group-hover:border-yellow-400 transition-colors"
+                className="w-28 h-28 rounded-xl object-cover border-2 border-gray-200 group-hover:border-[#fce011] transition-colors"
               />
               <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 rounded-xl transition-all duration-300 flex items-center justify-center">
                 <Eye className="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -111,7 +110,7 @@ const ContractorCard = ({
                 </div>
               )}
             </div>
-            
+
             {/* Quick Stats */}
             <div className="mt-3 space-y-1">
               <div className="flex items-center gap-1 text-xs text-gray-600">
@@ -130,7 +129,7 @@ const ContractorCard = ({
             <div className="flex items-start justify-between mb-3">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
-                  <h3 className="text-xl font-bold text-gray-900 group-hover:text-yellow-600 transition-colors truncate">
+                  <h3 className="text-xl font-bold text-gray-900 group-hover:text-[#fce011] transition-colors truncate">
                     {contractor.name}
                   </h3>
                   {isVerified && (
@@ -140,7 +139,7 @@ const ContractorCard = ({
                     </Badge>
                   )}
                 </div>
-                
+
                 <div className="flex items-center gap-4 text-sm text-gray-600 mb-2">
                   <div className="flex items-center gap-1">
                     <MapPin className="w-4 h-4 flex-shrink-0" />
@@ -152,9 +151,9 @@ const ContractorCard = ({
                 <div className="flex items-center gap-2 mb-3">
                   <div className="flex items-center">
                     {Array.from({ length: 5 }).map((_, i) => (
-                      <Star 
-                        key={i} 
-                        className={`w-4 h-4 ${i < Math.round(rating) ? 'text-yellow-500 fill-current' : 'text-gray-300'}`} 
+                      <Star
+                        key={i}
+                        className={`w-4 h-4 ${i < Math.round(rating) ? 'text-[#fce011] fill-current' : 'text-gray-300'}`}
                       />
                     ))}
                   </div>
@@ -192,7 +191,7 @@ const ContractorCard = ({
                 <Briefcase className="w-3 h-3 mr-1" />
                 {yearsInBusiness} Years
               </Badge>
-              <Badge variant="outline" className="text-xs bg-orange-50 text-orange-700 border-orange-200">
+              <Badge variant="outline" className="text-xs bg-yellow-50 text-black border-yellow-200">
                 <Clock className="w-3 h-3 mr-1" />
                 Available Now
               </Badge>
@@ -249,7 +248,7 @@ const ContractorCard = ({
                 <div className="flex items-start gap-2">
                   <div className="flex items-center">
                     {Array.from({ length: 5 }).map((_, i) => (
-                      <Star key={i} className={`w-3 h-3 ${i < (contractor.reviews[0].rating || 5) ? 'text-yellow-500 fill-current' : 'text-gray-300'}`} />
+                      <Star key={i} className={`w-3 h-3 ${i < (contractor.reviews[0].rating || 5) ? 'text-[#fce011] fill-current' : 'text-gray-300'}`} />
                     ))}
                   </div>
                   <p className="text-xs text-gray-700 line-clamp-2 flex-1">
@@ -266,7 +265,7 @@ const ContractorCard = ({
             <div className="flex flex-wrap items-center gap-2">
               <Button
                 size="sm"
-                className="bg-yellow-500 hover:bg-yellow-600 text-black font-medium"
+                className="bg-[#fce011] hover:bg-[#fce011]/90 text-black font-medium"
                 onClick={(e) => {
                   e.stopPropagation();
                   onCall(phone);
@@ -275,7 +274,7 @@ const ContractorCard = ({
                 <Phone className="w-4 h-4 mr-2" />
                 Call Now
               </Button>
-              
+
               <Button
                 variant="outline"
                 size="sm"

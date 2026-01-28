@@ -260,10 +260,10 @@ const EnhancedMessages = () => {
 
   const filteredConversations = conversations.filter(conv => {
     const matchesSearch = conv.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesTab = activeTab === 'all' || 
-                      (activeTab === 'unread' && conv.unreadCount > 0) ||
-                      (activeTab === 'pinned' && conv.pinned) ||
-                      (activeTab === 'archived' && conv.archived);
+    const matchesTab = activeTab === 'all' ||
+      (activeTab === 'unread' && conv.unreadCount > 0) ||
+      (activeTab === 'pinned' && conv.pinned) ||
+      (activeTab === 'archived' && conv.archived);
     return matchesSearch && matchesTab;
   });
 
@@ -287,10 +287,10 @@ const EnhancedMessages = () => {
     setMessages(prev => [...prev, message]);
     setNewMessage('');
     setReplyingTo(null);
-    
+
     // Update conversation last message
-    setConversations(prev => prev.map(conv => 
-      conv.id === selectedConversation 
+    setConversations(prev => prev.map(conv =>
+      conv.id === selectedConversation
         ? { ...conv, lastMessage: message }
         : conv
     ));
@@ -305,8 +305,8 @@ const EnhancedMessages = () => {
             // Remove reaction
             return {
               ...msg,
-              reactions: msg.reactions.map(r => 
-                r.emoji === emoji 
+              reactions: msg.reactions.map(r =>
+                r.emoji === emoji
                   ? { ...r, users: r.users.filter(u => u !== 'me'), count: r.count - 1 }
                   : r
               ).filter(r => r.count > 0)
@@ -315,8 +315,8 @@ const EnhancedMessages = () => {
             // Add reaction
             return {
               ...msg,
-              reactions: msg.reactions.map(r => 
-                r.emoji === emoji 
+              reactions: msg.reactions.map(r =>
+                r.emoji === emoji
                   ? { ...r, users: [...r.users, 'me'], count: r.count + 1 }
                   : r
               )
@@ -351,7 +351,7 @@ const EnhancedMessages = () => {
   const getMessageStatus = (message: Message) => {
     if (message.senderId === 'me') {
       if (message.readBy.length > 0) {
-        return <CheckCheck className="w-4 h-4 text-blue-500" />;
+        return <CheckCheck className="w-4 h-4 text-yellow-500" />;
       } else {
         return <Check className="w-4 h-4 text-gray-400" />;
       }
@@ -396,7 +396,7 @@ const EnhancedMessages = () => {
                     {conversations.reduce((sum, conv) => sum + conv.unreadCount, 0)} unread
                   </Badge>
                 </div>
-                
+
                 {/* Search */}
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
@@ -425,9 +425,8 @@ const EnhancedMessages = () => {
                     {filteredConversations.map((conversation) => (
                       <div
                         key={conversation.id}
-                        className={`p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors ${
-                          selectedConversation === conversation.id ? 'bg-primary/10 border-r-2 border-primary' : ''
-                        }`}
+                        className={`p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors ${selectedConversation === conversation.id ? 'bg-primary/10 border-r-2 border-primary' : ''
+                          }`}
                         onClick={() => setSelectedConversation(conversation.id)}
                       >
                         <div className="flex items-start gap-3">
@@ -446,7 +445,7 @@ const EnhancedMessages = () => {
                               <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white dark:border-gray-900"></div>
                             )}
                           </div>
-                          
+
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center justify-between">
                               <div className="flex items-center gap-2">
@@ -467,17 +466,17 @@ const EnhancedMessages = () => {
                                 )}
                               </div>
                             </div>
-                            
+
                             <div className="flex items-center gap-2 mt-1">
                               <Badge variant="outline" className="text-xs">
-                                {conversation.type === 'project' ? 'Project' : 
-                                 conversation.type === 'group' ? 'Group' : 'Direct'}
+                                {conversation.type === 'project' ? 'Project' :
+                                  conversation.type === 'group' ? 'Group' : 'Direct'}
                               </Badge>
                               <span className="text-xs text-gray-500">
                                 {conversation.participants.length} participants
                               </span>
                             </div>
-                            
+
                             {conversation.lastMessage && (
                               <p className="text-sm text-gray-600 dark:text-gray-400 truncate mt-1">
                                 {conversation.lastMessage.content}
@@ -518,14 +517,14 @@ const EnhancedMessages = () => {
                             {currentConversation.participants.filter(p => p.online && p.id !== 'me').length} online
                           </span>
                           {typingUsers.length > 0 && (
-                            <span className="text-blue-500">
+                            <span className="text-yellow-500">
                               {typingUsers.join(', ')} typing...
                             </span>
                           )}
                         </div>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center gap-2">
                       <Button variant="ghost" size="sm">
                         <Phone className="w-4 h-4" />
@@ -558,29 +557,28 @@ const EnhancedMessages = () => {
                               <AvatarFallback>{message.senderName.charAt(0)}</AvatarFallback>
                             </Avatar>
                           )}
-                          
+
                           <div className={`max-w-[70%] ${message.senderId === 'me' ? 'order-first' : ''}`}>
                             {message.replyTo && (
                               <div className="text-xs text-gray-500 mb-1 p-2 bg-gray-100 dark:bg-gray-800 rounded border-l-2 border-gray-300">
                                 Replying to previous message
                               </div>
                             )}
-                            
+
                             <div
-                              className={`p-3 rounded-lg ${
-                                message.senderId === 'me'
+                              className={`p-3 rounded-lg ${message.senderId === 'me'
                                   ? 'bg-primary text-black ml-auto'
                                   : 'bg-gray-100 dark:bg-gray-800'
-                              }`}
+                                }`}
                             >
                               {message.senderId !== 'me' && (
                                 <p className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
                                   {message.senderName}
                                 </p>
                               )}
-                              
+
                               <p className="text-sm">{message.content}</p>
-                              
+
                               {message.attachments.length > 0 && (
                                 <div className="mt-2 space-y-2">
                                   {message.attachments.map((attachment) => (
@@ -594,7 +592,7 @@ const EnhancedMessages = () => {
                                   ))}
                                 </div>
                               )}
-                              
+
                               <div className="flex items-center justify-between mt-2">
                                 <span className="text-xs opacity-70">
                                   {formatTimestamp(message.timestamp)}
@@ -603,18 +601,17 @@ const EnhancedMessages = () => {
                                 {getMessageStatus(message)}
                               </div>
                             </div>
-                            
+
                             {/* Reactions */}
                             {message.reactions.length > 0 && (
                               <div className="flex gap-1 mt-1">
                                 {message.reactions.map((reaction) => (
                                   <button
                                     key={reaction.emoji}
-                                    className={`text-xs px-2 py-1 rounded-full border ${
-                                      reaction.users.includes('me')
+                                    className={`text-xs px-2 py-1 rounded-full border ${reaction.users.includes('me')
                                         ? 'bg-primary/20 border-primary'
                                         : 'bg-gray-100 dark:bg-gray-800 border-gray-300'
-                                    }`}
+                                      }`}
                                     onClick={() => addReaction(message.id, reaction.emoji)}
                                   >
                                     {reaction.emoji} {reaction.count}
@@ -628,7 +625,7 @@ const EnhancedMessages = () => {
                                 </button>
                               </div>
                             )}
-                            
+
                             {/* Quick reactions */}
                             <div className="flex gap-1 mt-1 opacity-0 hover:opacity-100 transition-opacity">
                               {['👍', '❤️', '😂', '😮', '😢', '😡'].map((emoji) => (
@@ -648,7 +645,7 @@ const EnhancedMessages = () => {
                               </button>
                             </div>
                           </div>
-                          
+
                           {message.senderId === 'me' && (
                             <Avatar className="w-8 h-8">
                               <AvatarFallback>You</AvatarFallback>
@@ -674,7 +671,7 @@ const EnhancedMessages = () => {
                       <p className="text-gray-600 dark:text-gray-400 truncate">{replyingTo.content}</p>
                     </div>
                   )}
-                  
+
                   <div className="flex items-end gap-2">
                     <div className="flex-1">
                       <Textarea
@@ -690,7 +687,7 @@ const EnhancedMessages = () => {
                         className="min-h-[40px] max-h-[120px] resize-none"
                       />
                     </div>
-                    
+
                     <div className="flex items-center gap-1">
                       <Button variant="ghost" size="sm">
                         <Paperclip className="w-4 h-4" />
@@ -701,7 +698,7 @@ const EnhancedMessages = () => {
                       <Button variant="ghost" size="sm">
                         <Smile className="w-4 h-4" />
                       </Button>
-                      <Button 
+                      <Button
                         onClick={sendMessage}
                         disabled={!newMessage.trim()}
                         className="bg-primary hover:bg-yellow-400 text-black"

@@ -61,19 +61,19 @@ const MyProjects = () => {
 
   const getStatusStyle = (status: string) => {
     switch (status) {
-      case 'ON-TRACK': return "bg-green-400/10 text-green-600 dark:text-green-500";
+      case 'ON-TRACK': return "bg-yellow-400/10 text-yellow-600 dark:text-yellow-500";
       case 'AT-RISK': return "bg-yellow-400/10 text-yellow-600 dark:text-yellow-500";
-      case 'AHEAD': return "bg-blue-400/10 text-blue-600 dark:text-blue-400";
+      case 'AHEAD': return "bg-yellow-400/10 text-yellow-600 dark:text-yellow-500";
       case 'DELAYED': return "bg-red-400/10 text-red-600 dark:text-red-500";
       default: return "bg-gray-100 text-gray-800";
     }
   };
 
   const getProgressColor = (status: string) => {
-    if (status === 'AHEAD') return 'bg-blue-500';
+    if (status === 'AHEAD') return 'bg-yellow-500';
     if (status === 'AT-RISK') return 'bg-yellow-500';
     if (status === 'DELAYED') return 'bg-red-500';
-    return 'bg-green-500';
+    return 'bg-yellow-500';
   };
 
   const handleMissionControl = (project: Deployment) => {
@@ -116,7 +116,7 @@ const MyProjects = () => {
           {[
             { label: 'ACTIVE FLEET', value: deployments.length.toString().padStart(2, '0'), sub: 'OPERATIONAL UNITS', icon: Activity, color: 'text-yellow-500' },
             { label: 'AVG EFFICIENCY', value: '0%', sub: 'NO DATA YET', icon: TrendingUp, color: 'text-gray-500' },
-            { label: 'PERSONNEL', value: deployments.reduce((acc, d) => acc + d.team, 0).toString(), sub: 'TOTAL FIELD DEPLOYED', icon: Users, color: 'text-blue-500' },
+            { label: 'PERSONNEL', value: deployments.reduce((acc, d) => acc + d.team, 0).toString(), sub: 'TOTAL FIELD DEPLOYED', icon: Users, color: 'text-yellow-500' },
             { label: 'TRUST SCORE', value: 'N/A', sub: 'AWAITING FEEDBACK', icon: Shield, color: 'text-gray-500' },
           ].map((stat, i) => (
             <Card key={i} className="bg-white dark:bg-[#1c1e24] border-gray-100 dark:border-white/5 shadow-sm rounded-2xl overflow-hidden group hover:border-yellow-400/50 transition-all">
@@ -180,7 +180,7 @@ const MyProjects = () => {
                             <div className="flex flex-wrap items-center gap-4 text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                               <span className="flex items-center gap-1.5"><Building className="w-3.5 h-3.5 text-yellow-500" /> {project.client}</span>
                               <span className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-yellow-500" /> {project.location}</span>
-                              <span className="flex items-center gap-1.5 text-green-600"><DollarSign className="w-3.5 h-3.5" /> {project.value}</span>
+                              <span className="flex items-center gap-1.5 text-yellow-600"><DollarSign className="w-3.5 h-3.5" /> {project.value}</span>
                             </div>
                           </div>
                           <Button variant="ghost" size="icon" className="h-10 w-10 text-gray-400 hover:text-yellow-500">
@@ -296,7 +296,7 @@ const MyProjects = () => {
             <div className="grid grid-cols-2 gap-4 mb-8">
               <div className="p-4 bg-gray-50 dark:bg-white/5 rounded-2xl border border-gray-100 dark:border-white/5">
                 <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-1">Contract Scale</span>
-                <span className="text-xl font-bold text-green-600 font-mono">{selectedProject?.value}</span>
+                <span className="text-xl font-bold text-yellow-600 font-mono">{selectedProject?.value}</span>
               </div>
               <div className="p-4 bg-gray-50 dark:bg-white/5 rounded-2xl border border-gray-100 dark:border-white/5">
                 <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-1">Execution Phase</span>
@@ -315,10 +315,10 @@ const MyProjects = () => {
                 </div>
               </div>
 
-              <div className="flex gap-4 p-4 bg-blue-500/5 border border-blue-500/10 rounded-2xl">
-                <Activity className="w-5 h-5 text-blue-500 shrink-0" />
+              <div className="flex gap-4 p-4 bg-yellow-400/5 border border-yellow-400/10 rounded-2xl">
+                <Activity className="w-5 h-5 text-yellow-600 shrink-0" />
                 <div className="space-y-1">
-                  <p className="text-xs font-bold uppercase tracking-tight text-blue-700 dark:text-blue-400">Tactical Recommendation</p>
+                  <p className="text-xs font-bold uppercase tracking-tight text-yellow-700 dark:text-yellow-400">Tactical Recommendation</p>
                   <p className="text-[11px] font-medium text-gray-500 dark:text-gray-400">
                     Target milestones are within nominal parameters. Personnel allocation is optimized for {selectedProject?.phase} phase.
                   </p>

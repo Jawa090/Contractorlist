@@ -74,30 +74,30 @@ const AIQuantityTakeOff = () => {
       label: "Processing Speed",
       value: "10x Faster",
       icon: Zap,
-      color: "text-green-500",
+      color: "text-black",
     },
     {
       label: "Accuracy Rate",
       value: `${accuracy.toFixed(1)}%`,
       icon: Target,
-      color: "text-blue-500",
+      color: "text-black",
     },
     {
       label: "Files Processed",
       value: processedFiles.toLocaleString(),
       icon: FileImage,
-      color: "text-purple-500",
+      color: "text-black",
     },
     {
       label: "Time Saved",
       value: "85% Average",
       icon: Clock,
-      color: "text-orange-500",
+      color: "text-black",
     },
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-yellow-50 relative overflow-hidden">
       {/* Animated Background */}
       <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%23fbbf24%22%20fill-opacity%3D%220.03%22%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2230%22%20r%3D%222%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] animate-pulse"></div>
 
@@ -108,13 +108,13 @@ const AIQuantityTakeOff = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <div className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-bold mb-6">
+              <div className="inline-flex items-center px-4 py-2 bg-[#fce011]/20 text-black rounded-full text-sm font-bold mb-6">
                 <Brain className="w-4 h-4 mr-2" />
                 Computer Vision AI
               </div>
 
               <div className="flex items-center mb-6">
-                <div className="p-4 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl mr-6 shadow-lg ">
+                <div className="p-4 bg-[#fce011] rounded-2xl mr-6 shadow-lg ">
                   <Calculator className="h-12 w-12 text-white" />
                   <Eye className="h-6 w-6 text-white/70 absolute -mt-2 ml-8" />
                 </div>
@@ -153,7 +153,7 @@ const AIQuantityTakeOff = () => {
                   </span>
                 </div>
                 <div className="flex items-center">
-                  <Shield className="w-4 h-4 text-blue-500 mr-2" />
+                  <Shield className="w-4 h-4 text-black mr-2" />
                   <span className="text-sm font-medium text-gray-600">
                     Enterprise Security
                   </span>
@@ -176,7 +176,7 @@ const AIQuantityTakeOff = () => {
                   <span className="text-sm font-medium">
                     Blueprint Analysis
                   </span>
-                  <span className="text-sm text-green-600 font-bold">
+                  <span className="text-sm text-black font-bold">
                     Complete
                   </span>
                 </div>
@@ -184,23 +184,23 @@ const AIQuantityTakeOff = () => {
                   <span className="text-sm font-medium">
                     Material Detection
                   </span>
-                  <span className="text-sm text-green-600 font-bold">
+                  <span className="text-sm text-black font-bold">
                     99.8% Accuracy
                   </span>
                 </div>
-                <div className="flex justify-between items-center p-3 bg-blue-50 rounded-lg">
+                <div className="flex justify-between items-center p-3 bg-[#fce011]/10 rounded-lg">
                   <span className="text-sm font-medium">
                     Quantity Calculation
                   </span>
-                  <div className="w-16 h-2 bg-blue-200 rounded-full overflow-hidden">
-                    <div className="w-full h-full bg-blue-500 animate-pulse"></div>
+                  <div className="w-16 h-2 bg-[#fce011]/20 rounded-full overflow-hidden">
+                    <div className="w-full h-full bg-[#fce011] animate-pulse"></div>
                   </div>
                 </div>
               </div>
 
               <Button
                 onClick={() => setIsProcessing(!isProcessing)}
-                className="w-full bg-gradient-to-r from-[#fce011] to-yellow-400 hover:from-yellow-400 hover:to-[#fce011] text-black font-bold py-3 rounded-xl transition-all duration-300 transform hover:scale-105"
+                className="w-full bg-[#fce011] hover:bg-[#ebd010] text-black font-bold py-3 rounded-xl transition-all duration-300 transform hover:scale-105"
               >
                 <Play className="mr-2 h-5 w-5" />
                 {isProcessing ? "Processing..." : "Start AI Analysis"}
@@ -350,7 +350,7 @@ const AIQuantityTakeOff = () => {
           <div className="w-40 h-1 bg-gradient-to-r from-[#fce011] to-yellow-400 mx-auto rounded-full mb-10 animate-bounce"></div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <Card className="border-2 border-blue-200 hover:border-blue-400 transition-colors">
+            <Card className="border-2 border-[#fce011]/30 hover:border-[#fce011] transition-colors">
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <Cpu className="w-6 h-6 text-blue-600 mr-2" />
@@ -408,7 +408,7 @@ const AIQuantityTakeOff = () => {
               </CardContent>
             </Card>
 
-            <Card className="border-2 border-purple-200 hover:border-purple-400 transition-colors">
+            <Card className="border-2 border-[#fce011]/30 hover:border-[#fce011] transition-colors">
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <Shield className="w-6 h-6 text-purple-600 mr-2" />
@@ -567,11 +567,10 @@ const AIQuantityTakeOff = () => {
             ].map((plan, index) => (
               <Card
                 key={index}
-                className={`${
-                  plan.popular
+                className={`${plan.popular
                     ? "border-2 border-yellow-400 scale-105"
                     : "border border-gray-700"
-                } bg-gray-800/50 backdrop-blur-sm`}
+                  } bg-gray-800/50 backdrop-blur-sm`}
               >
                 {plan.popular && (
                   <div className="bg-yellow-400 text-black text-center py-2 text-sm font-bold rounded-t-lg">
@@ -597,11 +596,10 @@ const AIQuantityTakeOff = () => {
                     ))}
                   </ul>
                   <Button
-                    className={`w-full ${
-                      plan.popular
+                    className={`w-full ${plan.popular
                         ? "bg-yellow-400 hover:bg-yellow-500 text-black"
                         : "bg-white hover:bg-gray-100 text-black"
-                    } font-bold py-3`}
+                      } font-bold py-3`}
                   >
                     {plan.name === "Enterprise"
                       ? "Contact Sales"

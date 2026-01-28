@@ -309,12 +309,12 @@ const AdvancedProjectManagement = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'completed': return 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300';
-      case 'active': case 'in-progress': return 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300';
+      case 'completed': return 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300';
+      case 'active': case 'in-progress': return 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300';
       case 'on-hold': return 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300';
       case 'cancelled': return 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300';
       case 'todo': return 'bg-gray-100 dark:bg-gray-900/30 text-gray-800 dark:text-gray-300';
-      case 'review': return 'bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300';
+      case 'review': return 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300';
       default: return 'bg-gray-100 dark:bg-gray-900/30 text-gray-800 dark:text-gray-300';
     }
   };
@@ -324,7 +324,7 @@ const AdvancedProjectManagement = () => {
       case 'critical': return 'text-red-600 bg-red-100 dark:bg-red-900/30';
       case 'high': return 'text-orange-600 bg-orange-100 dark:bg-orange-900/30';
       case 'medium': return 'text-yellow-600 bg-yellow-100 dark:bg-yellow-900/30';
-      case 'low': return 'text-green-600 bg-green-100 dark:bg-green-900/30';
+      case 'low': return 'text-yellow-600 bg-yellow-100 dark:bg-yellow-900/30';
       default: return 'text-gray-600 bg-gray-100 dark:bg-gray-900/30';
     }
   };
@@ -361,14 +361,14 @@ const AdvancedProjectManagement = () => {
             <div className="flex items-center justify-between">
               <h3 className="font-semibold capitalize flex items-center gap-2">
                 {status === 'todo' && <Circle className="w-4 h-4 text-gray-500" />}
-                {status === 'in-progress' && <Play className="w-4 h-4 text-blue-500" />}
-                {status === 'review' && <Eye className="w-4 h-4 text-purple-500" />}
-                {status === 'completed' && <CheckCircle className="w-4 h-4 text-green-500" />}
+                {status === 'in-progress' && <Play className="w-4 h-4 text-yellow-500" />}
+                {status === 'review' && <Eye className="w-4 h-4 text-yellow-500" />}
+                {status === 'completed' && <CheckCircle className="w-4 h-4 text-yellow-500" />}
                 {status.replace('-', ' ')}
               </h3>
               <Badge variant="outline">{tasks.length}</Badge>
             </div>
-            
+
             <div className="space-y-3">
               {tasks.map((task) => (
                 <Card key={task.id} className="p-4 cursor-pointer hover:shadow-md transition-shadow">
@@ -379,11 +379,11 @@ const AdvancedProjectManagement = () => {
                         {task.priority}
                       </Badge>
                     </div>
-                    
+
                     <p className="text-xs text-gray-600 dark:text-gray-400 line-clamp-2">
                       {task.description}
                     </p>
-                    
+
                     <div className="space-y-2">
                       <div className="flex items-center justify-between text-xs">
                         <span>Progress</span>
@@ -391,7 +391,7 @@ const AdvancedProjectManagement = () => {
                       </div>
                       <Progress value={task.progress} className="h-1" />
                     </div>
-                    
+
                     <div className="flex items-center justify-between text-xs text-gray-500">
                       <span>{formatDate(task.endDate)}</span>
                       <div className="flex items-center gap-1">
@@ -399,7 +399,7 @@ const AdvancedProjectManagement = () => {
                         <span>{task.actualHours || 0}h / {task.estimatedHours}h</span>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center justify-between">
                       <span className="text-xs text-gray-600">{task.assignee}</span>
                       <div className="flex items-center gap-1">
@@ -411,7 +411,7 @@ const AdvancedProjectManagement = () => {
                   </div>
                 </Card>
               ))}
-              
+
               <Button variant="outline" className="w-full border-dashed">
                 <Plus className="w-4 h-4 mr-2" />
                 Add Task
@@ -445,7 +445,7 @@ const AdvancedProjectManagement = () => {
                 );
               })}
             </div>
-            
+
             {/* Tasks */}
             <div className="space-y-2">
               {tasks.map((task) => {
@@ -453,18 +453,17 @@ const AdvancedProjectManagement = () => {
                 const taskDuration = Math.ceil((task.endDate.getTime() - task.startDate.getTime()) / (1000 * 60 * 60 * 24));
                 const taskWidth = (taskDuration / totalDays) * 100;
                 const taskLeft = (taskStart / totalDays) * 100;
-                
+
                 return (
                   <div key={task.id} className="relative">
                     <div className="flex items-center gap-4 py-2">
                       <div className="w-48 text-sm font-medium truncate">{task.name}</div>
                       <div className="flex-1 relative h-8 bg-gray-100 dark:bg-gray-800 rounded">
                         <div
-                          className={`absolute top-0 h-full rounded flex items-center px-2 text-xs text-white ${
-                            task.status === 'completed' ? 'bg-green-500' :
-                            task.status === 'in-progress' ? 'bg-blue-500' :
-                            task.status === 'review' ? 'bg-purple-500' : 'bg-gray-400'
-                          }`}
+                          className={`absolute top-0 h-full rounded flex items-center px-2 text-xs text-black ${task.status === 'completed' ? 'bg-yellow-400' :
+                              task.status === 'in-progress' ? 'bg-yellow-300' :
+                                task.status === 'review' ? 'bg-yellow-200' : 'bg-gray-400'
+                            }`}
                           style={{
                             left: `${taskLeft}%`,
                             width: `${taskWidth}%`
@@ -487,25 +486,24 @@ const AdvancedProjectManagement = () => {
 
   const TimelineView = () => {
     const events = currentProject?.timeline || [];
-    
+
     return (
       <div className="space-y-4">
         <div className="relative">
           <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gray-300 dark:bg-gray-600"></div>
-          
+
           <div className="space-y-6">
             {events.map((event, index) => (
               <div key={event.id} className="relative flex items-start gap-4">
-                <div className={`relative z-10 w-8 h-8 rounded-full flex items-center justify-center ${
-                  event.status === 'completed' ? 'bg-green-500' :
-                  event.status === 'upcoming' ? 'bg-blue-500' : 'bg-red-500'
-                }`}>
+                <div className={`relative z-10 w-8 h-8 rounded-full flex items-center justify-center ${event.status === 'completed' ? 'bg-yellow-400' :
+                    event.status === 'upcoming' ? 'bg-yellow-300' : 'bg-red-500'
+                  }`}>
                   {event.type === 'milestone' && <Target className="w-4 h-4 text-white" />}
                   {event.type === 'task' && <CheckCircle className="w-4 h-4 text-white" />}
                   {event.type === 'meeting' && <Users className="w-4 h-4 text-white" />}
                   {event.type === 'delivery' && <FileText className="w-4 h-4 text-white" />}
                 </div>
-                
+
                 <div className="flex-1 pb-6">
                   <div className="flex items-center justify-between">
                     <h3 className="font-semibold">{event.title}</h3>
@@ -567,8 +565,8 @@ const AdvancedProjectManagement = () => {
                   <p className="text-sm text-gray-600 dark:text-gray-400">Progress</p>
                   <p className="text-2xl font-bold">{currentProject.progress}%</p>
                 </div>
-                <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
-                  <BarChart3 className="w-6 h-6 text-blue-600" />
+                <div className="w-12 h-12 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg flex items-center justify-center">
+                  <BarChart3 className="w-6 h-6 text-yellow-600" />
                 </div>
               </div>
               <Progress value={currentProject.progress} className="mt-4" />
@@ -582,8 +580,8 @@ const AdvancedProjectManagement = () => {
                   <p className="text-sm text-gray-600 dark:text-gray-400">Budget</p>
                   <p className="text-2xl font-bold">{formatCurrency(currentProject.budget)}</p>
                 </div>
-                <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
-                  <DollarSign className="w-6 h-6 text-green-600" />
+                <div className="w-12 h-12 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg flex items-center justify-center">
+                  <DollarSign className="w-6 h-6 text-yellow-600" />
                 </div>
               </div>
               <div className="mt-2 text-sm">
@@ -600,8 +598,8 @@ const AdvancedProjectManagement = () => {
                   <p className="text-sm text-gray-600 dark:text-gray-400">Team</p>
                   <p className="text-2xl font-bold">{currentProject.team.length}</p>
                 </div>
-                <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
-                  <Users className="w-6 h-6 text-purple-600" />
+                <div className="w-12 h-12 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg flex items-center justify-center">
+                  <Users className="w-6 h-6 text-yellow-600" />
                 </div>
               </div>
               <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
@@ -645,7 +643,7 @@ const AdvancedProjectManagement = () => {
                 </Badge>
               </div>
             </div>
-            
+
             {/* View Toggle */}
             <div className="flex items-center gap-2 mt-4">
               <Button
@@ -703,7 +701,7 @@ const AdvancedProjectManagement = () => {
                       </div>
                     )}
                   </div>
-                  
+
                   <div className="space-y-6">
                     {/* Project Info */}
                     <Card>
@@ -723,8 +721,8 @@ const AdvancedProjectManagement = () => {
                           <span className="text-gray-600 dark:text-gray-400">Risk Level</span>
                           <Badge className={
                             currentProject.riskLevel === 'high' ? 'bg-red-100 text-red-800' :
-                            currentProject.riskLevel === 'medium' ? 'bg-yellow-100 text-yellow-800' :
-                            'bg-green-100 text-green-800'
+                              currentProject.riskLevel === 'medium' ? 'bg-yellow-100 text-yellow-800' :
+                                'bg-yellow-100 text-yellow-800'
                           }>
                             {currentProject.riskLevel}
                           </Badge>
@@ -744,14 +742,14 @@ const AdvancedProjectManagement = () => {
                       <CardContent>
                         <div className="space-y-3">
                           <div className="flex items-start gap-3">
-                            <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
+                            <div className="w-2 h-2 bg-yellow-400 rounded-full mt-2"></div>
                             <div>
                               <p className="text-sm font-medium">Phase 1 Installation 80% complete</p>
                               <p className="text-xs text-gray-500">2 hours ago</p>
                             </div>
                           </div>
                           <div className="flex items-start gap-3">
-                            <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
+                            <div className="w-2 h-2 bg-yellow-400 rounded-full mt-2"></div>
                             <div>
                               <p className="text-sm font-medium">Equipment inspection completed</p>
                               <p className="text-xs text-gray-500">5 hours ago</p>
@@ -788,10 +786,9 @@ const AdvancedProjectManagement = () => {
                             <h3 className="font-semibold">{member.name}</h3>
                             <p className="text-sm text-gray-600 dark:text-gray-400">{member.role}</p>
                           </div>
-                          <div className={`w-3 h-3 rounded-full ${
-                            member.availability === 'available' ? 'bg-green-500' :
-                            member.availability === 'busy' ? 'bg-yellow-500' : 'bg-gray-500'
-                          }`}></div>
+                          <div className={`w-3 h-3 rounded-full ${member.availability === 'available' ? 'bg-yellow-400' :
+                              member.availability === 'busy' ? 'bg-yellow-500' : 'bg-gray-500'
+                            }`}></div>
                         </div>
                         <div className="mt-4">
                           <div className="flex justify-between text-sm mb-1">
@@ -846,7 +843,7 @@ const AdvancedProjectManagement = () => {
                     Upload Document
                   </Button>
                 </div>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {currentProject.documents.map((doc) => (
                     <Card key={doc.id} className="cursor-pointer hover:shadow-md transition-shadow">
@@ -891,9 +888,9 @@ const AdvancedProjectManagement = () => {
                             {formatCurrency(currentProject.budget - currentProject.spent)}
                           </span>
                         </div>
-                        <Progress 
-                          value={(currentProject.spent / currentProject.budget) * 100} 
-                          className="mt-4" 
+                        <Progress
+                          value={(currentProject.spent / currentProject.budget) * 100}
+                          className="mt-4"
                         />
                       </div>
                     </CardContent>
@@ -920,8 +917,8 @@ const AdvancedProjectManagement = () => {
                         <div className="flex justify-between">
                           <span>Efficiency</span>
                           <span className="font-semibold text-blue-600">
-                            {Math.round((currentProject.tasks.reduce((sum, task) => sum + task.estimatedHours, 0) / 
-                            Math.max(currentProject.tasks.reduce((sum, task) => sum + task.actualHours, 0), 1)) * 100)}%
+                            {Math.round((currentProject.tasks.reduce((sum, task) => sum + task.estimatedHours, 0) /
+                              Math.max(currentProject.tasks.reduce((sum, task) => sum + task.actualHours, 0), 1)) * 100)}%
                           </span>
                         </div>
                       </div>

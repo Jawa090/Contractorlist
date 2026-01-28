@@ -46,7 +46,7 @@ import {
   TrendingUp,
   RotateCcw,
   Mail,
-  Smartphone,MoreHorizontal
+  Smartphone, MoreHorizontal
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { scDashboardService, Bid } from '@/services/scDashboardService';
@@ -509,8 +509,8 @@ const FindProjects = () => {
 
                         <div className="flex-1">
                           <div className="flex flex-wrap gap-2 mb-4">
-                            <Badge className="bg-indigo-100 dark:bg-indigo-500/10 text-indigo-600 border-none font-black text-[9px] uppercase tracking-widest px-3 py-1">{p.category}</Badge>
-                            <Badge className="bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 border-none font-black text-[9px] uppercase tracking-widest px-3 py-1 flex items-center gap-1"><ShieldCheck size={10} /> {p.status}</Badge>
+                            <Badge className="bg-yellow-100 dark:bg-yellow-500/10 text-yellow-600 border-none font-black text-[9px] uppercase tracking-widest px-3 py-1">{p.category}</Badge>
+                            <Badge className="bg-yellow-100 dark:bg-yellow-500/10 text-yellow-600 border-none font-black text-[9px] uppercase tracking-widest px-3 py-1 flex items-center gap-1"><ShieldCheck size={10} /> {p.status}</Badge>
                             <Badge variant="outline" className="text-[9px] border-gray-200 dark:border-white/10 uppercase font-black text-gray-400">{p.posted}</Badge>
                           </div>
 
@@ -518,9 +518,9 @@ const FindProjects = () => {
 
                           <div className="flex flex-wrap items-center gap-6 text-[10px] font-black text-gray-500 uppercase tracking-widest mb-6 border-b border-gray-100 dark:border-white/5 pb-4">
                             <div className="flex items-center gap-2"><MapPin size={14} className="text-yellow-600" /> {p.location}</div>
-                            <div className="flex items-center gap-2"><Building size={14} className="text-blue-500" /> GC: {p.gc}</div>
+                            <div className="flex items-center gap-2"><Building size={14} className="text-yellow-600" /> GC: {p.gc}</div>
                             <div className="flex items-center gap-2"><Star size={14} className="text-yellow-400 fill-current" /> {p.gcRating}</div>
-                            <div className="flex items-center gap-2"><Tag size={14} className="text-purple-500" /> NIGP {p.nigpCode}</div>
+                            <div className="flex items-center gap-2"><Tag size={14} className="text-yellow-600" /> NIGP {p.nigpCode}</div>
                           </div>
 
                           <div className="flex flex-wrap gap-2">
@@ -556,9 +556,9 @@ const FindProjects = () => {
                               {savedProjectIds.includes(p.id) ? <BookmarkCheck size={16} /> : <Bookmark size={16} />}
                               {savedProjectIds.includes(p.id) ? 'Locked' : 'Save'}
                             </Button>
-                            <Button variant="ghost" className="h-12 w-12 rounded-2xl bg-white dark:bg-white/5 border border-gray-100 dark:border-white/5 text-gray-400 hover:text-indigo-500 overflow-hidden relative group/icon">
-                              <div className="absolute inset-0 bg-indigo-500 translate-y-full group-hover/icon:translate-y-0 transition-transform"></div>
-                              <MoreHorizontal size={18} className="relative z-10 group-hover/icon:text-white" />
+                            <Button variant="ghost" className="h-12 w-12 rounded-2xl bg-white dark:bg-white/5 border border-gray-100 dark:border-white/5 text-gray-400 hover:text-yellow-600 overflow-hidden relative group/icon">
+                              <div className="absolute inset-0 bg-yellow-400 translate-y-full group-hover/icon:translate-y-0 transition-transform"></div>
+                              <MoreHorizontal size={18} className="relative z-10 group-hover/icon:text-black" />
                             </Button>
                           </div>
                         </div>
@@ -569,8 +569,8 @@ const FindProjects = () => {
                   {/* Status Interaction Bar */}
                   <div className="bg-gray-50/50 dark:bg-black/20 px-10 py-4 flex items-center justify-between border-t border-gray-100 dark:border-white/5">
                     <div className="flex gap-8 text-[9px] font-black uppercase tracking-widest text-gray-400">
-                      <span className="flex items-center gap-2"><Calendar size={14} className="text-red-500" /> Bid Due: {p.deadline}</span>
-                      <span className="flex items-center gap-2"><Smartphone size={14} className="text-blue-500" /> {p.views} Terminal Views</span>
+                      <span className="flex items-center gap-2"><Calendar size={14} className="text-yellow-600" /> Bid Due: {p.deadline}</span>
+                      <span className="flex items-center gap-2"><Smartphone size={14} className="text-yellow-600" /> {p.views} Terminal Views</span>
                       <span className="flex items-center gap-2"><Tag size={14} /> Via {p.source}</span>
                     </div>
                     <div className="flex items-center gap-2">
@@ -579,7 +579,7 @@ const FindProjects = () => {
                           <div key={i} className="w-5 h-5 rounded-full border-2 border-white dark:border-[#1c1e24] bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-[8px] font-black text-white">{i}</div>
                         ))}
                       </div>
-                      <span className="text-[9px] font-black uppercase tracking-widest text-emerald-600">{p.bids} Competing Bidders</span>
+                      <span className="text-[9px] font-black uppercase tracking-widest text-yellow-600">{p.bids} Competing Bidders</span>
                     </div>
                   </div>
                 </Card>
@@ -601,8 +601,8 @@ const FindProjects = () => {
       {/* Success Modal */}
       <Dialog open={isSuccessModalOpen} onOpenChange={setIsSuccessModalOpen}>
         <DialogContent className="sm:max-w-[400px] bg-white dark:bg-[#1c1e24] border-none rounded-[3rem] p-10 text-center shadow-3xl">
-          <div className="w-24 h-24 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-8 border-4 border-green-500/20">
-            <CheckCircle2 className="w-12 h-12 text-green-500 animate-bounce" />
+          <div className="w-24 h-24 bg-yellow-500/10 rounded-full flex items-center justify-center mx-auto mb-8 border-4 border-yellow-500/20">
+            <CheckCircle2 className="w-12 h-12 text-[#fce011] animate-bounce" />
           </div>
           <DialogHeader>
             <DialogTitle className="text-2xl font-black tracking-tight text-center uppercase">Protocol Locked</DialogTitle>

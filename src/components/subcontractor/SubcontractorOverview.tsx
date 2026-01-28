@@ -89,8 +89,8 @@ const SubcontractorOverview = () => {
       subtext: 'PENDING TRANSMISSIONS',
       icon: Clock,
       progress: 45,
-      color: '#3b82f6', // Blue
-      textColor: 'text-blue-400'
+      color: '#EAB308',
+      textColor: 'text-yellow-400'
     },
     {
       title: 'Profile Views',
@@ -98,8 +98,8 @@ const SubcontractorOverview = () => {
       subtext: 'INCOMING SIGNALS',
       icon: Eye,
       progress: 88,
-      color: '#10b981', // Emerald
-      textColor: 'text-emerald-400'
+      color: '#EAB308',
+      textColor: 'text-yellow-400'
     },
     {
       title: 'Revenue YTD',
@@ -107,8 +107,8 @@ const SubcontractorOverview = () => {
       subtext: 'CAPITAL SECURED',
       icon: DollarSign,
       progress: 62,
-      color: '#a855f7', // Purple
-      textColor: 'text-purple-400'
+      color: '#EAB308',
+      textColor: 'text-yellow-400'
     }
   ];
 
@@ -127,7 +127,7 @@ const SubcontractorOverview = () => {
       {/* Background Ambience */}
       <div className="fixed inset-0 pointer-events-none opacity-40">
         <div className="absolute top-[10%] right-[-5%] w-[500px] h-[500px] bg-yellow-400/5 dark:bg-yellow-500/5 blur-[120px] rounded-full" />
-        <div className="absolute bottom-[20%] left-[-10%] w-[600px] h-[600px] bg-blue-400/5 dark:bg-blue-600/5 blur-[100px] rounded-full" />
+        <div className="absolute bottom-[20%] left-[-10%] w-[600px] h-[600px] bg-yellow-400/5 dark:bg-yellow-600/5 blur-[100px] rounded-full" />
       </div>
 
       <div className="flex-1 overflow-y-auto px-6 py-8 relative z-10 custom-scrollbar">
@@ -184,7 +184,7 @@ const SubcontractorOverview = () => {
                   <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-1">{stat.title}</p>
                   <p className="text-xl font-bold tracking-tight mb-1 tubular-nums font-mono">{stat.value}</p>
                   <div className="flex items-center gap-2">
-                    <span className={cn("text-[9px] font-extrabold px-1.5 py-0.5 rounded-md uppercase tracking-tighter", index % 2 === 0 ? "bg-yellow-400/10 text-yellow-600" : "bg-blue-400/10 text-blue-600")}>
+                    <span className={cn("text-[9px] font-extrabold px-1.5 py-0.5 rounded-md uppercase tracking-tighter bg-yellow-400/10 text-yellow-600")}>
                       {stat.subtext}
                     </span>
                   </div>

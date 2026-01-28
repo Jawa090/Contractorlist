@@ -105,13 +105,13 @@ const AIAssistant = () => {
                       {chatHistory.map((chat, index) => (
                         <div key={index} className={`flex ${chat.type === 'user' ? 'justify-end' : 'justify-start'}`}>
                           <div className={`max-w-[80%] rounded-lg p-3 ${chat.type === 'user'
-                              ? 'bg-primary text-black ml-4'
-                              : 'bg-gray-100 dark:bg-gray-800 mr-4'
+                            ? 'bg-primary text-black ml-4'
+                            : 'bg-gray-100 dark:bg-gray-800 mr-4'
                             }`}>
                             <p className="text-sm">{chat.message}</p>
                             <p className={`text-xs mt-1 ${chat.type === 'user'
-                                ? 'text-black/70'
-                                : 'text-text-secondary-light dark:text-text-secondary-dark'
+                              ? 'text-black/70'
+                              : 'text-text-secondary-light dark:text-text-secondary-dark'
                               }`}>
                               {chat.timestamp}
                             </p>
@@ -216,17 +216,17 @@ const AIAssistant = () => {
             <Card className="bg-gradient-to-br from-gray-900 to-gray-800 dark:from-black dark:to-gray-900 text-white border border-gray-700">
               <CardContent className="p-6">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="size-3 rounded-full bg-green-500 animate-pulse"></div>
+                  <div className="size-3 rounded-full bg-yellow-400 animate-pulse"></div>
                   <span className="font-semibold">AI Assistant Online</span>
                 </div>
                 <div className="space-y-3 text-sm">
                   <div className="flex justify-between">
                     <span className="text-gray-300">Response Time</span>
-                    <span className="text-green-400">{"< 2 seconds"}</span>
+                    <span className="text-yellow-400">{"< 2 seconds"}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-300">Accuracy Rate</span>
-                    <span className="text-green-400">94.2%</span>
+                    <span className="text-yellow-400">94.2%</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-300">Queries Today</span>

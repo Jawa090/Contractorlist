@@ -62,7 +62,7 @@ const ContractorHeroSection = () => {
                   key={index}
                   className="flex flex-col items-center text-center z-10 w-[25%]"
                 >
-                  <div className="bg-yellow-400 rounded-full w-10 h-10 flex items-center justify-center mb-2 shadow">
+                  <div className="bg-[#fce011] rounded-full w-10 h-10 flex items-center justify-center mb-2 shadow">
                     {step.icon}
                   </div>
                   <p className="text-sm font-small text-gray-800 max-w-[160px] leading-snug">
@@ -78,7 +78,7 @@ const ContractorHeroSection = () => {
                 <div className="flex-[2] w-full">
                   <Input
                     placeholder="Search Contractors in your area"
-                    className="h-12 sm:h-14 rounded-full border border-yellow-400 bg-white placeholder:text-gray-400 focus:ring-0 focus:border-yellow-500"
+                    className="h-12 sm:h-14 rounded-full border border-[#fce011] bg-white placeholder:text-gray-400 focus:ring-0 focus:border-[#fce011]"
                     value={serviceQuery}
                     onChange={(e) => setServiceQuery(e.target.value)}
                   />
@@ -86,18 +86,17 @@ const ContractorHeroSection = () => {
                 <div className="flex-1 sm:max-w-xs w-full">
                   <Input
                     placeholder="Zip Code"
-                    className="h-12 sm:h-14 rounded-full border border-yellow-400 bg-white placeholder:text-gray-400 focus:ring-0 focus:border-yellow-500"
+                    className="h-12 sm:h-14 rounded-full border border-[#fce011] bg-white placeholder:text-gray-400 focus:ring-0 focus:border-[#fce011]"
                     value={zipCode}
                     onChange={(e) => setZipCode(e.target.value)}
                   />
                 </div>
                 <a
-                  className="inline-flex items-center justify-center whitespace-nowrap bg-[#fce011] hover:bg-[#fce011]/90 text-black font-semibold px-6 sm:px-8 h-12 sm:h-14 rounded-full border border-yellow-500/40 shadow-[0_6px_14px_rgba(0,0,0,0.25)] hover:shadow-[0_8px_18px_rgba(0,0,0,0.28)] transition-shadow"
-                  href={`/contractors?zip=${encodeURIComponent(zipCode)}${
-                    serviceQuery
+                  className="inline-flex items-center justify-center whitespace-nowrap bg-[#fce011] hover:bg-[#fce011]/90 text-black font-semibold px-6 sm:px-8 h-12 sm:h-14 rounded-full border border-[#fce011]/40 shadow-[0_6px_14px_rgba(0,0,0,0.25)] hover:shadow-[0_8px_18px_rgba(0,0,0,0.28)] transition-shadow"
+                  href={`/contractors?zip=${encodeURIComponent(zipCode)}${serviceQuery
                       ? `&service=${encodeURIComponent(serviceQuery)}`
                       : ""
-                  }`}
+                    }`}
                   onClick={(e) => {
                     if (!zipCode) e.preventDefault();
                   }}

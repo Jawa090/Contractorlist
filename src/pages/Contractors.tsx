@@ -276,81 +276,16 @@ const Contractors = () => {
     setCompaniesLoading(true);
     setCompaniesError(null);
 
+    const limit = 10;
+
     try {
-      const filters: CompanySearchFilters = {
-        page: pageNum,
-        limit: 10,
-      };
+      // In a real app, we would use companyService.search(filters)
+      // For now, mirroring the filters used in the real fetch for mock data
 
-      // Location filters
-      if (zip) {
-        filters.zip = zip;
-      }
-      if (location && location !== "New York, NY") {
-        const [city, state] = location.split(", ");
-        if (city) filters.city = city;
-        if (state) filters.location = state;
-      }
-
-      // Service filter
-      if (serviceRaw) {
-        filters.service = serviceRaw;
-      }
-
-      // Business feature filters
-      if (verifiedLicense) filters.verified_license = true;
-      if (respondsQuickly) filters.responds_quickly = true;
-      if (hiredOnPlatform) filters.hired_on_platform = true;
-      if (provides3d) filters.provides_3d = true;
-      if (ecoFriendly) filters.eco_friendly = true;
-      if (familyOwned) filters.family_owned = true;
-      if (locallyOwned) filters.locally_owned = true;
-      if (offersCustomWork) filters.offers_custom_work = true;
-
-      // Category filter
-      if (professionalCategory) {
-        filters.professional_category = professionalCategory;
-      }
-
-      // Budget filter
-      if (budget) {
-        const budgetMap: Record<string, "$" | "$$" | "$$$" | "$$$$"> = {
-          "$ - I want to minimize costs": "$",
-          "$$ - Low-to-mid price": "$$",
-          "$$$ - Mid-to-high price": "$$$",
-          "$$$$ - I want the best results": "$$$$",
-        };
-        if (budgetMap[budget]) {
-          filters.budget = budgetMap[budget];
-        }
-      }
-
-      // Language filter
-      if (selectedLanguage && selectedLanguage !== "All Languages") {
-        const languageMap: Record<string, string> = {
-          "Speaks Spanish": "Spanish",
-          "Speaks Russian": "Russian",
-          "Speaks Italian": "Italian",
-        };
-        if (languageMap[selectedLanguage]) {
-          filters.language = languageMap[selectedLanguage];
-        }
-      }
-
-      // Rating filter
-      if (selectedRating && selectedRating !== "Any Rating") {
-        if (selectedRating === "5 stars only") {
-          filters.rating = 5;
-        } else if (selectedRating === "4 stars & up") {
-          filters.rating = 4;
-        } else if (selectedRating === "3 stars & up") {
-          filters.rating = 3;
-        }
-      }
-
-      console.log("Loading mock data only...");
+      console.log(`Loading mock data page ${pageNum}...`);
       let filteredMock = [...mockCompanies];
 
+      // Basic Search Filters
       if (zip) {
         filteredMock = filteredMock.filter(c =>
           c.service_zip_codes && c.service_zip_codes.some((z: string) => z.includes(zip))
@@ -360,22 +295,92 @@ const Contractors = () => {
       if (serviceRaw) {
         filteredMock = filteredMock.filter(c =>
           (c.services_offered && c.services_offered.some((s: string) => s.toLowerCase().includes(serviceRaw.toLowerCase()))) ||
-          (c.professional_category && c.professional_category.toLowerCase().includes(serviceRaw.toLowerCase()))
+          (c.professional_category && c.professional_category.toLowerCase().includes(serviceRaw.toLowerCase())) ||
+          (c.company_name && c.company_name.toLowerCase().includes(serviceRaw.toLowerCase()))
         );
       }
 
-      const mappedCompanies = filteredMock.map((item: any) =>
+      // Feature Filters
+      if (verifiedLicense) filteredMock = filteredMock.filter(c => c.verified_business);
+      if (respondsQuickly) filteredMock = filteredMock.filter(c => c.responds_quickly);
+      if (hiredOnPlatform) filteredMock = filteredMock.filter(c => c.hired_on_platform);
+      if (provides3d) filteredMock = filteredMock.filter(c => c.provides_3d_visualization);
+      if (ecoFriendly) filteredMock = filteredMock.filter(c => c.eco_friendly);
+      if (familyOwned) filteredMock = filteredMock.filter(c => c.family_owned);
+      if (locallyOwned) filteredMock = filteredMock.filter(c => c.locally_owned);
+      if (offersCustomWork) filteredMock = filteredMock.filter(c => c.offers_custom_work);
+
+      // Professional Category Filter
+      if (professionalCategory) {
+        filteredMock = filteredMock.filter(c =>
+          c.professional_category && c.professional_category.toLowerCase() === professionalCategory.toLowerCase()
+        );
+      }
+
+      // Budget Filter
+      if (budget) {
+        const budgetMap: Record<string, string> = {
+          "$ - I want to minimize costs": "$",
+          "$$ - Low-to-mid price": "$$",
+          "$$$ - Mid-to-high price": "$$$",
+          "$$$$ - I want the best results": "$$$$",
+        };
+        const shortBudget = budgetMap[budget];
+        if (shortBudget) {
+          filteredMock = filteredMock.filter(c => c.budget_range === shortBudget);
+        }
+      }
+
+      // Language Filter
+      if (selectedLanguage && selectedLanguage !== "All Languages") {
+        const lang = selectedLanguage.replace("Speaks ", "");
+        filteredMock = filteredMock.filter(c =>
+          c.languages && c.languages.some((l: string) => l.toLowerCase().includes(lang.toLowerCase()))
+        );
+      }
+
+      // Rating Filter
+      if (selectedRating && selectedRating !== "Any Rating") {
+        let minRating = 0;
+        if (selectedRating === "5 stars only") minRating = 5;
+        else if (selectedRating === "4 stars & up") minRating = 4;
+        else if (selectedRating === "3 stars & up") minRating = 3;
+
+        filteredMock = filteredMock.filter(c => (c.rating || 0) >= minRating);
+      }
+
+      // Keywords Search
+      if (search) {
+        const kw = search.toLowerCase();
+        filteredMock = filteredMock.filter(c =>
+          (c.company_name && c.company_name.toLowerCase().includes(kw)) ||
+          (c.tagline && c.tagline.toLowerCase().includes(kw)) ||
+          (c.description && c.description.toLowerCase().includes(kw))
+        );
+      }
+
+      // Calculate Pagination
+      const totalItems = filteredMock.length;
+      const totalPages = Math.ceil(totalItems / limit) || 1;
+
+      // Ensure pageNum is within bounds
+      const activePage = Math.min(Math.max(1, pageNum), totalPages);
+
+      const startIndex = (activePage - 1) * limit;
+      const paginatedSlice = filteredMock.slice(startIndex, startIndex + limit);
+
+      const mappedCompanies = paginatedSlice.map((item: any) =>
         normalizeCompanyData(item)
       );
 
       setCompanies(mappedCompanies);
       setCompaniesPagination({
-        currentPage: 1,
-        totalPages: 1,
-        totalItems: mappedCompanies.length,
-        itemsPerPage: mappedCompanies.length || 100,
+        currentPage: activePage,
+        totalPages: totalPages,
+        totalItems: totalItems,
+        itemsPerPage: limit,
       });
-      setCompaniesCurrentPage(1);
+      setCompaniesCurrentPage(activePage);
     } catch (e: any) {
       setCompaniesError(e.message || "Failed to load companies");
       setCompanies([]);
@@ -453,7 +458,7 @@ const Contractors = () => {
     locallyOwned,
     offersCustomWork,
     selectedLanguage,
-    selectedRating,
+    search,
   ]);
 
   useEffect(() => {
@@ -1118,7 +1123,7 @@ const Contractors = () => {
                   Next
                 </Button>
                 <span className="text-sm text-gray-600 ml-2">
-                  Page {companiesCurrentPage} of {totalCompaniesPages} ({companies.length} total)
+                  Page {companiesCurrentPage} of {totalCompaniesPages} ({totalCompanies} total)
                 </span>
               </div>
             )}

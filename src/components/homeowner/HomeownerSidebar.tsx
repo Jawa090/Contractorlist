@@ -92,7 +92,7 @@ const HomeownerSidebar = ({ isOpen, onClose }: HomeownerSidebarProps) => {
     <>
       {/* Mobile Overlay */}
       {isOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
           onClick={onClose}
         />
@@ -106,10 +106,10 @@ const HomeownerSidebar = ({ isOpen, onClose }: HomeownerSidebarProps) => {
         lg:relative lg:translate-x-0
       `}>
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-100 dark:border-gray-800 bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-gray-800 dark:to-gray-900">
+        <div className="flex items-center justify-between p-6 border-b border-gray-100 dark:border-gray-800 bg-[#fce011]/10 dark:bg-gray-800">
           {!isCollapsed && (
             <div className="flex items-center gap-3">
-              <div className="size-10 rounded-xl bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center shadow-lg">
+              <div className="size-10 rounded-xl bg-[#fce011] flex items-center justify-center shadow-lg">
                 <Home className="w-6 h-6 text-white" />
               </div>
               <div>
@@ -118,14 +118,14 @@ const HomeownerSidebar = ({ isOpen, onClose }: HomeownerSidebarProps) => {
               </div>
             </div>
           )}
-          
+
           <div className="flex items-center gap-2">
             {/* Desktop Collapse Toggle */}
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setIsCollapsed(!isCollapsed)}
-              className="hidden lg:flex p-2 hover:bg-yellow-50 rounded-lg"
+              className="hidden lg:flex p-2 hover:bg-[#fce011]/20 rounded-lg"
             >
               {isCollapsed ? (
                 <ChevronRight className="w-5 h-5 text-gray-600" />
@@ -133,13 +133,13 @@ const HomeownerSidebar = ({ isOpen, onClose }: HomeownerSidebarProps) => {
                 <ChevronLeft className="w-5 h-5 text-gray-600" />
               )}
             </Button>
-            
+
             {/* Mobile Close */}
             <Button
               variant="ghost"
               size="sm"
               onClick={onClose}
-              className="lg:hidden p-2 hover:bg-yellow-50 rounded-lg"
+              className="lg:hidden p-2 hover:bg-[#fce011]/20 rounded-lg"
             >
               <X className="w-5 h-5 text-gray-600" />
             </Button>
@@ -148,9 +148,9 @@ const HomeownerSidebar = ({ isOpen, onClose }: HomeownerSidebarProps) => {
 
         {/* User Profile */}
         {!isCollapsed && (
-          <div className="p-6 border-b border-gray-100 dark:border-gray-800 bg-gradient-to-r from-gray-50 to-yellow-50/30 dark:from-gray-800 dark:to-gray-900/50">
+          <div className="p-6 border-b border-gray-100 dark:border-gray-800 bg-[#fce011]/10 dark:bg-gray-800">
             <div className="flex items-center gap-4">
-              <div className="size-12 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center text-white font-bold text-lg shadow-lg ring-4 ring-yellow-100 dark:ring-yellow-900/50">
+              <div className="size-12 rounded-full bg-[#fce011] flex items-center justify-center text-black font-bold text-lg shadow-lg ring-4 ring-[#fce011]/20">
                 A
               </div>
               <div className="flex flex-col overflow-hidden">
@@ -182,16 +182,16 @@ const HomeownerSidebar = ({ isOpen, onClose }: HomeownerSidebarProps) => {
                   className={cn(
                     "group flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 relative overflow-hidden",
                     active
-                      ? "bg-gradient-to-r from-yellow-400 via-orange-500 to-yellow-500 text-black shadow-lg shadow-yellow-500/30 transform scale-[1.02]"
+                      ? "bg-[#fce011] text-black shadow-lg shadow-[#fce011]/30 transform scale-[1.02]"
                       : "text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 dark:hover:from-gray-800 dark:hover:to-gray-700 hover:text-gray-900 dark:hover:text-white hover:shadow-md",
                     isCollapsed ? 'justify-center px-3' : ''
                   )}
                 >
                   {/* Active indicator background animation */}
                   {active && (
-                    <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/20 to-orange-500/20 animate-pulse" />
+                    <div className="absolute inset-0 bg-[#fce011]/20 animate-pulse" />
                   )}
-                  
+
                   <div className={cn(
                     "flex items-center justify-center w-5 h-5 transition-all duration-300 relative z-10",
                     item.isPro && !active && "text-purple-500",
@@ -229,8 +229,8 @@ const HomeownerSidebar = ({ isOpen, onClose }: HomeownerSidebarProps) => {
                         </p>
                       </div>
                       {item.badge && (
-                        <Badge 
-                          variant={item.badge === 'Pro' ? 'default' : 'secondary'} 
+                        <Badge
+                          variant={item.badge === 'Pro' ? 'default' : 'secondary'}
                           className={cn(
                             "text-xs px-2 py-1 font-semibold transition-all duration-300 relative z-10",
                             active && 'bg-black/20 text-black border-black/20 shadow-md',

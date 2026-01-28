@@ -58,8 +58,8 @@ const Products = () => {
         "AI Quantity Take Off is a revolutionary AI-powered solution designed to transform the way construction and design professionals estimate materials. Using advanced computer vision and machine learning, it analyzes blueprints, CAD drawings, and 3D models to automatically calculate material quantities with unmatched accuracy. By detecting walls, beams, slabs, and other structural elements, it generates precise material lists in real time, reducing manual effort and human error.Beyond accurate estimation, AI Quantity Take Off streamlines project planning and procurement by providing detailed, exportable reports and real-time updates whenever design changes occur. It helps optimize costs, minimize material waste, and improve collaboration across teams, making construction projects more efficient, predictable, and cost-effective from start to finish.",
       icon: Calculator,
       aiIcon: Eye,
-      color: "bg-gradient-to-br from-blue-500 to-blue-600",
-      glowColor: "shadow-blue-500/25",
+      color: "bg-[#fce011]",
+      glowColor: "shadow-[#fce011]/25",
       features: [
         {
           icon: Brain,
@@ -93,8 +93,8 @@ const Products = () => {
         "The Intelligent Cost Prediction Engine leverages advanced AI algorithms and data analytics to revolutionize how project estimates are created. By continuously analyzing market trends, material costs, labor rates, and supply chain fluctuations, it delivers real-time insights that ensure every estimate remains accurate and up to date. This predictive capability minimizes human error and allows businesses to anticipate cost variations before they occur, enabling proactive decision-making and optimized budget allocation.Furthermore, the engine integrates historical performance data with live market intelligence to forecast future pricing with unmatched precision. Its adaptive learning models evolve over time, improving accuracy with each project and adapting to regional, seasonal, and economic changes.",
       icon: DollarSign,
       aiIcon: TrendingUp,
-      color: "bg-gradient-to-br from-green-500 to-emerald-600",
-      glowColor: "shadow-green-500/25",
+      color: "bg-[#fce011]",
+      glowColor: "shadow-[#fce011]/25",
       features: [
         {
           icon: Database,
@@ -128,8 +128,8 @@ const Products = () => {
         "The AI Chat Bot combines Natural Language Processing (NLP) with GPT-4 technology to deliver next-generation conversational experiences. It understands context, intent, and emotion, allowing it to engage users with fluid, human-like communication. Whether it’s customer support, lead generation, or personalized assistance, this chatbot ensures instant, accurate, and empathetic responses—enhancing user satisfaction while reducing operational load. Backed by continuous learning and adaptive intelligence, the AI Chat Bot evolves with every interaction, refining its tone, accuracy, and contextual awareness over time. It supports multilingual communication and integrates seamlessly with websites, mobile apps, and enterprise systems, enabling 24/7 intelligent engagement.",
       icon: MessageCircle,
       aiIcon: Brain,
-      color: "bg-gradient-to-br from-purple-500 to-violet-600",
-      glowColor: "shadow-purple-500/25",
+      color: "bg-[#fce011]",
+      glowColor: "shadow-[#fce011]/25",
       features: [
         { icon: Brain, text: "GPT-4 Powered", desc: "Latest AI technology" },
         { icon: Clock, text: "24/7 Availability", desc: "Always online" },
@@ -151,8 +151,8 @@ const Products = () => {
         "The AI Virtual Assistant is designed to redefine productivity by combining Automation and Workflow Intelligence. It observes and learns from user behavior, identifying repetitive processes and optimizing them through smart automation. From scheduling meetings and managing tasks to tracking project milestones, it intelligently adapts to your workflow, ensuring smoother operations and faster decision-making without manual intervention. Powered by advanced machine learning algorithms, this assistant doesn’t just execute commands—it understands priorities, anticipates needs, and provides actionable insights for better project outcomes. Its seamless integration with existing tools and platforms enables real-time collaboration, reporting, and task coordination across teams.",
       icon: Bot,
       aiIcon: Cpu,
-      color: "bg-gradient-to-br from-orange-500 to-red-600",
-      glowColor: "shadow-orange-500/25",
+      color: "bg-[#fce011]",
+      glowColor: "shadow-[#fce011]/25",
       features: [
         { icon: Cpu, text: "Smart Automation", desc: "Intelligent workflows" },
         {
@@ -217,7 +217,7 @@ const Products = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mx-24">
           <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-gray-200">
             <div className="flex items-center justify-between mb-4">
-              <Target className="w-8 h-8 text-blue-500" />
+              <Target className="w-8 h-8 text-[#fce011]" />
               <span className="text-sm font-medium text-gray-600">
                 AI Accuracy
               </span>
@@ -227,14 +227,14 @@ const Products = () => {
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
               <div
-                className="bg-blue-500 h-2 rounded-full transition-all duration-1000"
+                className="bg-[#fce011] h-2 rounded-full transition-all duration-1000"
                 style={{ width: `${aiStats.accuracy}%` }}
               ></div>
             </div>
           </div>
           <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-gray-200">
             <div className="flex items-center justify-between mb-4">
-              <Zap className="w-8 h-8 text-green-500" />
+              <Zap className="w-8 h-8 text-[#fce011]" />
               <span className="text-sm font-medium text-gray-600">
                 Processing Speed
               </span>
@@ -244,14 +244,14 @@ const Products = () => {
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
               <div
-                className="bg-green-500 h-2 rounded-full transition-all duration-1000"
+                className="bg-[#fce011] h-2 rounded-full transition-all duration-1000"
                 style={{ width: `${aiStats.speed}%` }}
               ></div>
             </div>
           </div>
           <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-gray-200">
             <div className="flex items-center justify-between mb-4">
-              <TrendingUp className="w-8 h-8 text-purple-500" />
+              <TrendingUp className="w-8 h-8 text-[#fce011]" />
               <span className="text-sm font-medium text-gray-600">
                 Cost Savings
               </span>
@@ -261,7 +261,7 @@ const Products = () => {
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
               <div
-                className="bg-purple-500 h-2 rounded-full transition-all duration-1000"
+                className="bg-[#fce011] h-2 rounded-full transition-all duration-1000"
                 style={{ width: `${aiStats.savings}%` }}
               ></div>
             </div>
@@ -305,8 +305,8 @@ const Products = () => {
                       <div
                         className={`relative p-4 rounded-2xl ${product.color} group-hover:scale-110 transform duration-500 shadow-lg`}
                       >
-                        <IconComponent className="h-10 w-10 text-white relative z-10" />
-                        <AiIconComponent className="h-5 w-5 text-white/70 absolute -top-1 -right-1 animate-pulse" />
+                        <IconComponent className="h-10 w-10 text-black relative z-10" />
+                        <AiIconComponent className="h-5 w-5 text-black/70 absolute -top-1 -right-1 animate-pulse" />
                       </div>
                       <div className="flex-1">
                         <CardTitle className="text-2xl font-bold text-black group-hover:text-[#fce011] transition-colors mb-2">
@@ -418,9 +418,8 @@ const Products = () => {
             >
               <div className="flex items-center justify-center mb-4">
                 <div
-                  className={`p-4 rounded-full bg-gradient-to-r from-[#fce011] to-yellow-400 ${
-                    isProcessing ? "animate-spin" : ""
-                  }`}
+                  className={`p-4 rounded-full bg-gradient-to-r from-[#fce011] to-yellow-400 ${isProcessing ? "animate-spin" : ""
+                    }`}
                 >
                   <Brain className="w-8 h-8 text-black" />
                 </div>

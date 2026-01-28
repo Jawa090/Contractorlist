@@ -170,27 +170,27 @@ const Glossary = () => {
     {
       name: "Materials",
       count: glossaryTerms.filter((t) => t.category === "Materials").length,
-      color: "bg-blue-100 text-blue-800",
+      color: "bg-yellow-100 text-yellow-800",
     },
     {
       name: "Structural",
       count: glossaryTerms.filter((t) => t.category === "Structural").length,
-      color: "bg-green-100 text-green-800",
+      color: "bg-yellow-100 text-yellow-800",
     },
     {
       name: "Technology",
       count: glossaryTerms.filter((t) => t.category === "Technology").length,
-      color: "bg-purple-100 text-purple-800",
+      color: "bg-yellow-100 text-yellow-800",
     },
     {
       name: "Safety",
       count: glossaryTerms.filter((t) => t.category === "Safety").length,
-      color: "bg-red-100 text-red-800",
+      color: "bg-yellow-100 text-yellow-800",
     },
     {
       name: "Site Work",
       count: glossaryTerms.filter((t) => t.category === "Site Work").length,
-      color: "bg-orange-100 text-orange-800",
+      color: "bg-yellow-100 text-yellow-800",
     },
   ];
 
@@ -350,11 +350,10 @@ const Glossary = () => {
           <div className="flex flex-wrap justify-center gap-2 mb-8">
             <button
               onClick={() => setSelectedLetter("All")}
-              className={`px-4 py-2 rounded-full font-medium transition-colors ${
-                selectedLetter === "All"
+              className={`px-4 py-2 rounded-full font-medium transition-colors ${selectedLetter === "All"
                   ? "bg-yellow-500 text-black"
                   : "bg-white text-gray-700 hover:bg-yellow-100"
-              }`}
+                }`}
             >
               All
             </button>
@@ -362,11 +361,10 @@ const Glossary = () => {
               <button
                 key={letter}
                 onClick={() => setSelectedLetter(letter)}
-                className={`w-10 h-10 rounded-full font-medium transition-colors ${
-                  selectedLetter === letter
+                className={`w-10 h-10 rounded-full font-medium transition-colors ${selectedLetter === letter
                     ? "bg-yellow-500 text-black"
                     : "bg-white text-gray-700 hover:bg-yellow-100"
-                }`}
+                  }`}
               >
                 {letter}
               </button>
@@ -382,8 +380,8 @@ const Glossary = () => {
                 {searchTerm
                   ? `Search Results (${filteredTerms.length})`
                   : selectedLetter === "All"
-                  ? `All Terms (${filteredTerms.length})`
-                  : `Terms starting with "${selectedLetter}" (${filteredTerms.length})`}
+                    ? `All Terms (${filteredTerms.length})`
+                    : `Terms starting with "${selectedLetter}" (${filteredTerms.length})`}
               </h3>
             </div>
             <div className="divide-y divide-gray-200">

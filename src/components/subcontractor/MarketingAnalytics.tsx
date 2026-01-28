@@ -70,7 +70,7 @@ const MarketingAnalytics = () => {
             <CardContent className="p-5">
               <div className="flex justify-between items-start mb-2">
                 <p className="text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark">Profile Views</p>
-                <Eye className="w-5 h-5 text-blue-600" />
+                <Eye className="w-5 h-5 text-yellow-600" />
               </div>
               <p className="text-2xl font-bold">1,240</p>
               <div className="flex items-center gap-1 mt-1">
@@ -83,12 +83,12 @@ const MarketingAnalytics = () => {
             <CardContent className="p-5">
               <div className="flex justify-between items-start mb-2">
                 <p className="text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark">Contact Clicks</p>
-                <Users className="w-5 h-5 text-green-600" />
+                <Users className="w-5 h-5 text-yellow-600" />
               </div>
               <p className="text-2xl font-bold">89</p>
               <div className="flex items-center gap-1 mt-1">
-                <ArrowUp className="w-4 h-4 text-green-500" />
-                <p className="text-xs font-medium text-green-500">+12% vs last period</p>
+                <ArrowUp className="w-4 h-4 text-yellow-500" />
+                <p className="text-xs font-medium text-yellow-500">+12% vs last period</p>
               </div>
             </CardContent>
           </Card>
@@ -97,12 +97,12 @@ const MarketingAnalytics = () => {
             <CardContent className="p-5">
               <div className="flex justify-between items-start mb-2">
                 <p className="text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark">Bid Invitations</p>
-                <Target className="w-5 h-5 text-purple-600" />
+                <Target className="w-5 h-5 text-yellow-600" />
               </div>
               <p className="text-2xl font-bold">23</p>
               <div className="flex items-center gap-1 mt-1">
-                <ArrowUp className="w-4 h-4 text-green-500" />
-                <p className="text-xs font-medium text-green-500">+8% vs last period</p>
+                <ArrowUp className="w-4 h-4 text-yellow-500" />
+                <p className="text-xs font-medium text-yellow-500">+8% vs last period</p>
               </div>
             </CardContent>
           </Card>
@@ -115,8 +115,8 @@ const MarketingAnalytics = () => {
               </div>
               <p className="text-2xl font-bold">4.9</p>
               <div className="flex items-center gap-1 mt-1">
-                <ArrowUp className="w-4 h-4 text-green-500" />
-                <p className="text-xs font-medium text-green-500">+0.1 vs last period</p>
+                <ArrowUp className="w-4 h-4 text-yellow-500" />
+                <p className="text-xs font-medium text-yellow-500">+0.1 vs last period</p>
               </div>
             </CardContent>
           </Card>
@@ -174,7 +174,7 @@ const MarketingAnalytics = () => {
                       <p className="text-xs text-text-secondary-light dark:text-text-secondary-dark">Medical Center Photos</p>
                     </div>
                     <div className="text-right">
-                      <p className="font-bold text-green-600">342 views</p>
+                      <p className="font-bold text-yellow-600">342 views</p>
                       <p className="text-xs text-text-secondary-light dark:text-text-secondary-dark">+15%</p>
                     </div>
                   </div>
@@ -184,7 +184,7 @@ const MarketingAnalytics = () => {
                       <p className="text-xs text-text-secondary-light dark:text-text-secondary-dark">About Us Section</p>
                     </div>
                     <div className="text-right">
-                      <p className="font-bold text-blue-600">298 views</p>
+                      <p className="font-bold text-yellow-600">298 views</p>
                       <p className="text-xs text-text-secondary-light dark:text-text-secondary-dark">+8%</p>
                     </div>
                   </div>
@@ -194,7 +194,7 @@ const MarketingAnalytics = () => {
                       <p className="text-xs text-text-secondary-light dark:text-text-secondary-dark">Licenses & Awards</p>
                     </div>
                     <div className="text-right">
-                      <p className="font-bold text-purple-600">187 views</p>
+                      <p className="font-bold text-yellow-600">187 views</p>
                       <p className="text-xs text-text-secondary-light dark:text-text-secondary-dark">+22%</p>
                     </div>
                   </div>
@@ -258,7 +258,7 @@ const MarketingAnalytics = () => {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
                     <div className="flex items-center gap-3">
-                      <div className="size-3 rounded-full bg-blue-500"></div>
+                      <div className="size-3 rounded-full bg-yellow-400"></div>
                       <span className="font-medium">Direct Search</span>
                     </div>
                     <div className="text-right">
@@ -268,7 +268,7 @@ const MarketingAnalytics = () => {
                   </div>
                   <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
                     <div className="flex items-center gap-3">
-                      <div className="size-3 rounded-full bg-green-500"></div>
+                      <div className="size-3 rounded-full bg-yellow-500"></div>
                       <span className="font-medium">Project Matching</span>
                     </div>
                     <div className="text-right">
@@ -304,7 +304,7 @@ const MarketingAnalytics = () => {
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-text-secondary-light dark:text-text-secondary-dark">Bounce Rate</span>
-                    <span className="font-bold text-green-600">23%</span>
+                    <span className="font-bold text-yellow-600">23%</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-text-secondary-light dark:text-text-secondary-dark">Pages per Visit</span>
@@ -341,12 +341,12 @@ const MarketingAnalytics = () => {
                 <CardTitle>Performance Insights</CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+                <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
                   <div className="flex items-start gap-3">
-                    <TrendingUp className="w-5 h-5 text-green-600 mt-0.5" />
+                    <TrendingUp className="w-5 h-5 text-yellow-600 mt-0.5" />
                     <div>
-                      <h4 className="font-semibold text-green-800 dark:text-green-300">Strong Performance</h4>
-                      <p className="text-sm text-green-700 dark:text-green-400 mt-1">
+                      <h4 className="font-semibold text-yellow-800 dark:text-yellow-300">Strong Performance</h4>
+                      <p className="text-sm text-yellow-700 dark:text-yellow-400 mt-1">
                         Your profile views are 23% higher than similar contractors in your area.
                       </p>
                     </div>
@@ -365,12 +365,12 @@ const MarketingAnalytics = () => {
                   </div>
                 </div>
 
-                <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
                   <div className="flex items-start gap-3">
-                    <Target className="w-5 h-5 text-blue-600 mt-0.5" />
+                    <Target className="w-5 h-5 text-yellow-600 mt-0.5" />
                     <div>
-                      <h4 className="font-semibold text-blue-800 dark:text-blue-300">Recommendation</h4>
-                      <p className="text-sm text-blue-700 dark:text-blue-400 mt-1">
+                      <h4 className="font-semibold text-yellow-800 dark:text-yellow-300">Recommendation</h4>
+                      <p className="text-sm text-yellow-700 dark:text-yellow-400 mt-1">
                         Update your service areas to include Round Rock and Cedar Park for 30% more visibility.
                       </p>
                     </div>

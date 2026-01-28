@@ -134,10 +134,10 @@ const BidManagement = () => {
   const getStatusStyle = (status: string) => {
     switch (status) {
       case 'DRAFT': return "bg-gray-100 dark:bg-white/5 text-gray-600 dark:text-gray-400";
-      case 'SUBMITTED': return "bg-blue-400/10 text-blue-600 dark:text-blue-400";
+      case 'SUBMITTED': return "bg-yellow-400/10 text-yellow-600 dark:text-yellow-400";
       case 'IN-REVIEW': return "bg-yellow-400/10 text-yellow-600 dark:text-yellow-500";
-      case 'WON': return "bg-green-400/10 text-green-600 dark:text-green-500";
-      case 'LOST': return "bg-red-400/10 text-red-600 dark:text-red-500";
+      case 'WON': return "bg-yellow-400/10 text-yellow-600 dark:text-yellow-500";
+      case 'LOST': return "bg-yellow-400/10 text-yellow-600 dark:text-yellow-500";
       default: return "bg-gray-100 text-gray-800";
     }
   };
@@ -176,7 +176,7 @@ const BidManagement = () => {
           {[
             { label: 'ACTIVE PROTOCOLS', value: bids.filter(b => b.type === 'active').length.toString().padStart(2, '0'), sub: 'LIVE TRANSMISSIONS', icon: Target, color: 'text-yellow-500' },
             { label: 'WIN PROBABILITY', value: '0%', sub: 'NO DATA YET', icon: Award, color: 'text-gray-500' },
-            { label: 'EVALUATION PENDING', value: bids.filter(b => b.status === 'IN-REVIEW').length.toString().padStart(2, '0'), sub: 'AWAITING RESPONSE', icon: Eye, color: 'text-blue-500' },
+            { label: 'EVALUATION PENDING', value: bids.filter(b => b.status === 'IN-REVIEW').length.toString().padStart(2, '0'), sub: 'AWAITING RESPONSE', icon: Eye, color: 'text-yellow-400' },
             { label: 'COMMITTED VALUE', value: `$${(bids.reduce((acc, b) => acc + b.budgetValue, 0) / 1000000).toFixed(1)}M`, sub: 'TOTAL ACTIVE SCALE', icon: DollarSign, color: 'text-yellow-500' },
           ].map((stat, i) => (
             <Card key={i} className="bg-white dark:bg-[#1c1e24] border-gray-100 dark:border-white/5 shadow-sm rounded-xl overflow-hidden group hover:border-yellow-400/50 transition-all">
@@ -245,7 +245,7 @@ const BidManagement = () => {
                               {bid.status}
                             </Badge>
                             {bid.daysLeft > 0 && bid.daysLeft <= 5 && (
-                              <Badge className="bg-red-500/10 text-red-500 border-none font-bold text-[8px] uppercase tracking-[0.2em] px-2.5 py-0.5">
+                              <Badge className="bg-yellow-500/10 text-yellow-600 border-none font-bold text-[8px] uppercase tracking-[0.2em] px-2.5 py-0.5">
                                 URGENT: {bid.daysLeft} CYCLES REMAINING
                               </Badge>
                             )}
@@ -268,7 +268,7 @@ const BidManagement = () => {
                             </div>
                             <div className="space-y-0.5">
                               <span className="text-[8px] font-bold text-gray-400 uppercase tracking-widest block">Value</span>
-                              <div className="flex items-center gap-1.5 text-green-600">
+                              <div className="flex items-center gap-1.5 text-yellow-600 font-black">
                                 <DollarSign className="w-3.5 h-3.5" />
                                 <span className="text-xs font-bold tabular-nums uppercase font-mono">{bid.bidAmount}</span>
                               </div>

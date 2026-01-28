@@ -361,9 +361,9 @@ const SubcontractorMessages = () => {
                           <div className="flex items-center gap-2">
                             <Badge variant="outline" className={cn(
                               "text-[8px] px-2 py-0 h-4 border-none font-black uppercase tracking-wider",
-                              chat.type === 'General Contractor' ? "bg-blue-100 dark:bg-blue-500/10 text-blue-600" :
+                              chat.type === 'General Contractor' ? "bg-yellow-100 dark:bg-yellow-500/10 text-yellow-600" :
                                 chat.type === 'Supplier' ? "bg-orange-100 dark:bg-orange-500/10 text-orange-600" :
-                                  "bg-purple-100 dark:bg-purple-500/10 text-purple-600"
+                                  "bg-yellow-100 dark:bg-yellow-500/10 text-yellow-600"
                             )}>
                               {chat.type}
                             </Badge>
@@ -413,7 +413,7 @@ const SubcontractorMessages = () => {
                     <div className="flex items-center gap-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">
                       <Building2 size={10} className="text-yellow-600" /> {activeContact.company}
                       <span className="opacity-20">•</span>
-                      <Briefcase size={10} className="text-blue-500" /> {activeContact.project}
+                      <Briefcase size={10} className="text-yellow-600" /> {activeContact.project}
                     </div>
                   </div>
                 </div>
@@ -491,7 +491,7 @@ const SubcontractorMessages = () => {
                                 "mt-4 p-4 rounded-2xl flex items-center gap-4 transition-colors",
                                 m.sender === 'me' ? "bg-white/10 hover:bg-white/20" : "bg-gray-100 dark:bg-black/20 hover:bg-gray-200 dark:hover:bg-black/30"
                               )}>
-                                <div className="w-10 h-10 rounded-xl bg-indigo-500/20 flex items-center justify-center text-indigo-400">
+                                <div className="w-10 h-10 rounded-xl bg-yellow-400/20 flex items-center justify-center text-yellow-600">
                                   <FileText size={20} />
                                 </div>
                                 <div className="flex-1 min-w-0">
@@ -503,7 +503,7 @@ const SubcontractorMessages = () => {
 
                             {m.sender === 'me' && (
                               <div className="absolute -left-12 top-1/2 -translate-y-1/2 opacity-0 group-hover/msg:opacity-100 transition-opacity">
-                                <CheckCheck size={16} className="text-green-500" />
+                                <CheckCheck size={16} className="text-yellow-500" />
                               </div>
                             )}
                           </div>
@@ -558,7 +558,7 @@ const SubcontractorMessages = () => {
                       <button className="text-[9px] font-black uppercase text-gray-400 hover:text-yellow-600 transition-colors flex items-center gap-1.5">
                         <FileText size={12} /> Attach Quote
                       </button>
-                      <button className="text-[9px] font-black uppercase text-gray-400 hover:text-blue-500 transition-colors flex items-center gap-1.5">
+                      <button className="text-[9px] font-black uppercase text-gray-400 hover:text-yellow-600 transition-colors flex items-center gap-1.5">
                         <Truck size={12} /> Dispatch Update
                       </button>
                     </div>

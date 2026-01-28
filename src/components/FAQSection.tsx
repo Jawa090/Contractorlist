@@ -45,7 +45,7 @@ const FAQSection = () => {
             <div>
               <h2 className="text-4xl font-bold text-black mb-8">
                 Frequently Asked{" "}
-                <span className="text-yellow-500">Questions</span>:
+                <span className="text-[#fce011]">Questions</span>:
               </h2>
             </div>
 
@@ -56,28 +56,26 @@ const FAQSection = () => {
                 return (
                   <div
                     key={index}
-                    className={`border-l-4 rounded-r-lg overflow-hidden shadow-sm ${
-                      isOpen
-                        ? "border-orange-400 bg-orange-50"
+                    className={`border-l-4 rounded-r-lg overflow-hidden shadow-sm ${isOpen
+                        ? "border-[#fce011] bg-[#fce011]/10"
                         : "border-gray-200 bg-white"
-                    }`}
+                      }`}
                   >
                     <button
                       onClick={() => toggleFAQ(index)}
                       className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-opacity-80 transition-colors duration-200"
                     >
                       <span
-                        className={`text-base font-medium pr-4 ${
-                          isOpen ? "text-orange-700" : "text-gray-700"
-                        }`}
+                        className={`text-base font-medium pr-4 ${isOpen ? "text-gray-900" : "text-gray-700"
+                          }`}
                       >
                         {faq.question}
                       </span>
                       <div className="flex-shrink-0">
                         {isOpen ? (
-                          <Minus className="w-5 h-5 text-orange-500" />
+                          <Minus className="w-5 h-5 text-[#fce011]" />
                         ) : (
-                          <Plus className="w-5 h-5 text-orange-500" />
+                          <Plus className="w-5 h-5 text-[#fce011]" />
                         )}
                       </div>
                     </button>

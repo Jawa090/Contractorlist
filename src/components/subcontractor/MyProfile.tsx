@@ -64,9 +64,9 @@ const MyProfile = () => {
               Manage your company profile and showcase your expertise
             </p>
           </div>
-          <Button 
+          <Button
             onClick={() => setIsEditing(!isEditing)}
-            className={isEditing ? "bg-green-600 hover:bg-green-700 text-white" : "bg-primary hover:bg-yellow-400 text-black"}
+            className={isEditing ? "bg-yellow-400 hover:bg-yellow-500 text-black" : "bg-primary hover:bg-yellow-400 text-black"}
           >
             {isEditing ? (
               <>
@@ -109,7 +109,7 @@ const MyProfile = () => {
                     <Star className="w-4 h-4 text-yellow-500 fill-current" />
                     <span className="text-sm font-medium ml-2">4.9 (127 reviews)</span>
                   </div>
-                  <Badge className="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300">
+                  <Badge className="bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 border-none">
                     <CheckCircle className="w-3 h-3 mr-1" />
                     Verified Contractor
                   </Badge>
@@ -168,7 +168,7 @@ const MyProfile = () => {
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-text-secondary-light dark:text-text-secondary-dark">Win Rate</span>
-                  <span className="font-bold text-green-600">24%</span>
+                  <span className="font-bold text-yellow-600">24%</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-text-secondary-light dark:text-text-secondary-dark">Response Time</span>
@@ -202,8 +202,8 @@ const MyProfile = () => {
                       />
                     ) : (
                       <p className="text-text-secondary-light dark:text-text-secondary-dark leading-relaxed">
-                        Acme Construction is a leading HVAC contractor serving the Austin metropolitan area for over 15 years. 
-                        We specialize in commercial and residential HVAC installation, maintenance, and energy efficiency solutions. 
+                        Acme Construction is a leading HVAC contractor serving the Austin metropolitan area for over 15 years.
+                        We specialize in commercial and residential HVAC installation, maintenance, and energy efficiency solutions.
                         Our team of certified technicians is committed to delivering high-quality work on time and within budget.
                       </p>
                     )}
@@ -352,12 +352,12 @@ const MyProfile = () => {
                           </div>
                           <div className="flex items-center gap-2">
                             {cert.verified ? (
-                              <Badge className="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300">
+                              <Badge className="bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 border-none">
                                 <Shield className="w-3 h-3 mr-1" />
                                 Verified
                               </Badge>
                             ) : (
-                              <Badge className="bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300">
+                              <Badge className="bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 border-none">
                                 Pending
                               </Badge>
                             )}
@@ -381,25 +381,25 @@ const MyProfile = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
                         <div className="flex items-center gap-3 mb-2">
-                          <Shield className="w-5 h-5 text-green-600" />
+                          <Shield className="w-5 h-5 text-yellow-600" />
                           <h4 className="font-semibold">General Liability</h4>
                         </div>
                         <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark">
                           $2M Coverage • Expires Dec 2024
                         </p>
-                        <Badge className="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 mt-2">
+                        <Badge className="bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 mt-2 border-none">
                           Active
                         </Badge>
                       </div>
                       <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
                         <div className="flex items-center gap-3 mb-2">
-                          <Shield className="w-5 h-5 text-green-600" />
+                          <Shield className="w-5 h-5 text-yellow-600" />
                           <h4 className="font-semibold">Workers' Compensation</h4>
                         </div>
                         <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark">
                           $1M Coverage • Expires Dec 2024
                         </p>
-                        <Badge className="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 mt-2">
+                        <Badge className="bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 mt-2 border-none">
                           Active
                         </Badge>
                       </div>

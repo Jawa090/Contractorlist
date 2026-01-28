@@ -63,14 +63,14 @@ const budgetData = [
 
 const projectStatusData = [
   { name: 'In Progress', value: 1, color: '#3b82f6' },
-  { name: 'Planning', value: 1, color: '#f59e0b' },
+  { name: 'Planning', value: 1, color: '#fce011' },
   { name: 'Bidding', value: 1, color: '#8b5cf6' },
 ];
 
 const HomeownerOverview = () => {
   const [isLive, setIsLive] = useState(true);
   const [lastUpdate, setLastUpdate] = useState(new Date());
-  
+
   // Real-time data state
   const [realTimeStats, setRealTimeStats] = useState({
     activeProjects: 3,
@@ -98,36 +98,36 @@ const HomeownerOverview = () => {
 
   // Enhanced stats with real-time data
   const stats = [
-    { 
-      title: 'Active Projects', 
-      value: realTimeStats.activeProjects.toString(), 
+    {
+      title: 'Active Projects',
+      value: realTimeStats.activeProjects.toString(),
       change: '+1',
       changeType: 'positive' as const,
       icon: TrendingUp,
       color: 'text-blue-600',
       bgColor: 'bg-blue-50'
     },
-    { 
-      title: 'Pending Bids', 
-      value: realTimeStats.pendingBids.toString(), 
+    {
+      title: 'Pending Bids',
+      value: realTimeStats.pendingBids.toString(),
       change: '+2',
       changeType: 'positive' as const,
       icon: Clock,
-      color: 'text-orange-600',
-      bgColor: 'bg-orange-50'
+      color: 'text-[#fce011]',
+      bgColor: 'bg-[#fce011]/10'
     },
-    { 
-      title: 'Budget Used', 
-      value: `$${realTimeStats.budgetUsed.toLocaleString()}`, 
+    {
+      title: 'Budget Used',
+      value: `$${realTimeStats.budgetUsed.toLocaleString()}`,
       change: '+8%',
       changeType: 'positive' as const,
       icon: DollarSign,
       color: 'text-green-600',
       bgColor: 'bg-green-50'
     },
-    { 
-      title: 'Next Milestone', 
-      value: `${realTimeStats.nextMilestone.toFixed(1)} days`, 
+    {
+      title: 'Next Milestone',
+      value: `${realTimeStats.nextMilestone.toFixed(1)} days`,
       change: 'On track',
       changeType: 'positive' as const,
       icon: Calendar,
@@ -210,15 +210,15 @@ const HomeownerOverview = () => {
             </Badge>
           </div>
           <p className="text-gray-600 dark:text-gray-400 text-lg">
-            You have <span className="font-semibold text-orange-600 dark:text-orange-400">3 active projects</span> and <span className="font-semibold text-blue-600 dark:text-blue-400">5 pending bids</span>
+            You have <span className="font-semibold text-[#fce011] dark:text-[#fce011]">3 active projects</span> and <span className="font-semibold text-blue-600 dark:text-blue-400">5 pending bids</span>
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <Button variant="outline" className="gap-2 border-orange-200 text-orange-700 hover:bg-orange-50 dark:border-orange-800 dark:text-orange-400">
+          <Button variant="outline" className="gap-2 border-[#fce011]/20 text-[#fce011] hover:bg-[#fce011]/10 dark:border-[#fce011]/30 dark:text-[#fce011]">
             <MoreHorizontal className="w-4 h-4" />
             Filter
           </Button>
-          <Button className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-semibold gap-2 shadow-lg">
+          <Button className="bg-[#fce011] hover:bg-[#fce011]/90 text-black font-semibold gap-2 shadow-lg">
             <Plus className="w-5 h-5" />
             New Project
           </Button>
@@ -228,8 +228,8 @@ const HomeownerOverview = () => {
       {/* Enhanced Stats Grid with Real-time Updates */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat) => (
-          <Card 
-            key={stat.title} 
+          <Card
+            key={stat.title}
             className={cn(
               "bg-white dark:bg-slate-900 hover:shadow-xl transition-all duration-300 border-0 shadow-sm",
               "group hover:scale-[1.02] cursor-pointer"
@@ -265,7 +265,7 @@ const HomeownerOverview = () => {
                 <p className="text-3xl font-bold text-gray-900 dark:text-white mb-1 transition-all duration-300">
                   {stat.value}
                   {isLive && stat.title === 'Pending Bids' && (
-                    <span className="ml-2 inline-block w-2 h-2 bg-orange-500 rounded-full animate-pulse"></span>
+                    <span className="ml-2 inline-block w-2 h-2 bg-[#fce011] rounded-full animate-pulse"></span>
                   )}
                 </p>
               </div>
@@ -316,39 +316,39 @@ const HomeownerOverview = () => {
               <AreaChart data={budgetData}>
                 <defs>
                   <linearGradient id="colorBudget" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8}/>
-                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8} />
+                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
                   </linearGradient>
                   <linearGradient id="colorSpent" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.8}/>
-                    <stop offset="95%" stopColor="#f59e0b" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="#fce011" stopOpacity={0.8} />
+                    <stop offset="95%" stopColor="#fce011" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" className="stroke-gray-200 dark:stroke-gray-700" />
                 <XAxis dataKey="name" className="text-xs" />
                 <YAxis className="text-xs" />
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: 'white', 
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: 'white',
                     border: '1px solid #e5e7eb',
                     borderRadius: '8px'
-                  }} 
+                  }}
                 />
-                <Area 
-                  type="monotone" 
-                  dataKey="budget" 
-                  stroke="#3b82f6" 
+                <Area
+                  type="monotone"
+                  dataKey="budget"
+                  stroke="#3b82f6"
                   strokeWidth={2}
-                  fillOpacity={1} 
-                  fill="url(#colorBudget)" 
+                  fillOpacity={1}
+                  fill="url(#colorBudget)"
                 />
-                <Area 
-                  type="monotone" 
-                  dataKey="spent" 
-                  stroke="#f59e0b" 
+                <Area
+                  type="monotone"
+                  dataKey="spent"
+                  stroke="#fce011"
                   strokeWidth={2}
-                  fillOpacity={1} 
-                  fill="url(#colorSpent)" 
+                  fillOpacity={1}
+                  fill="url(#colorSpent)"
                 />
               </AreaChart>
             </ResponsiveContainer>
@@ -366,16 +366,16 @@ const HomeownerOverview = () => {
                 <div key={item.name} className="space-y-2">
                   <div className="flex items-center justify-between text-sm">
                     <div className="flex items-center gap-2">
-                      <div 
-                        className="w-3 h-3 rounded-full" 
+                      <div
+                        className="w-3 h-3 rounded-full"
                         style={{ backgroundColor: item.color }}
                       />
                       <span className="font-medium text-gray-700 dark:text-gray-300">{item.name}</span>
                     </div>
                     <span className="font-bold text-gray-900 dark:text-white">{item.value}</span>
                   </div>
-                  <Progress 
-                    value={(item.value / 3) * 100} 
+                  <Progress
+                    value={(item.value / 3) * 100}
                     className="h-2"
                     style={{
                       backgroundColor: `${item.color}20`,
@@ -393,16 +393,16 @@ const HomeownerOverview = () => {
         <div className="lg:col-span-2 space-y-6">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Active Projects</h2>
-            <Button variant="outline" size="sm" className="text-orange-600 border-orange-200 hover:bg-orange-50 dark:border-orange-800 dark:text-orange-400">
+            <Button variant="outline" size="sm" className="text-[#fce011] border-[#fce011]/20 hover:bg-[#fce011]/10 dark:border-[#fce011]/30 dark:text-[#fce011]">
               <Eye className="w-4 h-4 mr-2" />
               View All
             </Button>
           </div>
-          
+
           <div className="space-y-4">
             {activeProjects.map((project) => (
-              <Card 
-                key={project.id} 
+              <Card
+                key={project.id}
                 className={cn(
                   "bg-white dark:bg-slate-900 hover:shadow-xl transition-all duration-300 border-0 shadow-sm",
                   "group cursor-pointer hover:scale-[1.01]"
@@ -411,7 +411,7 @@ const HomeownerOverview = () => {
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between mb-4">
                     <div>
-                      <h3 className="font-semibold text-lg text-gray-900 dark:text-white mb-1 group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">
+                      <h3 className="font-semibold text-lg text-gray-900 dark:text-white mb-1 group-hover:text-[#fce011] transition-colors">
                         {project.name}
                       </h3>
                       <p className="text-sm text-gray-600 dark:text-gray-400">{project.contractor}</p>
@@ -426,7 +426,7 @@ const HomeownerOverview = () => {
                       <p className="text-sm font-medium text-gray-900 dark:text-white">{project.budget}</p>
                     </div>
                   </div>
-                  
+
                   <div className="mb-4">
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-sm text-gray-600 dark:text-gray-400">Progress</span>
@@ -439,17 +439,17 @@ const HomeownerOverview = () => {
                     </div>
                     <div className="relative">
                       <Progress value={project.progress} className="h-2.5 bg-gray-100 dark:bg-gray-800" />
-                      <div 
+                      <div
                         className={cn(
                           "absolute top-0 left-0 h-2.5 rounded-full transition-all duration-1000",
-                          "bg-gradient-to-r from-yellow-400 to-orange-500",
+                          "bg-[#fce011]",
                           isLive && project.status === 'In Progress' && "animate-pulse"
                         )}
                         style={{ width: `${project.progress}%` }}
                       />
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
                     <span>Due: {project.dueDate}</span>
                     <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
@@ -465,16 +465,16 @@ const HomeownerOverview = () => {
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Recommended Pros</h2>
           </div>
-          
+
           <Card className="bg-white dark:bg-slate-900 border-0 shadow-sm">
             <CardContent className="p-6">
               <div className="space-y-4">
                 {recommendedPros.map((pro, index) => (
-                  <div 
-                    key={index} 
+                  <div
+                    key={index}
                     className={cn(
                       "flex items-center justify-between p-4 border border-gray-100 dark:border-gray-800 rounded-lg",
-                      "hover:border-orange-200 dark:hover:border-orange-800 hover:shadow-md transition-all cursor-pointer"
+                      "hover:border-[#fce011]/50 dark:hover:border-[#fce011]/50 hover:shadow-md transition-all cursor-pointer"
                     )}
                   >
                     <div className="flex-1">
@@ -482,7 +482,7 @@ const HomeownerOverview = () => {
                       <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{pro.specialty}</p>
                       <div className="flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400">
                         <div className="flex items-center gap-1">
-                          <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                          <Star className="w-3 h-3 fill-[#fce011] text-[#fce011]" />
                           <span className="font-semibold">{pro.rating}</span>
                         </div>
                         <div className="flex items-center gap-1">
@@ -491,18 +491,18 @@ const HomeownerOverview = () => {
                         </div>
                       </div>
                     </div>
-                    <Button 
-                      size="sm" 
-                      className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white shadow-sm"
+                    <Button
+                      size="sm"
+                      className="bg-[#fce011] hover:bg-[#fce011]/90 text-black shadow-sm"
                     >
                       Contact
                     </Button>
                   </div>
                 ))}
-                
-                <Button 
-                  variant="outline" 
-                  className="w-full mt-4 text-orange-600 border-orange-200 hover:bg-orange-50 dark:border-orange-800 dark:text-orange-400 dark:hover:bg-orange-900/20"
+
+                <Button
+                  variant="outline"
+                  className="w-full mt-4 text-[#fce011] border-[#fce011]/20 hover:bg-[#fce011]/10 dark:border-[#fce011]/80 dark:text-[#fce011]"
                 >
                   Browse All Contractors
                   <ArrowRight className="w-4 h-4 ml-2" />

@@ -118,7 +118,7 @@ const ReduxHeader = () => {
             <div className="md:hidden">
               <button
                 onClick={() => dispatch(toggleMobileMenu())}
-                className="text-black hover:text-yellow-500 transition-colors"
+                className="text-black hover:text-[#fce011] transition-colors"
               >
                 <svg
                   className="h-6 w-6"
@@ -162,19 +162,19 @@ const ReduxHeader = () => {
           <nav className="hidden md:flex items-center gap-6 text-base font-medium flex-1 justify-center">
             <Link
               to="/contractors"
-              className="text-black hover:text-yellow-500 transition-colors font-medium px-2"
+              className="text-black hover:text-[#fce011] transition-colors font-medium px-2"
             >
               Find Contractors
             </Link>
             <Link
               to="/projects"
-              className="text-black hover:text-yellow-500 transition-colors font-medium px-2"
+              className="text-black hover:text-[#fce011] transition-colors font-medium px-2"
             >
               Find Projects
             </Link>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="group inline-flex h-10 w-max items-center justify-center focus:outline-none disabled:pointer-events-none disabled:opacity-50 px-2 text-base font-medium text-black hover:text-yellow-500 hover:bg-gray-50 rounded-lg transition-colors bg-transparent data-[state=open]:bg-gray-50">
+                <button className="group inline-flex h-10 w-max items-center justify-center focus:outline-none disabled:pointer-events-none disabled:opacity-50 px-2 text-base font-medium text-black hover:text-[#fce011] hover:bg-gray-50 rounded-lg transition-colors bg-transparent data-[state=open]:bg-gray-50">
                   For Contractors
                   <ChevronDown className="relative top-[1px] ml-1 h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180" />
                 </button>
@@ -191,34 +191,34 @@ const ReduxHeader = () => {
                       </div>
                       <div className="space-y-4">
                         <Link to="/products" className="block group">
-                          <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-orange-50 transition-colors">
-                            <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-orange-200 transition-colors">
-                              <Target className="w-5 h-5 text-orange-600" />
+                          <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-[#fce011]/10 transition-colors">
+                            <div className="w-10 h-10 bg-[#fce011]/20 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-[#fce011]/30 transition-colors">
+                              <Target className="w-5 h-5 text-black" />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <h4 className="text-sm font-semibold text-gray-900 mb-1 group-hover:text-orange-600 transition-colors">AI Powered Project Finder</h4>
+                              <h4 className="text-sm font-semibold text-gray-900 mb-1 group-hover:text-[#fce011] transition-colors">AI Powered Project Finder</h4>
                               <p className="text-xs text-gray-600 leading-relaxed">Discover and win more projects with AI</p>
                             </div>
                           </div>
                         </Link>
                         <Link to="/products/ai-quantity-takeoff" className="block group">
                           <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-orange-50 transition-colors">
-                            <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-orange-200 transition-colors">
-                              <Calculator className="w-5 h-5 text-orange-600" />
+                            <div className="w-10 h-10 bg-[#fce011]/10 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-[#fce011]/20 transition-colors">
+                              <Calculator className="w-5 h-5 text-[#fce011]" />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <h4 className="text-sm font-semibold text-gray-900 mb-1 group-hover:text-orange-600 transition-colors">AI Digital Takeoff & Estimating</h4>
+                              <h4 className="text-sm font-semibold text-gray-900 mb-1 group-hover:text-[#fce011] transition-colors">AI Digital Takeoff & Estimating</h4>
                               <p className="text-xs text-gray-600 leading-relaxed">Accurate estimates in minutes, not hours</p>
                             </div>
                           </div>
                         </Link>
                         <Link to="/products/ai-chatbot" className="block group">
-                          <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-orange-50 transition-colors">
-                            <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-orange-200 transition-colors">
-                              <Bot className="w-5 h-5 text-orange-600" />
+                          <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-[#fce011]/10 transition-colors">
+                            <div className="w-10 h-10 bg-[#fce011]/20 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-[#fce011]/30 transition-colors">
+                              <Bot className="w-5 h-5 text-black" />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <h4 className="text-sm font-semibold text-gray-900 mb-1 group-hover:text-orange-600 transition-colors">AI Assistant for Contractors</h4>
+                              <h4 className="text-sm font-semibold text-gray-900 mb-1 group-hover:text-[#fce011] transition-colors">AI Assistant for Contractors</h4>
                               <p className="text-xs text-gray-600 leading-relaxed">Your 24/7 intelligent business assistant</p>
                             </div>
                           </div>
@@ -282,14 +282,14 @@ const ReduxHeader = () => {
                   </div>
 
                   {/* CTA Section */}
-                  <div className="bg-gradient-to-r from-orange-50 to-yellow-50 border-t border-gray-200 px-6 py-4">
+                  <div className="bg-gradient-to-r from-[#fce011]/10 to-[#fce011]/5 border-t border-gray-200 px-6 py-4">
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-base font-bold text-gray-900 mb-1">Ready to grow your business?</p>
                         <p className="text-sm text-gray-600">Start your free trial today</p>
                       </div>
                       <Link to="/signup">
-                        <Button className="bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white font-semibold px-6 py-2 rounded-lg shadow-md transition-colors">
+                        <Button className="bg-[#fce011] hover:bg-[#fce011]/90 text-black font-semibold px-6 py-2 rounded-lg shadow-md transition-colors">
                           Get Started
                         </Button>
                       </Link>
@@ -300,7 +300,7 @@ const ReduxHeader = () => {
             </DropdownMenu>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="group inline-flex h-10 w-max items-center justify-center focus:outline-none disabled:pointer-events-none disabled:opacity-50 px-2 text-base font-medium text-black hover:text-yellow-500 hover:bg-gray-50 rounded-lg transition-colors bg-transparent data-[state=open]:bg-gray-50">
+                <button className="group inline-flex h-10 w-max items-center justify-center focus:outline-none disabled:pointer-events-none disabled:opacity-50 px-2 text-base font-medium text-black hover:text-[#fce011] hover:bg-gray-50 rounded-lg transition-colors bg-transparent data-[state=open]:bg-gray-50">
                   For Homeowners
                   <ChevronDown className="relative top-[1px] ml-1 h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180" />
                 </button>
@@ -312,39 +312,39 @@ const ReduxHeader = () => {
                     {/* FIND & COMPARE Section */}
                     <div className="p-6">
                       <div className="flex items-center gap-2 mb-6">
-                        <Search className="w-5 h-5 text-orange-600" />
+                        <Search className="w-5 h-5 text-[#fce011]" />
                         <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide">Find & Compare</h3>
                       </div>
                       <div className="space-y-4">
                         <Link to="/contractors" className="block group">
-                          <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-orange-50 transition-colors">
-                            <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-orange-200 transition-colors">
-                              <Search className="w-5 h-5 text-orange-600" />
+                          <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-[#fce011]/10 transition-colors">
+                            <div className="w-10 h-10 bg-[#fce011]/20 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-[#fce011]/30 transition-colors">
+                              <Search className="w-5 h-5 text-black" />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <h4 className="text-sm font-semibold text-gray-900 mb-1 group-hover:text-orange-600 transition-colors">Find Local Contractors</h4>
+                              <h4 className="text-sm font-semibold text-gray-900 mb-1 group-hover:text-[#fce011] transition-colors">Find Local Contractors</h4>
                               <p className="text-xs text-gray-600 leading-relaxed">Connect with verified pros in your area</p>
                             </div>
                           </div>
                         </Link>
                         <Link to="/contractors" className="block group">
-                          <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-orange-50 transition-colors">
-                            <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-orange-200 transition-colors">
-                              <ClipboardCheck className="w-5 h-5 text-orange-600" />
+                          <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-[#fce011]/10 transition-colors">
+                            <div className="w-10 h-10 bg-[#fce011]/20 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-[#fce011]/30 transition-colors">
+                              <ClipboardCheck className="w-5 h-5 text-black" />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <h4 className="text-sm font-semibold text-gray-900 mb-1 group-hover:text-orange-600 transition-colors">Get Instant Quotes</h4>
+                              <h4 className="text-sm font-semibold text-gray-900 mb-1 group-hover:text-[#fce011] transition-colors">Get Instant Quotes</h4>
                               <p className="text-xs text-gray-600 leading-relaxed">Compare prices from multiple contractors</p>
                             </div>
                           </div>
                         </Link>
                         <Link to="/contractors" className="block group">
-                          <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-orange-50 transition-colors">
-                            <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-orange-200 transition-colors">
-                              <Star className="w-5 h-5 text-orange-600" />
+                          <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-[#fce011]/10 transition-colors">
+                            <div className="w-10 h-10 bg-[#fce011]/20 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-[#fce011]/30 transition-colors">
+                              <Star className="w-5 h-5 text-black" />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <h4 className="text-sm font-semibold text-gray-900 mb-1 group-hover:text-orange-600 transition-colors">Verified Reviews</h4>
+                              <h4 className="text-sm font-semibold text-gray-900 mb-1 group-hover:text-[#fce011] transition-colors">Verified Reviews</h4>
                               <p className="text-xs text-gray-600 leading-relaxed">Read authentic customer feedback</p>
                             </div>
                           </div>
@@ -415,7 +415,7 @@ const ReduxHeader = () => {
                     <div className="flex items-center justify-between">
                       <p className="text-sm font-medium text-gray-900">Ready to start your project? Find trusted contractors today</p>
                       <Link to="/contractors">
-                        <Button className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-6 py-2 rounded-lg shadow-md transition-colors">
+                        <Button className="bg-[#fce011] hover:bg-[#fce011]/90 text-black font-semibold px-6 py-2 rounded-lg shadow-md transition-colors">
                           Find Contractors
                         </Button>
                       </Link>
@@ -426,7 +426,7 @@ const ReduxHeader = () => {
             </DropdownMenu>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="group inline-flex h-10 w-max items-center justify-center focus:outline-none disabled:pointer-events-none disabled:opacity-50 px-2 text-base font-medium text-black hover:text-yellow-500 hover:bg-gray-50 rounded-lg transition-colors bg-transparent data-[state=open]:bg-gray-50">
+                <button className="group inline-flex h-10 w-max items-center justify-center focus:outline-none disabled:pointer-events-none disabled:opacity-50 px-2 text-base font-medium text-black hover:text-[#fce011] hover:bg-gray-50 rounded-lg transition-colors bg-transparent data-[state=open]:bg-gray-50">
                   For Supplier
                   <ChevronDown className="relative top-[1px] ml-1 h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180" />
                 </button>
@@ -438,39 +438,39 @@ const ReduxHeader = () => {
                     {/* PRODUCTS Section */}
                     <div className="p-6">
                       <div className="flex items-center gap-2 mb-6">
-                        <Package className="w-5 h-5 text-orange-600" />
+                        <Package className="w-5 h-5 text-[#fce011]" />
                         <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide">Products</h3>
                       </div>
                       <div className="space-y-4">
                         <Link to="/products" className="block group">
-                          <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-orange-50 transition-colors">
-                            <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-orange-200 transition-colors">
-                              <Target className="w-5 h-5 text-orange-600" />
+                          <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-[#fce011]/10 transition-colors">
+                            <div className="w-10 h-10 bg-[#fce011]/20 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-[#fce011]/30 transition-colors">
+                              <Target className="w-5 h-5 text-black" />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <h4 className="text-sm font-semibold text-gray-900 mb-1 group-hover:text-orange-600 transition-colors">Project Opportunities</h4>
+                              <h4 className="text-sm font-semibold text-gray-900 mb-1 group-hover:text-[#fce011] transition-colors">Project Opportunities</h4>
                               <p className="text-xs text-gray-600 leading-relaxed">Discover construction projects needing supplies</p>
                             </div>
                           </div>
                         </Link>
                         <Link to="/products" className="block group">
-                          <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-orange-50 transition-colors">
-                            <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-orange-200 transition-colors">
-                              <Network className="w-5 h-5 text-orange-600" />
+                          <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-[#fce011]/10 transition-colors">
+                            <div className="w-10 h-10 bg-[#fce011]/20 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-[#fce011]/30 transition-colors">
+                              <Network className="w-5 h-5 text-black" />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <h4 className="text-sm font-semibold text-gray-900 mb-1 group-hover:text-orange-600 transition-colors">Supplier Network</h4>
+                              <h4 className="text-sm font-semibold text-gray-900 mb-1 group-hover:text-[#fce011] transition-colors">Supplier Network</h4>
                               <p className="text-xs text-gray-600 leading-relaxed">Connect with contractors and builders</p>
                             </div>
                           </div>
                         </Link>
                         <Link to="/products" className="block group">
-                          <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-orange-50 transition-colors">
-                            <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-orange-200 transition-colors">
-                              <TrendingUp className="w-5 h-5 text-orange-600" />
+                          <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-[#fce011]/10 transition-colors">
+                            <div className="w-10 h-10 bg-[#fce011]/20 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-[#fce011]/30 transition-colors">
+                              <TrendingUp className="w-5 h-5 text-black" />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <h4 className="text-sm font-semibold text-gray-900 mb-1 group-hover:text-orange-600 transition-colors">Business Growth Tools</h4>
+                              <h4 className="text-sm font-semibold text-gray-900 mb-1 group-hover:text-[#fce011] transition-colors">Business Growth Tools</h4>
                               <p className="text-xs text-gray-600 leading-relaxed">Tools to expand your supply business</p>
                             </div>
                           </div>
@@ -534,14 +534,14 @@ const ReduxHeader = () => {
                   </div>
 
                   {/* CTA Section */}
-                  <div className="bg-gradient-to-r from-orange-50 to-yellow-50 border-t border-gray-200 px-6 py-4">
+                  <div className="bg-gradient-to-r from-[#fce011]/10 to-[#fce011]/5 border-t border-gray-200 px-6 py-4">
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-base font-bold text-gray-900 mb-1">Ready to grow your supply business?</p>
                         <p className="text-sm text-gray-600">Join our supplier network today</p>
                       </div>
                       <Link to="/signup">
-                        <Button className="bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white font-semibold px-6 py-2 rounded-lg shadow-md transition-colors">
+                        <Button className="bg-[#fce011] hover:bg-[#fce011]/90 text-black font-semibold px-6 py-2 rounded-lg shadow-md transition-colors">
                           Get Started
                         </Button>
                       </Link>
@@ -559,9 +559,9 @@ const ReduxHeader = () => {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="flex items-center gap-2 hover:bg-gray-50 rounded-xl transition-all duration-300 group">
-                    <div className="relative h-10 w-10 rounded-full bg-gradient-to-br from-yellow-400 via-yellow-500 to-orange-500 p-[2px] shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105">
+                    <div className="relative h-10 w-10 rounded-full bg-[#fce011] p-[2px] shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105">
                       <div className="h-full w-full rounded-full bg-white flex items-center justify-center">
-                        <div className="h-8 w-8 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center">
+                        <div className="h-8 w-8 rounded-full bg-[#fce011] flex items-center justify-center">
                           <User className="h-4 w-4 text-white" strokeWidth={2.5} />
                         </div>
                       </div>
@@ -571,12 +571,12 @@ const ReduxHeader = () => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-64 shadow-xl border border-gray-200 rounded-xl">
-                  <DropdownMenuLabel className="bg-gradient-to-br from-yellow-50 via-orange-50 to-yellow-50 rounded-t-xl">
+                  <DropdownMenuLabel className="bg-white rounded-t-xl">
                     <div className="flex items-center gap-4 p-3">
                       <div className="relative">
-                        <div className="h-14 w-14 rounded-full bg-gradient-to-br from-yellow-400 via-yellow-500 to-orange-500 p-[3px] shadow-lg">
+                        <div className="h-14 w-14 rounded-full bg-[#fce011] p-[3px] shadow-lg">
                           <div className="h-full w-full rounded-full bg-white flex items-center justify-center">
-                            <div className="h-11 w-11 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center shadow-inner">
+                            <div className="h-11 w-11 rounded-full bg-[#fce011] flex items-center justify-center shadow-inner">
                               <User className="h-6 w-6 text-white" strokeWidth={2.5} />
                             </div>
                           </div>
@@ -630,7 +630,7 @@ const ReduxHeader = () => {
             ) : (
               <Link
                 to="/login"
-                className="flex items-center gap-2 px-5 py-2 rounded-lg bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 relative overflow-hidden group"
+                className="flex items-center gap-2 px-5 py-2 rounded-lg bg-[#fce011] hover:bg-[#fce011]/90 text-black font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 relative overflow-hidden group"
                 style={{ boxShadow: "0 4px 15px rgba(255, 193, 7, 0.3)" }}
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -644,7 +644,7 @@ const ReduxHeader = () => {
           <div className="md:hidden">
             <button
               onClick={() => dispatch(toggleMobileMenu())}
-              className="text-black hover:text-yellow-500 transition-colors"
+              className="text-black hover:text-[#fce011] transition-colors"
             >
               <svg
                 className="h-6 w-6"
@@ -669,14 +669,14 @@ const ReduxHeader = () => {
             <div className="flex flex-col space-y-4">
               <Link
                 to="/contractors"
-                className="text-black hover:text-yellow-500 transition-colors px-4 py-2"
+                className="text-black hover:text-[#fce011] transition-colors px-4 py-2"
                 onClick={() => dispatch(closeMobileMenu())}
               >
                 Find Contractors
               </Link>
               <Link
                 to="/projects"
-                className="text-black hover:text-yellow-500 transition-colors px-4 py-2"
+                className="text-black hover:text-[#fce011] transition-colors px-4 py-2"
                 onClick={() => dispatch(closeMobileMenu())}
               >
                 Find Projects
@@ -684,7 +684,7 @@ const ReduxHeader = () => {
               <div className="px-4">
                 <button
                   onClick={() => handleDropdownToggle("contractors")}
-                  className="w-full flex items-center justify-between text-black hover:text-yellow-500 transition-colors py-2"
+                  className="w-full flex items-center justify-between text-black hover:text-[#fce011] transition-colors py-2"
                 >
                   <span className="font-medium">For Contractors</span>
                   <ChevronDown
@@ -696,49 +696,49 @@ const ReduxHeader = () => {
                   <div className="ml-4 mt-2 space-y-2 border-l-2 border-gray-200 pl-4">
                     <Link
                       to="/products"
-                      className="block text-gray-700 hover:text-yellow-500 transition-colors py-2"
+                      className="block text-gray-700 hover:text-[#fce011] transition-colors py-2"
                       onClick={() => dispatch(closeMobileMenu())}
                     >
                       AI Powered Project Finder
                     </Link>
                     <Link
                       to="/products/ai-quantity-takeoff"
-                      className="block text-gray-700 hover:text-yellow-500 transition-colors py-2"
+                      className="block text-gray-700 hover:text-[#fce011] transition-colors py-2"
                       onClick={() => dispatch(closeMobileMenu())}
                     >
                       AI Digital Takeoff & Estimating
                     </Link>
                     <Link
                       to="/products/ai-chatbot"
-                      className="block text-gray-700 hover:text-yellow-500 transition-colors py-2"
+                      className="block text-gray-700 hover:text-[#fce011] transition-colors py-2"
                       onClick={() => dispatch(closeMobileMenu())}
                     >
                       AI Assistant for Contractors
                     </Link>
                     <Link
                       to="/services"
-                      className="block text-gray-700 hover:text-yellow-500 transition-colors py-2"
+                      className="block text-gray-700 hover:text-[#fce011] transition-colors py-2"
                       onClick={() => dispatch(closeMobileMenu())}
                     >
                       Hire a Dedicated Estimator
                     </Link>
                     <Link
                       to="/services"
-                      className="block text-gray-700 hover:text-yellow-500 transition-colors py-2"
+                      className="block text-gray-700 hover:text-[#fce011] transition-colors py-2"
                       onClick={() => dispatch(closeMobileMenu())}
                     >
                       Hire a Dedicated Architect
                     </Link>
                     <Link
                       to="/services"
-                      className="block text-gray-700 hover:text-yellow-500 transition-colors py-2"
+                      className="block text-gray-700 hover:text-[#fce011] transition-colors py-2"
                       onClick={() => dispatch(closeMobileMenu())}
                     >
                       Web Design, SEO & Local Marketing
                     </Link>
                     <Link
                       to="/contact-us"
-                      className="block text-gray-700 hover:text-yellow-500 transition-colors py-2"
+                      className="block text-gray-700 hover:text-[#fce011] transition-colors py-2"
                       onClick={() => dispatch(closeMobileMenu())}
                     >
                       24/7 Technical Support
@@ -749,7 +749,7 @@ const ReduxHeader = () => {
               <div className="px-4">
                 <button
                   onClick={() => handleDropdownToggle("homeowners")}
-                  className="w-full flex items-center justify-between text-black hover:text-yellow-500 transition-colors py-2"
+                  className="w-full flex items-center justify-between text-black hover:text-[#fce011] transition-colors py-2"
                 >
                   <span className="font-medium">For Homeowners</span>
                   <ChevronDown
@@ -761,14 +761,14 @@ const ReduxHeader = () => {
                   <div className="ml-4 mt-2 space-y-2 border-l-2 border-gray-200 pl-4">
                     <Link
                       to="/contractors"
-                      className="block text-gray-700 hover:text-yellow-500 transition-colors py-2"
+                      className="block text-gray-700 hover:text-[#fce011] transition-colors py-2"
                       onClick={() => dispatch(closeMobileMenu())}
                     >
                       Find Contractors
                     </Link>
                     <Link
                       to="/join-network"
-                      className="block text-gray-700 hover:text-yellow-500 transition-colors py-2"
+                      className="block text-gray-700 hover:text-[#fce011] transition-colors py-2"
                       onClick={() => dispatch(closeMobileMenu())}
                     >
                       Post a Project
@@ -776,7 +776,7 @@ const ReduxHeader = () => {
                     {isAuthenticated && (
                       <Link
                         to="/homeowner-dashboard"
-                        className="block text-gray-700 hover:text-yellow-500 transition-colors py-2"
+                        className="block text-gray-700 hover:text-[#fce011] transition-colors py-2"
                         onClick={() => dispatch(closeMobileMenu())}
                       >
                         My Dashboard
@@ -784,14 +784,14 @@ const ReduxHeader = () => {
                     )}
                     <Link
                       to="/signup"
-                      className="block text-gray-700 hover:text-yellow-500 transition-colors py-2"
+                      className="block text-gray-700 hover:text-[#fce011] transition-colors py-2"
                       onClick={() => dispatch(closeMobileMenu())}
                     >
                       Join as Homeowner
                     </Link>
                     <Link
                       to="/contact-us"
-                      className="block text-gray-700 hover:text-yellow-500 transition-colors py-2"
+                      className="block text-gray-700 hover:text-[#fce011] transition-colors py-2"
                       onClick={() => dispatch(closeMobileMenu())}
                     >
                       Help & Support
@@ -802,7 +802,7 @@ const ReduxHeader = () => {
               <div className="px-4">
                 <button
                   onClick={() => handleDropdownToggle("supplier")}
-                  className="w-full flex items-center justify-between text-black hover:text-yellow-500 transition-colors py-2"
+                  className="w-full flex items-center justify-between text-black hover:text-[#fce011] transition-colors py-2"
                 >
                   <span className="font-medium">For Supplier</span>
                   <ChevronDown
@@ -814,49 +814,49 @@ const ReduxHeader = () => {
                   <div className="ml-4 mt-2 space-y-2 border-l-2 border-gray-200 pl-4">
                     <Link
                       to="/products"
-                      className="block text-gray-700 hover:text-yellow-500 transition-colors py-2"
+                      className="block text-gray-700 hover:text-[#fce011] transition-colors py-2"
                       onClick={() => dispatch(closeMobileMenu())}
                     >
                       Project Opportunities
                     </Link>
                     <Link
                       to="/products"
-                      className="block text-gray-700 hover:text-yellow-500 transition-colors py-2"
+                      className="block text-gray-700 hover:text-[#fce011] transition-colors py-2"
                       onClick={() => dispatch(closeMobileMenu())}
                     >
                       Supplier Network
                     </Link>
                     <Link
                       to="/products"
-                      className="block text-gray-700 hover:text-yellow-500 transition-colors py-2"
+                      className="block text-gray-700 hover:text-[#fce011] transition-colors py-2"
                       onClick={() => dispatch(closeMobileMenu())}
                     >
                       Business Growth Tools
                     </Link>
                     <Link
                       to="/services"
-                      className="block text-gray-700 hover:text-yellow-500 transition-colors py-2"
+                      className="block text-gray-700 hover:text-[#fce011] transition-colors py-2"
                       onClick={() => dispatch(closeMobileMenu())}
                     >
                       Bid Management
                     </Link>
                     <Link
                       to="/services"
-                      className="block text-gray-700 hover:text-yellow-500 transition-colors py-2"
+                      className="block text-gray-700 hover:text-[#fce011] transition-colors py-2"
                       onClick={() => dispatch(closeMobileMenu())}
                     >
                       Inventory Management
                     </Link>
                     <Link
                       to="/services"
-                      className="block text-gray-700 hover:text-yellow-500 transition-colors py-2"
+                      className="block text-gray-700 hover:text-[#fce011] transition-colors py-2"
                       onClick={() => dispatch(closeMobileMenu())}
                     >
                       Digital Marketing
                     </Link>
                     <Link
                       to="/contact-us"
-                      className="block text-gray-700 hover:text-yellow-500 transition-colors py-2"
+                      className="block text-gray-700 hover:text-[#fce011] transition-colors py-2"
                       onClick={() => dispatch(closeMobileMenu())}
                     >
                       24/7 Support

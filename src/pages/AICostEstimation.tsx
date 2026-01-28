@@ -77,7 +77,7 @@ const AICostEstimation = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-green-50 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-yellow-50 relative overflow-hidden">
       {/* Animated Background */}
       <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%23fbbf24%22%20fill-opacity%3D%220.03%22%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2230%22%20r%3D%222%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] animate-pulse"></div>
 
@@ -88,13 +88,13 @@ const AICostEstimation = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <div className="inline-flex items-center px-4 py-2 bg-green-100 text-green-800 rounded-full text-sm font-bold mb-6">
+              <div className="inline-flex items-center px-4 py-2 bg-[#fce011]/20 text-black rounded-full text-sm font-bold mb-6">
                 <TrendingUp className="w-4 h-4 mr-2" />
                 Predictive Analytics AI
               </div>
 
               <div className="flex items-center mb-6">
-                <div className="p-4 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl mr-6 shadow-lg">
+                <div className="p-4 bg-[#fce011] rounded-2xl mr-6 shadow-lg">
                   <DollarSign className="h-12 w-12 text-white" />
                   <TrendingUp className="h-6 w-6 text-white/70 absolute -mt-2 ml-8" />
                 </div>
@@ -133,7 +133,7 @@ const AICostEstimation = () => {
                   </span>
                 </div>
                 <div className="flex items-center">
-                  <Database className="w-4 h-4 text-green-500 mr-2" />
+                  <Database className="w-4 h-4 text-black mr-2" />
                   <span className="text-sm font-medium text-gray-600">
                     ML Processing
                   </span>
@@ -154,7 +154,7 @@ const AICostEstimation = () => {
               </div>
 
               <div className="space-y-4 mb-6">
-                <div className="flex justify-between items-center p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg">
+                <div className="flex justify-between items-center p-4 bg-yellow-50 rounded-lg">
                   <div>
                     <span className="text-sm font-medium text-gray-600">
                       Lumber (per board ft)
@@ -163,9 +163,9 @@ const AICostEstimation = () => {
                       ${marketData.lumber.toFixed(0)}
                     </div>
                   </div>
-                  <TrendingUp className="w-6 h-6 text-green-500" />
+                  <TrendingUp className="w-6 h-6 text-[#fce011]" />
                 </div>
-                <div className="flex justify-between items-center p-4 bg-gradient-to-r from-green-50 to-green-100 rounded-lg">
+                <div className="flex justify-between items-center p-4 bg-yellow-50 rounded-lg">
                   <div>
                     <span className="text-sm font-medium text-gray-600">
                       Steel (per ton)
@@ -174,9 +174,9 @@ const AICostEstimation = () => {
                       ${marketData.steel.toFixed(0)}
                     </div>
                   </div>
-                  <LineChart className="w-6 h-6 text-blue-500" />
+                  <LineChart className="w-6 h-6 text-[#fce011]" />
                 </div>
-                <div className="flex justify-between items-center p-4 bg-gradient-to-r from-purple-50 to-purple-100 rounded-lg">
+                <div className="flex justify-between items-center p-4 bg-yellow-50 rounded-lg">
                   <div>
                     <span className="text-sm font-medium text-gray-600">
                       Concrete (per yard)
@@ -185,13 +185,13 @@ const AICostEstimation = () => {
                       ${marketData.concrete.toFixed(0)}
                     </div>
                   </div>
-                  <BarChart3 className="w-6 h-6 text-purple-500" />
+                  <BarChart3 className="w-6 h-6 text-[#fce011]" />
                 </div>
               </div>
 
               <Button
                 onClick={() => setIsAnalyzing(!isAnalyzing)}
-                className="w-full bg-gradient-to-r from-[#fce011] to-yellow-400 hover:from-yellow-400 hover:to-[#fce011] text-black font-bold py-3 rounded-xl transition-all duration-300 transform hover:scale-105"
+                className="w-full bg-[#fce011] hover:bg-[#ebd010] text-black font-bold py-3 rounded-xl transition-all duration-300 transform hover:scale-105"
               >
                 <Calculator className="mr-2 h-5 w-5" />
                 {isAnalyzing ? "Analyzing Market..." : "Generate AI Estimate"}
@@ -217,7 +217,7 @@ const AICostEstimation = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
             <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-gray-200">
               <div className="flex items-center justify-between mb-4">
-                <Target className="w-8 h-8 text-green-500" />
+                <Target className="w-8 h-8 text-black" />
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
               </div>
               <div className="text-3xl font-bold text-black mb-2">
@@ -228,7 +228,7 @@ const AICostEstimation = () => {
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div
-                  className="bg-green-500 h-2 rounded-full transition-all duration-1000"
+                  className="bg-[#fce011] h-2 rounded-full transition-all duration-1000"
                   style={{ width: `${accuracy}%` }}
                 ></div>
               </div>
@@ -236,27 +236,27 @@ const AICostEstimation = () => {
 
             <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-gray-200">
               <div className="flex items-center justify-between mb-4">
-                <Zap className="w-8 h-8 text-blue-500" />
-                <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
+                <Zap className="w-8 h-8 text-[#fce011]" />
+                <div className="w-2 h-2 bg-[#fce011] rounded-full animate-pulse"></div>
               </div>
               <div className="text-3xl font-bold text-black mb-2">2.3s</div>
               <div className="text-sm text-gray-600 mb-4">
                 Average Response Time
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
-                <div className="bg-blue-500 h-2 rounded-full w-4/5"></div>
+                <div className="bg-[#fce011] h-2 rounded-full w-4/5"></div>
               </div>
             </div>
 
             <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-gray-200">
               <div className="flex items-center justify-between mb-4">
-                <TrendingUp className="w-8 h-8 text-purple-500" />
-                <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
+                <TrendingUp className="w-8 h-8 text-[#fce011]" />
+                <div className="w-2 h-2 bg-[#fce011] rounded-full animate-pulse"></div>
               </div>
               <div className="text-3xl font-bold text-black mb-2">42%</div>
               <div className="text-sm text-gray-600 mb-4">Cost Reduction</div>
               <div className="w-full bg-gray-200 rounded-full h-2">
-                <div className="bg-purple-500 h-2 rounded-full w-2/5"></div>
+                <div className="bg-[#fce011] h-2 rounded-full w-2/5"></div>
               </div>
             </div>
           </div>
@@ -265,7 +265,7 @@ const AICostEstimation = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div>
               <h3 className="text-3xl font-bold text-black mb-8 flex items-center">
-                <Brain className="w-8 h-8 text-green-500 mr-3" />
+                <Brain className="w-8 h-8 text-black mr-3" />
                 AI Intelligence Engine
               </h3>
               <div className="space-y-6">
@@ -276,8 +276,8 @@ const AICostEstimation = () => {
                       key={index}
                       className="flex items-start p-4 bg-white/60 backdrop-blur-sm rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300"
                     >
-                      <div className="p-3 bg-green-100 rounded-lg mr-4 flex-shrink-0">
-                        <IconComponent className="w-6 h-6 text-green-600" />
+                      <div className="p-3 bg-[#fce011]/10 rounded-lg mr-4 flex-shrink-0">
+                        <IconComponent className="w-6 h-6 text-[#fce011]" />
                       </div>
                       <div>
                         <h4 className="font-bold text-black mb-2">
@@ -328,7 +328,7 @@ const AICostEstimation = () => {
 
               <div className="space-y-4">
                 <Button
-                  className="w-full bg-gradient-to-r from-[#fce011] to-yellow-400 hover:from-yellow-400 hover:to-[#fce011] text-black font-bold py-3 rounded-xl"
+                  className="w-full bg-[#fce011] hover:bg-[#ebd010] text-black font-bold py-3 rounded-xl"
                   size="lg"
                 >
                   <Play className="mr-2 h-5 w-5" />
@@ -336,11 +336,11 @@ const AICostEstimation = () => {
                 </Button>
                 <Button
                   variant="outline"
-                  className="w-full border-white/30 text-white hover:bg-white hover:text-black py-3 rounded-xl"
+                  className="w-full border-white/30 text-black hover:bg-white hover:text-black py-3 rounded-xl"
                   size="lg"
                 >
                   <Calculator className="mr-2 h-5 w-5 text-black" />
-                  <p className="text-black">ROI Calculator</p>
+                  ROI Calculator
                 </Button>
               </div>
             </div>
@@ -365,31 +365,31 @@ const AICostEstimation = () => {
             <Card className="p-8">
               <CardHeader>
                 <CardTitle className="flex items-center text-2xl">
-                  <TrendingUp className="w-6 h-6 text-green-600 mr-3" />
+                  <TrendingUp className="w-6 h-6 text-[#fce011] mr-3" />
                   Cost Trend Analysis
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-6">
-                  <div className="flex justify-between items-center p-4 bg-green-50 rounded-lg">
+                  <div className="flex justify-between items-center p-4 bg-yellow-50 rounded-lg">
                     <span className="font-medium">Labor Costs</span>
                     <div className="flex items-center">
-                      <TrendingUp className="w-4 h-4 text-green-500 mr-2" />
-                      <span className="text-green-600 font-bold">+3.2%</span>
+                      <TrendingUp className="w-4 h-4 text-[#fce011] mr-2" />
+                      <span className="text-gray-900 font-bold">+3.2%</span>
                     </div>
                   </div>
-                  <div className="flex justify-between items-center p-4 bg-blue-50 rounded-lg">
+                  <div className="flex justify-between items-center p-4 bg-yellow-50 rounded-lg">
                     <span className="font-medium">Material Prices</span>
                     <div className="flex items-center">
-                      <TrendingUp className="w-4 h-4 text-blue-500 mr-2" />
-                      <span className="text-blue-600 font-bold">+1.8%</span>
+                      <TrendingUp className="w-4 h-4 text-[#fce011] mr-2" />
+                      <span className="text-gray-900 font-bold">+1.8%</span>
                     </div>
                   </div>
-                  <div className="flex justify-between items-center p-4 bg-purple-50 rounded-lg">
+                  <div className="flex justify-between items-center p-4 bg-yellow-50 rounded-lg">
                     <span className="font-medium">Equipment Rental</span>
                     <div className="flex items-center">
-                      <TrendingUp className="w-4 h-4 text-purple-500 mr-2" />
-                      <span className="text-purple-600 font-bold">+2.1%</span>
+                      <TrendingUp className="w-4 h-4 text-[#fce011] mr-2" />
+                      <span className="text-gray-900 font-bold">+2.1%</span>
                     </div>
                   </div>
                 </div>
@@ -399,7 +399,7 @@ const AICostEstimation = () => {
             <Card className="p-8">
               <CardHeader>
                 <CardTitle className="flex items-center text-2xl">
-                  <BarChart3 className="w-6 h-6 text-blue-600 mr-3" />
+                  <BarChart3 className="w-8 h-8 text-black" />
                   Regional Variations
                 </CardTitle>
               </CardHeader>
@@ -409,27 +409,27 @@ const AICostEstimation = () => {
                     {
                       region: "Northeast",
                       multiplier: "1.15x",
-                      color: "bg-red-100 text-red-700",
+                      color: "bg-yellow-100 text-yellow-800",
                     },
                     {
                       region: "West Coast",
                       multiplier: "1.22x",
-                      color: "bg-orange-100 text-orange-700",
+                      color: "bg-yellow-100 text-yellow-800",
                     },
                     {
                       region: "Southeast",
                       multiplier: "0.92x",
-                      color: "bg-green-100 text-green-700",
+                      color: "bg-yellow-100 text-yellow-800",
                     },
                     {
                       region: "Midwest",
                       multiplier: "0.88x",
-                      color: "bg-blue-100 text-blue-700",
+                      color: "bg-yellow-100 text-yellow-800",
                     },
                     {
                       region: "Southwest",
                       multiplier: "1.05x",
-                      color: "bg-purple-100 text-purple-700",
+                      color: "bg-yellow-100 text-yellow-800",
                     },
                   ].map((region, index) => (
                     <div
@@ -548,11 +548,10 @@ const AICostEstimation = () => {
             ].map((plan, index) => (
               <Card
                 key={index}
-                className={`${
-                  plan.popular
-                    ? "border-2 border-yellow-400 scale-105"
-                    : "border border-gray-700"
-                } bg-gray-800/50 backdrop-blur-sm`}
+                className={`${plan.popular
+                  ? "border-2 border-yellow-400 scale-105"
+                  : "border border-gray-700"
+                  } bg-gray-800/50 backdrop-blur-sm`}
               >
                 {plan.popular && (
                   <div className="bg-yellow-400 text-black text-center py-2 text-sm font-bold rounded-t-lg">
@@ -572,17 +571,16 @@ const AICostEstimation = () => {
                   <ul className="space-y-3 mb-8">
                     {plan.features.map((feature, idx) => (
                       <li key={idx} className="flex items-center text-gray-300">
-                        <CheckCircle className="w-4 h-4 text-green-400 mr-3" />
+                        <CheckCircle className="w-4 h-4 text-[#fce011] mr-3" />
                         {feature}
                       </li>
                     ))}
                   </ul>
                   <Button
-                    className={`w-full ${
-                      plan.popular
-                        ? "bg-yellow-400 hover:bg-yellow-500 text-black"
-                        : "bg-white hover:bg-gray-100 text-black"
-                    } font-bold py-3`}
+                    className={`w-full ${plan.popular
+                      ? "bg-[#fce011] hover:bg-[#ebd010] text-black"
+                      : "bg-white hover:bg-gray-100 text-black"
+                      } font-bold py-3`}
                   >
                     {plan.name === "Enterprise"
                       ? "Contact Sales"
@@ -596,7 +594,7 @@ const AICostEstimation = () => {
       </section>
 
       {/* ROI Calculator */}
-      <section className="relative z-10 py-20 bg-gradient-to-r from-green-400 to-emerald-600">
+      <section className="relative z-10 py-20 bg-[#fce011]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl font-bold text-white mb-6">
             Calculate Your ROI
@@ -626,7 +624,7 @@ const AICostEstimation = () => {
             <Link to="/contact-us">
               <Button
                 size="lg"
-                className="bg-white hover:bg-gray-100 text-green-600 font-bold px-8 py-4"
+                className="bg-white hover:bg-gray-100 text-black font-bold px-8 py-4"
               >
                 <Calculator className="mr-2 h-5 w-5" />
                 Calculate My ROI
@@ -636,7 +634,7 @@ const AICostEstimation = () => {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-white text-white hover:bg-white hover:text-green-600 font-bold px-8 py-4"
+                className="border-white text-white hover:bg-white hover:text-black font-bold px-8 py-4"
               >
                 Schedule Demo
               </Button>

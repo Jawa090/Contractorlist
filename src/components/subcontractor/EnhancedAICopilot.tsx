@@ -116,10 +116,10 @@ const EnhancedAICopilot = () => {
 
   const getInsightIcon = (type: string) => {
     switch (type) {
-      case 'optimization': return <TrendingUp className="w-5 h-5 text-green-600" />;
-      case 'opportunity': return <Target className="w-5 h-5 text-blue-600" />;
+      case 'optimization': return <TrendingUp className="w-5 h-5 text-yellow-600" />;
+      case 'opportunity': return <Target className="w-5 h-5 text-yellow-600" />;
       case 'warning': return <AlertCircle className="w-5 h-5 text-red-600" />;
-      case 'prediction': return <Brain className="w-5 h-5 text-purple-600" />;
+      case 'prediction': return <Brain className="w-5 h-5 text-yellow-600" />;
       case 'recommendation': return <Lightbulb className="w-5 h-5 text-yellow-600" />;
       default: return <Sparkles className="w-5 h-5 text-gray-600" />;
     }
@@ -130,7 +130,7 @@ const EnhancedAICopilot = () => {
       case 'critical': return 'border-l-red-500 bg-red-50 dark:bg-red-900/10';
       case 'high': return 'border-l-orange-500 bg-orange-50 dark:bg-orange-900/10';
       case 'medium': return 'border-l-yellow-500 bg-yellow-50 dark:bg-yellow-900/10';
-      case 'low': return 'border-l-green-500 bg-green-50 dark:bg-green-900/10';
+      case 'low': return 'border-l-yellow-400 bg-yellow-50 dark:bg-yellow-900/10';
       default: return 'border-l-gray-300 bg-gray-50 dark:bg-gray-900/10';
     }
   };
@@ -199,11 +199,11 @@ const EnhancedAICopilot = () => {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
           <div>
             <h1 className="text-3xl font-black tracking-tight mb-2 flex items-center gap-3">
-              <div className="size-10 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+              <div className="size-10 rounded-lg bg-yellow-400 flex items-center justify-center">
                 <Bot className="w-6 h-6 text-white" />
               </div>
               AI Copilot
-              <Badge className="bg-gradient-to-r from-blue-500 to-purple-600 text-white">
+              <Badge className="bg-yellow-400 text-black">
                 <Sparkles className="w-3 h-3 mr-1" />
                 Enhanced
               </Badge>
@@ -328,9 +328,9 @@ const EnhancedAICopilot = () => {
                                 <h4 className="font-bold text-lg mb-1">{insight.title}</h4>
                                 <div className="flex items-center gap-2 mb-2">
                                   <Badge className={`text-xs ${insight.priority === 'critical' ? 'bg-red-100 text-red-800' :
-                                      insight.priority === 'high' ? 'bg-orange-100 text-orange-800' :
-                                        insight.priority === 'medium' ? 'bg-yellow-100 text-yellow-800' :
-                                          'bg-green-100 text-green-800'
+                                    insight.priority === 'high' ? 'bg-orange-100 text-orange-800' :
+                                      insight.priority === 'medium' ? 'bg-yellow-100 text-yellow-800' :
+                                        'bg-yellow-100 text-yellow-800'
                                     }`}>
                                     {insight.priority.toUpperCase()}
                                   </Badge>
@@ -343,7 +343,7 @@ const EnhancedAICopilot = () => {
                                 </div>
                               </div>
                               <div className="text-right">
-                                <p className="text-sm font-semibold text-green-600">{insight.impact}</p>
+                                <p className="text-sm font-semibold text-yellow-600">{insight.impact}</p>
                                 <p className="text-xs text-gray-500">{formatTimestamp(insight.timestamp)}</p>
                               </div>
                             </div>
@@ -423,7 +423,7 @@ const EnhancedAICopilot = () => {
                     <CardTitle className="flex items-center gap-2">
                       <Bot className="w-5 h-5" />
                       AI Assistant Chat
-                      <Badge className="bg-green-100 text-green-800">Online</Badge>
+                      <Badge className="bg-yellow-100 text-yellow-800">Online</Badge>
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="flex-1 flex flex-col p-0">
@@ -436,8 +436,8 @@ const EnhancedAICopilot = () => {
                           >
                             <div
                               className={`max-w-[80%] rounded-lg p-3 ${conv.sender === 'user'
-                                  ? 'bg-primary text-black'
-                                  : 'bg-gray-100 dark:bg-gray-800'
+                                ? 'bg-primary text-black'
+                                : 'bg-gray-100 dark:bg-gray-800'
                                 }`}
                             >
                               <p className="text-sm">{conv.message}</p>
@@ -497,19 +497,19 @@ const EnhancedAICopilot = () => {
                       <div className="space-y-4">
                         <div className="flex justify-between items-center">
                           <span>Win Rate</span>
-                          <span className="font-bold text-green-600">68% ↑</span>
+                          <span className="font-bold text-yellow-600">68% ↑</span>
                         </div>
                         <Progress value={68} className="h-2" />
 
                         <div className="flex justify-between items-center">
                           <span>Bid Accuracy</span>
-                          <span className="font-bold text-blue-600">84% ↑</span>
+                          <span className="font-bold text-yellow-600">84% ↑</span>
                         </div>
                         <Progress value={84} className="h-2" />
 
                         <div className="flex justify-between items-center">
                           <span>Response Time</span>
-                          <span className="font-bold text-purple-600">2.3h ↓</span>
+                          <span className="font-bold text-yellow-600">2.3h ↓</span>
                         </div>
                         <Progress value={77} className="h-2" />
                       </div>
@@ -523,7 +523,7 @@ const EnhancedAICopilot = () => {
                     <CardContent>
                       <div className="space-y-4">
                         <div className="text-center">
-                          <p className="text-3xl font-bold text-green-600">+$1.2M</p>
+                          <p className="text-3xl font-bold text-yellow-600">+$1.2M</p>
                           <p className="text-sm text-gray-600">Revenue Impact</p>
                         </div>
                         <div className="grid grid-cols-2 gap-4 text-center">
@@ -550,21 +550,21 @@ const EnhancedAICopilot = () => {
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-4">
-                        <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                          <h4 className="font-semibold text-blue-800 dark:text-blue-300">Q2 2024 Forecast</h4>
-                          <p className="text-sm text-blue-700 dark:text-blue-400">
+                        <div className="p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
+                          <h4 className="font-semibold text-yellow-800 dark:text-yellow-300">Q2 2024 Forecast</h4>
+                          <p className="text-sm text-yellow-700 dark:text-yellow-400">
                             23% increase in commercial HVAC demand
                           </p>
                         </div>
-                        <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
-                          <h4 className="font-semibold text-green-800 dark:text-green-300">Energy Efficiency</h4>
-                          <p className="text-sm text-green-700 dark:text-green-400">
+                        <div className="p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
+                          <h4 className="font-semibold text-yellow-800 dark:text-yellow-300">Energy Efficiency</h4>
+                          <p className="text-sm text-yellow-700 dark:text-yellow-400">
                             Highest growth potential sector
                           </p>
                         </div>
-                        <div className="p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
-                          <h4 className="font-semibold text-purple-800 dark:text-purple-300">Smart Systems</h4>
-                          <p className="text-sm text-purple-700 dark:text-purple-400">
+                        <div className="p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
+                          <h4 className="font-semibold text-yellow-800 dark:text-yellow-300">Smart Systems</h4>
+                          <p className="text-sm text-yellow-700 dark:text-yellow-400">
                             Emerging opportunity in IoT HVAC
                           </p>
                         </div>
@@ -580,15 +580,15 @@ const EnhancedAICopilot = () => {
                       <div className="space-y-4">
                         <div className="flex justify-between items-center">
                           <span>Expected Monthly Revenue</span>
-                          <span className="font-bold text-green-600">$185K</span>
+                          <span className="font-bold text-yellow-600">$185K</span>
                         </div>
                         <div className="flex justify-between items-center">
                           <span>Projected Win Rate</span>
-                          <span className="font-bold text-blue-600">72%</span>
+                          <span className="font-bold text-yellow-600">72%</span>
                         </div>
                         <div className="flex justify-between items-center">
                           <span>Optimal Bid Count</span>
-                          <span className="font-bold text-purple-600">12-15</span>
+                          <span className="font-bold text-yellow-600">12-15</span>
                         </div>
                       </div>
                     </CardContent>
@@ -601,16 +601,16 @@ const EnhancedAICopilot = () => {
           {/* Right Column - Quick Actions & Status */}
           <div className="space-y-6">
             {/* AI Status */}
-            <Card className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20">
+            <Card className="bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20">
               <CardContent className="p-6">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="size-3 rounded-full bg-green-500 animate-pulse"></div>
+                  <div className="size-3 rounded-full bg-yellow-400 animate-pulse"></div>
                   <span className="font-semibold">AI Copilot Active</span>
                 </div>
                 <div className="space-y-3 text-sm">
                   <div className="flex justify-between">
                     <span>Processing Speed</span>
-                    <span className="text-green-600">Real-time</span>
+                    <span className="text-yellow-600">Real-time</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Data Sources</span>
@@ -657,8 +657,8 @@ const EnhancedAICopilot = () => {
               <CardContent>
                 <div className="space-y-3">
                   <div className="flex items-start gap-3">
-                    <div className="size-8 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
-                      <CheckCircle className="w-4 h-4 text-green-600" />
+                    <div className="size-8 rounded-full bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center">
+                      <CheckCircle className="w-4 h-4 text-yellow-600" />
                     </div>
                     <div className="flex-1">
                       <p className="text-sm font-medium">Analyzed 3 new leads</p>
@@ -666,8 +666,8 @@ const EnhancedAICopilot = () => {
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <div className="size-8 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
-                      <TrendingUp className="w-4 h-4 text-blue-600" />
+                    <div className="size-8 rounded-full bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center">
+                      <TrendingUp className="w-4 h-4 text-yellow-600" />
                     </div>
                     <div className="flex-1">
                       <p className="text-sm font-medium">Updated market predictions</p>
@@ -675,8 +675,8 @@ const EnhancedAICopilot = () => {
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <div className="size-8 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
-                      <Brain className="w-4 h-4 text-purple-600" />
+                    <div className="size-8 rounded-full bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center">
+                      <Brain className="w-4 h-4 text-yellow-600" />
                     </div>
                     <div className="flex-1">
                       <p className="text-sm font-medium">Generated pricing insights</p>

@@ -62,7 +62,7 @@ const VoiceAgentDemo = () => {
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-gray-900 dark:bg-gray-800 rounded-b-2xl z-20" />
 
             {/* Screen Content */}
-            <div className="h-full w-full rounded-[2.5rem] bg-gradient-to-b from-yellow-400/20 to-white dark:from-yellow-900/20 dark:to-[#0f1115] overflow-hidden flex flex-col p-6 pt-12 relative">
+            <div className="h-full w-full rounded-[2.5rem] bg-gradient-to-b from-[#fce011]/20 to-white dark:from-[#fce011]/20 dark:to-[#0f1115] overflow-hidden flex flex-col p-6 pt-12 relative">
 
                 {/* Header */}
                 <div className="flex justify-between items-center mb-8">
@@ -86,7 +86,7 @@ const VoiceAgentDemo = () => {
                                 exit={{ opacity: 0, scale: 0.9 }}
                                 className="relative flex flex-col items-center"
                             >
-                                <div className="w-48 h-48 rounded-full bg-yellow-400/10 flex items-center justify-center relative overflow-hidden group">
+                                <div className="w-48 h-48 rounded-full bg-[#fce011]/10 flex items-center justify-center relative overflow-hidden group">
                                     <motion.img
                                         src="/yellow-helmet.png"
                                         alt="Yellow Helmet"
@@ -94,7 +94,7 @@ const VoiceAgentDemo = () => {
                                         animate={{ y: [0, -10, 0] }}
                                         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                                     />
-                                    <div className="absolute inset-0 bg-yellow-400/20 blur-2xl group-hover:bg-yellow-400/30 transition-all" />
+                                    <div className="absolute inset-0 bg-[#fce011]/20 blur-2xl group-hover:bg-[#fce011]/30 transition-all" />
                                 </div>
                                 <p className="mt-6 text-sm font-bold text-gray-600 dark:text-gray-400 text-center px-4">
                                     Tap to speak with our AI Construction Manager
@@ -113,7 +113,7 @@ const VoiceAgentDemo = () => {
                                     {[...Array(3)].map((_, i) => (
                                         <motion.div
                                             key={i}
-                                            className="absolute border-2 border-yellow-400/30 rounded-full"
+                                            className="absolute border-2 border-[#fce011]/30 rounded-full"
                                             animate={{
                                                 scale: [1, 1.2 + volume, 1],
                                                 opacity: [0.3, 0.1, 0.3],
@@ -128,7 +128,7 @@ const VoiceAgentDemo = () => {
                                         />
                                     ))}
 
-                                    <div className="w-32 h-32 rounded-full bg-yellow-400 shadow-xl shadow-yellow-400/50 flex items-center justify-center relative z-10">
+                                    <div className="w-32 h-32 rounded-full bg-[#fce011] shadow-xl shadow-[#fce011]/50 flex items-center justify-center relative z-10">
                                         <motion.div
                                             animate={{
                                                 scale: [1, 1 + volume * 0.5, 1],
@@ -172,7 +172,7 @@ const VoiceAgentDemo = () => {
                         className={cn(
                             "h-20 w-20 rounded-full shadow-2xl transition-all duration-500 hover:scale-110",
                             callStatus === 'idle'
-                                ? "bg-yellow-400 hover:bg-yellow-500 text-black shadow-yellow-500/20"
+                                ? "bg-[#fce011] hover:bg-[#fce011]/90 text-black shadow-[#fce011]/20"
                                 : "bg-red-500 hover:bg-red-600 text-white shadow-red-500/20"
                         )}
                     >

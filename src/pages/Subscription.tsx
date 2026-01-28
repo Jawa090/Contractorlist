@@ -109,7 +109,7 @@ const Subscription = () => {
                                 id="billing-toggle"
                                 checked={billingCycle === "yearly"}
                                 onCheckedChange={(checked) => setBillingCycle(checked ? "yearly" : "monthly")}
-                                className="data-[state=checked]:bg-yellow-500"
+                                className="data-[state=checked]:bg-[#fce011]"
                             />
                             <Label
                                 htmlFor="billing-toggle"
@@ -173,7 +173,7 @@ const Subscription = () => {
                                     <CardFooter>
                                         <Button
                                             className={`w-full py-6 text-lg font-semibold transition-all duration-200 ${plan.highlight
-                                                ? "bg-yellow-400 hover:bg-yellow-500 text-black shadow-md hover:shadow-lg"
+                                                ? "bg-[#fce011] hover:bg-[#fce011]/90 text-black shadow-md hover:shadow-lg border-0"
                                                 : ""
                                                 }`}
                                             variant={plan.buttonVariant}
@@ -196,13 +196,13 @@ const Subscription = () => {
                     <div className="max-w-7xl mx-auto relative z-10">
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                             <div>
-                                <div className="inline-flex items-center px-3 py-1 rounded-full bg-blue-900/50 text-blue-300 text-xs font-bold mb-6 border border-blue-800">
+                                <div className="inline-flex items-center px-3 py-1 rounded-full bg-yellow-900/50 text-[#fce011] text-xs font-bold mb-6 border border-yellow-800">
                                     <Briefcase className="w-3 h-3 mr-2" />
                                     PROFESSIONAL SERVICES
                                 </div>
                                 <h2 className="text-3xl md:text-5xl font-bold mb-6 leading-tight">
                                     Need more than just tools? <br />
-                                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
+                                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#fce011] to-yellow-500">
                                         We've got you covered.
                                     </span>
                                 </h2>
@@ -222,8 +222,8 @@ const Subscription = () => {
                                         "Risk Assessment"
                                     ].map((service) => (
                                         <div key={service} className="flex items-center space-x-3">
-                                            <div className="p-1.5 bg-blue-500/20 rounded-full">
-                                                <Check className="w-4 h-4 text-blue-400" />
+                                            <div className="p-1.5 bg-[#fce011]/20 rounded-full">
+                                                <Check className="w-4 h-4 text-[#fce011]" />
                                             </div>
                                             <span className="text-gray-300 font-medium">{service}</span>
                                         </div>
@@ -232,7 +232,7 @@ const Subscription = () => {
 
                                 <Button
                                     size="lg"
-                                    className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-6 text-lg rounded-xl shadow-lg shadow-blue-900/20"
+                                    className="bg-[#fce011] hover:bg-[#fce011]/90 text-black px-8 py-6 text-lg rounded-xl shadow-lg shadow-yellow-900/20"
                                     onClick={() => navigate("/contact-us")}
                                 >
                                     Get a Custom Quote
@@ -241,14 +241,14 @@ const Subscription = () => {
                             </div>
 
                             <div className="relative">
-                                <div className="absolute -inset-4 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl opacity-30 blur-2xl animate-pulse"></div>
+                                <div className="absolute -inset-4 bg-gradient-to-r from-[#fce011] to-yellow-600 rounded-2xl opacity-30 blur-2xl animate-pulse"></div>
                                 <div className="relative bg-gray-800 border border-gray-700 rounded-2xl p-8 shadow-2xl">
                                     <div className="flex items-center justify-between mb-8">
                                         <div>
                                             <h3 className="text-xl font-bold text-white">Service Request</h3>
                                             <p className="text-sm text-gray-400">Typical response time: &lt; 2 hours</p>
                                         </div>
-                                        <Shield className="w-10 h-10 text-blue-500" />
+                                        <Shield className="w-10 h-10 text-[#fce011]" />
                                     </div>
 
                                     <div className="space-y-4">
@@ -258,16 +258,16 @@ const Subscription = () => {
                                                 <span className="text-xs bg-green-900/50 text-green-400 px-2 py-0.5 rounded">Active</span>
                                             </div>
                                             <div className="w-full bg-gray-600 rounded-full h-1.5">
-                                                <div className="bg-green-500 h-1.5 rounded-full" style={{ width: "75%" }}></div>
+                                                <div className="bg-[#fce011] h-1.5 rounded-full" style={{ width: "75%" }}></div>
                                             </div>
                                         </div>
                                         <div className="bg-gray-700/50 p-4 rounded-lg border border-gray-600">
                                             <div className="flex justify-between items-center mb-2">
                                                 <span className="text-sm font-medium text-gray-300">Cost Estimation</span>
-                                                <span className="text-xs bg-blue-900/50 text-blue-400 px-2 py-0.5 rounded">In Review</span>
+                                                <span className="text-xs bg-yellow-900/50 text-yellow-400 px-2 py-0.5 rounded">In Review</span>
                                             </div>
                                             <div className="w-full bg-gray-600 rounded-full h-1.5">
-                                                <div className="bg-blue-500 h-1.5 rounded-full" style={{ width: "40%" }}></div>
+                                                <div className="bg-[#fce011] h-1.5 rounded-full" style={{ width: "40%" }}></div>
                                             </div>
                                         </div>
                                         <div className="bg-gray-700/50 p-4 rounded-lg border border-gray-600">
