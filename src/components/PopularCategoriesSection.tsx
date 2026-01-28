@@ -30,6 +30,7 @@ import {
   Settings,
   Box,
   ChevronRight,
+  ChevronLeft,
   Phone,
   Target,
   Clock,
@@ -39,7 +40,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
 const PopularCategoriesSection = () => {
-  const [activeTab, setActiveTab] = useState("ai-powered-project");
+  const [activeTab, setActiveTab] = useState("ai-assistant");
   const [activeCategory, setActiveCategory] = useState<string | null>("Plumbers");
 
   const scrollRight = (rowId: string) => {
@@ -58,7 +59,7 @@ const PopularCategoriesSection = () => {
     { name: "Plumbers", icon: Droplets, color: "text-gray-700" },
     { name: "Electrical pros", icon: Zap, color: "text-gray-700" },
     { name: "Painters", icon: Paintbrush, color: "text-gray-700" },
-    { name: "HVA", icon: Wind, color: "text-gray-700" },
+    { name: "HVAC", icon: Wind, color: "text-gray-700" },
     { name: "Roofing", icon: Home, color: "text-gray-700" },
     { name: "Carpentry", icon: Hammer, color: "text-gray-700" },
     { name: "Flooring", icon: Layers, color: "text-gray-700" },
@@ -122,7 +123,8 @@ const PopularCategoriesSection = () => {
         description:
           "Discover opportunities before your competition with intelligent lead generation and automated prospecting tools that give you the edge.",
         icon: Search,
-        gradient: "from-[#fce011] to-[#fce011]",
+        gradient: "from-primary to-primary",
+        image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=1000&auto=format&fit=crop"
       },
       cards: [
         {
@@ -151,7 +153,8 @@ const PopularCategoriesSection = () => {
         description:
           "Transform your digital presence with AI-powered marketing, automation, and optimization tools designed for construction professionals.",
         icon: Zap,
-        gradient: "from-[#fce011] to-[#fce011]",
+        gradient: "from-primary to-primary",
+        image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1000&auto=format&fit=crop"
       },
       cards: [
         {
@@ -180,7 +183,8 @@ const PopularCategoriesSection = () => {
         description:
           "Your intelligent 24/7 assistant that helps with project management, decision-making, and workflow optimization.",
         icon: Users,
-        gradient: "from-[#fce011] to-[#fce011]",
+        gradient: "from-primary to-primary",
+        image: "https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=1000&auto=format&fit=crop"
       },
       cards: [
         {
@@ -209,7 +213,8 @@ const PopularCategoriesSection = () => {
         description:
           "Custom websites designed to showcase your work, attract new clients, and establish your professional online presence.",
         icon: Globe,
-        gradient: "from-[#fce011] to-[#fce011]",
+        gradient: "from-primary to-primary",
+        image: "https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?q=80&w=1000&auto=format&fit=crop"
       },
       cards: [
         {
@@ -238,7 +243,8 @@ const PopularCategoriesSection = () => {
         description:
           "Round-the-clock technical assistance from expert support team to keep your business running smoothly without interruption.",
         icon: HeadphonesIcon,
-        gradient: "from-[#fce011] to-[#fce011]",
+        gradient: "from-primary to-primary",
+        image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?q=80&w=1000&auto=format&fit=crop"
       },
       cards: [
         {
@@ -266,23 +272,23 @@ const PopularCategoriesSection = () => {
   const currentServices = services[activeTab as keyof typeof services];
 
   return (
-    <div className="relative py-8 bg-gradient-to-br from-gray-50 via-white to-yellow-50 overflow-hidden">
+    <div className="relative py-8 bg-gradient-to-br from-gray-50 via-white to-primary/20 overflow-hidden">
       {/* Background decoration */}
       <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%23fbbf24%22%20fill-opacity%3D%220.03%22%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2230%22%20r%3D%222%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')]"></div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Unified Categories & AI Tools Section */}
+        {/* Categories Section */}
         <div className="mb-12">
           {/* Consolidated Header */}
           <div className="text-center mb-6">
-            <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full mb-4 shadow-sm" style={{ backgroundColor: '#fce011' }}>
+            <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full mb-4 shadow-sm bg-primary">
               <Sparkles className="w-4 h-4 text-black" />
               <span className="text-xs font-bold text-black uppercase tracking-tight">
                 All-in-One Construction Intelligence Platform
               </span>
             </div>
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2">
-              Explore <span style={{ color: '#fce011' }}>Professional Categories</span> & <span style={{ color: '#fce011' }}>AI Tools</span>
+              Explore <span className="text-primary">Professional Categories</span>
             </h2>
             <p className="text-sm text-gray-600 max-w-2xl mx-auto">
               Find reliable subcontractors and use AI-powered insights to win more projects and scale your business.
@@ -298,64 +304,35 @@ const PopularCategoriesSection = () => {
             `}</style>
 
             {/* Top Part: Categories - Now more compact */}
-            <div className="mb-6 pb-6 border-b border-gray-300/30">
+            <div className="mb-6 border-b border-gray-300/30">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider">Popular Trade Categories</h3>
+                <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider">Popular Trade Categories in Construction</h3>
               </div>
 
-              {/* Row 1 */}
+              {/* Single Row of Categories */}
               <div className="relative mb-3">
-                <div
-                  id="category-scroll-container-row1"
-                  className="flex items-center gap-5 overflow-x-auto pb-2 scrollbar-hide scroll-smooth pr-10"
-                  style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-                >
-                  {firstRowCategories.map((category, index) => {
-                    const IconComponent = category.icon;
-                    const isActive = activeCategory === category.name;
-                    return (
-                      <button
-                        key={`row1-${index}`}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          setActiveCategory(category.name);
-                        }}
-                        className="flex flex-col items-center gap-2 min-w-[70px] flex-shrink-0 transition-all duration-200 group"
-                      >
-                        <div className={`p-2 rounded-xl transition-colors ${isActive ? 'bg-[#fce011]' : 'bg-white group-hover:bg-yellow-50 shadow-sm'}`}>
-                          <IconComponent
-                            className={`w-5 h-5 ${isActive ? 'text-black' : 'text-gray-700'}`}
-                            strokeWidth={2}
-                          />
-                        </div>
-                        <span className={`text-[10px] text-center leading-tight whitespace-nowrap ${isActive ? "text-gray-900 font-bold" : "text-gray-600 font-medium"}`}>
-                          {category.name}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
                 <button
-                  onClick={() => scrollRight('row1')}
-                  className="absolute right-0 top-[18px] flex items-center justify-center w-6 h-6 rounded-full bg-white/80 backdrop-blur-sm shadow-md hover:bg-white transition-colors z-10"
+                  onClick={() => {
+                    const container = document.getElementById('category-scroll-container');
+                    if (container) {
+                      container.scrollBy({ left: -200, behavior: 'smooth' });
+                    }
+                  }}
+                  className="absolute left-0 top-[18px] flex items-center justify-center w-6 h-6 rounded-full bg-white/80 backdrop-blur-sm shadow-md hover:bg-white transition-colors z-10"
                 >
-                  <ChevronRight className="w-4 h-4 text-gray-700" />
+                  <ChevronLeft className="w-4 h-4 text-gray-700" />
                 </button>
-              </div>
-
-              {/* Row 2 */}
-              <div className="relative">
                 <div
-                  id="category-scroll-container-row2"
-                  className="flex items-center gap-5 overflow-x-auto pb-2 scrollbar-hide scroll-smooth pr-10"
+                  id="category-scroll-container"
+                  className="flex items-center gap-5 overflow-x-auto pb-2 scrollbar-hide scroll-smooth px-10"
                   style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                 >
-                  {secondRowCategories.map((category, index) => {
+                  {allCategories.map((category, index) => {
                     const IconComponent = category.icon;
                     const isActive = activeCategory === category.name;
                     return (
                       <button
-                        key={`row2-${index}`}
+                        key={index}
                         onClick={(e) => {
                           e.preventDefault();
                           setActiveCategory(category.name);
@@ -376,7 +353,12 @@ const PopularCategoriesSection = () => {
                   })}
                 </div>
                 <button
-                  onClick={() => scrollRight('row2')}
+                  onClick={() => {
+                    const container = document.getElementById('category-scroll-container');
+                    if (container) {
+                      container.scrollBy({ left: 200, behavior: 'smooth' });
+                    }
+                  }}
                   className="absolute right-0 top-[18px] flex items-center justify-center w-6 h-6 rounded-full bg-white/80 backdrop-blur-sm shadow-md hover:bg-white transition-colors z-10"
                 >
                   <ChevronRight className="w-4 h-4 text-gray-700" />
@@ -384,124 +366,448 @@ const PopularCategoriesSection = () => {
               </div>
             </div>
 
-            {/* Bottom Part: AI Tools Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 items-stretch">
-              {/* Left Side - Vertical Tabs */}
-              <div className="lg:col-span-2 flex flex-col space-y-1.5">
-                <h3 className="text-[10px] font-extrabold text-gray-500 uppercase tracking-widest mb-1 px-1">AI-Powered Solutions</h3>
-                <div className="flex flex-col gap-1.5 flex-1">
-                  {tabs.map((tab) => {
-                    const TabIcon = tab.icon;
-                    const isActive = activeTab === tab.id;
-                    return (
-                      <button
-                        key={tab.id}
-                        onClick={() => setActiveTab(tab.id)}
-                        className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left font-bold transition-all duration-200 flex-1 ${isActive
-                          ? "bg-[#fce011] text-black shadow-sm"
-                          : "bg-black/5 text-gray-700 hover:bg-black/10 border border-transparent"
-                          }`}
-                      >
-                        <TabIcon className={`w-3.5 h-3.5 flex-shrink-0 ${isActive ? 'text-black' : 'text-gray-500'}`} />
-                        <span className="text-[11px] sm:text-xs">{tab.label}</span>
-                      </button>
-                    );
-                  })}
+            {/* Sub-Trades Grid - Dynamically populated based on activeCategory */}
+            {activeCategory && (
+              <div className="mt-8 animate-in fade-in slide-in-from-top-4 duration-500 border-t border-gray-200/50 pt-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                    <span className="w-1.5 h-6 bg-primary rounded-full inline-block"></span>
+                    {activeCategory} Services
+                  </h3>
                 </div>
-              </div>
 
-              {/* Right Side - Cards aligned to Left Height */}
-              <div className="lg:col-span-3">
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 h-full">
-                  {currentServices.cards.map((card, index) => {
-                    const cardImages = [
-                      "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&h=400&fit=crop",
-                      "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=400&h=400&fit=crop",
-                      "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=400&h=400&fit=crop",
-                    ];
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  {(() => {
+                    // Helper to generate sub-categories based on the active one
+                    const getSubData = (cat: string) => {
+                      // Image mappings for categories
+                      const imageMap: Record<string, string[]> = {
+                        "Plumbers": [
+                          "https://images.unsplash.com/photo-1581244277943-fe0ef9d47b5f?auto=format&fit=crop&q=80&w=400", // Pipes
+                          "https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?auto=format&fit=crop&q=80&w=400", // Fix
+                          "https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&q=80&w=400", // Water
+                          "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=400"  // Bath
+                        ],
+                        "Electrical pros": [
+                          "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=400", // Wires
+                          "https://images.unsplash.com/photo-1544724569-5f546fd6dd2d?auto=format&fit=crop&q=80&w=400", // Light
+                          "https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?auto=format&fit=crop&q=80&w=400", // Panel
+                          "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=400"  // Smart
+                        ],
+                        "Landscapers": [
+                          "https://images.unsplash.com/photo-1558904541-efa843a96f01?auto=format&fit=crop&q=80&w=400", // Lawn
+                          "https://images.unsplash.com/photo-1599824426001-c88f615372c0?auto=format&fit=crop&q=80&w=400", // Tree
+                          "https://images.unsplash.com/photo-1621960248888-29cca2535a29?auto=format&fit=crop&q=80&w=400", // Hedge
+                          "https://images.unsplash.com/photo-1592595896551-12b371d546d5?auto=format&fit=crop&q=80&w=400"  // Design
+                        ],
+                        "Cleaners": [
+                          "https://images.unsplash.com/photo-1581578731117-10d52143b0e8?auto=format&fit=crop&q=80&w=400", // Deep
+                          "https://images.unsplash.com/photo-1527515673516-756372da8015?auto=format&fit=crop&q=80&w=400", // Window
+                          "https://images.unsplash.com/photo-1563453392212-326f5e854473?auto=format&fit=crop&q=80&w=400", // Carpet
+                          "https://images.unsplash.com/photo-1528740561666-dc24705f08a7?auto=format&fit=crop&q=80&w=400"  // Move
+                        ],
+                        "Painters": [
+                          "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=400", // Roll
+                          "https://images.unsplash.com/photo-1562259920-47afc305f369?auto=format&fit=crop&q=80&w=400", // Wall
+                          "https://images.unsplash.com/photo-1595111867116-291583d47c4e?auto=format&fit=crop&q=80&w=400", // Exterior
+                          "https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&q=80&w=400"  // Detail
+                        ],
+                        "Roofing": [
+                          "https://images.unsplash.com/photo-1632759145351-1d592919f522?auto=format&fit=crop&q=80&w=400", // Shingles
+                          "https://images.unsplash.com/photo-1598177579736-231cb4892c5a?auto=format&fit=crop&q=80&w=400", // Metal
+                          "https://images.unsplash.com/photo-1595814467389-91ee7491cf49?auto=format&fit=crop&q=80&w=400", // Solar
+                          "https://images.unsplash.com/photo-1595420377045-8c08cb4d2719?auto=format&fit=crop&q=80&w=400"  // Repair
+                        ],
+                        "Handymen": [
+                          "https://images.unsplash.com/photo-1621905251918-48416bd8575a?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1505798577917-a651a5d40320?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1581092921461-eab62e97a782?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1454692173233-f4f34c12adad?auto=format&fit=crop&q=80&w=400"
+                        ],
+                        "Movers": [
+                          "https://images.unsplash.com/photo-1504958043606-d560c5a7114b?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1625906230917-26e5fc503250?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1600518464441-9154a4dea21b?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1603517452654-e0b65670868a?auto=format&fit=crop&q=80&w=400"
+                        ],
+                        "HVAC": [
+                          "https://images.unsplash.com/photo-1520114878144-6123749968dd?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1516937941348-c0331b32d9df?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1616423640778-28d1b53229bd?auto=format&fit=crop&q=80&w=400"
+                        ],
+                        "Carpentry": [
+                          "https://images.unsplash.com/photo-1503708928676-1cb796a0891e?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1533560737976-78e874945d81?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1588667631376-70e93cc15ce9?auto=format&fit=crop&q=80&w=400"
+                        ],
+                        "Flooring": [
+                          "https://images.unsplash.com/photo-1581858726768-fd1192e27e8d?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1516455590571-0f735d4615a9?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1594235372071-7d12f451f478?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1584622277026-6a978f1f5107?auto=format&fit=crop&q=80&w=400"
+                        ],
+                        "Drywall": [
+                          "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1590483005527-dc5328224522?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1595111867116-291583d47c4e?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&q=80&w=400"
+                        ],
+                        "Concrete": [
+                          "https://images.unsplash.com/photo-1518640165980-d3e0e2aa2bf2?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1549488497-29cf9787e9c2?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1517581177697-a06a18481210?auto=format&fit=crop&q=80&w=400"
+                        ],
+                        "Masonry": [
+                          "https://images.unsplash.com/photo-1590073242678-70ee3fc28e8e?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1534237710431-e2fc698436d0?auto=format&fit=crop&q=80&w=400"
+                        ],
+                        "Insulation": [
+                          "https://images.unsplash.com/photo-1621905251918-48416bd8575a?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1518458028785-8fbcd101ebb9?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc?auto=format&fit=crop&q=80&w=400"
+                        ],
+                        "Windows": [
+                          "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1594818379496-da1e345b0ded?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1506473551532-602058b7367c?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1600607686527-6fb886090705?auto=format&fit=crop&q=80&w=400"
+                        ],
+                        "Doors": [
+                          "https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1516455590571-0f735d4615a9?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1549408226-4066ea196ce3?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1489171078254-c3365d6e359f?auto=format&fit=crop&q=80&w=400"
+                        ],
+                        "Siding": [
+                          "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1590483005527-dc5328224522?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1595111867116-291583d47c4e?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1595814467389-91ee7491cf49?auto=format&fit=crop&q=80&w=400"
+                        ],
+                        "Gutters": [
+                          "https://images.unsplash.com/photo-1632759145351-1d592919f522?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1598177579736-231cb4892c5a?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1595420377045-8c08cb4d2719?auto=format&fit=crop&q=80&w=400"
+                        ],
+                        "Decking": [
+                          "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1595111867116-291583d47c4e?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1558442074-3c19266e89e7?auto=format&fit=crop&q=80&w=400"
+                        ],
+                        "Fencing": [
+                          "https://images.unsplash.com/photo-1518173946687-a4c8892bbd9f?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1574360773950-7042a92a54fb?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1563825867375-385002b8529f?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1598520106830-8c45c2035460?auto=format&fit=crop&q=80&w=400"
+                        ],
+                        "Paving": [
+                          "https://images.unsplash.com/photo-1590483005527-dc5328224522?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1518779607149-de244a04d603?auto=format&fit=crop&q=80&w=400"
+                        ],
+                        "Demolition": [
+                          "https://images.unsplash.com/photo-1518640165980-d3e0e2aa2bf2?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1549488497-29cf9787e9c2?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&q=80&w=400"
+                        ],
+                        "Excavation": [
+                          "https://images.unsplash.com/photo-1503708928676-1cb796a0891e?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1615811361263-14902157c7fc?auto=format&fit=crop&q=80&w=400"
+                        ],
+                        "Foundation": [
+                          "https://images.unsplash.com/photo-1518779607149-de244a04d603?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1590483005527-dc5328224522?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1549488497-29cf9787e9c2?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&q=80&w=400"
+                        ],
+                        "Welding": [
+                          "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1518709779341-56cf4535e94b?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&q=80&w=400"
+                        ],
+                        "Tiling": [
+                          "https://images.unsplash.com/photo-1584622277026-6a978f1f5107?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1516455590571-0f735d4615a9?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=400"
+                        ],
+                        "Countertops": [
+                          "https://images.unsplash.com/photo-1584622277026-6a978f1f5107?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1590483005527-dc5328224522?auto=format&fit=crop&q=80&w=400"
+                        ],
+                        "Cabinetry": [
+                          "https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1600607686527-6fb886090705?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1590483005527-dc5328224522?auto=format&fit=crop&q=80&w=400"
+                        ],
+                        "Appliances": [
+                          "https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1584622277026-6a978f1f5107?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1574966744033-d897507eb2e2?auto=format&fit=crop&q=80&w=400",
+                          "https://images.unsplash.com/photo-1492139031021-d4ba1134045c?auto=format&fit=crop&q=80&w=400"
+                        ]
+                      };
 
-                    return (
+                      const subLabels: Record<string, string[]> = {
+                        "Plumbers": ["Emergency Repair", "Drain Cleaning", "Water Heaters", "Pipe Installation"],
+                        "Electrical pros": ["Full Rewiring", "Smart Home", "Panel Upgrades", "Lighting Install"],
+                        "Landscapers": ["Lawn Care", "Tree Service", "Hardscaping", "Irrigation"],
+                        "Cleaners": ["Deep Cleaning", "Move-In/Out", "Carpet Cleaning", "Window Washing"],
+                        "Painters": ["Interior Painting", "Exterior Painting", "Cabinet Refinishing", "Drywall Repair"],
+                        "Roofing": ["Roof Replacement", "Leak Repair", "Gutter Install", "Solar Integration"],
+                        "Handymen": ["Furniture Assembly", "TV Mounting", "Minor Repairs", "Fixture Updates"],
+                        "Movers": ["Local Moves", "Long Distance", "Packing Services", "Furniture Moving"],
+                        "HVAC": ["AC Repair", "Furnace Install", "Duct Cleaning", "System Tuning"],
+                        "Carpentry": ["Custom Trim", "Framing", "Deck Building", "Cabinet Install"],
+                        "Flooring": ["Hardwood Install", "Carpet Fitting", "Tile Work", "Floor Refinishing"],
+                        "Drywall": ["Sheetrock Hang", "Taping & Mud", "Texture Match", "Patch Repair"],
+                        "Concrete": ["Driveway Pour", "Patio Stamping", "Foundation Work", "Walkway Paving"],
+                        "Masonry": ["Brick Laying", "Stone Veneer", "Chimney Repair", "Retaining Walls"],
+                        "Insulation": ["Spray Foam", "Fiberglass", "Attic Sealing", "Wall Injection"],
+                        "Windows": ["Window Replacement", "Glass Repair", "Seal Restoration", "Frame Fixes"],
+                        "Doors": ["Entry Doors", "Garage Doors", "Interior Hang", "Locksmithing"],
+                        "Siding": ["Vinyl Siding", "Fiber Cement", "Wood Siding", "Siding Repair"],
+                        "Gutters": ["Gutter Install", "Gutter Cleaning", "Guards Setup", "Downspouts"],
+                        "Decking": ["New Build", "Deck Resurfacing", "Railing Install", "Stair Repair"],
+                        "Fencing": ["Wood Fencing", "Vinyl Fencing", "Chain Link", "Gate Repair"],
+                        "Paving": ["Asphalt Paving", "Sealcoating", "Driveway Resurface", "Striping"],
+                        "Demolition": ["Full Gut", "Debris Removal", "Wall Removal", "Site Clearing"],
+                        "Excavation": ["Grading", "Trenching", "Land Clearing", "Pool Digging"],
+                        "Foundation": ["Crack Repair", "Waterproofing", "Leveling", "New Pour"],
+                        "Welding": ["Structural", "Ornamental", "Gate Repair", "Custom Fab"],
+                        "Tiling": ["Bathroom Tile", "Kitchen Splash", "Floor Tiling", "Grout Seal"],
+                        "Countertops": ["Granite Install", "Quartz Fitting", "Marble Repair", "Edge Chip Fix"],
+                        "Cabinetry": ["Custom Build", "Refacing", "Hardware Swap", "Installation"],
+                        "Appliances": ["Refrigerator Fix", "Washer/Dryer", "Dishwasher Install", "Oven Repair"]
+                      };
+
+                      // Fallback generator for other categories
+                      const labels = subLabels[cat] || [
+                        `Residential ${cat}`,
+                        `Commercial ${cat}`,
+                        `${cat} Repair`,
+                        `${cat} Installation`
+                      ];
+
+                      const images = imageMap[cat] || [
+                        "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&q=80&w=400", // Generic Build
+                        "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&q=80&w=400", // Generic Site
+                        "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&q=80&w=400", // Generic Hardhat
+                        "https://images.unsplash.com/photo-1535732820275-9ffd998cac22?auto=format&fit=crop&q=80&w=400"  // Generic Tools
+                      ];
+
+                      return labels.map((label, i) => ({
+                        name: label,
+                        img: images[i % images.length]
+                      }));
+                    };
+
+                    return getSubData(activeCategory).map((sub, idx) => (
                       <div
-                        key={index}
-                        className="relative rounded-2xl overflow-hidden shadow-sm border border-black/5 hover:border-[#fce011] hover:shadow-md transition-all duration-300 group h-full min-h-[140px]"
+                        key={idx}
+                        className="group relative h-36 sm:h-48 rounded-xl overflow-hidden shadow-sm border border-gray-100 cursor-default"
                       >
                         <img
-                          src={cardImages[index] || "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&h=400&fit=crop"}
-                          alt={card.title}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                          src={sub.img}
+                          alt={sub.name}
+                          className="absolute inset-0 w-full h-full object-cover opacity-90"
+                          onError={(e) => {
+                            e.currentTarget.src = "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&q=80&w=400"; // Fallback
+                            e.currentTarget.onerror = null;
+                          }}
                         />
-                        {/* Text Overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-3">
-                          <h4 className="text-[10px] font-bold text-white text-center leading-tight uppercase tracking-tight group-hover:text-[#fce011] transition-colors leading-relaxed">
-                            {card.title}
-                          </h4>
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-3 flex flex-col justify-end">
+                          <h4 className="text-white text-[10px] sm:text-xs font-bold uppercase tracking-wide leading-tight group-hover:text-primary transition-colors">{sub.name}</h4>
                         </div>
                       </div>
-                    );
-                  })}
+                    ));
+                  })()}
                 </div>
               </div>
-            </div>
+            )}
+
           </div>
         </div>
 
-        {/* Dedicated GC Voice Agent Section */}
-        <div className="mb-24 mt-12 overflow-hidden">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Left Column: Description */}
-            <div className="space-y-8">
-              <div className="space-y-4">
-                <Badge className="bg-[#fce011] text-black font-black px-4 py-1.5 rounded-full uppercase tracking-widest text-[10px]">
-                  NEW: GC VOICE TERMINAL
-                </Badge>
-                <h2 className="text-4xl sm:text-5xl font-black text-gray-900 leading-tight uppercase tracking-tighter">
-                  MEET <span className="text-[#fce011]">MORGAN</span>: YOUR 24/7 AI General Contractor
-                </h2>
-                <p className="text-lg text-gray-600 font-medium leading-relaxed">
-                  <b> Call Now +1 (321) 237 9018</b>
-                </p>
-                <p className="text-lg text-gray-600 font-medium leading-relaxed">
-                  Our advanced AI voice agent handles all your incoming construction calls with professional precision. From estimate requests to subcontractor coordination, Morgan is always on duty.
-                </p>
-              </div>
+        {/* New Separate AI Tools Section */}
+        <div className="mb-12 mt-8">
+          <div className="text-center mb-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full mb-2 shadow-sm bg-primary/10 border border-primary/20">
+              <Sparkles className="w-3 h-3 text-primary" />
+              <span className="text-[10px] font-bold text-gray-800 uppercase tracking-tight">
+                Next-Gen Tools
+              </span>
+            </div>
+            <h3 className="text-lg sm:text-2xl font-bold text-gray-900 mb-1">
+              AI-Powered <span className="text-primary">Solutions</span>
+            </h3>
+            <p className="text-[10px] sm:text-xs text-gray-600 max-w-2xl mx-auto">
+              Automate your workflow with our suite of intelligent construction management tools.
+            </p>
+          </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                {[
-                  { title: "Smart Estimator", desc: "Calculates material and labor costs on the fly.", icon: Zap },
-                  { title: "Lead Processor", desc: "Identifies and qualifies new project signals instantly.", icon: Target },
-                  { title: "24/7 Availability", desc: "Never miss a critical call or emergency again.", icon: Clock },
-                  { title: "CSI Divisions", desc: "Fluent in all trades from concrete to finishing.", icon: Building2 },
-                ].map((feature, i) => (
-                  <div key={i} className="flex gap-4 p-4 bg-white rounded-2xl shadow-sm border border-gray-100 dark:bg-gray-800/50 dark:border-white/5">
-                    <div className="w-10 h-10 rounded-xl bg-[#fce011]/10 flex items-center justify-center flex-shrink-0">
-                      <feature.icon className="w-5 h-5 text-[#fce011]" />
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-sm text-gray-900 dark:text-white uppercase tracking-tight">{feature.title}</h4>
-                      <p className="text-xs text-gray-500 mt-1">{feature.desc}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
 
-              <div className="pt-6">
-                <Button
-                  className="h-14 px-8 bg-black text-white hover:bg-gray-800 font-bold uppercase tracking-widest text-xs rounded-2xl group transition-all"
-                  onClick={() => {
-                    const el = document.getElementById('voice-demo-terminal');
-                    el?.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                >
-                  Experience the Demo <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Button>
-              </div>
+          <div className="bg-white rounded-3xl p-4 sm:p-6 shadow-lg border border-gray-100">
+            {/* Horizontal Tiles (Tabs) */}
+            <div className="flex gap-2 overflow-x-auto pb-2 mb-6 scrollbar-hide snap-x justify-start max-w-full" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+              {tabs.map((tab) => {
+                const TabIcon = tab.icon;
+                const isActive = activeTab === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`flex items-center gap-2 px-3 py-2 rounded-xl transition-all duration-300 whitespace-nowrap min-w-max border snap-start ${isActive
+                      ? "bg-black text-white shadow-md scale-105 border-black ring-2 ring-primary ring-offset-2"
+                      : "bg-gray-50 text-gray-600 hover:bg-gray-100 border-gray-200"
+                      }`}
+                  >
+                    <TabIcon className={`w-3.5 h-3.5 ${isActive ? 'text-primary' : 'text-gray-500'}`} />
+                    <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wide">{tab.label === "AI Assistant for Contractors" ? "Morgan AI Voice Agent" : tab.label}</span>
+                  </button>
+                );
+              })}
             </div>
 
-            {/* Right Column: Mobile Demo Terminal */}
-            <div id="voice-demo-terminal" className="relative flex justify-center lg:justify-end">
-              {/* Background Glow */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-[#fce011]/20 blur-[100px] rounded-full -z-10" />
-              <VoiceAgentDemo />
+            {/* Dynamic Content Section */}
+            <div className="mt-4 min-h-[300px]">
+              {activeTab === 'ai-assistant' ? (
+                // MORGAN SECTION (Voice Agent)
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center animate-in fade-in duration-500">
+                  {/* Left Column: Description */}
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Badge className="bg-primary text-black font-black px-3 py-1 rounded-full uppercase tracking-widest text-[8px]">
+                        NEW: GC VOICE TERMINAL
+                      </Badge>
+                      <h2 className="text-2xl sm:text-3xl font-black text-gray-900 leading-tight uppercase tracking-tighter">
+                        MEET <span className="text-primary">MORGAN</span>: YOUR 24/7 AI General Contractor
+                      </h2>
+                      <p className="text-sm text-gray-600 font-medium leading-relaxed">
+                        <b> Call Now <strong><a href="tel:+13212379018">+1 (321) 237 9018</a></strong></b>
+                      </p>
+                      <p className="text-sm text-gray-600 font-medium leading-relaxed">
+                        Our advanced AI-Voice Call Agent will listen to all your incoming construction relevant calls with professional precision and answer all your queries. From estimate requests to subcontractor coordination, Morgan is always on duty.                      </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {[
+                        { title: "Smart Estimator", desc: "Calculates material and labor costs on the fly.", icon: Zap },
+                        { title: "Lead Processor", desc: "Identifies and qualifies new project signals instantly.", icon: Target },
+                        { title: "24/7 Availability", desc: "Never miss a critical call or emergency again.", icon: Clock },
+                        { title: "CSI Divisions", desc: "Fluent in all trades from concrete to finishing.", icon: Building2 },
+                      ].map((feature, i) => (
+                        <div key={i} className="flex gap-3 p-3 bg-gray-50 rounded-xl border border-gray-100 dark:bg-gray-800/50 dark:border-white/5">
+                          <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                            <feature.icon className="w-4 h-4 text-primary" />
+                          </div>
+                          <div>
+                            <h4 className="font-bold text-xs text-gray-900 dark:text-white uppercase tracking-tight">{feature.title}</h4>
+                            <p className="text-[10px] text-gray-500 mt-0.5">{feature.desc}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+{/* 
+                    <div className="pt-4">
+                      <Button
+                        className="h-10 px-6 bg-black text-white hover:bg-gray-800 font-bold uppercase tracking-widest text-[10px] rounded-xl group transition-all"
+                        onClick={() => {
+                          const el = document.getElementById('voice-demo-terminal');
+                          el?.scrollIntoView({ behavior: 'smooth' });
+                        }}
+                      >
+                        Experience the Demo <ArrowRight className="ml-2 w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                      </Button>
+                    </div> */}
+                  </div>
+
+                  {/* Right Column: Mobile Demo Terminal */}
+                  <div id="voice-demo-terminal" className="relative flex justify-center lg:justify-end scale-90 origin-right">
+                    {/* Background Glow */}
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-primary/20 blur-[80px] rounded-full -z-10" />
+                    <VoiceAgentDemo />
+                  </div>
+                </div>
+              ) : (
+                // GENERIC SECTION (For other tabs)
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center animate-in fade-in duration-500">
+                  {/* Left Column: Description */}
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <h2 className="text-2xl sm:text-3xl font-black text-gray-900 leading-tight uppercase tracking-tight">
+                        {currentServices.main.title}
+                      </h2>
+                      <p className="text-sm text-gray-600 font-medium leading-relaxed">
+                        {currentServices.main.description}
+                      </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-3">
+                      {currentServices.cards.map((card, index) => (
+                        <div key={index} className="flex gap-3 p-3 bg-gray-50 rounded-xl border border-gray-100 transition-all hover:bg-primary/5 hover:border-primary/30">
+                          <div className="w-8 h-8 rounded-lg bg-white shadow-sm flex items-center justify-center flex-shrink-0 border border-gray-100">
+                            <card.icon className="w-4 h-4 text-primary" />
+                          </div>
+                          <div>
+                            <h4 className="font-bold text-xs text-gray-900 uppercase tracking-tight">{card.title}</h4>
+                            <p className="text-[10px] text-gray-500 mt-0.5 leading-relaxed">{card.description}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="pt-4">
+                      <Button className="h-10 px-6 bg-black text-white hover:bg-gray-800 font-bold uppercase tracking-widest text-[10px] rounded-xl group">
+                        Learn More <ArrowRight className="ml-2 w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Right Column: Dynamic Visual for Non-Morgan Tabs */}
+                  <div className="relative h-full min-h-[300px] rounded-2xl overflow-hidden shadow-xl border-4 border-white bg-gray-100 group">
+                    <div className={`absolute inset-0 bg-gradient-to-br ${currentServices.main.gradient} opacity-10`} />
+                    {/* Abstract UI Representation based on tab */}
+                    <div className="absolute inset-0 flex items-center justify-center bg-gray-50">
+                      {/* Placeholder for specific UI mockups per section - using generic reliable image for now */}
+                      <img
+                        src={(currentServices.main as any).image}
+                        alt={currentServices.main.title}
+                        className="w-full h-full object-cover opacity-90 hover:scale-105 transition-transform duration-700"
+                      />
+                      <div className="absolute inset-0 bg-black/10 mix-blend-multiply" />
+
+                      <div className="absolute bottom-6 left-6 right-6 bg-white/90 backdrop-blur-md p-4 rounded-xl shadow-lg border border-white/50">
+                        <div className="flex items-center gap-2 mb-1">
+                          <div className="p-1.5 bg-[#fce011] rounded-md">
+                            <currentServices.main.icon className="w-3.5 h-3.5 text-black" />
+                          </div>
+                          <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Featured Tool</span>
+                        </div>
+                        <h3 className="font-bold text-sm text-gray-900">
+                          {currentServices.cards[0].title}
+                        </h3>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -513,16 +819,6 @@ const PopularCategoriesSection = () => {
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full -ml-24 -mb-24"></div>
 
           <div className="relative z-10 max-w-3xl mx-auto text-center">
-            {/* Trust Badge */}
-            <div className="flex items-center justify-center gap-2 mb-6">
-              <div className="w-8 h-8 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/30">
-                <CheckCircle className="w-4 h-4 text-white" />
-              </div>
-              <span className="text-black font-semibold text-sm">
-                Trusted by 10,000+ contractors nationwide
-              </span>
-            </div>
-
             {/* Heading */}
             <h3 className="text-2xl sm:text-3xl font-bold text-black mb-4 leading-tight">
               Ready to Transform Your Pre-Construction Process?
@@ -571,7 +867,7 @@ const PopularCategoriesSection = () => {
         </div>
 
       </div>
-    </div>
+    </div >
   );
 };
 

@@ -109,11 +109,11 @@
   }
 
   .glow-yellow {
-    box-shadow: 0 0 20px rgba(252, 224, 17, 0.15);
+    box-shadow: 0 0 20px hsl(var(--primary) / 0.15);
   }
 
   .glow-text {
-    text-shadow: 0 0 10px rgba(252, 224, 17, 0.5);
+    text-shadow: 0 0 10px hsl(var(--primary) / 0.5);
   }
 
   .scrollbar-hide {

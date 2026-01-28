@@ -34,6 +34,15 @@ export interface Project {
     privatelyFunded: boolean;
     matchScore?: number;
     postedDate: string;
+    sector?: string;                // Added
+    constructionType?: string;      // Added
+    laborRequirements?: string;     // Added
+    country?: string;               // Added
+    county?: string;                // Added
+    materials?: string[];           // Added
+    experienceRequired?: string;    // Added
+    bondedRequired?: boolean;       // Added
+    insuredRequired?: boolean;      // Added
 }
 
 interface ProjectCardProps {

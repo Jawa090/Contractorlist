@@ -119,7 +119,7 @@ const CompanyDetails = () => {
         const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
         const res = await fetch(`${API_URL}/companies/${id}`);
         const json = await res.json();
-        
+
         if (!json.success) {
           // If API fails, use mock data for demonstration
           console.log("API failed, using mock data");
@@ -135,7 +135,7 @@ const CompanyDetails = () => {
         setLoading(false);
       }
     };
-    
+
     fetchCompanyDetails();
   }, [id, location.state]);
 
@@ -153,8 +153,8 @@ const CompanyDetails = () => {
   const serviceAreasArray = Array.isArray(company?.serviceAreas)
     ? company?.serviceAreas
     : company?.serviceAreas
-    ? [company.serviceAreas]
-    : [];
+      ? [company.serviceAreas]
+      : [];
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -178,11 +178,11 @@ const CompanyDetails = () => {
         {loading && (
           <div className="text-center text-gray-600 py-12">Loading company details...</div>
         )}
-        
+
         {error && (
           <div className="text-center text-red-600 py-12">{error}</div>
         )}
-        
+
         {!loading && !error && company && (
           <>
             {/* Image Gallery with Navigation */}
@@ -212,7 +212,7 @@ const CompanyDetails = () => {
                   </SwiperSlide>
                 ))}
               </Swiper>
-              
+
               {/* Custom Navigation Buttons */}
               <button className="swiper-button-prev-custom absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white p-3 rounded-full shadow-lg transition-all">
                 <ChevronLeft className="w-6 h-6 text-gray-800" />
@@ -229,7 +229,7 @@ const CompanyDetails = () => {
                 <div className="flex items-start justify-between mb-6">
                   <div className="flex-1">
                     <h1 className="text-3xl font-bold text-gray-900 mb-3">{company.name}</h1>
-                    
+
                     <div className="flex items-center gap-1 mb-3">
                       <MapPin className="w-5 h-5 text-gray-500" />
                       <span className="text-gray-600">{company.address || company.location}</span>
@@ -237,7 +237,7 @@ const CompanyDetails = () => {
 
                     <div className="flex items-center gap-4 mb-4">
                       <div className="flex items-center gap-1">
-                        <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" />
+                        <Star className="w-5 h-5 text-primary fill-primary" />
                         <span className="text-xl font-bold text-gray-900">
                           {numericRating > 0 ? numericRating.toFixed(1) : "5.0"}
                         </span>
@@ -289,7 +289,7 @@ const CompanyDetails = () => {
                 {company.certifications && company.certifications.length > 0 && (
                   <div className="mb-6">
                     <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                      <Award className="w-5 h-5 text-yellow-600" />
+                      <Award className="w-5 h-5 text-primary" />
                       Certifications & Credentials
                     </h3>
                     <div className="flex flex-wrap gap-2">
@@ -306,13 +306,13 @@ const CompanyDetails = () => {
                 {company.awards && company.awards.length > 0 && (
                   <div className="mb-6">
                     <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                      <Award className="w-5 h-5 text-yellow-600" />
+                      <Award className="w-5 h-5 text-primary" />
                       Awards & Recognition
                     </h3>
                     <ul className="space-y-2">
                       {company.awards.map((award: string, idx: number) => (
                         <li key={idx} className="flex items-center gap-2 text-gray-700">
-                          <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+                          <Star className="w-4 h-4 text-primary fill-primary" />
                           {award}
                         </li>
                       ))}
@@ -326,7 +326,7 @@ const CompanyDetails = () => {
                     <h3 className="text-lg font-semibold text-gray-900 mb-3">Services Offered</h3>
                     <div className="flex flex-wrap gap-2">
                       {company.servicesOffered.map((service: string, idx: number) => (
-                        <Badge key={idx} className="bg-yellow-100 text-yellow-800 border-yellow-300 hover:bg-yellow-200 px-3 py-1">
+                        <Badge key={idx} className="bg-primary/10 text-black border-primary/30 hover:bg-primary/20 px-3 py-1">
                           {service}
                         </Badge>
                       ))}
@@ -370,7 +370,7 @@ const CompanyDetails = () => {
                   {company.phone && (
                     <Button
                       onClick={() => (window.location.href = `tel:${company.phone}`)}
-                      className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold"
+                      className="bg-primary hover:bg-primary/90 text-black font-semibold"
                     >
                       <Phone className="w-4 h-4 mr-2" /> Call Now
                     </Button>
@@ -403,7 +403,7 @@ const CompanyDetails = () => {
                 <h2 className="text-2xl font-bold text-gray-900 mb-6">Client Reviews & Testimonials</h2>
 
                 {/* Overall Rating Summary */}
-                <div className="flex items-center gap-6 mb-8 p-6 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg border border-yellow-200">
+                <div className="flex items-center gap-6 mb-8 p-6 bg-primary/5 rounded-lg border border-primary/20">
                   <div className="text-center">
                     <div className="text-5xl font-bold text-gray-900 mb-2">
                       {numericRating > 0 ? numericRating.toFixed(1) : "5.0"}
@@ -414,9 +414,8 @@ const CompanyDetails = () => {
                         return (
                           <Star
                             key={i}
-                            className={`w-6 h-6 ${
-                              filled ? "text-yellow-500 fill-yellow-500" : "text-gray-300"
-                            }`}
+                            className={`w-6 h-6 ${filled ? "text-primary fill-primary" : "text-gray-300"
+                              }`}
                           />
                         );
                       })}
@@ -439,7 +438,7 @@ const CompanyDetails = () => {
                       const reviewer = review.clientName || review.reviewer || review.author || "Client";
                       const text = review.comment || review.text || review.review || review.reviewText || "";
                       const rating = review.rating || review.stars || 5;
-                      
+
                       return (
                         <div
                           key={idx}
@@ -447,7 +446,7 @@ const CompanyDetails = () => {
                         >
                           <div className="flex items-start justify-between mb-4">
                             <div className="flex items-start gap-4">
-                              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center text-white font-bold text-lg">
+                              <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-black font-bold text-lg">
                                 {reviewer.charAt(0).toUpperCase()}
                               </div>
                               <div>
@@ -464,9 +463,8 @@ const CompanyDetails = () => {
                               {Array.from({ length: 5 }).map((_, i) => (
                                 <Star
                                   key={i}
-                                  className={`w-5 h-5 ${
-                                    i < rating ? "text-yellow-500 fill-yellow-500" : "text-gray-300"
-                                  }`}
+                                  className={`w-5 h-5 ${i < rating ? "text-primary fill-primary" : "text-gray-300"
+                                    }`}
                                 />
                               ))}
                             </div>

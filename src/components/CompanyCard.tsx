@@ -63,7 +63,7 @@ const CompanyCard = (props: CompanyCardProps) => {
     verifiedBusiness = false,
     images = [],
   } = props;
-  
+
   const navigate = useNavigate();
   const defaultImages = ["/home1.jpeg", "/home2.jpeg", "/home3.jpeg"];
   const displayImages = images && images.length > 0 ? images : defaultImages;
@@ -126,7 +126,7 @@ const CompanyCard = (props: CompanyCardProps) => {
 
             <div className="flex items-center flex-wrap gap-4 text-sm text-gray-600 mb-2">
               <div className="flex items-center gap-1">
-                <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+                <Star className="w-4 h-4 text-primary fill-primary" />
                 <span className="font-semibold text-gray-900">
                   {numericRating.toFixed(1)}
                 </span>
@@ -152,7 +152,7 @@ const CompanyCard = (props: CompanyCardProps) => {
 
             {/* Featured Review - Compact */}
             {featuredReview?.reviewText && (
-              <div className="bg-gray-50 rounded-lg p-3 border-l-4 border-yellow-400 mt-2">
+              <div className="bg-gray-50 rounded-lg p-3 border-l-4 border-primary mt-2">
                 <p className="text-gray-700 italic text-sm mb-1">
                   "{featuredReview.reviewText}"
                 </p>
@@ -171,14 +171,14 @@ const CompanyCard = (props: CompanyCardProps) => {
           {/* Highlights */}
           <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm">
             {typeof verifiedHires === "number" && verifiedHires > 0 && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-yellow-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-yellow-800 border border-yellow-200">
+              <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-black border border-primary/20">
                 <Verified className="w-3 h-3" />
                 {verifiedHires} Hires on Platform
               </span>
             )}
             {reviewsCount > 0 && numericRating > 0 && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-white px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-gray-700 border border-gray-200 shadow-sm">
-                <Star className="w-3 h-3 text-yellow-500 fill-yellow-500" />
+              <span className="inline-flex items-center gap-1 rounded-full bg-white px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-black border border-gray-200 shadow-sm">
+                <Star className="w-3 h-3 text-primary fill-primary" />
                 Top Rated • {numericRating.toFixed(1)} ({reviewsCount} reviews)
               </span>
             )}
@@ -188,7 +188,7 @@ const CompanyCard = (props: CompanyCardProps) => {
           <div className="flex flex-wrap items-center justify-end gap-2">
             <button
               onClick={handleSendMessage}
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-600 px-5 py-2 text-sm font-semibold text-black shadow-md hover:from-yellow-600 hover:to-yellow-700 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-1 transition-all"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-5 py-2 text-sm font-semibold text-black shadow-md hover:bg-primary/90 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 transition-all"
             >
               <Mail className="w-4 h-4" />
               Send Message
@@ -196,7 +196,7 @@ const CompanyCard = (props: CompanyCardProps) => {
 
             <button
               onClick={handleVideoCall}
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-gray-300 bg-white px-4 py-2 text-xs sm:text-sm font-medium text-gray-800 shadow-sm hover:border-yellow-500 hover:text-yellow-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-yellow-300 focus:ring-offset-1 transition-all"
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-gray-300 bg-white px-4 py-2 text-xs sm:text-sm font-medium text-gray-800 shadow-sm hover:border-primary hover:text-primary hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 transition-all"
             >
               <Video className="w-4 h-4" />
               Video Call
@@ -204,7 +204,7 @@ const CompanyCard = (props: CompanyCardProps) => {
 
             <button
               onClick={handleReadMore}
-              className="inline-flex items-center justify-center gap-1 px-3 py-2 text-xs sm:text-sm font-semibold text-gray-700 hover:text-yellow-700 hover:underline"
+              className="inline-flex items-center justify-center gap-1 px-3 py-2 text-xs sm:text-sm font-semibold text-gray-700 hover:text-primary hover:underline"
             >
               <Eye className="w-4 h-4" />
               Read More

@@ -56,6 +56,15 @@ const MOCK_PROJECTS: Project[] = [
     privatelyFunded: true,
     matchScore: 6,
     postedDate: "2 days ago",
+    sector: "Private",
+    constructionType: "Addition / Expansion",
+    laborRequirements: "Prevailing Wage",
+    country: "United States",
+    county: "Travis",
+    materials: ["Concrete", "Steel", "Glass"],
+    experienceRequired: "10+ Years in Business",
+    bondedRequired: true,
+    insuredRequired: true
   },
   {
     id: "2",
@@ -76,6 +85,16 @@ const MOCK_PROJECTS: Project[] = [
     privatelyFunded: true,
     matchScore: 5,
     postedDate: "5 days ago",
+    sector: "Private",
+    sector: "Private",
+    constructionType: "New Construction",
+    laborRequirements: "Non-Union",
+    country: "United States",
+    county: "Bexar",
+    materials: ["Concrete", "Glass", "HVAC Equipment"],
+    experienceRequired: "5-10 Years in Business",
+    bondedRequired: false,
+    insuredRequired: true
   },
   {
     id: "3",
@@ -97,6 +116,15 @@ const MOCK_PROJECTS: Project[] = [
     privatelyFunded: false,
     matchScore: 7,
     postedDate: "1 week ago",
+    sector: "Public (Local)",
+    constructionType: "Renovation / Retrofit",
+    laborRequirements: "Prevailing Wage",
+    country: "United States",
+    county: "Harris",
+    materials: ["Plumbing Fixtures", "Electrical Gear", "Flooring"],
+    experienceRequired: "1-5 Years in Business",
+    bondedRequired: true,
+    insuredRequired: true
   },
   {
     id: "4",
@@ -116,6 +144,16 @@ const MOCK_PROJECTS: Project[] = [
     addendaAvailable: false,
     privatelyFunded: true,
     postedDate: "3 days ago",
+    sector: "Private",
+    sector: "Private",
+    constructionType: "New Construction",
+    laborRequirements: "Non-Union",
+    country: "United States",
+    county: "Dallas",
+    materials: ["Steel", "Concrete", "Heavy Machinery"],
+    experienceRequired: "5-10 Years in Business",
+    bondedRequired: false,
+    insuredRequired: true
   },
   {
     id: "5",
@@ -136,6 +174,15 @@ const MOCK_PROJECTS: Project[] = [
     privatelyFunded: true,
     matchScore: 4,
     postedDate: "1 day ago",
+    sector: "Private",
+    constructionType: "New Construction",
+    laborRequirements: "Non-Union",
+    country: "United States",
+    county: "Harris",
+    materials: ["Lumber", "Plumbing Fixtures", "HVAC Equipment"],
+    experienceRequired: "10+ Years in Business",
+    bondedRequired: true,
+    insuredRequired: true
   },
   {
     id: "6",
@@ -157,6 +204,15 @@ const MOCK_PROJECTS: Project[] = [
     privatelyFunded: false,
     matchScore: 3,
     postedDate: "4 days ago",
+    sector: "Public (State)",
+    constructionType: "Renovation / Retrofit",
+    laborRequirements: "Prevailing Wage",
+    country: "United States",
+    county: "Harris",
+    materials: ["Concrete", "Steel", "Heavy Machinery"],
+    experienceRequired: "10+ Years in Business",
+    bondedRequired: true,
+    insuredRequired: true
   },
   {
     id: "7",
@@ -176,6 +232,15 @@ const MOCK_PROJECTS: Project[] = [
     addendaAvailable: false,
     privatelyFunded: true,
     postedDate: "2 weeks ago",
+    sector: "Private",
+    constructionType: "New Construction",
+    laborRequirements: "Non-Union",
+    country: "United States",
+    county: "Travis",
+    materials: ["Glass", "HVAC Equipment", "Electrical Gear"],
+    experienceRequired: "5-10 Years in Business",
+    bondedRequired: false,
+    insuredRequired: true
   },
   {
     id: "8",
@@ -197,6 +262,15 @@ const MOCK_PROJECTS: Project[] = [
     privatelyFunded: false,
     matchScore: 5,
     postedDate: "6 days ago",
+    sector: "Public (Local)",
+    constructionType: "Renovation / Retrofit",
+    laborRequirements: "Union",
+    country: "United States",
+    county: "Tarrant",
+    materials: ["Concrete", "Process Piping", "Electrical Gear"],
+    experienceRequired: "10+ Years in Business",
+    bondedRequired: true,
+    insuredRequired: true
   },
 ];
 
@@ -273,6 +347,21 @@ const Projects = () => {
       result = result.filter((p) => filters.stages.includes(p.stage));
     }
 
+    // Sector filter
+    if (filters?.sectors && filters.sectors.length > 0) {
+      result = result.filter((p) => p.sector && filters.sectors.includes(p.sector));
+    }
+
+    // Construction Type filter
+    if (filters?.constructionTypes && filters.constructionTypes.length > 0) {
+      result = result.filter((p) => p.constructionType && filters.constructionTypes.includes(p.constructionType));
+    }
+
+    // Labor Requirements filter
+    if (filters?.laborRequirements && filters.laborRequirements.length > 0) {
+      result = result.filter((p) => p.laborRequirements && filters.laborRequirements.includes(p.laborRequirements));
+    }
+
     // Trades filter
     if (filters?.trades && filters.trades.length > 0) {
       const selectedTradeNames = CSI_DIVISIONS
@@ -307,6 +396,63 @@ const Projects = () => {
         const from = filters.bidDateFrom ? new Date(filters.bidDateFrom).getTime() : -Infinity;
         const to = filters.bidDateTo ? new Date(filters.bidDateTo).getTime() : Infinity;
         return bidDate >= from && bidDate <= to;
+      });
+    }
+
+
+    // Region Filter (Country, State, County)
+    if (filters?.country && filters.country !== "All") {
+      result = result.filter(p => !p.country || p.country === filters.country);
+    }
+    if (filters?.state && filters.state !== "All") {
+      result = result.filter(p => p.state === filters.state || (p.state === "TX" && filters.state === "Texas")); // Mock mapping
+    }
+    if (filters?.county && filters.county !== "All") {
+      result = result.filter(p => !p.county || p.county === filters.county);
+    }
+
+    // Materials Filter
+    if (filters?.materials && filters.materials.length > 0) {
+      result = result.filter(p =>
+        p.materials?.some(m => filters.materials.includes(m))
+      );
+    }
+
+    // Requirements Filter
+    if (filters?.experienceLevel) {
+      result = result.filter(p => p.experienceRequired === filters.experienceLevel);
+    }
+    if (filters?.bonded) {
+      result = result.filter(p => p.bondedRequired === true);
+    }
+    if (filters?.insured) {
+      result = result.filter(p => p.insuredRequired === true);
+    }
+
+    // Publish Date Filter (Mock logic parsing "X days ago")
+    if (filters?.publishDate && filters.publishDate !== "any") {
+      const days = parseInt(filters.publishDate);
+      result = result.filter(p => {
+        if (!p.postedDate) return false;
+        const match = p.postedDate.match(/(\d+) (day|week|month)/);
+        if (!match) return true; // Keep if format unknown
+        let postedDays = parseInt(match[1]);
+        if (match[2].startsWith("week")) postedDays *= 7;
+        if (match[2].startsWith("month")) postedDays *= 30;
+        return postedDays <= days;
+      });
+    }
+
+    // Bidding Within Filter
+    if (filters?.biddingWithin && filters.biddingWithin !== "any") {
+      const days = parseInt(filters.biddingWithin);
+      const now = new Date();
+      result = result.filter(p => {
+        if (!p.bidDate) return false;
+        const bidDate = new Date(p.bidDate);
+        const diffTime = bidDate.getTime() - now.getTime();
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        return diffDays >= 0 && diffDays <= days;
       });
     }
 

@@ -141,7 +141,7 @@ const ContractorDetails = () => {
                             {addressLine}
                           </span>
                           <span className="inline-flex items-center gap-1">
-                            <Star className="w-5 h-5 text-[#fce011] fill-[#fce011]" />
+                            <Star className="w-5 h-5 text-primary fill-primary" />
                             <span className="text-lg font-semibold text-gray-900">
                               {(contractor.rating?.average ?? contractor.rating ?? 0).toFixed ? (contractor.rating?.average ?? contractor.rating ?? 0).toFixed(1) : Number(contractor.rating?.average ?? contractor.rating ?? 0).toFixed(1)}
                             </span>
@@ -209,7 +209,7 @@ const ContractorDetails = () => {
                         <ul className="space-y-2">
                           {contractor.awards.map((award: string, idx: number) => (
                             <li key={idx} className="flex items-center gap-2 text-gray-700">
-                              <Star className="w-4 h-4 text-[#fce011] fill-[#fce011]" />
+                              <Star className="w-4 h-4 text-primary fill-primary" />
                               {award}
                             </li>
                           ))}
@@ -222,7 +222,7 @@ const ContractorDetails = () => {
                         <h3 className="text-lg font-semibold text-gray-900 mb-3">Services Offered</h3>
                         <div className="flex flex-wrap gap-2">
                           {(contractor.services || []).map((s: string) => (
-                            <Badge key={s} className="bg-[#fce011]/10 text-black border-[#fce011]/30 hover:bg-[#fce011]/20">
+                            <Badge key={s} className="bg-primary/10 text-black border-primary/30 hover:bg-primary/20">
                               {s}
                             </Badge>
                           ))}
@@ -259,7 +259,7 @@ const ContractorDetails = () => {
 
                     <div className="flex flex-wrap items-center gap-3 pt-4 border-t">
                       {phone && (
-                        <Button onClick={() => (window.location.href = `tel:${phone}`)} className="bg-[#fce011] hover:bg-[#ebd010] text-black font-semibold">
+                        <Button onClick={() => (window.location.href = `tel:${phone}`)} className="bg-primary hover:bg-primary/90 text-black font-semibold">
                           <Phone className="w-4 h-4 mr-2" /> Call Now
                         </Button>
                       )}
@@ -284,7 +284,7 @@ const ContractorDetails = () => {
                 <h2 className="text-2xl font-bold text-gray-900 mb-6">Client Reviews & Testimonials</h2>
 
                 {/* Overall rating summary */}
-                <div className="flex items-center gap-6 mb-8 p-6 bg-[#fce011]/5 rounded-lg border border-[#fce011]/20">
+                <div className="flex items-center gap-6 mb-8 p-6 bg-primary/5 rounded-lg border border-primary/20">
                   <div className="text-center">
                     <div className="text-5xl font-bold text-gray-900 mb-2">
                       {(contractor?.rating?.average ?? contractor?.rating ?? 0).toFixed ? (contractor?.rating?.average ?? contractor?.rating ?? 0).toFixed(1) : Number(contractor?.rating?.average ?? contractor?.rating ?? 0).toFixed(1)}
@@ -294,7 +294,7 @@ const ContractorDetails = () => {
                         const avg = Number(contractor?.rating?.average ?? contractor?.rating ?? 0);
                         const filled = i < Math.round(avg);
                         return (
-                          <Star key={i} className={`w-6 h-6 ${filled ? 'text-[#fce011] fill-[#fce011]' : 'text-gray-300'}`} />
+                          <Star key={i} className={`w-6 h-6 ${filled ? 'text-primary fill-primary' : 'text-gray-300'}`} />
                         );
                       })}
                     </div>
@@ -322,7 +322,7 @@ const ContractorDetails = () => {
                         <div key={idx} className="border-2 border-gray-100 rounded-xl bg-white p-6 hover:shadow-md transition-shadow">
                           <div className="flex items-start justify-between mb-4">
                             <div className="flex items-start gap-4">
-                              <div className="w-12 h-12 rounded-full bg-[#fce011] flex items-center justify-center text-black font-bold text-lg">
+                              <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-black font-bold text-lg">
                                 {reviewer.charAt(0).toUpperCase()}
                               </div>
                               <div>
@@ -338,7 +338,7 @@ const ContractorDetails = () => {
                             </div>
                             <div className="flex items-center gap-1">
                               {Array.from({ length: 5 }).map((_, i) => (
-                                <Star key={i} className={`w-5 h-5 ${i < Math.round(stars) ? 'text-[#fce011] fill-[#fce011]' : 'text-gray-300'}`} />
+                                <Star key={i} className={`w-5 h-5 ${i < Math.round(stars) ? 'text-primary fill-primary' : 'text-gray-300'}`} />
                               ))}
                             </div>
                           </div>

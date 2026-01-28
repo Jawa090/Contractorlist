@@ -113,6 +113,11 @@ const Contractors = () => {
   const [offersCustomWork, setOffersCustomWork] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState<string>("");
   const [selectedRating, setSelectedRating] = useState<string>("");
+  const [selectedProjectTypes, setSelectedProjectTypes] = useState<string[]>([]);
+  const [selectedWorkPreferences, setSelectedWorkPreferences] = useState<string[]>([]);
+  const [experienceLevel, setExperienceLevel] = useState<string>("");
+  const [bonded, setBonded] = useState(false);
+  const [insured, setInsured] = useState(false);
 
   // Helper to toggle filters
   const toggleFilter = (filter: string) => {
@@ -147,6 +152,16 @@ const Contractors = () => {
       setSelectedLanguage(filter);
     } else if (filter.includes("stars")) {
       setSelectedRating(filter);
+    } else if (["Commercial", "Residential", "Industrial", "Government", "Institutional"].includes(filter)) {
+      setSelectedProjectTypes(prev => prev.includes(filter) ? prev.filter(f => f !== filter) : [...prev, filter]);
+    } else if (["Union", "Non-Union", "Prevailing Wage"].includes(filter)) {
+      setSelectedWorkPreferences(prev => prev.includes(filter) ? prev.filter(f => f !== filter) : [...prev, filter]);
+    } else if (filter.includes("Years in Business")) {
+      setExperienceLevel(filter);
+    } else if (filter === "Bonded") {
+      setBonded(!bonded);
+    } else if (filter === "Insured") {
+      setInsured(!insured);
     }
   };
 
@@ -179,6 +194,16 @@ const Contractors = () => {
       setSelectedLanguage("");
     } else if (filter.includes("stars")) {
       setSelectedRating("");
+    } else if (["Commercial", "Residential", "Industrial", "Government", "Institutional"].includes(filter)) {
+      setSelectedProjectTypes(prev => prev.filter(f => f !== filter));
+    } else if (["Union", "Non-Union", "Prevailing Wage"].includes(filter)) {
+      setSelectedWorkPreferences(prev => prev.filter(f => f !== filter));
+    } else if (filter.includes("Years in Business")) {
+      setExperienceLevel("");
+    } else if (filter === "Bonded") {
+      setBonded(false);
+    } else if (filter === "Insured") {
+      setInsured(false);
     }
   };
 
@@ -197,6 +222,11 @@ const Contractors = () => {
     setOffersCustomWork(false);
     setSelectedLanguage("");
     setSelectedRating("");
+    setSelectedProjectTypes([]);
+    setSelectedWorkPreferences([]);
+    setExperienceLevel("");
+    setBonded(false);
+    setInsured(false);
   };
 
   // Count active filters
@@ -213,6 +243,11 @@ const Contractors = () => {
     offersCustomWork,
     selectedLanguage && selectedLanguage !== "All Languages",
     selectedRating && selectedRating !== "Any Rating",
+    selectedProjectTypes.length > 0,
+    selectedWorkPreferences.length > 0,
+    experienceLevel,
+    bonded,
+    insured,
   ].filter(Boolean).length;
 
   // Sidebar services: fetch real counts from backend with fallback icons
@@ -459,6 +494,11 @@ const Contractors = () => {
     offersCustomWork,
     selectedLanguage,
     search,
+    selectedProjectTypes,
+    selectedWorkPreferences,
+    experienceLevel,
+    bonded,
+    insured,
   ]);
 
   useEffect(() => {
@@ -506,10 +546,10 @@ const Contractors = () => {
       <div className="border-b border-gray-200 pb-3 mb-3 last:border-b-0">
         <button
           onClick={() => setOpen(!open)}
-          className="flex items-center justify-between w-full text-sm font-bold text-gray-900 mb-2 hover:text-yellow-600 transition-colors"
+          className="flex items-center justify-between w-full text-sm font-bold text-gray-900 mb-2 hover:text-primary transition-colors"
         >
           <div className="flex items-center gap-2">
-            {Icon && <Icon className="w-4 h-4 text-yellow-600" />}
+            {Icon && <Icon className="w-4 h-4 text-primary" />}
             <span>{title}</span>
           </div>
           {open ? (
@@ -560,7 +600,7 @@ const Contractors = () => {
             {/* Location Section */}
             <div className="mb-4 pb-3 border-b border-gray-200">
               <div className="flex items-center gap-2 mb-3">
-                <MapPin className="w-4 h-4 text-yellow-600" />
+                <MapPin className="w-4 h-4 text-primary" />
                 <h3 className="text-sm font-bold text-gray-900">
                   Location
                 </h3>
@@ -572,7 +612,7 @@ const Contractors = () => {
                     onChange={(e) => {
                       setLocation(e.target.value);
                     }}
-                    className="w-full h-9 rounded-lg border border-gray-300 bg-white px-3 pr-8 text-sm text-gray-700 focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all hover:border-gray-400 appearance-none cursor-pointer"
+                    className="w-full h-9 rounded-lg border border-gray-300 bg-white px-3 pr-8 text-sm text-gray-700 focus:ring-2 focus:ring-primary focus:border-primary transition-all hover:border-gray-400 appearance-none cursor-pointer"
                   >
                     <option>New York, NY</option>
                     <option>California, CA</option>
@@ -585,7 +625,7 @@ const Contractors = () => {
                   <select
                     value={radius}
                     onChange={(e) => setRadius(e.target.value)}
-                    className="w-full h-9 rounded-lg border border-gray-300 bg-white px-3 pr-8 text-sm text-gray-700 focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all hover:border-gray-400 appearance-none cursor-pointer"
+                    className="w-full h-9 rounded-lg border border-gray-300 bg-white px-3 pr-8 text-sm text-gray-700 focus:ring-2 focus:ring-primary focus:border-primary transition-all hover:border-gray-400 appearance-none cursor-pointer"
                   >
                     <option>50 mi</option>
                     <option>100 mi</option>
@@ -601,7 +641,7 @@ const Contractors = () => {
                 <div className="relative flex items-center justify-center">
                   <input
                     type="checkbox"
-                    className="w-5 h-5 rounded border-2 border-gray-300 text-yellow-600 focus:ring-2 focus:ring-yellow-500 focus:ring-offset-0 cursor-pointer transition-all checked:bg-yellow-500 checked:border-yellow-500"
+                    className="w-5 h-5 rounded border-2 border-gray-300 text-primary focus:ring-2 focus:ring-primary focus:ring-offset-0 cursor-pointer transition-all checked:bg-primary checked:border-primary"
                     checked={verifiedLicense}
                     onChange={(e) => {
                       setVerifiedLicense(e.target.checked);
@@ -610,7 +650,7 @@ const Contractors = () => {
                   />
                 </div>
                 <div className="flex items-center gap-2 flex-1">
-                  <Shield className="w-4 h-4 text-gray-500 group-hover:text-yellow-600 transition-colors" />
+                  <Shield className="w-4 h-4 text-gray-500 group-hover:text-primary transition-colors" />
                   <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900">Verified License</span>
                 </div>
               </label>
@@ -618,7 +658,7 @@ const Contractors = () => {
                 <div className="relative flex items-center justify-center">
                   <input
                     type="checkbox"
-                    className="w-5 h-5 rounded border-2 border-gray-300 text-yellow-600 focus:ring-2 focus:ring-yellow-500 focus:ring-offset-0 cursor-pointer transition-all checked:bg-yellow-500 checked:border-yellow-500"
+                    className="w-5 h-5 rounded border-2 border-gray-300 text-primary focus:ring-2 focus:ring-primary focus:ring-offset-0 cursor-pointer transition-all checked:bg-primary checked:border-primary"
                     checked={respondsQuickly}
                     onChange={(e) => {
                       setRespondsQuickly(e.target.checked);
@@ -627,7 +667,7 @@ const Contractors = () => {
                   />
                 </div>
                 <div className="flex items-center gap-2 flex-1">
-                  <Clock className="w-4 h-4 text-gray-500 group-hover:text-yellow-600 transition-colors" />
+                  <Clock className="w-4 h-4 text-gray-500 group-hover:text-primary transition-colors" />
                   <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900">Responds Quickly</span>
                 </div>
               </label>
@@ -635,7 +675,7 @@ const Contractors = () => {
                 <div className="relative flex items-center justify-center">
                   <input
                     type="checkbox"
-                    className="w-5 h-5 rounded border-2 border-gray-300 text-yellow-600 focus:ring-2 focus:ring-yellow-500 focus:ring-offset-0 cursor-pointer transition-all checked:bg-yellow-500 checked:border-yellow-500"
+                    className="w-5 h-5 rounded border-2 border-gray-300 text-primary focus:ring-2 focus:ring-primary focus:ring-offset-0 cursor-pointer transition-all checked:bg-primary checked:border-primary"
                     checked={hiredOnPlatform}
                     onChange={(e) => {
                       setHiredOnPlatform(e.target.checked);
@@ -644,7 +684,7 @@ const Contractors = () => {
                   />
                 </div>
                 <div className="flex items-center gap-2 flex-1">
-                  <Verified className="w-4 h-4 text-gray-500 group-hover:text-yellow-600 transition-colors" />
+                  <Verified className="w-4 h-4 text-gray-500 group-hover:text-primary transition-colors" />
                   <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900">Hired on Houzz</span>
                 </div>
               </label>
@@ -658,7 +698,7 @@ const Contractors = () => {
                   <input
                     type="text"
                     placeholder="Search Professional Category"
-                    className="w-full border-2 border-gray-200 rounded-lg px-3 pl-10 py-2.5 text-sm focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all"
+                    className="w-full border-2 border-gray-200 rounded-lg px-3 pl-10 py-2.5 text-sm focus:ring-2 focus:ring-primary focus:border-primary transition-all"
                   />
                 </div>
               </div>
@@ -677,7 +717,7 @@ const Contractors = () => {
                     <input
                       type="radio"
                       name="category"
-                      className="w-4 h-4 border-2 border-gray-300 text-yellow-600 focus:ring-2 focus:ring-yellow-500 focus:ring-offset-0 cursor-pointer flex-shrink-0"
+                      className="w-4 h-4 border-2 border-gray-300 text-primary focus:ring-2 focus:ring-primary focus:ring-offset-0 cursor-pointer flex-shrink-0"
                       checked={professionalCategory === item}
                       onChange={() => {
                         setProfessionalCategory(item);
@@ -686,7 +726,7 @@ const Contractors = () => {
                     />
                     <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900 flex-1 whitespace-nowrap overflow-hidden text-ellipsis">{item}</span>
                     {professionalCategory === item && (
-                      <CheckCircle className="w-4 h-4 text-yellow-600 flex-shrink-0" />
+                      <CheckCircle className="w-4 h-4 text-primary flex-shrink-0" />
                     )}
                   </label>
                 ))}
@@ -695,8 +735,109 @@ const Contractors = () => {
 
             {/* Project Type */}
             <AccordionSection title="Project Type" icon={Home}>
-              <div className="p-3 bg-gray-50 rounded-lg border border-gray-200">
-                <p className="text-gray-500 text-sm font-medium">Select project type...</p>
+              <div className="space-y-1.5">
+                {[
+                  "Commercial",
+                  "Residential",
+                  "Industrial",
+                  "Government",
+                  "Institutional"
+                ].map((item, i) => (
+                  <label
+                    key={i}
+                    className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer group"
+                  >
+                    <input
+                      type="checkbox"
+                      className="w-4 h-4 rounded border-2 border-gray-300 text-primary focus:ring-2 focus:ring-primary focus:ring-offset-0 cursor-pointer"
+                      checked={selectedProjectTypes.includes(item)}
+                      onChange={() => toggleFilter(item)}
+                    />
+                    <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900 flex-1">{item}</span>
+                  </label>
+                ))}
+              </div>
+            </AccordionSection>
+
+            {/* Work Preference */}
+            <AccordionSection title="Labor Preference" icon={Users}>
+              <div className="space-y-1.5">
+                {[
+                  "Union",
+                  "Non-Union",
+                  "Prevailing Wage"
+                ].map((item, i) => (
+                  <label
+                    key={i}
+                    className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer group"
+                  >
+                    <input
+                      type="checkbox"
+                      className="w-4 h-4 rounded border-2 border-gray-300 text-primary focus:ring-2 focus:ring-primary focus:ring-offset-0 cursor-pointer"
+                      checked={selectedWorkPreferences.includes(item)}
+                      onChange={() => toggleFilter(item)}
+                    />
+                    <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900 flex-1">{item}</span>
+                  </label>
+                ))}
+              </div>
+            </AccordionSection>
+
+            {/* Experience Level */}
+            <AccordionSection title="Experience" icon={Clock}>
+              <div className="space-y-1.5">
+                {[
+                  "1-5 Years in Business",
+                  "5-10 Years in Business",
+                  "10+ Years in Business"
+                ].map((item, i) => (
+                  <label
+                    key={i}
+                    className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer group"
+                  >
+                    <input
+                      type="radio"
+                      name="experience"
+                      className="w-4 h-4 border-2 border-gray-300 text-primary focus:ring-2 focus:ring-primary focus:ring-offset-0 cursor-pointer"
+                      checked={experienceLevel === item}
+                      onChange={() => {
+                        setExperienceLevel(item);
+                        toggleFilter(item);
+                      }}
+                    />
+                    <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900 flex-1">{item}</span>
+                  </label>
+                ))}
+              </div>
+            </AccordionSection>
+
+            {/* Credentials */}
+            <AccordionSection title="Credentials" icon={Shield}>
+              <div className="space-y-1.5">
+                <label className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    className="w-4 h-4 rounded border-2 border-gray-300 text-primary focus:ring-2 focus:ring-primary focus:ring-offset-0 cursor-pointer"
+                    checked={bonded}
+                    onChange={(e) => {
+                      setBonded(e.target.checked);
+                      toggleFilter("Bonded");
+                    }}
+                  />
+                  <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900 flex-1">Bonded</span>
+                </label>
+                <label className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    className="w-4 h-4 rounded border-2 border-gray-300 text-primary focus:ring-2 focus:ring-primary focus:ring-offset-0 cursor-pointer"
+                    checked={insured}
+                    onChange={(e) => {
+                      setInsured(e.target.checked);
+                      toggleFilter("Insured");
+                    }}
+                  />
+                  <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900 flex-1">Insured</span>
+                </label>
               </div>
             </AccordionSection>
 
@@ -711,14 +852,14 @@ const Contractors = () => {
                 <label
                   key={i}
                   className={`flex items-center gap-3 p-3 rounded-lg border-2 transition-all cursor-pointer group ${budget === item.value
-                    ? "bg-yellow-50 border-yellow-400 shadow-sm"
+                    ? "bg-primary/5 border-primary shadow-sm"
                     : "bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50"
                     }`}
                 >
                   <div className="relative flex items-center justify-center">
                     <input
                       type="checkbox"
-                      className="w-5 h-5 rounded border-2 border-gray-300 text-yellow-600 focus:ring-2 focus:ring-yellow-500 focus:ring-offset-0 cursor-pointer transition-all checked:bg-yellow-500 checked:border-yellow-500"
+                      className="w-5 h-5 rounded border-2 border-gray-300 text-primary focus:ring-2 focus:ring-primary focus:ring-offset-0 cursor-pointer transition-all checked:bg-primary checked:border-primary"
                       checked={budget === item.value}
                       onChange={(e) => {
                         if (e.target.checked) {
@@ -739,7 +880,7 @@ const Contractors = () => {
                     <p className="text-xs text-gray-600">{item.value.split(" - ")[1]}</p>
                   </div>
                   {budget === item.value && (
-                    <CheckCircle className="w-5 h-5 text-yellow-600" />
+                    <CheckCircle className="w-5 h-5 text-primary" />
                   )}
                 </label>
               ))}
@@ -760,14 +901,14 @@ const Contractors = () => {
                   <label
                     key={i}
                     className={`flex items-center gap-3 p-2.5 rounded-lg transition-all cursor-pointer group ${item.checked
-                      ? "bg-yellow-50 border border-yellow-200"
+                      ? "bg-primary/5 border border-primary/20"
                       : "hover:bg-gray-50"
                       }`}
                   >
                     <div className="relative flex items-center justify-center">
                       <input
                         type="checkbox"
-                        className="w-5 h-5 rounded border-2 border-gray-300 text-yellow-600 focus:ring-2 focus:ring-yellow-500 focus:ring-offset-0 cursor-pointer transition-all checked:bg-yellow-500 checked:border-yellow-500"
+                        className="w-5 h-5 rounded border-2 border-gray-300 text-primary focus:ring-2 focus:ring-primary focus:ring-offset-0 cursor-pointer transition-all checked:bg-primary checked:border-primary"
                         checked={item.checked}
                         onChange={(e) => {
                           item.setter(e.target.checked);
@@ -775,14 +916,14 @@ const Contractors = () => {
                         }}
                       />
                     </div>
-                    <item.icon className={`w-4 h-4 transition-colors ${item.checked ? "text-yellow-600" : "text-gray-400 group-hover:text-gray-600"
+                    <item.icon className={`w-4 h-4 transition-colors ${item.checked ? "text-primary" : "text-gray-400 group-hover:text-gray-600"
                       }`} />
                     <span className={`text-sm font-medium flex-1 transition-colors ${item.checked ? "text-gray-900" : "text-gray-700 group-hover:text-gray-900"
                       }`}>
                       {item.label}
                     </span>
                     {item.checked && (
-                      <CheckCircle className="w-4 h-4 text-yellow-600" />
+                      <CheckCircle className="w-4 h-4 text-primary" />
                     )}
                   </label>
                 ))}
@@ -805,7 +946,7 @@ const Contractors = () => {
                     <input
                       type="radio"
                       name="language"
-                      className="w-4 h-4 border-2 border-gray-300 text-yellow-600 focus:ring-2 focus:ring-yellow-500 focus:ring-offset-0 cursor-pointer"
+                      className="w-4 h-4 border-2 border-gray-300 text-primary focus:ring-2 focus:ring-primary focus:ring-offset-0 cursor-pointer"
                       checked={selectedLanguage === item}
                       onChange={() => {
                         setSelectedLanguage(item);
@@ -814,7 +955,7 @@ const Contractors = () => {
                     />
                     <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900 flex-1">{item}</span>
                     {selectedLanguage === item && (
-                      <CheckCircle className="w-4 h-4 text-yellow-600" />
+                      <CheckCircle className="w-4 h-4 text-primary" />
                     )}
                   </label>
                 ))}
@@ -833,14 +974,14 @@ const Contractors = () => {
                   <label
                     key={i}
                     className={`flex items-center gap-3 p-2.5 rounded-lg transition-all cursor-pointer group ${selectedRating === item.value
-                      ? "bg-yellow-50 border border-yellow-200"
+                      ? "bg-primary/5 border border-primary/20"
                       : "hover:bg-gray-50"
                       }`}
                   >
                     <input
                       type="radio"
                       name="rating"
-                      className="w-4 h-4 border-2 border-gray-300 text-yellow-600 focus:ring-2 focus:ring-yellow-500 focus:ring-offset-0 cursor-pointer"
+                      className="w-4 h-4 border-2 border-gray-300 text-primary focus:ring-2 focus:ring-primary focus:ring-offset-0 cursor-pointer"
                       checked={selectedRating === item.value}
                       onChange={() => {
                         setSelectedRating(item.value);
@@ -857,7 +998,7 @@ const Contractors = () => {
                             <Star
                               key={idx}
                               className={`w-4 h-4 ${idx < item.stars
-                                ? "text-yellow-500 fill-yellow-500"
+                                ? "text-primary fill-primary"
                                 : "text-gray-300"
                                 }`}
                             />
@@ -870,7 +1011,7 @@ const Contractors = () => {
                       </span>
                     </div>
                     {selectedRating === item.value && (
-                      <CheckCircle className="w-4 h-4 text-yellow-600" />
+                      <CheckCircle className="w-4 h-4 text-primary" />
                     )}
                   </label>
                 ))}
@@ -901,7 +1042,7 @@ const Contractors = () => {
                       <span>Background Verified</span>
                     </div>
                     <div className="flex items-center gap-1">
-                      <Award className="w-4 h-4 text-yellow-600" />
+                      <Award className="w-4 h-4 text-primary" />
                       <span>Top Rated</span>
                     </div>
                   </div>
@@ -1094,7 +1235,7 @@ const Contractors = () => {
                           key={page}
                           onClick={() => goToCompaniesPage(page)}
                           className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${companiesCurrentPage === page
-                            ? "bg-yellow-500 text-white hover:bg-yellow-600"
+                            ? "bg-primary text-black hover:bg-primary/90"
                             : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
                             }`}
                         >

@@ -57,8 +57,8 @@ const FAQSection = () => {
                   <div
                     key={index}
                     className={`border-l-4 rounded-r-lg overflow-hidden shadow-sm ${isOpen
-                        ? "border-[#fce011] bg-[#fce011]/10"
-                        : "border-gray-200 bg-white"
+                      ? "border-[#fce011] bg-[#fce011]/10"
+                      : "border-gray-200 bg-white"
                       }`}
                   >
                     <button
@@ -98,9 +98,9 @@ const FAQSection = () => {
           {/* Right Content - FAQ Image */}
           <div className="flex justify-center lg:justify-end items-center">
             <img
-              src="/f.png"
-              alt="FAQ Illustration with colorful geometric shapes and FAQ text"
-              className="w-full max-w-2xl h-auto object-contain mix-blend-multiply"
+              src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&q=80&w=800"
+              alt="Construction professional"
+              className="w-full max-w-lg h-auto object-cover rounded-2xl shadow-2xl"
             />
           </div>
         </div>

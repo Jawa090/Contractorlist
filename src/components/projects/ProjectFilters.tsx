@@ -9,7 +9,10 @@ import {
     Building2,
     Briefcase,
     DollarSign,
-    Filter
+    Filter,
+    Landmark,
+    Hammer,
+    Users
 } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -30,6 +33,7 @@ import {
 } from "@/components/ui/collapsible";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 const PROJECT_STAGES = [
     "Planning",
@@ -49,6 +53,27 @@ const PROJECT_CATEGORIES = [
     "Retail",
     "Hospitality",
     "Mixed-Use",
+];
+
+const PROJECT_SECTORS = [
+    "Private",
+    "Public (Federal)",
+    "Public (State)",
+    "Public (Local)",
+];
+
+const CONSTRUCTION_TYPES = [
+    "New Construction",
+    "Renovation / Retrofit",
+    "Addition / Expansion",
+    "Tenant Improvement (TI)",
+    "Demolition",
+];
+
+const LABOR_REQUIREMENTS = [
+    "Union",
+    "Non-Union",
+    "Prevailing Wage",
 ];
 
 export const CSI_DIVISIONS = [
@@ -84,6 +109,43 @@ const VALUE_RANGES = [
     "$10M - $50M",
     "$50M - $100M",
     "Over $100M",
+];
+
+const PROJ_COUNTRIES = ["United States", "Canada"];
+const PROJ_STATES = ["Texas", "California", "New York", "Florida", "Illinois", "Ohio", "Pennsylvania", "Georgia"];
+const PROJ_COUNTIES = ["Travis", "Dallas", "Harris", "Los Angeles", "Cook", "Maricopa", "Orange", "San Diego"];
+
+const PUBLISH_DATES = [
+    { label: "Any time", value: "any" },
+    { label: "Last 24 hours", value: "1" },
+    { label: "Last 3 days", value: "3" },
+    { label: "Last 7 days", value: "7" },
+    { label: "Last 30 days", value: "30" },
+    { label: "Last 3 months", value: "90" },
+];
+
+const BIDDING_WITHIN = [
+    { label: "Any time", value: "any" },
+    { label: "Next 7 days", value: "7" },
+    { label: "Next 30 days", value: "30" },
+    { label: "Next 60 days", value: "60" },
+];
+
+const MATERIALS_EQUIPMENT = [
+    "Concrete",
+    "Steel",
+    "Lumber",
+    "Glass",
+    "HVAC Equipment",
+    "Electrical Gear",
+    "Plumbing Fixtures",
+    "Heavy Machinery",
+];
+
+const EXPERIENCE_LEVELS = [
+    "1-5 Years in Business",
+    "5-10 Years in Business",
+    "10+ Years in Business",
 ];
 
 interface FilterSectionProps {
@@ -122,6 +184,69 @@ const FilterSection = ({
     );
 };
 
+interface FilterCheckboxListProps<T> {
+    items: T[];
+    selectedItems: string[];
+    onToggle: (item: string) => void;
+    labelFn: (item: T) => React.ReactNode;
+    valueFn: (item: T) => string;
+    idPrefix: string;
+    limit?: number;
+}
+
+const FilterCheckboxList = <T,>({
+    items,
+    selectedItems,
+    onToggle,
+    labelFn,
+    valueFn,
+    idPrefix,
+    limit = 5
+}: FilterCheckboxListProps<T>) => {
+    const [showAll, setShowAll] = useState(false);
+
+    // Always show all items if we are under the limit or if showAll is true
+    // Also if limit is 0 or negative, assume show all (though default is 5)
+    const shouldLimit = limit > 0 && items.length > limit && !showAll;
+    const displayedItems = shouldLimit ? items.slice(0, limit) : items;
+    const remainingCount = items.length - limit;
+
+    return (
+        <div className="space-y-2">
+            {displayedItems.map((item) => {
+                const value = valueFn(item);
+                const id = `${idPrefix}-${value}`;
+                return (
+                    <div key={value} className="flex items-center space-x-2">
+                        <Checkbox
+                            id={id}
+                            checked={selectedItems.includes(value)}
+                            onCheckedChange={() => onToggle(value)}
+                        />
+                        <Label
+                            htmlFor={id}
+                            className="text-sm font-normal cursor-pointer flex-1 leading-normal"
+                        >
+                            {labelFn(item)}
+                        </Label>
+                    </div>
+                );
+            })}
+
+            {items.length > limit && (
+                <Button
+                    variant="link"
+                    size="sm"
+                    className="h-auto p-0 text-xs text-accent hover:text-accent/80"
+                    onClick={() => setShowAll(!showAll)}
+                >
+                    {showAll ? "Show Less" : `See ${remainingCount} More`}
+                </Button>
+            )}
+        </div>
+    );
+};
+
 interface ProjectFiltersProps {
     onFiltersChange?: (filters: ProjectFilterState) => void;
 }
@@ -131,12 +256,25 @@ export interface ProjectFilterState {
     radius: number;
     stages: string[];
     categories: string[];
+    sectors: string[];             // Added
+    constructionTypes: string[];   // Added
+    laborRequirements: string[];   // Added
     trades: string[];
     valueRanges: string[];
     bidDateFrom: string;
     bidDateTo: string;
     documentsOnly: boolean;
     savedOnly: boolean;
+    country: string;
+    state: string;
+    county: string;
+    publishDate: string;
+    biddingWithin: string;
+    materials: string[];
+    experienceLevel: string;
+    bonded: boolean;
+    insured: boolean;
+    specAlerts: boolean;
 }
 
 const ProjectFilters = ({ onFiltersChange }: ProjectFiltersProps) => {
@@ -144,6 +282,9 @@ const ProjectFilters = ({ onFiltersChange }: ProjectFiltersProps) => {
     const [radius, setRadius] = useState([50]);
     const [selectedStages, setSelectedStages] = useState<string[]>([]);
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+    const [selectedSectors, setSelectedSectors] = useState<string[]>([]);
+    const [selectedConstructionTypes, setSelectedConstructionTypes] = useState<string[]>([]);
+    const [selectedLaborRequirements, setSelectedLaborRequirements] = useState<string[]>([]);
     const [selectedTrades, setSelectedTrades] = useState<string[]>([]);
     const [selectedValueRanges, setSelectedValueRanges] = useState<string[]>([]);
     const [tradeSearch, setTradeSearch] = useState("");
@@ -151,6 +292,16 @@ const ProjectFilters = ({ onFiltersChange }: ProjectFiltersProps) => {
     const [bidDateTo, setBidDateTo] = useState("");
     const [documentsOnly, setDocumentsOnly] = useState(false);
     const [savedOnly, setSavedOnly] = useState(false);
+    const [country, setCountry] = useState("");
+    const [state, setState] = useState("");
+    const [county, setCounty] = useState("");
+    const [publishDate, setPublishDate] = useState("");
+    const [biddingWithin, setBiddingWithin] = useState("");
+    const [selectedMaterials, setSelectedMaterials] = useState<string[]>([]);
+    const [experienceLevel, setExperienceLevel] = useState("");
+    const [bonded, setBonded] = useState(false);
+    const [insured, setInsured] = useState(false);
+    const [specAlerts, setSpecAlerts] = useState(false);
 
     useEffect(() => {
         if (onFiltersChange) {
@@ -159,12 +310,25 @@ const ProjectFilters = ({ onFiltersChange }: ProjectFiltersProps) => {
                 radius: radius[0],
                 stages: selectedStages,
                 categories: selectedCategories,
+                sectors: selectedSectors,
+                constructionTypes: selectedConstructionTypes,
+                laborRequirements: selectedLaborRequirements,
                 trades: selectedTrades,
                 valueRanges: selectedValueRanges,
                 bidDateFrom,
                 bidDateTo,
                 documentsOnly,
                 savedOnly,
+                country,
+                state,
+                county,
+                publishDate,
+                biddingWithin,
+                materials: selectedMaterials,
+                experienceLevel,
+                bonded,
+                insured,
+                specAlerts,
             });
         }
     }, [
@@ -172,12 +336,25 @@ const ProjectFilters = ({ onFiltersChange }: ProjectFiltersProps) => {
         radius,
         selectedStages,
         selectedCategories,
+        selectedSectors,
+        selectedConstructionTypes,
+        selectedLaborRequirements,
         selectedTrades,
         selectedValueRanges,
         bidDateFrom,
         bidDateTo,
         documentsOnly,
         savedOnly,
+        country,
+        state,
+        county,
+        publishDate,
+        biddingWithin,
+        selectedMaterials,
+        experienceLevel,
+        bonded,
+        insured,
+        specAlerts,
         onFiltersChange
     ]);
 
@@ -189,19 +366,35 @@ const ProjectFilters = ({ onFiltersChange }: ProjectFiltersProps) => {
     const totalFilters =
         selectedStages.length +
         selectedCategories.length +
+        selectedSectors.length +
+        selectedConstructionTypes.length +
+        selectedLaborRequirements.length +
         selectedTrades.length +
         selectedValueRanges.length +
         (location ? 1 : 0) +
         (bidDateFrom ? 1 : 0) +
         (bidDateTo ? 1 : 0) +
         (documentsOnly ? 1 : 0) +
-        (savedOnly ? 1 : 0);
+        (savedOnly ? 1 : 0) +
+        (country ? 1 : 0) +
+        (state ? 1 : 0) +
+        (county ? 1 : 0) +
+        (publishDate ? 1 : 0) +
+        (biddingWithin ? 1 : 0) +
+        selectedMaterials.length +
+        (experienceLevel ? 1 : 0) +
+        (bonded ? 1 : 0) +
+        (insured ? 1 : 0) +
+        (specAlerts ? 1 : 0);
 
     const clearAllFilters = () => {
         setLocation("");
         setRadius([50]);
         setSelectedStages([]);
         setSelectedCategories([]);
+        setSelectedSectors([]);
+        setSelectedConstructionTypes([]);
+        setSelectedLaborRequirements([]);
         setSelectedTrades([]);
         setSelectedValueRanges([]);
         setTradeSearch("");
@@ -209,6 +402,16 @@ const ProjectFilters = ({ onFiltersChange }: ProjectFiltersProps) => {
         setBidDateTo("");
         setDocumentsOnly(false);
         setSavedOnly(false);
+        setCountry("");
+        setState("");
+        setCounty("");
+        setPublishDate("");
+        setBiddingWithin("");
+        setSelectedMaterials([]);
+        setExperienceLevel("");
+        setBonded(false);
+        setInsured(false);
+        setSpecAlerts(false);
     };
 
     const toggleArrayItem = (arr: string[], item: string, setter: (arr: string[]) => void) => {
@@ -276,6 +479,15 @@ const ProjectFilters = ({ onFiltersChange }: ProjectFiltersProps) => {
                                 />
                             </Badge>
                         ))}
+                        {selectedSectors.map((sector) => (
+                            <Badge key={sector} variant="secondary" className="gap-1 pr-1">
+                                {sector}
+                                <X
+                                    className="w-3 h-3 cursor-pointer hover:text-destructive"
+                                    onClick={() => toggleArrayItem(selectedSectors, sector, setSelectedSectors)}
+                                />
+                            </Badge>
+                        ))}
                     </div>
                 )}
             </div>
@@ -315,6 +527,84 @@ const ProjectFilters = ({ onFiltersChange }: ProjectFiltersProps) => {
                         </div>
                     </FilterSection>
 
+                    {/* Region */}
+                    <FilterSection
+                        title="Region (Country/State)"
+                        icon={<Landmark className="w-4 h-4" />}
+                        count={(country ? 1 : 0) + (state ? 1 : 0) + (county ? 1 : 0)}
+                    >
+                        <div className="space-y-3">
+                            <div className="space-y-1.5">
+                                <Label className="text-xs text-muted-foreground">Country</Label>
+                                <Select value={country} onValueChange={setCountry}>
+                                    <SelectTrigger className="w-full text-left h-9">
+                                        <SelectValue placeholder="Select Country" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="All">All Countries</SelectItem>
+                                        {PROJ_COUNTRIES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div className="space-y-1.5">
+                                <Label className="text-xs text-muted-foreground">State</Label>
+                                <Select value={state} onValueChange={setState}>
+                                    <SelectTrigger className="w-full text-left h-9">
+                                        <SelectValue placeholder="Select State" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="All">All States</SelectItem>
+                                        {PROJ_STATES.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div className="space-y-1.5">
+                                <Label className="text-xs text-muted-foreground">County</Label>
+                                <Select value={county} onValueChange={setCounty}>
+                                    <SelectTrigger className="w-full text-left h-9">
+                                        <SelectValue placeholder="Select County" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="All">All Counties</SelectItem>
+                                        {PROJ_COUNTIES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        </div>
+                    </FilterSection>
+
+                    {/* Timing */}
+                    <FilterSection
+                        title="Dates & Timing"
+                        icon={<Calendar className="w-4 h-4" />}
+                        count={(publishDate ? 1 : 0) + (biddingWithin ? 1 : 0)}
+                    >
+                        <div className="space-y-3">
+                            <div className="space-y-1.5">
+                                <Label className="text-xs text-muted-foreground">Publish Date</Label>
+                                <Select value={publishDate} onValueChange={setPublishDate}>
+                                    <SelectTrigger className="w-full text-left h-9">
+                                        <SelectValue placeholder="Select Range" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {PUBLISH_DATES.map(p => <SelectItem key={p.value} value={p.value}>{p.label}</SelectItem>)}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div className="space-y-1.5">
+                                <Label className="text-xs text-muted-foreground">Bidding Within</Label>
+                                <Select value={biddingWithin} onValueChange={setBiddingWithin}>
+                                    <SelectTrigger className="w-full text-left h-9">
+                                        <SelectValue placeholder="Select Range" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {BIDDING_WITHIN.map(b => <SelectItem key={b.value} value={b.value}>{b.label}</SelectItem>)}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        </div>
+                    </FilterSection>
+
                     {/* Project Stage */}
                     <FilterSection
                         title="Project Stage"
@@ -348,19 +638,85 @@ const ProjectFilters = ({ onFiltersChange }: ProjectFiltersProps) => {
                         defaultOpen={true}
                         count={selectedCategories.length}
                     >
-                        <div className="space-y-2 max-h-48 overflow-y-auto">
-                            {PROJECT_CATEGORIES.map((category) => (
-                                <div key={category} className="flex items-center space-x-2">
+                        <FilterCheckboxList
+                            items={PROJECT_CATEGORIES}
+                            selectedItems={selectedCategories}
+                            onToggle={(item) => toggleArrayItem(selectedCategories, item, setSelectedCategories)}
+                            valueFn={(item) => item}
+                            labelFn={(item) => item}
+                            idPrefix="cat"
+                        />
+                    </FilterSection>
+
+                    {/* Sector */}
+                    <FilterSection
+                        title="Sector"
+                        icon={<Landmark className="w-4 h-4" />}
+                        count={selectedSectors.length}
+                    >
+                        <div className="space-y-2">
+                            {PROJECT_SECTORS.map((sector) => (
+                                <div key={sector} className="flex items-center space-x-2">
                                     <Checkbox
-                                        id={`cat-${category}`}
-                                        checked={selectedCategories.includes(category)}
-                                        onCheckedChange={() => toggleArrayItem(selectedCategories, category, setSelectedCategories)}
+                                        id={`sector-${sector}`}
+                                        checked={selectedSectors.includes(sector)}
+                                        onCheckedChange={() => toggleArrayItem(selectedSectors, sector, setSelectedSectors)}
                                     />
                                     <Label
-                                        htmlFor={`cat-${category}`}
+                                        htmlFor={`sector-${sector}`}
                                         className="text-sm font-normal cursor-pointer flex-1"
                                     >
-                                        {category}
+                                        {sector}
+                                    </Label>
+                                </div>
+                            ))}
+                        </div>
+                    </FilterSection>
+
+                    {/* Construction Type */}
+                    <FilterSection
+                        title="Construction Type"
+                        icon={<Hammer className="w-4 h-4" />}
+                        count={selectedConstructionTypes.length}
+                    >
+                        <div className="space-y-2">
+                            {CONSTRUCTION_TYPES.map((type) => (
+                                <div key={type} className="flex items-center space-x-2">
+                                    <Checkbox
+                                        id={`type-${type}`}
+                                        checked={selectedConstructionTypes.includes(type)}
+                                        onCheckedChange={() => toggleArrayItem(selectedConstructionTypes, type, setSelectedConstructionTypes)}
+                                    />
+                                    <Label
+                                        htmlFor={`type-${type}`}
+                                        className="text-sm font-normal cursor-pointer flex-1"
+                                    >
+                                        {type}
+                                    </Label>
+                                </div>
+                            ))}
+                        </div>
+                    </FilterSection>
+
+                    {/* Labor Requirements */}
+                    <FilterSection
+                        title="Labor Requirements"
+                        icon={<Users className="w-4 h-4" />}
+                        count={selectedLaborRequirements.length}
+                    >
+                        <div className="space-y-2">
+                            {LABOR_REQUIREMENTS.map((req) => (
+                                <div key={req} className="flex items-center space-x-2">
+                                    <Checkbox
+                                        id={`req-${req}`}
+                                        checked={selectedLaborRequirements.includes(req)}
+                                        onCheckedChange={() => toggleArrayItem(selectedLaborRequirements, req, setSelectedLaborRequirements)}
+                                    />
+                                    <Label
+                                        htmlFor={`req-${req}`}
+                                        className="text-sm font-normal cursor-pointer flex-1"
+                                    >
+                                        {req}
                                     </Label>
                                 </div>
                             ))}
@@ -382,23 +738,21 @@ const ProjectFilters = ({ onFiltersChange }: ProjectFiltersProps) => {
                                     className="pl-9"
                                 />
                             </div>
-                            <div className="space-y-2 max-h-48 overflow-y-auto">
-                                {filteredTrades.map((trade) => (
-                                    <div key={trade.code} className="flex items-center space-x-2">
-                                        <Checkbox
-                                            id={`trade-${trade.code}`}
-                                            checked={selectedTrades.includes(trade.code)}
-                                            onCheckedChange={() => toggleArrayItem(selectedTrades, trade.code, setSelectedTrades)}
-                                        />
-                                        <Label
-                                            htmlFor={`trade-${trade.code}`}
-                                            className="text-sm font-normal cursor-pointer flex-1"
-                                        >
-                                            <span className="text-muted-foreground mr-1">{trade.code}</span>
-                                            {trade.name}
-                                        </Label>
-                                    </div>
-                                ))}
+                            <div className="space-y-2 animate-in fade-in slide-in-from-top-2 duration-200">
+                                <FilterCheckboxList
+                                    items={filteredTrades}
+                                    selectedItems={selectedTrades}
+                                    onToggle={(item) => toggleArrayItem(selectedTrades, item, setSelectedTrades)}
+                                    valueFn={(item) => item.code}
+                                    labelFn={(item) => (
+                                        <>
+                                            <span className="text-muted-foreground mr-1">{item.code}</span>
+                                            {item.name}
+                                        </>
+                                    )}
+                                    idPrefix="trade"
+                                    limit={tradeSearch ? 100 : 5} // Show all if searching
+                                />
                             </div>
                         </div>
                     </FilterSection>
@@ -409,22 +763,87 @@ const ProjectFilters = ({ onFiltersChange }: ProjectFiltersProps) => {
                         icon={<DollarSign className="w-4 h-4" />}
                         count={selectedValueRanges.length}
                     >
-                        <div className="space-y-2 max-h-48 overflow-y-auto">
-                            {VALUE_RANGES.map((range) => (
-                                <div key={range} className="flex items-center space-x-2">
+                        <FilterCheckboxList
+                            items={VALUE_RANGES}
+                            selectedItems={selectedValueRanges}
+                            onToggle={(item) => toggleArrayItem(selectedValueRanges, item, setSelectedValueRanges)}
+                            valueFn={(item) => item}
+                            labelFn={(item) => item}
+                            idPrefix="value"
+                        />
+                    </FilterSection>
+
+                    {/* Materials & Equipment */}
+                    <FilterSection
+                        title="Materials & Equipment"
+                        icon={<Briefcase className="w-4 h-4" />}
+                        count={selectedMaterials.length}
+                    >
+                        <div className="space-y-2">
+                            {MATERIALS_EQUIPMENT.map((mat) => (
+                                <div key={mat} className="flex items-center space-x-2">
                                     <Checkbox
-                                        id={`value-${range}`}
-                                        checked={selectedValueRanges.includes(range)}
-                                        onCheckedChange={() => toggleArrayItem(selectedValueRanges, range, setSelectedValueRanges)}
+                                        id={`mat-${mat}`}
+                                        checked={selectedMaterials.includes(mat)}
+                                        onCheckedChange={() => toggleArrayItem(selectedMaterials, mat, setSelectedMaterials)}
                                     />
                                     <Label
-                                        htmlFor={`value-${range}`}
+                                        htmlFor={`mat-${mat}`}
                                         className="text-sm font-normal cursor-pointer flex-1"
                                     >
-                                        {range}
+                                        {mat}
                                     </Label>
                                 </div>
                             ))}
+                        </div>
+                    </FilterSection>
+
+
+                    {/* Contractor Requirements */}
+                    <FilterSection
+                        title="Contractor Requirements"
+                        icon={<Users className="w-4 h-4" />}
+                        count={(experienceLevel ? 1 : 0) + (bonded ? 1 : 0) + (insured ? 1 : 0)}
+                    >
+                        <div className="space-y-4">
+                            <div className="space-y-3">
+                                <Label className="text-xs text-muted-foreground">Experience Required</Label>
+                                <RadioGroup value={experienceLevel} onValueChange={setExperienceLevel}>
+                                    {EXPERIENCE_LEVELS.map((level) => (
+                                        <div key={level} className="flex items-center space-x-2">
+                                            <RadioGroupItem value={level} id={`exp-${level}`} />
+                                            <Label htmlFor={`exp-${level}`} className="font-normal cursor-pointer">
+                                                {level}
+                                            </Label>
+                                        </div>
+                                    ))}
+                                </RadioGroup>
+                            </div>
+                            <div className="space-y-3 pt-2 border-t border-border">
+                                <Label className="text-xs text-muted-foreground">Credentials Required</Label>
+                                <div className="space-y-2">
+                                    <div className="flex items-center space-x-2">
+                                        <Checkbox
+                                            id="req-bonded"
+                                            checked={bonded}
+                                            onCheckedChange={(checked) => setBonded(checked as boolean)}
+                                        />
+                                        <Label htmlFor="req-bonded" className="font-normal cursor-pointer">
+                                            Bonded Contractor
+                                        </Label>
+                                    </div>
+                                    <div className="flex items-center space-x-2">
+                                        <Checkbox
+                                            id="req-insured"
+                                            checked={insured}
+                                            onCheckedChange={(checked) => setInsured(checked as boolean)}
+                                        />
+                                        <Label htmlFor="req-insured" className="font-normal cursor-pointer">
+                                            Insured Contractor
+                                        </Label>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </FilterSection>
 
@@ -480,6 +899,19 @@ const ProjectFilters = ({ onFiltersChange }: ProjectFiltersProps) => {
                                     className="text-sm font-normal cursor-pointer"
                                 >
                                     Saved Projects Only
+                                </Label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <Checkbox
+                                    id="spec-alerts"
+                                    checked={specAlerts}
+                                    onCheckedChange={(checked) => setSpecAlerts(checked as boolean)}
+                                />
+                                <Label
+                                    htmlFor="spec-alerts"
+                                    className="text-sm font-normal cursor-pointer"
+                                >
+                                    Spec Alerts
                                 </Label>
                             </div>
                         </div>

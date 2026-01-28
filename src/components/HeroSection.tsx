@@ -58,7 +58,7 @@ const HeroSection = () => {
             {/* Search Section */}
             <div className="space-y-4">
               <p className="text-base sm:text-lg text-gray-700">
-                Find verified & certified pros in your area
+                Find Verified & Certified Pros in Your Area
               </p>
               <div className="flex flex-col sm:flex-row items-stretch gap-3">
                 <div className="flex-[2] w-full">
@@ -96,7 +96,7 @@ const HeroSection = () => {
             <div className="space-y-3">
               <div className="flex flex-col sm:flex-row items-center sm:items-start gap-2 sm:gap-6">
                 <p className="text-sm sm:text-base lg:text-lg text-black font-bold underline underline-offset-4 text-center sm:text-left">
-                  Explore our most popular visited construction pro categories
+                  Explore Our Most Popular Visited Construction Pro Categories
                 </p>
                 <Link
                   to="/services"
