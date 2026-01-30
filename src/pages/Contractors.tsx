@@ -55,6 +55,8 @@ import companyService, { CompanySearchFilters } from "@/services/companyService"
 import { normalizeCompanyData } from "@/utils/normalizeCompany";
 
 import { mockCompanies } from "@/data/mockCompanies";
+import Footer from "@/components/Footer";
+import CTASection from "@/components/CTASection";
 
 const Contractors = () => {
   const [params] = useSearchParams();
@@ -546,7 +548,7 @@ const Contractors = () => {
       <div className="border-b border-gray-200 pb-3 mb-3 last:border-b-0">
         <button
           onClick={() => setOpen(!open)}
-          className="flex items-center justify-between w-full text-sm font-bold text-gray-900 mb-2 hover:text-primary transition-colors"
+          className="flex items-center justify-between w-full text-sm font-bold text-gray-900 mb-2 hover:text-yellow-600 transition-colors"
         >
           <div className="flex items-center gap-2">
             {Icon && <Icon className="w-4 h-4 text-primary" />}
@@ -583,7 +585,7 @@ const Contractors = () => {
         <div className="my-1 border-t border-gray-200" />
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Sidebar - Wider, no scroll */}
-          <div className="lg:col-span-4 bg-white rounded-xl shadow-lg border border-gray-200 p-6 h-fit">
+          <div className="lg:col-span-3 bg-white rounded-xl shadow-lg border border-gray-200 p-6 h-fit">
             {/* Header with Clear All */}
             {activeFiltersCount > 0 && (
               <div className="mb-4 pb-4 border-b border-gray-200">
@@ -650,7 +652,7 @@ const Contractors = () => {
                   />
                 </div>
                 <div className="flex items-center gap-2 flex-1">
-                  <Shield className="w-4 h-4 text-gray-500 group-hover:text-primary transition-colors" />
+                  <Shield className="w-4 h-4 text-gray-500 group-hover:text-yellow-600 transition-colors" />
                   <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900">Verified License</span>
                 </div>
               </label>
@@ -667,7 +669,7 @@ const Contractors = () => {
                   />
                 </div>
                 <div className="flex items-center gap-2 flex-1">
-                  <Clock className="w-4 h-4 text-gray-500 group-hover:text-primary transition-colors" />
+                  <Clock className="w-4 h-4 text-gray-500 group-hover:text-yellow-600 transition-colors" />
                   <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900">Responds Quickly</span>
                 </div>
               </label>
@@ -684,7 +686,7 @@ const Contractors = () => {
                   />
                 </div>
                 <div className="flex items-center gap-2 flex-1">
-                  <Verified className="w-4 h-4 text-gray-500 group-hover:text-primary transition-colors" />
+                  <Verified className="w-4 h-4 text-gray-500 group-hover:text-yellow-600 transition-colors" />
                   <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900">Hired on Houzz</span>
                 </div>
               </label>
@@ -1020,7 +1022,7 @@ const Contractors = () => {
           </div>
 
           {/* Main Content */}
-          <div className="lg:col-span-8">
+          <div className="lg:col-span-9">
             {/* Results Header */}
             {/* <div className="bg-white rounded-lg shadow-sm border p-6 mb-6">
               <div className="flex items-center justify-between">
@@ -1268,35 +1270,13 @@ const Contractors = () => {
                 </span>
               </div>
             )}
-            {/* Contractors List */}
-            <div className="space-y-6">
+            {/* Contractors List - Legacy Removed, using CompanyCard above */}
+            {/* <div className="space-y-6">
               {visibleContractors.map((contractor, index) => {
-                const email =
-                  contractor?.contact?.email ||
-                  contractor?.email ||
-                  "contact@contractor.com";
-                const phone =
-                  contractor?.contact?.phone ||
-                  contractor?.phone ||
-                  "(555) 123-4567";
-                const website =
-                  contractor?.website || contractor?.contact?.website || "";
-
-                return (
-                  <ContractorCard
-                    key={contractor.id}
-                    contractor={contractor}
-                    featured={index < 2} // Mark first 2 as featured
-                    onViewProfile={handleProfilePreview}
-                    onCall={(phone) => (window.location.href = `tel:${phone}`)}
-                    onEmail={(email) =>
-                      (window.location.href = `mailto:${email}`)
-                    }
-                    onWebsite={(website) => window.open(website, "_blank")}
-                  />
-                );
+                 // Legacy rendering removed to prefer CompanyCard
+                 return null;
               })}
-            </div>
+            </div> */}
 
             {/* Pagination */}
             {pagination && (
@@ -1327,6 +1307,8 @@ const Contractors = () => {
         onClose={closeProfilePreview}
       />
 
+      <CTASection />
+      <Footer />
     </div>
   );
 };
