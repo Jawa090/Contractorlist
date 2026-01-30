@@ -1,4 +1,10 @@
-const defaultImages = ["/home1.jpeg", "/home2.jpeg", "/home3.jpeg"];
+const defaultImages = [
+  "/projects/kitchen-luxury.png",
+  "/projects/living-room-modern.png",
+  "/projects/bathroom-spa.png",
+  "/projects/bedroom-suite.png",
+  "/projects/exterior-modern.png"
+];
 
 const toNumber = (value: any) => {
   if (typeof value === "number" && !Number.isNaN(value)) return value;
@@ -45,11 +51,11 @@ export const normalizeCompanyData = (raw: any = {}) => {
 
   const serviceAreas = ensureArray(
     company.service_areas ||
-      company.serviceAreas ||
-      details.service_areas ||
-      details.serviceAreas ||
-      company.service_cities ||
-      company.serviceCities
+    company.serviceAreas ||
+    details.service_areas ||
+    details.serviceAreas ||
+    company.service_cities ||
+    company.serviceCities
   );
 
   const normalized = {
@@ -77,17 +83,17 @@ export const normalizeCompanyData = (raw: any = {}) => {
     tagline: company.tagline || details.tagline || "",
     featuredReview: company.featured_review
       ? {
-          reviewer: company.featured_review.reviewer,
-          reviewText:
-            company.featured_review.review_text ||
-            company.featured_review.reviewText,
-        }
+        reviewer: company.featured_review.reviewer,
+        reviewText:
+          company.featured_review.review_text ||
+          company.featured_review.reviewText,
+      }
       : company.featured_reviewer_name || company.featured_review_text
-      ? {
+        ? {
           reviewer: company.featured_reviewer_name,
           reviewText: company.featured_review_text,
         }
-      : undefined,
+        : undefined,
     address:
       company.address ||
       details.address ||
@@ -113,8 +119,8 @@ export const normalizeCompanyData = (raw: any = {}) => {
     certifications:
       ensureArray(
         company.certifications ||
-          details.certifications ||
-          company.certs
+        details.certifications ||
+        company.certs
       ) || [],
     awards:
       ensureArray(
@@ -123,8 +129,8 @@ export const normalizeCompanyData = (raw: any = {}) => {
     servicesOffered:
       ensureArray(
         company.services_offered ||
-          details.services_offered ||
-          company.services
+        details.services_offered ||
+        company.services
       ) || [],
     specialties:
       ensureArray(company.specialties || details.specialties) || [],
@@ -155,8 +161,8 @@ export const normalizeCompanyData = (raw: any = {}) => {
     languages:
       ensureArray(
         company.languages ||
-          details.languages ||
-          (company.language ? [company.language] : [])
+        details.languages ||
+        (company.language ? [company.language] : [])
       ) || [],
     budgetRange: company.budget_range || details.budget_range || "",
     professionalCategory:

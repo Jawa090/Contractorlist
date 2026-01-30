@@ -94,8 +94,8 @@ const ContractorHeroSection = () => {
                 <a
                   className="inline-flex items-center justify-center whitespace-nowrap bg-[#fce011] hover:bg-[#fce011]/90 text-black font-semibold px-6 sm:px-8 h-12 sm:h-14 rounded-full border border-[#fce011]/40 shadow-[0_6px_14px_rgba(0,0,0,0.25)] hover:shadow-[0_8px_18px_rgba(0,0,0,0.28)] transition-shadow"
                   href={`/contractors?zip=${encodeURIComponent(zipCode)}${serviceQuery
-                      ? `&service=${encodeURIComponent(serviceQuery)}`
-                      : ""
+                    ? `&service=${encodeURIComponent(serviceQuery)}`
+                    : ""
                     }`}
                   onClick={(e) => {
                     if (!zipCode) e.preventDefault();
@@ -108,10 +108,10 @@ const ContractorHeroSection = () => {
           </div>
 
           {/* Right content - Hero image */}
-          <div className="lg:col-span-1 flex justify-end -mr-32 lg:-mr-96 overflow-hidden lg:flex">
+          <div className="lg:col-span-1 flex justify-end -mr-24 lg:-mr-32 overflow-hidden lg:flex">
             <div className="relative z-10">
               <img
-                src="/lovable-uploads/b9965203-96b6-4c77-92c6-2a3bbd331d98.png"
+                src="/contractors-hero.png"
                 alt="Professional contractor with tools"
                 className="w-auto h-auto max-w-none lg:max-w-4xl transform hover:scale-105 transition-transform duration-500"
                 style={{ maxHeight: "500px" }}
