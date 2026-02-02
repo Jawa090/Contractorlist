@@ -13,12 +13,16 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 
+import { normalizeCompanyData } from "@/utils/normalizeCompany";
+
 const ContractorDetails = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const location = useLocation();
-  const [contractor, setContractor] = useState<any | null>(null);
-  const [loading, setLoading] = useState(false);
+
+  // Initialize state from navigation location to prevent "Not found" flash
+  const [contractor, setContractor] = useState<any | null>(location.state?.company || null);
+  const [loading, setLoading] = useState(!location.state?.company);
   const [error, setError] = useState<string | null>(null);
 
   // State initialization
@@ -27,24 +31,30 @@ const ContractorDetails = () => {
       // 1. Try to get data from navigation state first
       if (location.state?.company) {
         setContractor(location.state.company);
+        setLoading(false);
         return;
       }
 
       // 2. Try to get data from local static data
       if (id && contractorDetailsData[id]) {
-        setContractor(contractorDetailsData[id]);
+        setContractor(normalizeCompanyData(contractorDetailsData[id]));
+        setLoading(false);
         return;
       }
 
       // 3. Fetch from API if neither (fallback)
-      if (!id) return;
+      if (!id) {
+        setLoading(false);
+        return;
+      }
+
       setLoading(true);
       try {
         const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-        const res = await fetch(`${API_URL}/contractors/${id}`);
+        const res = await fetch(`${API_URL}/companies/${id}`);
         const json = await res.json();
         if (json.success) {
-          setContractor(json.data);
+          setContractor(normalizeCompanyData(json.data));
         } else {
           throw new Error("Failed to load contractor data");
         }
@@ -52,7 +62,7 @@ const ContractorDetails = () => {
         console.error(err);
         // Fallback to a default mock for visualization if API fails in dev
         if (contractorDetailsData["grandeur-hills-group"]) {
-          setContractor(contractorDetailsData["grandeur-hills-group"]);
+          setContractor(normalizeCompanyData(contractorDetailsData["grandeur-hills-group"]));
         } else {
           setError("Could not load contractor details.");
         }
@@ -71,18 +81,21 @@ const ContractorDetails = () => {
   const name = contractor.name || "Contractor Name";
   const description = contractor.description || "No description available.";
   const rating = Number(contractor.rating?.average ?? contractor.rating ?? 5.0);
-  const reviewCount = contractor.rating?.count ?? contractor.reviewCount ?? 20; // Default count match UI
+  const reviewCount = contractor.rating?.count ?? contractor.reviewCount ?? contractor.reviewsCount ?? 20; // Default count match UI
   const address = contractor.address ?
     (typeof contractor.address === 'string' ? contractor.address : `${contractor.address.street || ''} ${contractor.address.city}, ${contractor.address.state}`)
     : (contractor.location ? `${contractor.location.city}, ${contractor.location.state}` : "New York, NY");
 
-  const tags = contractor.services || ["General Contractor", "Kitchen Remodeling", "Home Building"];
-  const projects = contractor.portfolio || [
-    "/projects/kitchen-luxury.png",
-    "/projects/living-room-modern.png",
-    "/projects/bathroom-spa.png",
-    "/projects/bedroom-suite.png",
-    "/projects/exterior-modern.png"
+  const tags = contractor.servicesOffered || contractor.services || ["General Contractor", "Kitchen Remodeling", "Home Building"];
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+  const BASE_URL = API_URL.replace('/api', '');
+
+  const projects = contractor.images || contractor.portfolio || [
+    `${BASE_URL}/projects/kitchen-luxury.png`,
+    `${BASE_URL}/projects/living-room-modern.png`,
+    `${BASE_URL}/projects/bathroom-spa.png`,
+    `${BASE_URL}/projects/bedroom-suite.png`,
+    `${BASE_URL}/projects/exterior-modern.png`
   ];
   const reviews = contractor.testimonials || contractor.reviews || [];
 
