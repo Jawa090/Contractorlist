@@ -12,7 +12,7 @@ export interface CompanySearchFilters {
   hired_on_platform?: boolean;
   professional_category?: string;
   budget?: '$' | '$$' | '$$$' | '$$$$';
-  provides_3d?: boolean;
+  provides_3d_visualization?: boolean;
   eco_friendly?: boolean;
   family_owned?: boolean;
   locally_owned?: boolean;
@@ -106,7 +106,7 @@ export const companyService = {
     if (filters.hired_on_platform !== undefined) params.append('hired_on_platform', filters.hired_on_platform.toString());
     if (filters.professional_category) params.append('professional_category', filters.professional_category);
     if (filters.budget) params.append('budget', filters.budget);
-    if (filters.provides_3d !== undefined) params.append('provides_3d', filters.provides_3d.toString());
+    if (filters.provides_3d_visualization !== undefined) params.append('provides_3d_visualization', filters.provides_3d_visualization.toString());
     if (filters.eco_friendly !== undefined) params.append('eco_friendly', filters.eco_friendly.toString());
     if (filters.family_owned !== undefined) params.append('family_owned', filters.family_owned.toString());
     if (filters.locally_owned !== undefined) params.append('locally_owned', filters.locally_owned.toString());
