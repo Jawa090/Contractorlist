@@ -32,7 +32,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import authService from "@/services/authService";
+import authService from "@/api/authService";
 
 const SignupMultiStep = () => {
   const navigate = useNavigate();

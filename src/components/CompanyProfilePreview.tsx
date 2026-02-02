@@ -36,7 +36,7 @@ import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import companyService from "@/services/companyService";
+import companyService from "@/api/companyService";
 
 interface CompanyProfilePreviewProps {
   companyName: string | null;
@@ -209,8 +209,8 @@ const CompanyProfilePreview = ({ companyName, isOpen, onClose }: CompanyProfileP
                       key={id}
                       onClick={() => setActiveTab(id as any)}
                       className={`flex items-center gap-2 px-4 py-2 border-b-2 transition-colors ${activeTab === id
-                          ? 'border-yellow-500 text-yellow-600 font-medium'
-                          : 'border-transparent text-gray-600 hover:text-gray-900'
+                        ? 'border-yellow-500 text-yellow-600 font-medium'
+                        : 'border-transparent text-gray-600 hover:text-gray-900'
                         }`}
                     >
                       <Icon className="w-4 h-4" />
@@ -376,8 +376,8 @@ const CompanyProfilePreview = ({ companyName, isOpen, onClose }: CompanyProfileP
                                     <Star
                                       key={i}
                                       className={`w-4 h-4 ${i < Math.round(rating)
-                                          ? "text-yellow-500 fill-yellow-500"
-                                          : "text-gray-300"
+                                        ? "text-yellow-500 fill-yellow-500"
+                                        : "text-gray-300"
                                         }`}
                                     />
                                   ))}

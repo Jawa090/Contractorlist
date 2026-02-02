@@ -9,7 +9,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from "@/store";
 import { useAppDispatch } from "@/store/hooks";
 import { fetchUserProfile, setUser } from "@/store/slices/authSlice";
-import authService from "@/services/authService";
+import authService from "@/api/authService";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import RouteThemeManager from "@/components/RouteThemeManager";
 import AIChatbot from "@/components/AIChatbot";

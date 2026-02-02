@@ -7,7 +7,6 @@ export { default as api } from './api';
 export { default as authService } from './authService';
 export { default as contractorService } from './contractorService';
 export { default as companyService } from './companyService';
-export { scDashboardService } from './scDashboardService';
 export { getDashboardOverview, getProjects, getRecentProjects, getProjectDiscovery, submitBid, getTeamMembers, inviteTeamMember, getProjectDocuments, uploadDocument, deleteDocument } from './gcDashboardService';
 
 // Re-export types for convenience

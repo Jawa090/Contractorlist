@@ -1,5 +1,5 @@
 import api from './api';
-import mockAPI from '@/api/gc-dashboard-api';
+import mockAPI from '@/services/gc-dashboard-api';
 
 /**
  * GC Dashboard API Service

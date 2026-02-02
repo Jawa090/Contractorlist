@@ -51,7 +51,7 @@ import ProjectTypeSelector from "@/components/ProjectTypeSelector";
 import HeroSection from "@/components/HeroSection";
 import ContractorHeroSection from "@/components/ContractorHeroSection";
 import ReduxHeader from "@/components/ReduxHeader";
-import companyService, { CompanySearchFilters } from "@/services/companyService";
+import companyService, { CompanySearchFilters } from "@/api/companyService";
 import { normalizeCompanyData } from "@/utils/normalizeCompany";
 import Footer from "@/components/Footer";
 import CTASection from "@/components/CTASection";
