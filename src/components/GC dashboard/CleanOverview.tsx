@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { getDashboardOverview, getRecentProjects } from '@/api/gc-apis';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
@@ -34,78 +35,75 @@ const CleanOverview = () => {
   const [selectedProject, setSelectedProject] = useState<any>(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
 
-  const stats = [
-    {
-      title: 'Active Projects',
-      value: '1',
-      subtext: 'All Systems Operational',
-      icon: Building2,
-      isActive: true,
-      bgColor: 'bg-accent/10 dark:bg-accent/20',
-      iconColor: 'text-accent',
-      borderColor: 'border-accent/20 dark:border-accent/30'
-    },
-    {
-      title: 'Pending Bids',
-      value: '0',
-      subtext: 'No pending bids',
-      icon: Briefcase,
-      isActive: false,
-      bgColor: 'bg-gray-100 dark:bg-gray-800/50',
-      iconColor: 'text-gray-400 dark:text-gray-500',
-      borderColor: 'border-gray-200 dark:border-gray-700'
-    },
-    {
-      title: 'Team Members',
-      value: '0',
-      subtext: 'Invite team',
-      icon: Users,
-      isActive: false,
-      bgColor: 'bg-gray-100 dark:bg-gray-800/50',
-      iconColor: 'text-gray-400 dark:text-gray-500',
-      borderColor: 'border-gray-200 dark:border-gray-700'
-    },
-    {
-      title: 'Messages',
-      value: '0',
-      subtext: 'No new messages',
-      icon: MessageSquare,
-      isActive: false,
-      bgColor: 'bg-gray-100 dark:bg-gray-800/50',
-      iconColor: 'text-gray-400 dark:text-gray-500',
-      borderColor: 'border-gray-200 dark:border-gray-700'
-    }
-  ];
+  const [stats, setStats] = useState<any[]>([]);
+  const [recentProjects, setRecentProjects] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const recentProjects = [
-    {
-      name: 'Downtown Office Renovation',
-      client: 'Sample Client LLC',
-      location: 'Austin, TX',
-      status: 'Active',
-      budget: '$2.4M',
-      completion: 'Mar 2025',
-      progress: 65
-    },
-    {
-      name: 'Modern Residence Expansion',
-      client: 'Private Owner',
-      location: 'Austin, TX',
-      status: 'Planning',
-      budget: '$0.8M',
-      completion: 'Aug 2025',
-      progress: 15
-    },
-    {
-      name: 'Retail Space Build-out',
-      client: 'Metro Retail Group',
-      location: 'Austin, TX',
-      status: 'Completed',
-      budget: '$1.2M',
-      completion: 'Jan 2025',
-      progress: 100
+  useEffect(() => {
+    loadDashboardData();
+  }, []);
+
+  const loadDashboardData = async () => {
+    try {
+      setIsLoading(true);
+      const [overview, projects] = await Promise.all([
+        getDashboardOverview(),
+        getRecentProjects(3)
+      ]);
+
+      const mappedStats = [
+        {
+          title: 'Active Projects',
+          value: overview.activeProjectsCount || '0',
+          subtext: overview.activeProjectsCount > 0 ? 'All Systems Operational' : 'Start a new project',
+          icon: Building2,
+          isActive: overview.activeProjectsCount > 0,
+          bgColor: 'bg-accent/10 dark:bg-accent/20',
+          iconColor: 'text-accent',
+          borderColor: 'border-accent/20 dark:border-accent/30'
+        },
+        {
+          title: 'Pending Bids',
+          value: overview.pendingBidsCount || '0',
+          subtext: overview.pendingBidsCount > 0 ? 'Review submissions' : 'No pending bids',
+          icon: Briefcase,
+          isActive: overview.pendingBidsCount > 0,
+          bgColor: 'bg-gray-100 dark:bg-gray-800/50',
+          iconColor: 'text-gray-400 dark:text-gray-500',
+          borderColor: 'border-gray-200 dark:border-gray-700'
+        },
+        {
+          title: 'Team Members',
+          value: overview.teamMembersCount || '0',
+          subtext: overview.teamMembersCount > 0 ? 'Active collaborators' : 'Invite team',
+          icon: Users,
+          isActive: overview.teamMembersCount > 0,
+          bgColor: 'bg-gray-100 dark:bg-gray-800/50',
+          iconColor: 'text-gray-400 dark:text-gray-500',
+          borderColor: 'border-gray-200 dark:border-gray-700'
+        },
+        {
+          title: 'Total Budget',
+          value: typeof overview.totalBudget === 'number'
+            ? `$${(overview.totalBudget / 1000000).toFixed(1)}M`
+            : overview.totalBudget || '$0',
+          subtext: 'Portfolio value',
+          icon: DollarSign,
+          isActive: false,
+          bgColor: 'bg-gray-100 dark:bg-gray-800/50',
+          iconColor: 'text-gray-400 dark:text-gray-500',
+          borderColor: 'border-gray-200 dark:border-gray-700'
+        }
+      ];
+
+      setStats(mappedStats);
+      setRecentProjects(projects);
+    } catch (error) {
+      console.error("Failed to load dashboard data", error);
+    } finally {
+      setIsLoading(false);
     }
-  ];
+  };
 
   const filteredProjects = projectFilter === 'All'
     ? recentProjects
@@ -198,7 +196,7 @@ const CleanOverview = () => {
                     </h3>
                     <p className="text-xs text-gray-500 dark:text-gray-400">{project.client}</p>
                   </div>
-                  <button 
+                  <button
                     onClick={(e) => {
                       e.stopPropagation();
                     }}
@@ -295,29 +293,29 @@ const CleanOverview = () => {
               <div className="space-y-4 mb-5">
                 <h4 className="text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500">Quick Actions</h4>
                 <div className="grid grid-cols-2 gap-2.5">
-                  <Button 
-                    variant="outline" 
-                    className="justify-start border-gray-200 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-gray-800/50" 
+                  <Button
+                    variant="outline"
+                    className="justify-start border-gray-200 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-gray-800/50"
                     onClick={() => navigate('/gc-dashboard/my-projects')}
                   >
                     <FileText className="w-4 h-4 mr-2" /> View Documents
                   </Button>
-                  <Button 
-                    variant="outline" 
-                    className="justify-start border-gray-200 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-gray-800/50" 
+                  <Button
+                    variant="outline"
+                    className="justify-start border-gray-200 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-gray-800/50"
                     onClick={() => navigate('/gc-dashboard/communications')}
                   >
                     <MessageSquare className="w-4 h-4 mr-2" /> Message Team
                   </Button>
-                  <Button 
-                    variant="outline" 
-                    className="justify-start border-gray-200 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-gray-800/50" 
+                  <Button
+                    variant="outline"
+                    className="justify-start border-gray-200 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-gray-800/50"
                     onClick={() => navigate('/gc-dashboard/directory')}
                   >
                     <Users className="w-4 h-4 mr-2" /> Find Subs
                   </Button>
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     className="justify-start border-gray-200 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-gray-800/50"
                   >
                     <TrendingUp className="w-4 h-4 mr-2" /> View Reports
@@ -326,8 +324,8 @@ const CleanOverview = () => {
               </div>
 
               <DialogFooter>
-                <Button 
-                  className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-semibold shadow-sm" 
+                <Button
+                  className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-semibold shadow-sm"
                   onClick={() => navigate('/gc-dashboard/my-projects')}
                 >
                   Manage Full Project <ArrowRight className="ml-2 w-4 h-4" />

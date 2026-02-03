@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { useState, useEffect } from 'react';
+import { getBids } from '@/api/gc-apis';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -10,16 +11,11 @@ import {
     Plus,
     Clock,
     CheckCircle2,
-    AlertCircle,
     FileText,
     DollarSign,
-    Briefcase,
-    ChevronRight,
     ArrowUpRight,
     Eye,
-    UserCheck,
     PlayCircle,
-    Calendar,
     MapPin,
     Building2,
     Users
@@ -50,75 +46,24 @@ interface Bid {
 const BidManagement = () => {
     const [activeStage, setActiveStage] = useState('all');
     const [searchQuery, setSearchQuery] = useState('');
+    const [bids, setBids] = useState<Bid[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
 
-    const bids: Bid[] = [
-        {
-            id: "BID-90210",
-            project: "Riverside Tech Complex",
-            contractor: "Titan Concrete Pros",
-            contractorAvatar: "TC",
-            amount: "$245,000",
-            status: "submitted",
-            deadline: "2026-02-15",
-            submittedDate: "2026-01-20",
-            confidence: 94,
-            items: 12,
-            location: "Austin, TX",
-            projectType: "Commercial",
-            clientName: "TechCorp Industries"
-        },
-        {
-            id: "BID-90211",
-            project: "Downtown Plaza Renovation",
-            contractor: "VoltMaster Electrical",
-            contractorAvatar: "VE",
-            amount: "$120,500",
-            status: "viewed",
-            deadline: "2026-02-10",
-            submittedDate: "2026-01-18",
-            viewedDate: "2026-01-22",
-            confidence: 88,
-            items: 8,
-            location: "Houston, TX",
-            projectType: "Renovation",
-            clientName: "Metro Development"
-        },
-        {
-            id: "BID-90212",
-            project: "Oak Ridge Annex",
-            contractor: "Structural Steel Inc",
-            contractorAvatar: "SS",
-            amount: "$890,000",
-            status: "accepted",
-            deadline: "2026-02-05",
-            submittedDate: "2026-01-15",
-            viewedDate: "2026-01-17",
-            acceptedDate: "2026-01-25",
-            confidence: 100,
-            items: 24,
-            location: "Dallas, TX",
-            projectType: "Industrial",
-            clientName: "Oak Ridge Corp"
-        },
-        {
-            id: "BID-90213",
-            project: "Luxury Residential Complex",
-            contractor: "Elite Builders Group",
-            contractorAvatar: "EB",
-            amount: "$1,250,000",
-            status: "project_started",
-            deadline: "2026-01-30",
-            submittedDate: "2026-01-10",
-            viewedDate: "2026-01-12",
-            acceptedDate: "2026-01-18",
-            projectStartDate: "2026-01-20",
-            confidence: 95,
-            items: 35,
-            location: "San Antonio, TX",
-            projectType: "Residential",
-            clientName: "Luxury Homes LLC"
+    useEffect(() => {
+        loadBids();
+    }, []);
+
+    const loadBids = async () => {
+        try {
+            setIsLoading(true);
+            const data = await getBids();
+            setBids(data);
+        } catch (error) {
+            console.error("Failed to load bids", error);
+        } finally {
+            setIsLoading(false);
         }
-    ];
+    };
 
     const getStatusInfo = (status: BidCycleStatus) => {
         switch (status) {
@@ -171,7 +116,7 @@ const BidManagement = () => {
         const matchesSearch = bid.project.toLowerCase().includes(searchQuery.toLowerCase()) ||
             bid.contractor.toLowerCase().includes(searchQuery.toLowerCase()) ||
             bid.clientName.toLowerCase().includes(searchQuery.toLowerCase());
-        
+
         if (activeStage === 'all') return matchesSearch;
         if (activeStage === 'active') return matchesSearch && (bid.status === 'submitted' || bid.status === 'viewed');
         if (activeStage === 'accepted') return matchesSearch && (bid.status === 'accepted' || bid.status === 'project_started');
@@ -198,9 +143,9 @@ const BidManagement = () => {
             <div className="max-w-7xl mx-auto px-8">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
                     {[
-                        { label: 'Active Bids', value: '18', icon: Clock, color: 'text-accent' },
-                        { label: 'Under Review', value: '05', icon: Filter, color: 'text-gray-900 dark:text-white' },
-                        { label: 'Total Value', value: '$3.4M', icon: DollarSign, color: 'text-accent' }
+                        { label: 'Active Bids', value: bids.filter(b => b.status === 'submitted' || b.status === 'viewed').length.toString(), icon: Clock, color: 'text-accent' },
+                        { label: 'Under Review', value: bids.filter(b => b.status === 'viewed').length.toString(), icon: Filter, color: 'text-gray-900 dark:text-white' },
+                        { label: 'Total Value', value: `$${(bids.reduce((acc, b) => acc + (parseFloat(b.amount.replace(/[^0-9.]/g, '')) || 0), 0) / 1000000).toFixed(1)}M`, icon: DollarSign, color: 'text-accent' }
                     ].map(stat => (
                         <Card key={stat.label} className="bg-white dark:bg-[#1c1e24] border-gray-200 dark:border-white/5 rounded-[2rem] p-6">
                             <div className="flex items-center gap-4">
@@ -248,7 +193,9 @@ const BidManagement = () => {
                     </div>
 
                     <div className="p-6 space-y-4">
-                        {filteredBids.length === 0 ? (
+                        {isLoading ? (
+                            <div className="text-center py-12 font-bold text-gray-500">Retrieving active tender signals...</div>
+                        ) : filteredBids.length === 0 ? (
                             <div className="text-center py-12">
                                 <Gavel className="w-16 h-16 text-gray-300 dark:text-gray-700 mx-auto mb-4" />
                                 <p className="text-gray-500 dark:text-gray-400 font-semibold">No bids found</p>
@@ -261,7 +208,7 @@ const BidManagement = () => {
 
                                 return (
                                     <Card key={bid.id} className="group bg-white dark:bg-[#1c1e24] border-gray-200 dark:border-white/5 hover:border-accent/30 dark:hover:border-accent/20 transition-all duration-300 overflow-hidden">
-                                        <CardContent className="p-6">
+                                        <div className="p-6">
                                             <div className="flex flex-col lg:flex-row gap-6">
                                                 {/* Left Section - Project Info */}
                                                 <div className="flex-1 space-y-4">
@@ -312,7 +259,7 @@ const BidManagement = () => {
                                                             {cycleSteps.map((step, index) => {
                                                                 const isLast = index === cycleSteps.length - 1;
                                                                 const StepIcon = getStatusInfo(step.key as BidCycleStatus).icon;
-                                                                
+
                                                                 return (
                                                                     <div key={step.key} className="flex items-center flex-1">
                                                                         <div className="flex flex-col items-center flex-1">
@@ -392,8 +339,8 @@ const BidManagement = () => {
                                                         <p className="text-xs font-bold text-gray-500 dark:text-gray-400 mb-2 uppercase tracking-wider">
                                                             {statusInfo.description}
                                                         </p>
-                                                        <Button 
-                                                            variant="outline" 
+                                                        <Button
+                                                            variant="outline"
                                                             className="w-full rounded-xl h-10 border-accent/20 hover:bg-accent hover:text-black dark:hover:text-accent-foreground font-semibold"
                                                         >
                                                             View Details
@@ -402,7 +349,7 @@ const BidManagement = () => {
                                                     </div>
                                                 </div>
                                             </div>
-                                        </CardContent>
+                                        </div>
                                     </Card>
                                 );
                             })

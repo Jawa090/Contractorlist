@@ -7,7 +7,7 @@ export { default as api } from './api';
 export { default as authService } from './authService';
 export { default as contractorService } from './contractorService';
 export { default as companyService } from './companyService';
-export { getDashboardOverview, getProjects, getRecentProjects, getProjectDiscovery, submitBid, getTeamMembers, inviteTeamMember, getProjectDocuments, uploadDocument, deleteDocument } from './gcDashboardService';
+export { getDashboardOverview, getProjects, getRecentProjects, getProjectDiscovery, submitBid, getTeamMembers, inviteTeamMember, getProjectDocuments, uploadDocument, deleteDocument } from './gc-apis/backend';
 
 // Re-export types for convenience
 export type * from '@/types/auth.types';

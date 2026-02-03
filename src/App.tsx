@@ -203,17 +203,23 @@ const AppRoutes = () => {
   );
 };
 
+import { SocketProvider } from "@/context/SocketContext";
+
+// ...
+
 const App = () => (
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <NotificationSystem />
-          <BrowserRouter>
-            <AppRoutes />
-          </BrowserRouter>
+          <SocketProvider>
+            <Toaster />
+            <Sonner />
+            <NotificationSystem />
+            <BrowserRouter>
+              <AppRoutes />
+            </BrowserRouter>
+          </SocketProvider>
         </TooltipProvider>
       </QueryClientProvider>
     </PersistGate>
