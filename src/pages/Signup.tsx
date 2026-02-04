@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
-import authService from "@/services/authService";
+import authService from "@/api/authService";
 
 const signupSchema = z
   .object({

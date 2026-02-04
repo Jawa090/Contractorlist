@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { getProjectDiscovery } from '@/api/gc-apis';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -47,103 +48,53 @@ const SubcontractorDirectory = () => {
     const [selectedAvailability, setSelectedAvailability] = useState<string[]>([]);
     const [selectedTiers, setSelectedTiers] = useState<string[]>([]);
 
-    const contractors = [
-        {
-            id: 1,
-            name: 'VoltMaster Electrical Services',
-            location: 'Austin, TX',
-            distance: '1.2 mi',
-            rating: 4.9,
-            reviews: 128,
-            verified: true,
-            tier: 'Gold',
-            specialties: ['Div 26 - Electrical', 'Div 28 - Electronic Safety & Security'],
-            status: 'Available',
-            projects: 45,
-            avatar: 'VM',
-            phone: '(512) 555-0123',
-            email: 'info@voltmaster.com',
-            yearsExperience: 15,
-            bonded: true,
-            insured: true
-        },
-        {
-            id: 2,
-            name: 'Apex Wiring & Power',
-            location: 'San Antonio, TX',
-            distance: '45 mi',
-            rating: 4.5,
-            reviews: 42,
-            verified: true,
-            tier: 'Silver',
-            specialties: ['Div 26 - Electrical', 'Div 27 - Communications'],
-            status: 'Busy',
-            projects: 12,
-            avatar: 'AW',
-            phone: '(210) 555-0145',
-            email: 'contact@apexwiring.com',
-            yearsExperience: 8,
-            bonded: true,
-            insured: true
-        },
-        {
-            id: 3,
-            name: 'Bright Future Solar',
-            location: 'Austin, TX',
-            distance: '8 mi',
-            rating: 4.8,
-            reviews: 8,
-            verified: true,
-            tier: 'Bronze',
-            specialties: ['Div 48 - Electrical Power Generation', 'Div 26 - Electrical'],
-            status: 'Available',
-            projects: 5,
-            avatar: 'BF',
-            phone: '(512) 555-0167',
-            email: 'hello@brightfuture.com',
-            yearsExperience: 5,
-            bonded: true,
-            insured: true
-        },
-        {
-            id: 4,
-            name: 'Titan Concrete Pros',
-            location: 'Dallas, TX',
-            distance: '120 mi',
-            rating: 4.7,
-            reviews: 215,
-            verified: true,
-            tier: 'Platinum',
-            specialties: ['Div 03 - Concrete', 'Div 31 - Earthwork'],
-            status: 'Available',
-            projects: 89,
-            avatar: 'TC',
-            phone: '(214) 555-0189',
-            email: 'info@titanconcrete.com',
-            yearsExperience: 25,
-            bonded: true,
-            insured: true
+    const [contractors, setContractors] = useState<any[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        loadContractors();
+    }, [searchQuery, selectedLocation, selectedCategory, selectedAvailability, selectedTiers]);
+
+    const loadContractors = async () => {
+        try {
+            setIsLoading(true);
+            const filters: any = {};
+            if (searchQuery) filters.search = searchQuery;
+            if (selectedLocation) filters.location = selectedLocation;
+            if (selectedCategory.length > 0) filters.type = selectedCategory[0]; // Backend usually takes one type or we joins
+
+            const data = await getProjectDiscovery(filters);
+
+            // Map backend data to local structure if needed
+            const mappedData = data.map((c: any) => ({
+                id: c.id,
+                name: c.name,
+                location: c.location || 'N/A',
+                distance: c.distance || 'N/A',
+                rating: c.rating || 0,
+                reviews: c.reviews || 0,
+                verified: c.verified || false,
+                tier: c.tier || 'New',
+                specialties: c.specialties || (c.trade ? [c.trade] : []),
+                status: c.status || 'Available',
+                projects: c.projects || 0,
+                avatar: c.avatar || c.name.split(' ').map((n: string) => n[0]).join('').substring(0, 2).toUpperCase(),
+                phone: c.phone || 'N/A',
+                email: c.email || 'N/A',
+                yearsExperience: c.yearsExperience || 0,
+                bonded: c.bonded || false,
+                insured: c.insured || false
+            }));
+
+            setContractors(mappedData);
+        } catch (error) {
+            console.error("Failed to load contractors", error);
+        } finally {
+            setIsLoading(false);
         }
-    ];
+    };
 
-    const filteredContractors = contractors.filter(c => {
-        const matchesSearch = c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            c.specialties.some(s => s.toLowerCase().includes(searchQuery.toLowerCase()));
-
-        const matchesCategory = selectedCategory.length === 0 ||
-            c.specialties.some(s => selectedCategory.includes(s));
-
-        const matchesLocation = selectedLocation === '' ||
-            c.location.toLowerCase().includes(selectedLocation.toLowerCase());
-
-        const matchesAvailability = selectedAvailability.length === 0 ||
-            selectedAvailability.some(status => c.status.toLowerCase().includes(status.toLowerCase().replace(' now', '')));
-
-        const matchesTier = selectedTiers.length === 0 ||
-            selectedTiers.includes(c.tier);
-
-        return matchesSearch && matchesCategory && matchesLocation && matchesAvailability && matchesTier;
-    });
+    const filteredContractors = contractors; // Already filtered by backend if we pass params correctly
 
     const handleInvitationAction = () => {
         const methods = inviteMethod === 'both' ? 'Email and SMS' : inviteMethod.toUpperCase();
@@ -352,7 +303,9 @@ const SubcontractorDirectory = () => {
                             </Select>
                         </div>
 
-                        {filteredContractors.length > 0 ? (
+                        {isLoading ? (
+                            <div className="col-span-full py-40 text-center">Identifying premium partners...</div>
+                        ) : filteredContractors.length > 0 ? (
                             <div className={cn(
                                 "grid gap-8",
                                 viewMode === 'grid' ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2" : "grid-cols-1"

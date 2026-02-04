@@ -1,14 +1,27 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
 import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { getTeamMembers, inviteTeamMember, createTeamMember, deleteTeamMember, updateTeamMember, getProjectDiscovery, sendTeamMemberReminder } from '@/api/gc-apis';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,21 +30,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+
 import { useToast } from "@/hooks/use-toast";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from "@/components/ui/dialog";
-import {
   Search,
-  Filter,
-  MoreVertical,
   Plus,
-  PlayCircle,
+  Sparkles,
   Mail,
   UserPlus,
   ShieldCheck,
@@ -39,17 +43,15 @@ import {
   Building2,
   Users,
   Briefcase,
-  CheckCircle2,
-  ArrowRight,
-  Sparkles,
   Zap,
   MessageSquare,
-  Smartphone
+  Smartphone,
+  MoreVertical
 } from 'lucide-react';
 
 /* 
   Rebuilding Team Management to align with the "Dark Glass" theme while keeping the 
-  "Onboarding" table structure requested in the previous step, but dark mode.
+  "Onboarding" table structure.
 */
 
 interface TeamMember {
@@ -62,6 +64,7 @@ interface TeamMember {
   progress: number;
   country: string;
   avatar?: string;
+  assignedProjects: { id: number; name: string }[];
 }
 
 const EnterpriseTeamManagement = () => {
@@ -82,73 +85,222 @@ const EnterpriseTeamManagement = () => {
   const [selectedSub, setSelectedSub] = useState<any>(null);
   const [messageType, setMessageType] = useState<'default' | 'custom'>('default');
   const [customMessage, setCustomMessage] = useState('');
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingMemberId, setEditingMemberId] = useState<string | null>(null);
+  const [discoveredSubcontractors, setDiscoveredSubcontractors] = useState<any[]>([]);
+  const [isDiscoveryLoading, setIsDiscoveryLoading] = useState(false);
 
   const defaultMessage = selectedSub ? `Hello ${selectedSub.name}, we've selected you for our upcoming project. Please complete your onboarding to get started.` : '';
 
-  const mockSubcontractors = [
-    { id: 's1', name: 'VoltMaster Electrical', trade: 'Division 26 - Electrical', rating: 4.8, projects: 12, avatar: 'VM', location: 'Austin, TX', verified: true, email: 'contact@voltmaster.com', phone: '(512) 555-0321' },
-    { id: 's2', name: 'Apex Communications', trade: 'Division 27 - Communications', rating: 4.9, projects: 8, avatar: 'AC', location: 'Houston, TX', verified: true, email: 'bids@apexcomm.com', phone: '(713) 555-0988' },
-    { id: 's3', name: 'Titan Concrete Pros', trade: 'Division 03 - Concrete', rating: 4.7, projects: 24, avatar: 'TC', location: 'Dallas, TX', verified: false, email: 'admin@titanconcrete.com', phone: '(214) 555-0766' },
-    { id: 's4', name: 'AquaFlow Utilities', trade: 'Division 33 - Utilities', rating: 4.6, projects: 15, avatar: 'AF', location: 'Austin, TX', verified: true, email: 'service@aquaflow.com', phone: '(512) 555-0444' },
-  ];
+  // Alert Dialog State
+  const [alertConfig, setAlertConfig] = useState<{
+    isOpen: boolean;
+    title: string;
+    description: string;
+    onConfirm: () => void;
+    variant: 'default' | 'destructive';
+  }>({
+    isOpen: false,
+    title: '',
+    description: '',
+    onConfirm: () => { },
+    variant: 'default'
+  });
 
-  const teamMembers: TeamMember[] = [
-    {
-      id: '1',
-      name: 'Gorde Omkar',
-      role: 'You',
-      employeeId: 'GOADS01',
-      type: 'Direct Employee',
-      status: 'In-Progress',
-      progress: 20,
-      country: 'India',
-      avatar: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80&w=100&h=100'
-    },
-    {
-      id: '2',
-      name: 'Darrell Steward',
-      role: 'Direct Employee',
-      employeeId: 'GOADS02',
-      type: 'Direct Employee',
-      status: 'In-Progress',
-      progress: 80,
-      country: 'United States',
-      avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100&h=100'
-    },
-    {
-      id: '3',
-      name: 'Darlene Robertson',
-      role: 'Contractor',
-      employeeId: 'GOADS03',
-      type: 'Contractor',
-      status: 'In-Progress',
-      progress: 40,
-      country: 'United States',
-      avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=100&h=100'
-    },
-    {
-      id: '4',
-      name: 'Robert Fox',
-      role: 'Direct Employee',
-      employeeId: 'GOADS04',
-      type: 'Direct Employee',
-      status: 'Draft',
-      progress: 100,
-      country: 'United States',
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100&h=100'
-    },
-    {
-      id: '5',
-      name: 'Courtney Henry',
-      role: 'Direct Employee',
-      employeeId: 'GOADS05',
-      type: 'Direct Employee',
-      status: 'Draft',
-      progress: 20,
-      country: 'United States',
-      avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=100&h=100'
+  const confirmAction = (title: string, description: string, onConfirm: () => void, variant: 'default' | 'destructive' = 'default') => {
+    setAlertConfig({ isOpen: true, title, description, onConfirm, variant });
+  };
+
+  useEffect(() => {
+    loadTeamMembers();
+  }, []);
+
+  useEffect(() => {
+    if (discoveryView === 'directory') {
+      loadDiscovery();
     }
-  ];
+  }, [discoveryView, searchQuery, selectedCategory]);
+
+  const loadDiscovery = async () => {
+    try {
+      setIsDiscoveryLoading(true);
+      const filters: any = {};
+      if (searchQuery) filters.search = searchQuery;
+      if (selectedCategory !== 'All Trades') filters.type = selectedCategory;
+
+      const data = await getProjectDiscovery(filters);
+      setDiscoveredSubcontractors(data);
+    } catch (error) {
+      console.error("Failed to load discovery", error);
+    } finally {
+      setIsDiscoveryLoading(false);
+    }
+  };
+
+  const loadTeamMembers = async () => {
+    try {
+      setIsLoading(true);
+      const data = await getTeamMembers();
+      const mappedMembers = data.map((m: any) => ({
+        id: m.id,
+        name: m.name,
+        role: m.role || 'Team Member',
+        employeeId: m.employee_id || 'N/A',
+        type: m.type || 'Direct Employee',
+        status: (m.status === 'Active' ? 'Completed' : 'In-Progress') as any,
+        progress: m.progress || 0,
+        country: 'United States',
+        avatar: m.avatar_url,
+        assignedProjects: m.assigned_projects || []
+      }));
+      setTeamMembers(mappedMembers);
+    } catch (error) {
+      console.error("Failed to load team members", error);
+      toast({
+        title: "Error",
+        description: "Failed to load team members",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSendReminder = async (member: TeamMember) => {
+    try {
+      await sendTeamMemberReminder(parseInt(member.id));
+      toast({
+        title: "Reminder Sent",
+        description: `Reminder email sent to ${member.name}`,
+      });
+    } catch (error: any) {
+      console.error("Failed to send reminder:", error);
+      toast({
+        title: "Error",
+        description: error.response?.data?.error?.message || "Failed to send reminder email",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleAddMember = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const methods = inviteMethod === 'both' ? 'Email and SMS' : inviteMethod.toUpperCase();
+
+      const memberData = {
+        name,
+        email,
+        phone,
+        role,
+        type: 'Direct Employee' as const,
+        employee_id: `EMP-${Math.floor(Math.random() * 10000)}`,
+        status: 'Active'
+      };
+
+      if (isEditing && editingMemberId) {
+        await updateTeamMember(Number(editingMemberId), memberData);
+        toast({
+          title: "Team Member Updated",
+          description: `${name}'s profile has been updated.`,
+        });
+      } else {
+        await createTeamMember(memberData);
+        toast({
+          title: "Team Member Added",
+          description: `${name} has been added to your team. Invitation sent via ${methods}.`,
+        });
+      }
+
+      setIsAddModalOpen(false);
+      setIsEditing(false);
+      setEditingMemberId(null);
+      loadTeamMembers();
+      setName('');
+      setEmail('');
+      setPhone('');
+      setRole('');
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: `Failed to ${isEditing ? 'update' : 'create'} team member`,
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleEditMember = (member: any) => {
+    setIsEditing(true);
+    setEditingMemberId(member.id.toString());
+    setName(member.name);
+    setEmail(''); // In a real app we'd fetch this or have it in the member object
+    setRole(member.role);
+    setIsAddModalOpen(true);
+  };
+
+  const handleHireSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedSub) return;
+
+    try {
+      const methods = inviteMethod === 'both' ? 'Email and SMS' : inviteMethod.toUpperCase();
+      const messageContent = messageType === 'custom' ? 'your custom message' : 'the default project invitation';
+
+      // Call API to create team member as Contractor
+      await createTeamMember({
+        name: selectedSub.name,
+        email: selectedSub.email || `contact@${selectedSub.name.toLowerCase().replace(/\s+/g, '')}.com`, // Fallback if mock data lacks email
+        phone: selectedSub.phone || '',
+        role: selectedSub.trade,
+        type: 'Contractor',
+        status: 'In-Progress'
+      });
+
+      toast({
+        title: "Hiring Notification Sent",
+        description: `Official hire notification sent to ${selectedSub.name} via ${methods} with ${messageContent}.`,
+      });
+      setIsHireModalOpen(false);
+      setIsOnboardingModalOpen(true);
+      setMessageType('default');
+      setCustomMessage('');
+
+      // Refresh list to show new hire
+      loadTeamMembers();
+    } catch (error) {
+      toast({
+        title: "Hiring Failed",
+        description: "Could not add subcontractor to team.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleDeleteMember = async (id: string, name: string) => {
+    confirmAction(
+      "Remove Team Member?",
+      `Are you sure you want to remove ${name} from your team?`,
+      async () => {
+        try {
+          await deleteTeamMember(Number(id));
+          toast({
+            title: "Team Member Removed",
+            description: `${name} has been removed from the team.`
+          });
+          loadTeamMembers();
+        } catch (error) {
+          toast({
+            title: "Error",
+            description: "Failed to remove team member.",
+            variant: "destructive"
+          });
+        }
+      },
+      "destructive"
+    );
+  };
 
   const filteredMembers = teamMembers.filter(m => {
     const matchesSearch = m.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -159,37 +311,6 @@ const EnterpriseTeamManagement = () => {
       (activeTab === 'pending' && m.status === 'In-Progress');
     return matchesSearch && matchesTab;
   });
-
-  const handleAddMember = (e: React.FormEvent) => {
-    e.preventDefault();
-    const methods = inviteMethod === 'both' ? 'Email and SMS' : inviteMethod.toUpperCase();
-    toast({
-      title: "Invitation Sent",
-      description: `Invitation has been sent to ${name} via ${methods}.`,
-    });
-    setIsAddModalOpen(false);
-    // Reset form
-    setName('');
-    setEmail('');
-    setPhone('');
-    setRole('');
-  };
-
-  const handleHireSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const methods = inviteMethod === 'both' ? 'Email and SMS' : inviteMethod.toUpperCase();
-    const messageContent = messageType === 'custom' ? 'your custom message' : 'the default project invitation';
-
-    toast({
-      title: "Hiring Notification Sent",
-      description: `Official hire notification sent to ${selectedSub?.name} via ${methods} with ${messageContent}.`,
-    });
-    setIsHireModalOpen(false);
-    setIsOnboardingModalOpen(true);
-    // Reset message state
-    setMessageType('default');
-    setCustomMessage('');
-  };
 
   return (
     <div className="space-y-8">
@@ -273,7 +394,18 @@ const EnterpriseTeamManagement = () => {
             )}
             <Button
               className="h-12 px-6 bg-yellow-400 hover:bg-yellow-500 text-black font-bold uppercase tracking-widest rounded-xl shadow-sm border-0"
-              onClick={() => discoveryView === 'team' ? setIsAddModalOpen(true) : navigate('/gc-dashboard/directory')}
+              onClick={() => {
+                if (discoveryView === 'team') {
+                  setIsEditing(false);
+                  setName('');
+                  setEmail('');
+                  setPhone('');
+                  setRole('');
+                  setIsAddModalOpen(true);
+                } else {
+                  navigate('/gc-dashboard/directory');
+                }
+              }}
             >
               {discoveryView === 'team' ? <><Plus className="mr-2" size={18} /> Add Member</> : <><Sparkles className="mr-2" size={18} /> Discover Partner</>}
             </Button>
@@ -315,6 +447,7 @@ const EnterpriseTeamManagement = () => {
                   <tr className="border-b border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5">
                     <th className="px-6 py-4 text-left text-[10px] font-bold text-gray-400 uppercase tracking-widest">Team Member</th>
                     <th className="px-6 py-4 text-left text-[10px] font-bold text-gray-400 uppercase tracking-widest">Role & ID</th>
+                    <th className="px-6 py-4 text-left text-[10px] font-bold text-gray-400 uppercase tracking-widest">Assigned Projects</th>
                     <th className="px-6 py-4 text-left text-[10px] font-bold text-gray-400 uppercase tracking-widest">Progress</th>
                     <th className="px-6 py-4 text-left text-[10px] font-bold text-gray-400 uppercase tracking-widest">Status</th>
                     <th className="px-6 py-4 text-right"></th>
@@ -341,6 +474,20 @@ const EnterpriseTeamManagement = () => {
                         <div className="flex flex-col">
                           <span className="text-xs font-bold text-gray-700 dark:text-gray-300">{member.role}</span>
                           <span className="text-[10px] text-gray-400 uppercase tracking-widest">{member.employeeId}</span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex flex-wrap gap-1.5 max-w-[200px]">
+                          {member.assignedProjects && member.assignedProjects.length > 0 ? (
+                            <>
+                              {member.assignedProjects.slice(0, 2).map((p: any) => (
+                                <Badge key={p.id} variant="outline" className="text-[9px] h-5 px-1.5 whitespace-nowrap bg-gray-50 dark:bg-white/5 border-gray-200 dark:border-white/10 text-gray-600 dark:text-gray-300 font-medium">{p.name}</Badge>
+                              ))}
+                              {member.assignedProjects.length > 2 && (
+                                <Badge variant="outline" className="text-[9px] h-5 px-1.5 bg-gray-50 dark:bg-white/5 text-gray-400 border-gray-200 dark:border-white/10">+{member.assignedProjects.length - 2}</Badge>
+                              )}
+                            </>
+                          ) : <span className="text-[10px] text-gray-400 italic">No projects</span>}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -374,15 +521,15 @@ const EnterpriseTeamManagement = () => {
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end" className="w-48 bg-white dark:bg-[#1c1e24] border-gray-200 dark:border-white/10 p-1 rounded-xl shadow-lg">
-                            <DropdownMenuItem className="rounded-lg font-bold" onClick={() => toast({ title: "Edit", description: `Editing ${member.name}` })}>
+                            <DropdownMenuItem className="rounded-lg font-bold" onClick={() => handleEditMember(member)}>
                               Edit Profile
                             </DropdownMenuItem>
-                            <DropdownMenuItem className="rounded-lg font-bold" onClick={() => toast({ title: "Reminder", description: "Compliance request sent" })}>
+                            <DropdownMenuItem className="rounded-lg font-bold" onClick={() => handleSendReminder(member)}>
                               Send Reminder
                             </DropdownMenuItem>
                             <DropdownMenuSeparator className="bg-gray-100 dark:bg-white/5" />
-                            <DropdownMenuItem className="rounded-lg font-bold text-gray-900 dark:text-white focus:bg-gray-100 dark:focus:bg-white/10">
-                              Deactivate
+                            <DropdownMenuItem className="rounded-lg font-bold text-red-600 focus:text-red-600 focus:bg-red-50 dark:focus:bg-red-900/20" onClick={() => handleDeleteMember(member.id, member.name)}>
+                              Deactivate / Remove
                             </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
@@ -396,14 +543,10 @@ const EnterpriseTeamManagement = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-          {mockSubcontractors
-            .filter(sub => {
-              const matchesSearch = sub.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                sub.trade.toLowerCase().includes(searchQuery.toLowerCase());
-              const matchesTrade = selectedCategory === 'All Trades' || sub.trade === selectedCategory;
-              return matchesSearch && matchesTrade;
-            })
-            .map(sub => (
+          {isDiscoveryLoading ? (
+            <div className="col-span-full py-20 text-center">Loading discovery partners...</div>
+          ) : discoveredSubcontractors.length > 0 ? (
+            discoveredSubcontractors.map(sub => (
               <Card key={sub.id} className="group relative overflow-hidden bg-white dark:bg-[#1c1e24] border border-gray-200 dark:border-white/5 rounded-2xl shadow-sm">
                 <div className="absolute top-0 right-0 p-3">
                   {sub.verified && (
@@ -461,19 +604,14 @@ const EnterpriseTeamManagement = () => {
                   </div>
                 </CardContent>
               </Card>
-            ))}
-          {mockSubcontractors.filter(sub => {
-            const matchesSearch = sub.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-              sub.trade.toLowerCase().includes(searchQuery.toLowerCase());
-            const matchesTrade = selectedCategory === 'All Trades' || sub.trade === selectedCategory;
-            return matchesSearch && matchesTrade;
-          }).length === 0 && (
-              <div className="col-span-full py-20 text-center bg-gray-50/50 dark:bg-white/5 rounded-2xl border border-dashed border-gray-200 dark:border-white/10">
-                <Sparkles className="mx-auto h-12 w-12 text-gray-300 dark:text-gray-600 mb-4" />
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">No matching partners found</h3>
-                <p className="text-sm text-gray-500 dark:text-gray-400">Try broadening your trade criteria or search for a specific trade.</p>
-              </div>
-            )}
+            ))
+          ) : (
+            <div className="col-span-full py-20 text-center bg-gray-50/50 dark:bg-white/5 rounded-2xl border border-dashed border-gray-200 dark:border-white/10">
+              <Sparkles className="mx-auto h-12 w-12 text-gray-300 dark:text-gray-600 mb-4" />
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">No matching partners found</h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Try broadening your trade criteria or search for a specific trade.</p>
+            </div>
+          )}
         </div>
       )}
 
@@ -481,9 +619,9 @@ const EnterpriseTeamManagement = () => {
       <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
         <DialogContent className="bg-white dark:bg-[#1c1e24] border-gray-200 dark:border-white/10 text-gray-900 dark:text-white sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Add Team Member</DialogTitle>
+            <DialogTitle>{isEditing ? 'Edit Team Member' : 'Add Team Member'}</DialogTitle>
             <DialogDescription>
-              Invite a new person to join your GC dashboard team.
+              {isEditing ? `Update details for ${name}.` : 'Invite a new person to join your GC dashboard team.'}
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleAddMember} className="space-y-4 py-4">
@@ -584,7 +722,7 @@ const EnterpriseTeamManagement = () => {
             <DialogFooter className="pt-4">
               <Button type="button" variant="ghost" onClick={() => setIsAddModalOpen(false)} className="text-gray-500">Cancel</Button>
               <Button type="submit" className="bg-yellow-400 hover:bg-yellow-500 text-black font-bold h-11 px-8 rounded-xl shadow-lg shadow-yellow-500/10 transition-all active:scale-95">
-                Send Invitation
+                {isEditing ? 'Save Changes' : 'Send Invitation'}
               </Button>
             </DialogFooter>
           </form>
@@ -746,6 +884,29 @@ const EnterpriseTeamManagement = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <AlertDialog open={alertConfig.isOpen} onOpenChange={(open) => {
+        if (!open) setAlertConfig(prev => ({ ...prev, isOpen: false }));
+      }}>
+        <AlertDialogContent className="bg-white dark:bg-[#1c1e24] border-gray-200 dark:border-white/10 text-gray-900 dark:text-white">
+          <AlertDialogHeader>
+            <AlertDialogTitle>{alertConfig.title}</AlertDialogTitle>
+            <AlertDialogDescription>{alertConfig.description}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setAlertConfig(prev => ({ ...prev, isOpen: false }))}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                alertConfig.onConfirm();
+                setAlertConfig(prev => ({ ...prev, isOpen: false }));
+              }}
+              className={cn(alertConfig.variant === 'destructive' ? "bg-red-600 hover:bg-red-700 focus:ring-red-600" : "")}
+            >
+              Confirm
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

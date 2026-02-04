@@ -9,7 +9,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from "@/store";
 import { useAppDispatch } from "@/store/hooks";
 import { fetchUserProfile, setUser } from "@/store/slices/authSlice";
-import authService from "@/services/authService";
+import authService from "@/api/authService";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import RouteThemeManager from "@/components/RouteThemeManager";
 import AIChatbot from "@/components/AIChatbot";
@@ -140,6 +140,12 @@ const AppRoutes = () => {
         <Route path="/locations/:state" element={<StateDetail />} />
         <Route path="/locations/:state/:city" element={<CityDetail />} />
 
+        <Route path="/projects/:id" element={<ProjectDetail />} />
+        <Route path="/contact-us" element={<ContactUs />} />
+        <Route path="/locations" element={<Locations />} />
+        <Route path="/locations/:state" element={<StateDetail />} />
+        <Route path="/locations/:state/:city" element={<CityDetail />} />
+
         {/* Protected Dashboard Routes */}
         <Route
           path="/gc-dashboard/*"
@@ -197,17 +203,23 @@ const AppRoutes = () => {
   );
 };
 
+import { SocketProvider } from "@/context/SocketContext";
+
+// ...
+
 const App = () => (
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <NotificationSystem />
-          <BrowserRouter>
-            <AppRoutes />
-          </BrowserRouter>
+          <SocketProvider>
+            <Toaster />
+            <Sonner />
+            <NotificationSystem />
+            <BrowserRouter>
+              <AppRoutes />
+            </BrowserRouter>
+          </SocketProvider>
         </TooltipProvider>
       </QueryClientProvider>
     </PersistGate>
