@@ -1,13 +1,6 @@
-<<<<<<< HEAD
-import React, { useState, useEffect } from 'react';
-import { getProjects, createProject as createProjectAPI, updateProject as updateProjectAPI, deleteProject as deleteProjectAPI, initializeFreshUserData } from '@/services/gcDashboardService';
-import EnterpriseTeamManagement from './EnterpriseTeamManagement';
-import ProjectDocuments from './ProjectDocuments';
-=======
 import { getProjects, createProject as createProjectAPI, updateProject as updateProjectAPI, deleteProject as deleteProjectAPI, getTeamMembers, assignTeamMember, removeTeamMemberFromProject, getProjectTeamMembers, uploadDocument } from '@/api/gc-apis';
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
->>>>>>> fed95d8320c8c07fb59edbd67928964b01a484c9
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -38,15 +31,11 @@ import {
   List,
   UserPlus,
   ArrowRight,
-<<<<<<< HEAD
-  MessageSquare, FileText, Users, FolderOpen, Users2, Trash2, Upload
-=======
   MessageSquare, FileText, Users, FolderOpen, Users2,
   Trash2,
   Upload,
   Power,
   CheckCircle2
->>>>>>> fed95d8320c8c07fb59edbd67928964b01a484c9
 } from 'lucide-react';
 import { Avatar as UIAvatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
@@ -101,13 +90,6 @@ const MyProjects = () => {
   const [isGlobalUploading, setIsGlobalUploading] = useState(false);
   const [selectedGlobalFile, setSelectedGlobalFile] = useState<File | null>(null);
 
-<<<<<<< HEAD
-  const [isEditing, setIsEditing] = useState(false);
-  const [editingProjectId, setEditingProjectId] = useState<number | null>(null);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [projectToDelete, setProjectToDelete] = useState<number | null>(null);
-  const [isUploadingProject, setIsUploadingProject] = useState(false);
-=======
   // Alert Dialog State
   const [alertConfig, setAlertConfig] = useState<{
     isOpen: boolean;
@@ -122,7 +104,6 @@ const MyProjects = () => {
     onConfirm: () => { },
     variant: 'default'
   });
->>>>>>> fed95d8320c8c07fb59edbd67928964b01a484c9
 
   const confirmAction = (title: string, description: string, onConfirm: () => void, variant: 'default' | 'destructive' = 'default') => {
     setAlertConfig({ isOpen: true, title, description, onConfirm, variant });
@@ -627,27 +608,7 @@ const MyProjects = () => {
                 <button onClick={() => setViewMode('card')} className={`p-1.5 rounded-md transition-all ${viewMode === 'card' ? 'bg-gray-100 dark:bg-white/10 text-black dark:text-white' : 'text-gray-400 dark:text-gray-500 hover:text-black dark:hover:text-white'}`}><Grid3x3 size={18} /></button>
                 <button onClick={() => setViewMode('table')} className={`p-1.5 rounded-md transition-all ${viewMode === 'table' ? 'bg-gray-100 dark:bg-white/10 text-black dark:text-white' : 'text-gray-400 dark:text-gray-500 hover:text-black dark:hover:text-white'}`}><List size={18} /></button>
               </div>
-<<<<<<< HEAD
-              <div className="relative">
-                <Input
-                  type="file"
-                  accept=".pdf,.doc,.docx,.txt"
-                  onChange={handleFileUpload}
-                  className="absolute inset-0 opacity-0 cursor-pointer z-10 w-full h-full"
-                  disabled={isUploadingProject}
-                />
-                <Button 
-                  variant="outline" 
-                  className="h-11 border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 font-bold rounded-xl px-4 mr-2"
-                  disabled={isUploadingProject}
-                >
-                  <Upload size={18} className="mr-2" /> 
-                  {isUploadingProject ? 'Processing...' : 'Upload File'}
-                </Button>
-              </div>
-=======
               <Button onClick={() => setShowGlobalUploadModal(true)} className="h-11 bg-white dark:bg-white/5 hover:bg-gray-100 dark:hover:bg-white/10 text-gray-900 dark:text-white font-bold rounded-xl px-4 border border-gray-200 dark:border-white/10" variant="outline"><Upload size={18} className="mr-2" /> Upload Doc</Button>
->>>>>>> fed95d8320c8c07fb59edbd67928964b01a484c9
               <Button onClick={() => { resetForm(); setShowNewProject(true); }} className="h-11 bg-accent hover:bg-accent/90 text-accent-foreground font-bold rounded-xl px-6"><Plus size={18} className="mr-2" /> New Project</Button>
             </div>
           )}
@@ -815,11 +776,6 @@ const MyProjects = () => {
                         <div className="text-[10px] text-gray-400 dark:text-gray-600 mt-1">{project.completion}</div>
                       </td>
                       <td className="px-6 py-4 text-right" onClick={(e) => e.stopPropagation()}>
-<<<<<<< HEAD
-                        <div className="flex justify-end gap-2">
-                          <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-accent" onClick={(e) => handleEditClick(e, project)} title="Edit Project"><FileText size={16} /></Button>
-                          <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-red-500" onClick={(e) => handleDeleteClick(e, project.id)} title="Delete Project"><Trash2 size={16} /></Button>
-=======
                         <div className="flex justify-end gap-2 items-center">
                           {/* Active/Inactive Toggle */}
                           <Button
@@ -873,7 +829,6 @@ const MyProjects = () => {
                               <DropdownMenuItem className="text-red-600 focus:text-red-600 focus:bg-red-50 dark:focus:bg-red-900/20" onClick={(e) => { e.stopPropagation(); handleDeleteProject(project.id); }}>Delete Project</DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
->>>>>>> fed95d8320c8c07fb59edbd67928964b01a484c9
                         </div>
                       </td>
                     </tr>
@@ -1073,24 +1028,6 @@ const MyProjects = () => {
           </DialogContent>
         </Dialog>
 
-<<<<<<< HEAD
-        {/* Delete Confirmation Dialog */}
-        <Dialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
-          <DialogContent className="bg-white dark:bg-[#1c1e24] border-gray-200 dark:border-white/10 text-gray-900 dark:text-white sm:max-w-md">
-            <DialogHeader>
-              <DialogTitle className="text-xl font-bold text-red-600 dark:text-red-400">Delete Project</DialogTitle>
-              <DialogDescription className="text-gray-500 dark:text-gray-400">
-                Are you sure you want to delete this project? This action cannot be undone and will remove all associated data including documents and team assignments.
-              </DialogDescription>
-            </DialogHeader>
-            <DialogFooter className="gap-2">
-              <Button variant="ghost" onClick={() => { setShowDeleteConfirm(false); setProjectToDelete(null); }}>Cancel</Button>
-              <Button 
-                onClick={confirmDelete} 
-                className="bg-red-600 hover:bg-red-700 text-white font-bold"
-              >
-                Delete Project
-=======
         {/* Project Team View Modal */}
         <Dialog open={showTeamModal} onOpenChange={setShowTeamModal}>
           <DialogContent className="bg-white dark:bg-[#1c1e24] border-gray-200 dark:border-white/10 text-gray-900 dark:text-white sm:max-w-3xl max-h-[80vh] overflow-y-auto">
@@ -1264,7 +1201,6 @@ const MyProjects = () => {
                 disabled={!globalUploadProject || !selectedGlobalFile || isGlobalUploading}
               >
                 {isGlobalUploading ? "Uploading..." : "Upload Document"}
->>>>>>> fed95d8320c8c07fb59edbd67928964b01a484c9
               </Button>
             </DialogFooter>
           </DialogContent>
