@@ -247,15 +247,26 @@ const MyProjects = () => {
 
   const handleSaveProject = async () => {
     try {
+      const budgetValue = newProjectBudget.replace(/[^0-9.]/g, '');
+      const durationValue = newProjectDuration.replace(/[^0-9]/g, '');
+
       const projectData = {
         name: newProjectName,
         location: newProjectLocation || undefined,
         client: newProjectClient || undefined,
         status: newProjectStatus as any,
-        budget: newProjectBudget === '' ? undefined : Number(newProjectBudget.replace(/[^0-9.]/g, '')),
-        duration: newProjectDuration === '' ? undefined : Number(newProjectDuration),
+        budget: budgetValue === '' ? undefined : parseFloat(budgetValue),
+        duration: durationValue === '' ? undefined : parseInt(durationValue, 10),
         description: newProjectDescription || undefined
       };
+
+      // Filter out budget/duration if they are NaN or <= 0 (matching backend z.number().positive())
+      if (projectData.budget !== undefined && (isNaN(projectData.budget) || projectData.budget <= 0)) {
+        delete projectData.budget;
+      }
+      if (projectData.duration !== undefined && (isNaN(projectData.duration) || projectData.duration <= 0)) {
+        delete projectData.duration;
+      }
 
       if (isEditing && editingProjectId) {
         const updated = await updateProjectAPI(editingProjectId, projectData as any);
@@ -515,7 +526,7 @@ const MyProjects = () => {
                             }}
                             className={cn(
                               "h-8 px-2 text-[10px] font-semibold rounded-lg transition-all border shrink-0 mr-1 hidden sm:flex",
-                              ['On Track', 'In Progress', 'Active'].includes(project.status)
+                              ['Active', 'Bidding', 'Planning'].includes(project.status)
                                 ? "bg-green-100 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-900/50 hover:bg-green-200 dark:hover:bg-green-900/50"
                                 : "bg-gray-100 text-gray-500 border-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-white/10 hover:bg-gray-200 dark:hover:bg-white/10"
                             )}
@@ -653,7 +664,7 @@ const MyProjects = () => {
                             }}
                             className={cn(
                               "h-7 w-7 p-0 rounded-lg transition-all border shrink-0",
-                              ['On Track', 'In Progress', 'Active'].includes(project.status)
+                              ['Active', 'Bidding', 'Planning'].includes(project.status)
                                 ? "bg-green-100 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-900/50 hover:bg-green-200 dark:hover:bg-green-900/50"
                                 : "bg-gray-100 text-gray-500 border-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-white/10 hover:bg-gray-200 dark:hover:bg-white/10"
                             )}
@@ -834,7 +845,11 @@ const MyProjects = () => {
                   <Select value={newProjectStatus} onValueChange={setNewProjectStatus}>
                     <SelectTrigger className="bg-gray-50 dark:bg-black/20 border-gray-200 dark:border-white/10 text-gray-900 dark:text-white"><SelectValue placeholder="Select status" /></SelectTrigger>
                     <SelectContent className="bg-white dark:bg-[#1c1e24] border-gray-200 dark:border-white/10 text-gray-900 dark:text-white">
-                      <SelectItem value="Planning">Planning</SelectItem><SelectItem value="In Progress">In Progress</SelectItem><SelectItem value="Bidding">Bidding</SelectItem><SelectItem value="On Hold">On Hold</SelectItem>
+                      <SelectItem value="Planning">Planning</SelectItem>
+                      <SelectItem value="Active">Active / In Progress</SelectItem>
+                      <SelectItem value="Bidding">Bidding</SelectItem>
+                      <SelectItem value="On Hold">On Hold</SelectItem>
+                      <SelectItem value="Completed">Completed</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

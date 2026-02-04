@@ -94,7 +94,7 @@ const CleanOverview = () => {
 
 
 
-  const activeProjectsCount = projects.filter(p => ['On Track', 'In Progress', 'Active'].includes(p.status)).length;
+  const activeProjectsCount = projects.filter(p => ['Active', 'Planning', 'Bidding'].includes(p.status)).length;
   const recentProjects = projects.slice(0, 3);
 
   const stats = [
@@ -227,7 +227,7 @@ const CleanOverview = () => {
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
             {displayProjects.map((project, i) => {
-              const isActive = ['On Track', 'In Progress', 'Active'].includes(project.status);
+              const isActive = ['Active', 'Planning', 'Bidding'].includes(project.status);
               return (
                 <div
                   key={project.id || i}
@@ -268,7 +268,7 @@ const CleanOverview = () => {
                               <span className={cn("inline-block text-sm font-semibold cursor-pointer hover:underline", isActive ? "text-accent" : "text-gray-400")}>{project.status}</span>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className="bg-white dark:bg-[#1c1e24] border-gray-200 dark:border-white/10">
-                              {['Planning', 'On Track', 'In Progress', 'Bidding', 'On Hold', 'Completed', 'Delayed'].map(status => (
+                              {['Planning', 'Bidding', 'Active', 'Completed', 'On Hold'].map(status => (
                                 <DropdownMenuItem key={status} onClick={(e) => { e.stopPropagation(); handleStatusUpdate(project.id, status) }}>{status}</DropdownMenuItem>
                               ))}
                             </DropdownMenuContent>
