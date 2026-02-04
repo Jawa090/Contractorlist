@@ -161,7 +161,7 @@ const Footer = () => {
         </div>
 
         {/* Social Media Icons */}
-        <div className="flex justify-center space-x-4 mt-8 mb-8">
+        <div className="flex justify-center space-x-4 mt-8 mb-6">
           {socialLinks.map((social, index) => {
             const Icon = social.icon;
             return (
@@ -177,42 +177,50 @@ const Footer = () => {
           })}
         </div>
 
+        {/* Bottom Section - Image Style */}
+        <div className="bg-gray-100 py-6">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+              {/* Left - Logo and Copyright */}
+              <div className="flex items-center gap-3">
+                <img src="/fav-icon.png" alt="Logo" className="w-10 h-10" />
+                <p className="text-gray-700 text-sm">
+                  2025 All Rights Reserved by <span className="font-bold text-black">Contractoralist Inc</span>
+                </p>
+              </div>
+
+              {/* Center - Group Brands */}
+              <div className="text-center">
+                <p className="text-gray-700 text-sm font-semibold mb-1">Contractoralist.com Group brands:</p>
+                <p className="text-gray-600 text-xs">
+                  <a href="https://remoteseat.com/" target="_blank" rel="noopener noreferrer" className="hover:text-gray-800 hover:underline transition-colors">RemotSeat.com</a>
+                  {" | "}
+                  <a href="https://paradiseestimating.com/" target="_blank" rel="noopener noreferrer" className="hover:text-gray-800 hover:underline transition-colors">Paradise Estimating</a>
+                  {" | "}
+                  <a href="https://estimatinghub.com/" target="_blank" rel="noopener noreferrer" className="hover:text-gray-800 hover:underline transition-colors">Estimating Hub</a>
+                  {" | "}
+                  <a href="https://decexperts.com/" target="_blank" rel="noopener noreferrer" className="hover:text-gray-800 hover:underline transition-colors">Dec Experts</a>
+                  {" | "}
+                  <a href="https://grobots.ai/" target="_blank" rel="noopener noreferrer" className="hover:text-gray-800 hover:underline transition-colors">Growbots</a>
+                </p>
+              </div>
+
+              {/* Right - Stitched by */}
+              <div className="text-right">
+                <p className="text-gray-700 text-sm">
+                  Stitched by: <a href="https://bitwords.com/" target="_blank" rel="noopener noreferrer" className="font-bold text-black hover:underline transition-colors">Bitwords Inc.</a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Copyright */}
-        <div className="border-t border-gray-300 mt-12 pt-8">
+        <div className="border-t border-gray-300 pt-6 pb-4">
           <div className="flex justify-center">
             <p className="text-gray-600 text-sm text-center">
               Copyright © 2004-2024 Contractor List - All rights reserved.
             </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Bottom Section - Image Style */}
-      <div className="bg-gray-200 py-6">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            {/* Left - Logo and Copyright */}
-            <div className="flex items-center gap-3">
-              <img src="/fav-icon.png" alt="Logo" className="w-10 h-10" />
-              <p className="text-gray-700 text-sm">
-                2025 All Rights Reserved by <span className="font-bold text-black">Contractoralist Inc</span>
-              </p>
-            </div>
-
-            {/* Center - Group Brands */}
-            <div className="text-center">
-              <p className="text-gray-700 text-sm font-semibold mb-1">Contractoralist.com Group brands:</p>
-              <p className="text-gray-600 text-xs">
-                RemotSeat.com | Paradise Estimating | Estimating Hub | Dec Experts | Growbots
-              </p>
-            </div>
-
-            {/* Right - Stitched by */}
-            <div className="text-right">
-              <p className="text-gray-700 text-sm">
-                Stitched by: <span className="font-bold text-black">Bitwords Inc.</span>
-              </p>
-            </div>
           </div>
         </div>
       </div>
