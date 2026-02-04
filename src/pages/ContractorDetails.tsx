@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/hooks/use-toast";
 
 import { normalizeCompanyData } from "@/utils/normalizeCompany";
 
@@ -24,6 +25,45 @@ const ContractorDetails = () => {
   const [contractor, setContractor] = useState<any | null>(location.state?.company || null);
   const [loading, setLoading] = useState(!location.state?.company);
   const [error, setError] = useState<string | null>(null);
+  const { toast } = useToast();
+  const [zipCode, setZipCode] = useState("");
+
+  useEffect(() => {
+    if (contractor?.address?.zipCode) {
+      setZipCode(contractor.address.zipCode);
+    }
+  }, [contractor]);
+
+  const handleZipCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, "");
+    if (value.length <= 5) {
+      setZipCode(value);
+    }
+  };
+
+  const validateAndSendMessage = () => {
+    if (!zipCode) {
+      toast({
+        title: "ZIP Code Required",
+        description: "Please enter your ZIP code.",
+        variant: "destructive",
+      });
+      return;
+    }
+    if (zipCode.length !== 5) {
+      toast({
+        title: "Invalid ZIP Code",
+        description: "Please enter a valid 5-digit US ZIP code.",
+        variant: "destructive",
+      });
+      return;
+    }
+    // Proceed with sending message logic
+    toast({
+      title: "Message Sent",
+      description: "Your inquiry has been sent to the contractor.",
+    });
+  };
 
   // State initialization
   useEffect(() => {
@@ -306,7 +346,12 @@ const ContractorDetails = () => {
             <div className="sticky top-24 bg-white border border-gray-200 shadow-xl rounded-xl p-6">
               <h3 className="font-bold text-gray-900 mb-4 text-base">Contact {name}</h3>
               <div className="space-y-4">
-                <Input placeholder="Zip Code" defaultValue={contractor.address?.zipCode || "10001"} />
+                <Input
+                  placeholder="Zip Code"
+                  value={zipCode}
+                  onChange={handleZipCodeChange}
+                  maxLength={5}
+                />
                 <Input placeholder="What is your project?" />
                 <div className="grid grid-cols-2 gap-3">
                   <Input placeholder="Full Name" />
@@ -319,7 +364,12 @@ const ContractorDetails = () => {
                   By clicking Send, you agree to our Terms of Use and Privacy Policy.
                 </div>
 
-                <Button className="w-full bg-black text-white hover:bg-gray-800 h-12 text-base font-semibold">Send Message</Button>
+                <Button
+                  className="w-full bg-black text-white hover:bg-gray-800 h-12 text-base font-semibold"
+                  onClick={validateAndSendMessage}
+                >
+                  Send Message
+                </Button>
               </div>
 
               <div className="mt-6 pt-6 border-t border-gray-200">

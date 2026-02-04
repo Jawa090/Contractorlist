@@ -58,7 +58,7 @@ const Header = ({ onMenuClick }: HeaderProps) => {
     if (location.pathname.includes('/project-discovery')) return 'Project Discovery';
     if (location.pathname.includes('/directory')) return 'Sub Contractor Directory';
     if (location.pathname.includes('/settings')) return 'Settings';
-    if (location.pathname.includes('/help')) return 'Support';
+    if (location.pathname.includes('/customer-support')) return 'Customer Support';
     return 'GC Dashboard';
   };
 

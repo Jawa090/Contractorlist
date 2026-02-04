@@ -13,7 +13,7 @@ const FindProjects = lazy(() => import('@/components/subcontractor/FindProjects'
 const ProjectDiscovery = lazy(() => import('@/components/subcontractor/ProjectDiscovery'));
 const Messages = lazy(() => import('@/components/subcontractor/Messages'));
 const AccountSettings = lazy(() => import('@/components/subcontractor/AccountSettings'));
-const HelpSupport = lazy(() => import('@/components/subcontractor/HelpSupport'));
+const CustomerSupport = lazy(() => import('@/components/subcontractor/CustomerSupport'));
 const AIAssistant = lazy(() => import('@/components/subcontractor/AIAssistant'));
 const Suppliers = lazy(() => import('@/components/GC dashboard/Suppliers'));
 const ProductsOverview = lazy(() => import('@/components/GC dashboard/Products/ProductsOverview'));
@@ -141,7 +141,7 @@ const SubcontractorDashboard = () => {
                 <Route path="/services" element={<ServicesOverview />} />
                 <Route path="/suppliers" element={<Suppliers />} />
                 <Route path="/settings" element={<AccountSettings />} />
-                <Route path="/help-support" element={<HelpSupport />} />
+                <Route path="/customer-support" element={<CustomerSupport />} />
               </Routes>
             </Suspense>
           </ErrorBoundary>

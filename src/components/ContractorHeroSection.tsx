@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useMemo, useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 import { Link } from "react-router-dom";
 import {
   Building,
@@ -18,6 +19,34 @@ import { FaClipboardList, FaMapMarkerAlt, FaHandshake } from "react-icons/fa";
 const ContractorHeroSection = () => {
   const [showAllCategories, setShowAllCategories] = useState(false);
   const [zipCode, setZipCode] = useState("");
+  const { toast } = useToast();
+
+  const handleZipCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, "");
+    if (value.length <= 5) {
+      setZipCode(value);
+    }
+  };
+
+  const validateSearch = (e: React.MouseEvent) => {
+    if (!zipCode) {
+      e.preventDefault();
+      toast({
+        title: "ZIP Code Required",
+        description: "Please enter a ZIP code to search for contractors.",
+        variant: "destructive",
+      });
+      return;
+    }
+    if (zipCode.length !== 5) {
+      e.preventDefault();
+      toast({
+        title: "Invalid ZIP Code",
+        description: "Please enter a valid 5-digit US ZIP code.",
+        variant: "destructive",
+      });
+    }
+  };
   const [serviceQuery, setServiceQuery] = useState("");
 
   const steps = [
@@ -89,17 +118,16 @@ const ContractorHeroSection = () => {
                       placeholder="10118"
                       className="w-24 border-0 bg-transparent text-gray-700 font-semibold focus:ring-0 text-base"
                       value={zipCode}
-                      onChange={(e) => setZipCode(e.target.value)}
+                      onChange={handleZipCodeChange}
+                      maxLength={5}
                     />
                   </div>
                   <a
                     href={`/contractors?zip=${encodeURIComponent(zipCode)}${serviceQuery
-                        ? `&service=${encodeURIComponent(serviceQuery)}`
-                        : ""
+                      ? `&service=${encodeURIComponent(serviceQuery)}`
+                      : ""
                       }`}
-                    onClick={(e) => {
-                      if (!zipCode) e.preventDefault();
-                    }}
+                    onClick={validateSearch}
                   >
                     <Button className="bg-[#fce011] hover:bg-[#fce011]/90 text-black font-bold px-6 rounded-lg shadow-md">
                       Search

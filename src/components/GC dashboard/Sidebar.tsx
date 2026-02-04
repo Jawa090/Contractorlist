@@ -22,9 +22,11 @@ import {
   PhoneCall,
   Zap,
   Briefcase,
-  TrendingUp
+  TrendingUp,
+  LifeBuoy
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+
 
 interface SidebarProps {
   isOpen: boolean;
@@ -33,6 +35,7 @@ interface SidebarProps {
 
 const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
+
   const location = useLocation();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -89,7 +92,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
     {
       label: 'System',
       items: [
-        { name: 'Talk to Sales', href: '#', icon: PhoneCall, onClick: () => toast({ title: "Sales Connection", description: "Request received. A dedicated representative will reach out shortly." }) },
+        { name: 'Customer Support', href: '/gc-dashboard/customer-support', icon: LifeBuoy },
         { name: 'Settings', href: '/gc-dashboard/settings', icon: Settings },
       ]
     }
@@ -246,6 +249,8 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
 
         </div>
       </aside>
+
+
     </>
   );
 };

@@ -31,9 +31,11 @@ import {
   Sparkles,
   Truck,
   PhoneCall,
-  Gavel
+  Gavel,
+  LifeBuoy
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+
 
 interface SubcontractorSidebarProps {
   isOpen: boolean;
@@ -42,6 +44,7 @@ interface SubcontractorSidebarProps {
 
 const SubcontractorSidebar = ({ isOpen, onClose }: SubcontractorSidebarProps) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
+
   const location = useLocation();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -104,11 +107,10 @@ const SubcontractorSidebar = ({ isOpen, onClose }: SubcontractorSidebarProps) =>
 
   const bottomItems = [
     {
-      name: 'Talk to Sales',
-      href: '#',
-      icon: PhoneCall,
-      description: 'Connect with us',
-      onClick: () => toast({ title: "Sales Contact", description: "Request received. We will reach out to you within 24 hours." })
+      name: 'Customer Support',
+      href: '/subcontractor-dashboard/customer-support',
+      icon: LifeBuoy,
+      description: 'Help & Assistance',
     },
     {
       name: 'My Profile',
@@ -258,6 +260,8 @@ const SubcontractorSidebar = ({ isOpen, onClose }: SubcontractorSidebarProps) =>
 
         </div>
       </aside>
+
+
     </>
   );
 };

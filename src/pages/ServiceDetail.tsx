@@ -16,10 +16,42 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
 const ServiceDetail = () => {
   const { serviceName } = useParams<{ serviceName: string }>();
   const [zipCode, setZipCode] = useState("");
+  const { toast } = useToast();
+  const navigate = useNavigate();
+
+  const handleZipCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, "");
+    if (value.length <= 5) {
+      setZipCode(value);
+    }
+  };
+
+  const handleGetQuotes = () => {
+    if (!zipCode) {
+      toast({
+        title: "ZIP Code Required",
+        description: "Please enter a ZIP code to see local pros.",
+        variant: "destructive",
+      });
+      return;
+    }
+    if (zipCode.length !== 5) {
+      toast({
+        title: "Invalid ZIP Code",
+        description: "Please enter a valid 5-digit US ZIP code.",
+        variant: "destructive",
+      });
+      return;
+    }
+    // Navigate to contractors page with zip code
+    navigate(`/contractors?zip=${zipCode}&service=${formattedServiceName}`);
+  };
 
   // Convert URL slug to proper service name
   const formattedServiceName = serviceName
@@ -89,12 +121,16 @@ const ServiceDetail = () => {
                       type="text"
                       placeholder="ZIP code"
                       value={zipCode}
-                      onChange={(e) => setZipCode(e.target.value)}
+                      onChange={handleZipCodeChange}
                       className="pl-10 py-6 text-lg"
+                      maxLength={5}
                     />
                   </div>
                 </div>
-                <Button className="bg-[#fce011] hover:bg-[#fce011]/90 text-black font-semibold px-8 py-6 text-lg">
+                <Button
+                  className="bg-[#fce011] hover:bg-[#fce011]/90 text-black font-semibold px-8 py-6 text-lg"
+                  onClick={handleGetQuotes}
+                >
                   Get quotes
                 </Button>
               </div>
@@ -224,7 +260,7 @@ const ServiceDetail = () => {
       <section className="py-12 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-gray-900 mb-8">FAQs</h2>
-          
+
           <div className="space-y-4">
             <details className="group border border-gray-200 rounded-lg">
               <summary className="flex items-center justify-between p-6 cursor-pointer hover:bg-gray-50">
@@ -285,7 +321,7 @@ const ServiceDetail = () => {
           <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
             Why hire professionals on our platform?
           </h2>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center">
               <div className="w-16 h-16 bg-[#fce011] rounded-full flex items-center justify-center mx-auto mb-4">

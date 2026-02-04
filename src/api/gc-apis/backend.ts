@@ -300,10 +300,134 @@ export const deleteDocument = async (documentId: number): Promise<void> => {
   await api.delete(`/gc-dashboard/documents/${documentId}`);
 };
 
+
 /**
- * Get All Bids
+ * Get Sent Invitations (previously misnamed "getBids")
  */
-export const getBids = async (): Promise<any[]> => {
+export const getSentInvitations = async (): Promise<any[]> => {
+  const response = await api.get('/gc-dashboard/sent-invitations');
+  return response.data.data;
+};
+
+// ==========================================
+// NEW BID MANAGEMENT API
+// ==========================================
+
+export interface BidItem {
+  id?: number;
+  name: string;
+  description?: string;
+  price: number;
+}
+
+export interface Bid {
+  id: string;
+  status: 'draft' | 'submitted' | 'viewed' | 'accepted' | 'started' | 'rejected' | 'withdrawn';
+  amount: number;
+  project_name: string;
+  location: string;
+  project_type: string;
+  client_name: string;
+  items_count: number;
+  created_at: string;
+  updated_at: string;
+  // ... potentially other fields
+}
+
+/**
+ * Get My Bids (Contractor View)
+ */
+export const getMyBids = async (): Promise<Bid[]> => {
   const response = await api.get('/gc-dashboard/bids');
+  return response.data.data;
+};
+
+/**
+ * Get Bid Detail
+ */
+export const getBidDetail = async (bidId: string): Promise<any> => {
+  const response = await api.get(`/gc-dashboard/bids/${bidId}`);
+  return response.data.data;
+};
+
+/**
+ * Create New Bid (Start Draft)
+ */
+export const createBid = async (data: {
+  projectId: string | number;
+  totalPrice: number;
+  notes?: string;
+  items?: BidItem[];
+  estimatedStartDate?: string;
+  estimatedEndDate?: string;
+  companyHighlights?: string;
+  relevantExperience?: string;
+  credentials?: string;
+}): Promise<any> => {
+  const response = await api.post('/gc-dashboard/bids', data);
+  return response.data.data;
+};
+
+/**
+ * Update Bid Items (Draft Only)
+ */
+export const updateBidItems = async (bidId: string, items: BidItem[]): Promise<any> => {
+  const response = await api.put(`/gc-dashboard/bids/${bidId}/items`, { items });
+  return response.data.data;
+};
+
+/**
+ * Submit Bid (Move to Submitted status)
+ */
+export const finalizeBidSubmission = async (bidId: string): Promise<any> => {
+  const response = await api.post(`/gc-dashboard/bids/${bidId}/submit`);
+  return response.data.data;
+};
+
+/**
+ * Withdraw Bid
+ */
+export const withdrawBid = async (bidId: string): Promise<any> => {
+  const response = await api.post(`/gc-dashboard/bids/${bidId}/withdraw`);
+  return response.data.data;
+};
+
+/**
+ * Accept Bid (Project Owner View)
+ */
+export const acceptBid = async (bidId: string): Promise<any> => {
+  const response = await api.post(`/gc-dashboard/bids/${bidId}/accept`);
+  return response.data.data;
+};
+
+/**
+ * Reject Bid (Project Owner View)
+ */
+export const rejectBid = async (bidId: string): Promise<any> => {
+  const response = await api.post(`/gc-dashboard/bids/${bidId}/reject`);
+  return response.data.data;
+};
+
+/**
+ * Start Project from Bid (Project Owner View)
+ */
+export const startProjectFromBid = async (bidId: string): Promise<any> => {
+  const response = await api.post(`/gc-dashboard/bids/${bidId}/start`);
+  return response.data.data;
+};
+
+/**
+ * Delete Bid
+ */
+export const deleteBid = async (bidId: string): Promise<any> => {
+  const response = await api.delete(`/gc-dashboard/bids/${bidId}`);
+  return response.data;
+};
+
+/**
+ * Get All Bids for a Project (Project Owner View)
+ */
+export const getProjectBids = async (projectId: string | number): Promise<Bid[]> => {
+  const response = await api.get(`/gc-dashboard/projects/${projectId}/bids`);
   return response.data.data;
 };

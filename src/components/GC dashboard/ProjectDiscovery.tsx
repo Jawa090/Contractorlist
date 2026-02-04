@@ -12,6 +12,9 @@ import {
   DialogTitle,
   DialogFooter
 } from '@/components/ui/dialog';
+import { useNavigate } from 'react-router-dom';
+import { createBid, finalizeBidSubmission } from '@/api/gc-apis/backend';
+import { Textarea } from '@/components/ui/textarea';
 import {
   Select,
   SelectContent,
@@ -21,6 +24,7 @@ import {
 } from "@/components/ui/select";
 import {
   Search,
+  Plus,
   MapPin,
   Building2,
   Star,
@@ -44,13 +48,16 @@ import {
   Tag,
   Bookmark,
   FileSearch,
-  ChevronDown
+  ChevronDown,
+  Trash2,
+  X
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 
 const ProjectDiscovery = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [locationSearch, setLocationSearch] = useState('');
   const [selectedSources, setSelectedSources] = useState<string[]>([]);
@@ -70,97 +77,95 @@ const ProjectDiscovery = () => {
   const [dueWithin, setDueWithin] = useState('any');
   const [multipleKeywords, setMultipleKeywords] = useState('');
 
-  // Mock projects with industry-standard data points (PlanHub inspired)
-  const [projects] = useState([
-    {
-      id: 1,
-      name: 'Downtown Commercial Plaza Renovation',
-      location: 'Austin, TX',
-      distanceValue: 2.4,
-      distance: '2.4 mi',
-      budget: '$2.4M - $3.1M',
-      category: 'Commercial',
-      projectType: 'Renovation',
-      source: 'PlanHub',
-      posted: '2 days ago',
-      deadline: '2026-02-15',
-      nigpCode: '910-00',
-      matchScore: 98,
-      isProfileMatch: true,
-      trades: ['Electrical', 'HVAC', 'General Construction'],
-      description: 'Complete renovation of 3-story commercial plaza. Project requires GC with experience in commercial renovations. Interior fit-out and exterior facade.',
-      owner: 'Metro Properties LLC',
-      sqft: '45,000',
-      duration: '12-18 months',
-      status: 'Bidding'
-    },
-    {
-      id: 2,
-      name: 'Oak Ridge Medical Center Annex',
-      location: 'Round Rock, TX',
-      distanceValue: 15,
-      distance: '15 mi',
-      budget: '$8.5M - $10M',
-      category: 'Healthcare',
-      projectType: 'New Project',
-      source: 'Dodge Construction',
-      posted: '5 hours ago',
-      deadline: '2026-03-01',
-      nigpCode: '906-00',
-      matchScore: 88,
-      isProfileMatch: true,
-      trades: ['General Construction', 'Plumbing', 'Electrical'],
-      description: 'New construction of a 20,000 sq ft medical annex. Requires specialized healthcare construction experience and medical gas line installation.',
-      owner: 'Oak Ridge Health',
-      sqft: '20,000',
-      duration: '18 months',
-      status: 'Open'
-    },
-    {
-      id: 3,
-      name: 'Residential Complex Phase 2',
-      location: 'San Marcos, TX',
-      distanceValue: 30,
-      distance: '30 mi',
-      budget: '$12M - $15M',
-      category: 'Multi-Family',
-      projectType: 'New Project',
-      source: 'PlanHub',
-      posted: '1 week ago',
-      deadline: '2026-02-10',
-      nigpCode: '909-00',
-      matchScore: 76,
-      isProfileMatch: false,
-      trades: ['General Construction', 'Concrete', 'Framing'],
-      description: 'Phase 2 of Riverside Apartments. 4 buildings, 120 units total. Wood frame construction on slab on grade.',
-      owner: 'Riverside Development',
-      sqft: '145,000',
-      duration: '24 months',
-      status: 'Bidding'
-    },
-    {
-      id: 4,
-      name: 'Public Library Modernization',
-      location: 'Austin, TX',
-      distanceValue: 4.8,
-      distance: '4.8 mi',
-      budget: '$5.5M',
-      category: 'Government',
-      projectType: 'Renovation',
-      source: 'Dodge Construction',
-      posted: 'Yesterday',
-      deadline: '2026-02-28',
-      nigpCode: '910-65',
-      matchScore: 94,
-      isProfileMatch: true,
-      trades: ['Asbestos Abatement', 'IT Infrastructure', 'Interior Finishes'],
-      description: 'Public works project for city library. Requires strict adherence to public procurement guidelines and prevailing wage.',
-      owner: 'City of Austin',
-      sqft: '32,000',
-      duration: '12 months',
-      status: 'Open'
+  // State for projects
+  const [projects, setProjects] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isCreatingBid, setIsCreatingBid] = useState(false);
+
+  // New Bid Form State
+  const [showBidModal, setShowBidModal] = useState(false);
+  const [bidItems, setBidItems] = useState<any[]>([{ name: '', description: '', price: 0 }]);
+  const [bidNotes, setBidNotes] = useState('');
+  const [bidStartDate, setBidStartDate] = useState('');
+  const [bidEndDate, setBidEndDate] = useState('');
+  const [bidCompanyHighlights, setBidCompanyHighlights] = useState('');
+  const [bidRelevantExperience, setBidRelevantExperience] = useState('');
+  const [bidCredentials, setBidCredentials] = useState('');
+
+  const calculateTotal = () => bidItems.reduce((sum, item) => sum + (Number(item.price) || 0), 0);
+
+  const handleOpenBidModal = () => {
+    setShowDetailsModal(false);
+    setShowBidModal(true);
+  };
+
+  const handleSubmitBid = async () => {
+    if (!selectedProject) return;
+
+    try {
+      setIsCreatingBid(true);
+
+      const totalPrice = calculateTotal();
+
+      // 1. Create the bid
+      const bid = await createBid({
+        projectId: selectedProject.id,
+        totalPrice: totalPrice,
+        notes: bidNotes,
+        items: bidItems,
+        estimatedStartDate: bidStartDate,
+        estimatedEndDate: bidEndDate,
+        companyHighlights: bidCompanyHighlights,
+        relevantExperience: bidRelevantExperience,
+        credentials: bidCredentials
+      });
+
+      // 2. Automatically submit it
+      await finalizeBidSubmission(bid.id);
+
+      toast({
+        title: "Proposal Submitted Successfully",
+        description: `Your bid of $${totalPrice.toLocaleString()} has been sent to the project owner.`,
+      });
+
+      setShowBidModal(false);
+      navigate('/gc-dashboard/bids');
+
+    } catch (error: any) {
+      console.error("Failed to submit bid:", error);
+      toast({
+        title: "Submission Failed",
+        description: error.response?.data?.message || "We encountered an error while sending your proposal.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsCreatingBid(false);
     }
-  ]);
+  };
+
+  // Fetch Projects from API
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        setIsLoading(true);
+        // Dynamically import the API client to avoid circular dependencies if any
+        const api = await import('@/api/gc-apis/backend');
+        const data = await api.getProjectDiscovery();
+        setProjects(data);
+      } catch (error) {
+        console.error("Failed to fetch marketplace projects:", error);
+        toast({
+          title: "Error",
+          description: "Failed to load project feed. Using cached signals.",
+          variant: "destructive"
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProjects();
+  }, [toast]);
 
   const projectCategories = ['Commercial', 'Residential', 'Industrial', 'Healthcare', 'Educational', 'Multi-Family', 'Government'];
   const sources = ['PlanHub', 'Dodge Construction'];
@@ -730,10 +735,184 @@ const ProjectDiscovery = () => {
 
               <div className="p-8 bg-gray-100 dark:bg-black/30 border-t border-gray-100 dark:border-white/5 flex gap-4">
                 <Button onClick={() => setShowDetailsModal(false)} variant="outline" className="flex-1 h-12 rounded-xl text-[10px] font-black uppercase tracking-widest dark:border-white/10">Dismiss</Button>
-                <Button className="flex-[2] h-12 rounded-xl bg-yellow-400 hover:bg-yellow-500 text-black font-black uppercase text-[10px] tracking-widest shadow-xl">Submit Intent To Bid</Button>
+                <Button onClick={handleOpenBidModal} className="flex-[2] h-12 rounded-xl bg-yellow-400 hover:bg-yellow-500 text-black font-black uppercase text-[10px] tracking-widest shadow-xl">
+                  {isCreatingBid ? 'Starting Bid...' : 'Bid on Project'}
+                </Button>
               </div>
             </div>
           )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Bid Proposal Form Modal */}
+      <Dialog open={showBidModal} onOpenChange={setShowBidModal}>
+        <DialogContent className="max-w-3xl bg-white dark:bg-[#111318] p-0 overflow-hidden border-gray-200 dark:border-white/10 shadow-3xl rounded-[2rem]">
+          <div className="flex flex-col max-h-[90vh]">
+            <div className="p-8 bg-gray-100/50 dark:bg-black/30 border-b border-gray-100 dark:border-white/5">
+              <div className="flex justify-between items-center mb-2">
+                <Badge className="bg-yellow-400 text-black border-none font-black text-[9px] uppercase tracking-widest px-3">Official Proposal</Badge>
+                <div className="text-right">
+                  <p className="text-[9px] font-black uppercase text-gray-500 tracking-widest">Total Bid Amount</p>
+                  <p className="text-2xl font-black font-mono text-yellow-600">${calculateTotal().toLocaleString()}</p>
+                </div>
+              </div>
+              <h2 className="text-3xl font-black tracking-tighter text-gray-900 dark:text-white leading-tight">
+                Submit Proposal
+              </h2>
+              <p className="text-xs font-bold text-gray-500 mt-1">Project: {selectedProject?.name}</p>
+            </div>
+
+            <div className="p-8 space-y-8 overflow-y-auto custom-scrollbar">
+              <div className="grid grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label className="text-[10px] font-black uppercase tracking-widest text-gray-400">Estimated Start Date</Label>
+                  <Input
+                    type="date"
+                    value={bidStartDate}
+                    onChange={(e) => setBidStartDate(e.target.value)}
+                    className="bg-white dark:bg-black/20 border-gray-200 dark:border-white/10 h-11 rounded-xl"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-[10px] font-black uppercase tracking-widest text-gray-400">Estimated End Date</Label>
+                  <Input
+                    type="date"
+                    value={bidEndDate}
+                    onChange={(e) => setBidEndDate(e.target.value)}
+                    className="bg-white dark:bg-black/20 border-gray-200 dark:border-white/10 h-11 rounded-xl"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <Label className="text-[10px] font-black uppercase tracking-widest text-gray-400">Proposal Items (Line Items)</Label>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => setBidItems([...bidItems, { name: '', description: '', price: 0 }])}
+                    className="h-7 text-[10px] font-bold rounded-lg border-gray-200 dark:border-white/10"
+                  >
+                    <Plus className="w-3 h-3 mr-1" /> Add Item
+                  </Button>
+                </div>
+                <div className="space-y-3">
+                  {bidItems.map((item, index) => (
+                    <div key={index} className="flex gap-2 items-start p-4 bg-gray-50 dark:bg-white/[0.02] rounded-2xl border border-gray-100 dark:border-white/5">
+                      <div className="flex-1 space-y-2">
+                        <Input
+                          placeholder="Item Name (e.g., HVAC Installation)"
+                          value={item.name}
+                          onChange={(e) => {
+                            const newItems = [...bidItems];
+                            newItems[index].name = e.target.value;
+                            setBidItems(newItems);
+                          }}
+                          className="h-9 bg-white dark:bg-black/20 text-xs rounded-xl"
+                        />
+                        <Input
+                          placeholder="Short description"
+                          value={item.description}
+                          onChange={(e) => {
+                            const newItems = [...bidItems];
+                            newItems[index].description = e.target.value;
+                            setBidItems(newItems);
+                          }}
+                          className="h-9 bg-white dark:bg-black/20 text-xs rounded-xl"
+                        />
+                      </div>
+                      <div className="w-32 space-y-2">
+                        <div className="relative">
+                          <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-3 h-3 text-gray-400" />
+                          <Input
+                            type="number"
+                            placeholder="Price"
+                            value={item.price}
+                            onChange={(e) => {
+                              const newItems = [...bidItems];
+                              newItems[index].price = e.target.value;
+                              setBidItems(newItems);
+                            }}
+                            className="pl-8 h-9 bg-white dark:bg-black/20 text-xs rounded-xl"
+                          />
+                        </div>
+                        {bidItems.length > 1 && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setBidItems(bidItems.filter((_, i) => i !== index))}
+                            className="w-full text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20 text-[10px] font-bold h-7 rounded-lg"
+                          >
+                            <Trash2 className="w-3 h-3 mr-1" /> Remove
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="p-6 rounded-3xl bg-yellow-50 dark:bg-yellow-900/10 border border-yellow-100 dark:border-yellow-900/20 space-y-6">
+                <div className="flex items-center gap-2">
+                  <Star className="w-4 h-4 text-yellow-600 fill-current" />
+                  <h4 className="text-[11px] font-black uppercase tracking-tighter text-yellow-800 dark:text-yellow-500">The GC Edge (Attract the Client)</h4>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label className="text-[9px] font-black uppercase tracking-widest text-yellow-700/60">Company Highlights</Label>
+                    <Input
+                      placeholder="e.g. 20+ years, 500+ projects"
+                      value={bidCompanyHighlights}
+                      onChange={(e) => setBidCompanyHighlights(e.target.value)}
+                      className="h-9 bg-white dark:bg-black/40 border-yellow-200 dark:border-yellow-900/30 text-xs rounded-xl"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-[9px] font-black uppercase tracking-widest text-yellow-700/60">Credentials & Licensing</Label>
+                    <Input
+                      placeholder="Licensed, Insured, OSHA30"
+                      value={bidCredentials}
+                      onChange={(e) => setBidCredentials(e.target.value)}
+                      className="h-9 bg-white dark:bg-black/40 border-yellow-200 dark:border-yellow-900/30 text-xs rounded-xl"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="text-[9px] font-black uppercase tracking-widest text-yellow-700/60">Relevant Experience (Prior Success)</Label>
+                  <Textarea
+                    placeholder="Describe similar projects you've handled..."
+                    value={bidRelevantExperience}
+                    onChange={(e) => setBidRelevantExperience(e.target.value)}
+                    className="min-h-[80px] bg-white dark:bg-black/40 border-yellow-200 dark:border-yellow-900/30 text-xs rounded-xl"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-[10px] font-black uppercase tracking-widest text-gray-400">Proposal Summary / Cover Notes</Label>
+                <Textarea
+                  placeholder="Summarize your expertise and project approach..."
+                  value={bidNotes}
+                  onChange={(e) => setBidNotes(e.target.value)}
+                  className="min-h-[120px] bg-white dark:bg-black/20 border-gray-200 dark:border-white/10 rounded-2xl p-4 text-sm"
+                />
+              </div>
+            </div>
+
+            <div className="p-8 bg-gray-100 dark:bg-black/30 border-t border-gray-100 dark:border-white/5 flex gap-4">
+              <Button onClick={() => setShowBidModal(false)} variant="outline" className="flex-1 h-12 rounded-xl text-[10px] font-black uppercase tracking-widest dark:border-white/10">Back to Details</Button>
+              <Button
+                onClick={handleSubmitBid}
+                disabled={isCreatingBid || calculateTotal() <= 0}
+                className="flex-[2] h-12 rounded-xl bg-yellow-400 hover:bg-yellow-500 text-black font-black uppercase text-[10px] tracking-widest shadow-xl disabled:opacity-50"
+              >
+                <Briefcase className="w-4 h-4 mr-2" />
+                {isCreatingBid ? 'Submitting Proposal...' : 'Submit Official Proposal'}
+              </Button>
+            </div>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
