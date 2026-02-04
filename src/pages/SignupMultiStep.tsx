@@ -260,31 +260,14 @@ const SignupMultiStep = () => {
       }
     }
     if (step === 3) {
-      if (!formData.trades || formData.trades.length === 0) {
-        const title = formData.workType === "client" ? "Selection Required" : "Trade Selection Required";
-        const description = formData.workType === "client" ? "Please select at least one project interest" : "Please select at least one trade your company specializes in";
-        toast({ title, description, variant: "destructive" });
+      if (formData.workType !== 'client' && (!formData.trades || formData.trades.length === 0)) {
+        toast({ title: "Trade Selection Required", description: "Please select at least one trade your company specializes in", variant: "destructive" });
         return false;
       }
     }
 
     if (step === 4) {
-      if (!formData.goals || formData.goals.length === 0) {
-        toast({ title: "Selection Required", description: "Please select at least one goal to continue", variant: "destructive" });
-        return false;
-      }
-    }
-    if (step === 3) {
-      if (!formData.trades || formData.trades.length === 0) {
-        const title = formData.workType === "client" ? "Selection Required" : "Trade Selection Required";
-        const description = formData.workType === "client" ? "Please select at least one project interest" : "Please select at least one trade your company specializes in";
-        toast({ title, description, variant: "destructive" });
-        return false;
-      }
-    }
-
-    if (step === 4) {
-      if (!formData.goals || formData.goals.length === 0) {
+      if (formData.workType !== 'client' && (!formData.goals || formData.goals.length === 0)) {
         toast({ title: "Selection Required", description: "Please select at least one goal to continue", variant: "destructive" });
         return false;
       }
@@ -403,7 +386,8 @@ const SignupMultiStep = () => {
           financingStatus: formData.financingStatus,
           address: formData.address, // Property address
           companyName: formData.companyName, // Optional for client
-          role: formData.role // Optional for client
+          role: formData.role, // Optional for client
+          trades: formData.trades
         };
       } else if (formData.workType === 'general-contractor') {
         payload = {

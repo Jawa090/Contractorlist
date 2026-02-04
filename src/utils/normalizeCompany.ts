@@ -1,6 +1,6 @@
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 // Remove /api if present as we want the root URL for static files
-const BASE_URL = API_URL.replace('/api', '');
+const BASE_URL = API_URL.replace('/api', '/');
 
 const defaultImages = [
   `${BASE_URL}/projects/kitchen-luxury.png`,

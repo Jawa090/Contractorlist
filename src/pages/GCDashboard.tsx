@@ -10,7 +10,7 @@ const CleanCommunications = lazy(() => import('@/components/GC dashboard/CleanCo
 const Directory = lazy(() => import('@/components/GC dashboard/Directory'));
 const MyProjects = lazy(() => import('@/components/GC dashboard/MyProjects'));
 const AccountSettings = lazy(() => import('@/components/GC dashboard/AccountSettings'));
-const HelpSupport = lazy(() => import('@/components/GC dashboard/HelpSupport'));
+const CustomerSupport = lazy(() => import('@/components/GC dashboard/CustomerSupport'));
 const ProjectDiscovery = lazy(() => import('@/components/GC dashboard/ProjectDiscovery'));
 const EnterpriseTeamManagement = lazy(() => import('@/components/GC dashboard/EnterpriseTeamManagement'));
 const EnhancedDocuments = lazy(() => import('@/components/GC dashboard/EnhancedDocuments'));
@@ -136,7 +136,7 @@ const GCDashboard = () => {
                 <Route path="/team" element={<EnterpriseTeamManagement />} />
                 <Route path="/documents" element={<EnhancedDocuments />} />
                 <Route path="/settings" element={<AccountSettings />} />
-                <Route path="/help" element={<HelpSupport />} />
+                <Route path="/customer-support" element={<CustomerSupport />} />
               </Routes>
             </Suspense>
           </ErrorBoundary>

@@ -152,8 +152,34 @@ export const updateDocument = async (documentId: number, data: any) => {
     return await gcAPI.updateDocument(documentId, data);
 };
 
-export const getBids = async () => {
-    return await gcAPI.getBids();
+// Renamed from getBids to match backend.ts
+export const getSentInvitations = async () => {
+    return await gcAPI.getSentInvitations();
+};
+
+// NEW BID MANAGEMENT EXPORTS
+export const getMyBids = async () => {
+    return await gcAPI.getMyBids();
+};
+
+export const getBidDetail = async (bidId: string) => {
+    return await gcAPI.getBidDetail(bidId);
+};
+
+export const createBid = async (data: any) => {
+    return await gcAPI.createBid(data);
+};
+
+export const updateBidItems = async (bidId: string, items: any) => {
+    return await gcAPI.updateBidItems(bidId, items);
+};
+
+export const finalizeBidSubmission = async (bidId: string) => {
+    return await gcAPI.finalizeBidSubmission(bidId);
+};
+
+export const withdrawBid = async (bidId: string) => {
+    return await gcAPI.withdrawBid(bidId);
 };
 
 export const sendTeamMemberReminder = async (teamMemberId: number) => {
