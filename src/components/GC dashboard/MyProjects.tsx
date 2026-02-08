@@ -1,5 +1,7 @@
 import { createProject as createProjectAPI, updateProject as updateProjectAPI, deleteProject as deleteProjectAPI, assignTeamMember, removeTeamMemberFromProject, getProjectTeamMembers, uploadDocument, bulkUploadProjects } from '@/api/gc-apis';
 import { useState, useEffect } from 'react';
+import { z } from "zod";
+
 
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -54,7 +56,25 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 
+const projectFormSchema = z.object({
+  name: z.string().min(1, "Project name is required"),
+  client: z.string().optional(),
+  project_type: z.string().optional(),
+  city: z.string().optional(),
+  state: z.string().optional(),
+  contract_value: z
+    .number({ invalid_type_error: "Contract value must be a number" })
+    .positive("Contract value must be greater than 0")
+    .optional(),
+  status: z.enum(["Planning", "Bidding", "Active", "Completed", "On Hold"]),
+  start_date: z.string().optional(),
+  expected_completion_date: z.string().optional(),
+});
+
+type ProjectFormInput = z.infer<typeof projectFormSchema>;
+
 const MyProjects = () => {
+
   const { toast } = useToast();
   const navigate = useNavigate();
   const [selectedProject, setSelectedProject] = useState<number | null>(null);
@@ -89,8 +109,10 @@ const MyProjects = () => {
   const [newProjectStatus, setNewProjectStatus] = useState('Planning');
   const [newProjectStartDate, setNewProjectStartDate] = useState('');
   const [newProjectExpectedCompletion, setNewProjectExpectedCompletion] = useState('');
+  const [projectFormErrors, setProjectFormErrors] = useState<Record<keyof ProjectFormInput, string>>({} as Record<keyof ProjectFormInput, string>);
 
   // Custom Global Upload State
+
   const [showGlobalUploadModal, setShowGlobalUploadModal] = useState(false);
   const [globalUploadProject, setGlobalUploadProject] = useState<string>("");
   const [globalUploadCategory, setGlobalUploadCategory] = useState("Other");
@@ -260,38 +282,64 @@ const MyProjects = () => {
     setNewProjectExpectedCompletion('');
     setIsEditing(false);
     setEditingProjectId(null);
+    setProjectFormErrors({} as Record<keyof ProjectFormInput, string>);
   };
+
 
   const handleSaveProject = async () => {
     try {
+      const trimmedName = newProjectName.trim();
+      const trimmedClient = newProjectClient.trim();
+      const trimmedType = newProjectType.trim();
+      const trimmedCity = newProjectCity.trim();
+      const trimmedState = newProjectState.trim();
+      const trimmedStartDate = newProjectStartDate.trim();
+      const trimmedExpectedCompletion = newProjectExpectedCompletion.trim();
       const trimmedContractValue = newProjectContractValue.trim();
 
       let parsedContractValue: number | undefined;
       if (trimmedContractValue !== '') {
-        const numericValue = Number(trimmedContractValue);
-        if (Number.isNaN(numericValue) || numericValue <= 0) {
-          toast({
-            title: "Invalid Contract Value",
-            description: "Please enter a positive number for the contract value.",
-            variant: "destructive",
-          });
-          return;
-        }
-        parsedContractValue = numericValue;
+        parsedContractValue = Number(trimmedContractValue);
       }
 
-      const projectData = {
-        name: newProjectName,
-        client: newProjectClient || undefined,
-        project_type: newProjectType || undefined,
-        city: newProjectCity || undefined,
-        state: newProjectState || undefined,
+      const candidate: ProjectFormInput = {
+        name: trimmedName,
+        client: trimmedClient || undefined,
+        project_type: trimmedType || undefined,
+        city: trimmedCity || undefined,
+        state: trimmedState || undefined,
         contract_value: parsedContractValue,
-        status: newProjectStatus as any,
-        start_date: newProjectStartDate || undefined,
-        expected_completion_date: newProjectExpectedCompletion || undefined,
+        status: newProjectStatus as ProjectFormInput['status'],
+        start_date: trimmedStartDate || undefined,
+        expected_completion_date: trimmedExpectedCompletion || undefined,
       };
 
+      // Clear previous errors
+      setProjectFormErrors({} as Record<keyof ProjectFormInput, string>);
+
+      const parsed = projectFormSchema.safeParse(candidate);
+
+      if (!parsed.success) {
+        const fieldErrors: Record<keyof ProjectFormInput, string> = {} as Record<keyof ProjectFormInput, string>;
+
+        parsed.error.issues.forEach((issue) => {
+          const field = issue.path[0];
+          if (typeof field === 'string' && !fieldErrors[field as keyof ProjectFormInput]) {
+            fieldErrors[field as keyof ProjectFormInput] = issue.message;
+          }
+        });
+
+        setProjectFormErrors(fieldErrors);
+
+        toast({
+          title: "Please fix the highlighted fields",
+          description: Object.values(fieldErrors).join(" · "),
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const projectData = parsed.data;
 
       if (isEditing && editingProjectId) {
         const updated = await updateProjectAPI(editingProjectId, projectData as any);
@@ -324,6 +372,7 @@ const MyProjects = () => {
       });
     }
   };
+
 
   const handleInviteMembers = async () => {
     if (!selectedProject || invitedMembers.length === 0) {
@@ -902,13 +951,56 @@ const MyProjects = () => {
             </DialogHeader>
             <div className="grid gap-3.5 py-3">
               <div className="grid grid-cols-2 gap-3.5">
-                <div className="space-y-1.5"><Label className="text-sm text-gray-700 dark:text-gray-300">Project Name *</Label><Input placeholder="e.g. Office Renovation" className="bg-gray-50 dark:bg-black/20 border-gray-200 dark:border-white/10 text-gray-900 dark:text-white h-9" value={newProjectName} onChange={(e) => setNewProjectName(e.target.value)} /></div>
-                <div className="space-y-1.5"><Label className="text-sm text-gray-700 dark:text-gray-300">Client Name</Label><Input placeholder="Client Name" className="bg-gray-50 dark:bg-black/20 border-gray-200 dark:border-white/10 text-gray-900 dark:text-white h-9" value={newProjectClient} onChange={(e) => setNewProjectClient(e.target.value)} /></div>
+                <div className="space-y-1.5">
+                  <Label className="text-sm text-gray-700 dark:text-gray-300">Project Name *</Label>
+                  <Input
+                    placeholder="e.g. Office Renovation"
+                    className="bg-gray-50 dark:bg-black/20 border-gray-200 dark:border-white/10 text-gray-900 dark:text-white h-9"
+                    value={newProjectName}
+                    onChange={(e) => setNewProjectName(e.target.value)}
+                  />
+                  {projectFormErrors.name && (
+                    <p className="text-xs text-red-500 mt-1">{projectFormErrors.name}</p>
+                  )}
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-sm text-gray-700 dark:text-gray-300">Client Name</Label>
+                  <Input
+                    placeholder="Client Name"
+                    className="bg-gray-50 dark:bg-black/20 border-gray-200 dark:border-white/10 text-gray-900 dark:text-white h-9"
+                    value={newProjectClient}
+                    onChange={(e) => setNewProjectClient(e.target.value)}
+                  />
+                </div>
               </div>
-              <div className="space-y-1.5"><Label className="text-sm text-gray-700 dark:text-gray-300">Project Type</Label><Input placeholder="e.g. Commercial, Residential, Industrial" className="bg-gray-50 dark:bg-black/20 border-gray-200 dark:border-white/10 text-gray-900 dark:text-white h-9" value={newProjectType} onChange={(e) => setNewProjectType(e.target.value)} /></div>
+              <div className="space-y-1.5">
+                <Label className="text-sm text-gray-700 dark:text-gray-300">Project Type</Label>
+                <Input
+                  placeholder="e.g. Commercial, Residential, Industrial"
+                  className="bg-gray-50 dark:bg-black/20 border-gray-200 dark:border-white/10 text-gray-900 dark:text-white h-9"
+                  value={newProjectType}
+                  onChange={(e) => setNewProjectType(e.target.value)}
+                />
+              </div>
               <div className="grid grid-cols-2 gap-3.5">
-                <div className="space-y-1.5"><Label className="text-sm text-gray-700 dark:text-gray-300">City</Label><Input placeholder="City" className="bg-gray-50 dark:bg-black/20 border-gray-200 dark:border-white/10 text-gray-900 dark:text-white h-9" value={newProjectCity} onChange={(e) => setNewProjectCity(e.target.value)} /></div>
-                <div className="space-y-1.5"><Label className="text-sm text-gray-700 dark:text-gray-300">State</Label><Input placeholder="State" className="bg-gray-50 dark:bg-black/20 border-gray-200 dark:border-white/10 text-gray-900 dark:text-white h-9" value={newProjectState} onChange={(e) => setNewProjectState(e.target.value)} /></div>
+                <div className="space-y-1.5">
+                  <Label className="text-sm text-gray-700 dark:text-gray-300">City</Label>
+                  <Input
+                    placeholder="City"
+                    className="bg-gray-50 dark:bg-black/20 border-gray-200 dark:border-white/10 text-gray-900 dark:text-white h-9"
+                    value={newProjectCity}
+                    onChange={(e) => setNewProjectCity(e.target.value)}
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-sm text-gray-700 dark:text-gray-300">State</Label>
+                  <Input
+                    placeholder="State"
+                    className="bg-gray-50 dark:bg-black/20 border-gray-200 dark:border-white/10 text-gray-900 dark:text-white h-9"
+                    value={newProjectState}
+                    onChange={(e) => setNewProjectState(e.target.value)}
+                  />
+                </div>
               </div>
               <div className="grid grid-cols-2 gap-3.5">
                 <div className="space-y-1.5">
@@ -921,12 +1013,16 @@ const MyProjects = () => {
                     value={newProjectContractValue}
                     onChange={(e) => setNewProjectContractValue(e.target.value)}
                   />
+                  {projectFormErrors.contract_value && (
+                    <p className="text-xs text-red-500 mt-1">{projectFormErrors.contract_value}</p>
+                  )}
                 </div>
                 <div className="space-y-1.5">
-
                   <Label className="text-sm text-gray-700 dark:text-gray-300">Project Status</Label>
                   <Select value={newProjectStatus} onValueChange={setNewProjectStatus}>
-                    <SelectTrigger className="bg-gray-50 dark:bg-black/20 border-gray-200 dark:border-white/10 text-gray-900 dark:text-white h-9"><SelectValue placeholder="Select status" /></SelectTrigger>
+                    <SelectTrigger className="bg-gray-50 dark:bg-black/20 border-gray-200 dark:border-white/10 text-gray-900 dark:text-white h-9">
+                      <SelectValue placeholder="Select status" />
+                    </SelectTrigger>
                     <SelectContent className="bg-white dark:bg-[#1c1e24] border-gray-200 dark:border-white/10 text-gray-900 dark:text-white">
                       <SelectItem value="Planning">Planning</SelectItem>
                       <SelectItem value="Bidding">Bidding</SelectItem>
@@ -938,10 +1034,27 @@ const MyProjects = () => {
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-3.5">
-                <div className="space-y-1.5"><Label className="text-sm text-gray-700 dark:text-gray-300">Start Date</Label><Input type="date" className="bg-gray-50 dark:bg-black/20 border-gray-200 dark:border-white/10 text-gray-900 dark:text-white h-9" value={newProjectStartDate} onChange={(e) => setNewProjectStartDate(e.target.value)} /></div>
-                <div className="space-y-1.5"><Label className="text-sm text-gray-700 dark:text-gray-300">Expected Completion</Label><Input type="date" className="bg-gray-50 dark:bg-black/20 border-gray-200 dark:border-white/10 text-gray-900 dark:text-white h-9" value={newProjectExpectedCompletion} onChange={(e) => setNewProjectExpectedCompletion(e.target.value)} /></div>
+                <div className="space-y-1.5">
+                  <Label className="text-sm text-gray-700 dark:text-gray-300">Start Date</Label>
+                  <Input
+                    type="date"
+                    className="bg-gray-50 dark:bg-black/20 border-gray-200 dark:border-white/10 text-gray-900 dark:text-white h-9"
+                    value={newProjectStartDate}
+                    onChange={(e) => setNewProjectStartDate(e.target.value)}
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-sm text-gray-700 dark:text-gray-300">Expected Completion</Label>
+                  <Input
+                    type="date"
+                    className="bg-gray-50 dark:bg-black/20 border-gray-200 dark:border-white/10 text-gray-900 dark:text-white h-9"
+                    value={newProjectExpectedCompletion}
+                    onChange={(e) => setNewProjectExpectedCompletion(e.target.value)}
+                  />
+                </div>
               </div>
             </div>
+
             <div className="flex justify-end gap-2.5 pt-3">
               <Button variant="ghost" onClick={() => setShowNewProject(false)} className="h-9">Cancel</Button>
               <Button onClick={handleSaveProject} className="bg-accent hover:bg-accent/90 text-accent-foreground h-9">{isEditing ? 'Save Changes' : 'Create Project'}</Button>

@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { z } from "zod";
+
 import { getMyBids, getBidDetail, updateBidItems, Bid as ApiBid, BidItem, finalizeBidSubmission, withdrawBid, deleteBid } from '@/api/gc-apis/backend';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -45,6 +47,13 @@ import {
 import { cn } from '@/lib/utils';
 import { useToast } from "@/components/ui/use-toast";
 
+const bidItemEditSchema = z.object({
+  name: z.string().min(1, "Item name is required"),
+  description: z.string().optional(),
+  price: z.number().nonnegative("Price cannot be negative"),
+});
+
+
 // Map backend status to frontend view
 type BidStatus = 'draft' | 'submitted' | 'viewed' | 'accepted' | 'started' | 'rejected' | 'withdrawn';
 
@@ -70,6 +79,8 @@ const BidManagement = () => {
     // Edit Mode State
     const [isEditing, setIsEditing] = useState(false);
     const [editableItems, setEditableItems] = useState<any[]>([]);
+    const [editItemsError, setEditItemsError] = useState<string | null>(null);
+
 
     // Alert Dialog State
     const [alertConfig, setAlertConfig] = useState<{
@@ -479,7 +490,14 @@ const BidManagement = () => {
                                     )}
                                 </div>
 
+                                {editItemsError && (
+                                    <div className="mb-3 rounded-md bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 px-3 py-2 text-xs text-red-700 dark:text-red-200">
+                                        {editItemsError}
+                                    </div>
+                                )}
+
                                 <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2">
+
                                     {isEditing ? (
                                         <div className="space-y-4">
                                             {editableItems.map((item, index) => (

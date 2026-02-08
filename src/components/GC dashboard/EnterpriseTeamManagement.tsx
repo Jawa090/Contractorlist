@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { z } from "zod";
+
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -22,6 +24,15 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { getTeamMembers, inviteTeamMember, createTeamMember, deleteTeamMember, updateTeamMember, getProjectDiscovery, sendTeamMemberReminder } from '@/api/gc-apis';
+
+const teamMemberFormSchema = z.object({
+  name: z.string().min(1, "Full name is required"),
+  email: z.string().email("Enter a valid email address").optional(),
+  phone: z.string().optional(),
+  role: z.string().min(1, "Role is required"),
+  type: z.enum(["Direct Employee", "Contractor"]),
+});
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -83,6 +94,8 @@ const EnterpriseTeamManagement = () => {
   const [role, setRole] = useState('');
   const [employeeId, setEmployeeId] = useState('');
   const [type, setType] = useState<'Direct Employee' | 'Contractor'>('Direct Employee');
+  const [teamMemberFormErrors, setTeamMemberFormErrors] = useState<Record<string, string>>({});
+
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
@@ -162,62 +175,104 @@ const EnterpriseTeamManagement = () => {
   const handleAddMember = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Close modal immediately
-    setIsAddModalOpen(false);
+    const trimmedName = name.trim();
+    const trimmedEmail = email.trim();
+    const trimmedPhone = phone.trim();
+    const trimmedRole = role.trim();
 
-    // Capture current state values for the API call
-    const currentIsEditing = isEditing;
-    const currentMemberId = editingMemberId;
-    const currentName = name;
-
-    const memberData = {
-      name,
-      email,
-      phone,
-      role,
-      type: type,
-      employee_id: isEditing && employeeId ? employeeId : `EMP-${Math.floor(Math.random() * 10000)}`,
-      status: 'Active'
+    const candidate = {
+      name: trimmedName,
+      email: trimmedEmail || undefined,
+      phone: trimmedPhone || undefined,
+      role: trimmedRole,
+      type,
     };
 
-    // Reset form state immediately
-    setIsEditing(false);
-    setEditingMemberId(null);
-    setName('');
-    setEmail('');
-    setPhone('');
-    setRole('');
-    setEmployeeId('');
-    setType('Direct Employee');
+    // Clear previous errors
+    setTeamMemberFormErrors({});
 
-    // Run API call in background
+    const parsed = teamMemberFormSchema.safeParse(candidate);
+    const fieldErrors: Record<string, string> = {};
+
+    if (!parsed.success) {
+      parsed.error.issues.forEach((issue) => {
+        const field = issue.path[0];
+        if (typeof field === 'string' && !fieldErrors[field]) {
+          fieldErrors[field] = issue.message;
+        }
+      });
+    }
+
+    // Cross-field checks based on invite method
+    if ((inviteMethod === 'email' || inviteMethod === 'both') && !trimmedEmail) {
+      fieldErrors.email = 'Email is required when sending invitation via email.';
+    }
+    if ((inviteMethod === 'sms' || inviteMethod === 'both') && !trimmedPhone) {
+      fieldErrors.phone = 'Phone number is required when sending invitation via SMS.';
+    }
+
+    if (Object.keys(fieldErrors).length > 0) {
+      setTeamMemberFormErrors(fieldErrors);
+      toast({
+        title: 'Please fix the highlighted fields',
+        description: Object.values(fieldErrors).join(' · '),
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    const memberData = {
+      name: parsed.data.name,
+      email: parsed.data.email,
+      phone: parsed.data.phone,
+      role: parsed.data.role,
+      type: parsed.data.type,
+      employee_id: isEditing && employeeId ? employeeId : `EMP-${Math.floor(Math.random() * 10000)}`,
+      status: 'Active',
+    };
+
+    const currentIsEditing = isEditing;
+    const currentMemberId = editingMemberId;
+    const currentName = parsed.data.name;
+
     try {
       const methods = inviteMethod === 'both' ? 'Email and SMS' : inviteMethod.toUpperCase();
 
       if (currentIsEditing && currentMemberId) {
         await updateTeamMember(Number(currentMemberId), memberData);
         toast({
-          title: "Team Member Updated",
+          title: 'Team Member Updated',
           description: `${currentName}'s profile has been updated.`,
         });
       } else {
         await createTeamMember(memberData);
         toast({
-          title: "Team Member Added",
+          title: 'Team Member Added',
           description: `${currentName} has been added to your team. Invitation sent via ${methods}.`,
         });
       }
+
+      setIsAddModalOpen(false);
+      setIsEditing(false);
+      setEditingMemberId(null);
+      setName('');
+      setEmail('');
+      setPhone('');
+      setRole('');
+      setEmployeeId('');
+      setType('Direct Employee');
+
       loadTeamMembers();
     } catch (error) {
-      console.error("Team member operation failed:", error);
+      console.error('Team member operation failed:', error);
       toast({
-        title: "Error",
+        title: 'Error',
         description: `Failed to ${currentIsEditing ? 'update' : 'create'} team member`,
-        variant: "destructive"
+        variant: 'destructive',
       });
-      // Optionally re-open modal or handle error state here if needed
     }
   };
+
 
   const handleEditMember = (member: TeamMember) => {
     setIsEditing(true);
@@ -450,12 +505,15 @@ const EnterpriseTeamManagement = () => {
               <Input
                 id="name"
                 placeholder="John Doe"
-                required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className="bg-gray-100 dark:bg-black/20 border-gray-200 dark:border-white/10"
               />
+              {teamMemberFormErrors.name && (
+                <p className="text-xs text-red-500 mt-1">{teamMemberFormErrors.name}</p>
+              )}
             </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-gray-700 dark:text-gray-300">Email Address</Label>
@@ -463,12 +521,15 @@ const EnterpriseTeamManagement = () => {
                   id="email"
                   type="email"
                   placeholder="john@example.com"
-                  required={inviteMethod !== 'sms'}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="bg-gray-100 dark:bg-black/20 border-gray-200 dark:border-white/10"
                 />
+                {teamMemberFormErrors.email && (
+                  <p className="text-xs text-red-500 mt-1">{teamMemberFormErrors.email}</p>
+                )}
               </div>
+
               <div className="space-y-2">
                 <Label htmlFor="phone" className="text-gray-700 dark:text-gray-300">Phone Number</Label>
                 <div className="relative">
@@ -490,12 +551,15 @@ const EnterpriseTeamManagement = () => {
               <Input
                 id="role"
                 placeholder="e.g. Project Manager, Site Supervisor"
-                required
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
                 className="bg-gray-100 dark:bg-black/20 border-gray-200 dark:border-white/10"
               />
+              {teamMemberFormErrors.role && (
+                <p className="text-xs text-red-500 mt-1">{teamMemberFormErrors.role}</p>
+              )}
             </div>
+
 
             <div className="space-y-3 pt-2">
               <Label className="text-gray-700 dark:text-gray-300">Invitation Method</Label>

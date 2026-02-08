@@ -1,4 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
+import { z } from "zod";
+
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -53,6 +55,28 @@ import {
   X
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+
+const bidItemSchema = z.object({
+  name: z.string().min(1, "Item name is required"),
+  description: z.string().optional(),
+  price: z.number().nonnegative("Price cannot be negative"),
+});
+
+const bidFormSchema = z.object({
+  items: z
+    .array(bidItemSchema)
+    .min(1, "At least one line item is required")
+    .refine((items) => items.some((item) => item.price > 0), {
+      message: "At least one line item must have a price greater than 0",
+    }),
+  notes: z.string().optional(),
+  estimatedStartDate: z.string().optional(),
+  estimatedEndDate: z.string().optional(),
+  companyHighlights: z.string().optional(),
+  relevantExperience: z.string().optional(),
+  credentials: z.string().optional(),
+});
+
 import { cn } from '@/lib/utils';
 import ProjectFilters, { ProjectFilterState, CSI_DIVISIONS } from '@/components/projects/ProjectFilters';
 
@@ -112,8 +136,10 @@ const ProjectDiscovery = () => {
   const [bidCompanyHighlights, setBidCompanyHighlights] = useState('');
   const [bidRelevantExperience, setBidRelevantExperience] = useState('');
   const [bidCredentials, setBidCredentials] = useState('');
+  const [bidFormError, setBidFormError] = useState<string | null>(null);
 
   const calculateTotal = () => bidItems.reduce((sum, item) => sum + (Number(item.price) || 0), 0);
+
 
   const handleOpenBidModal = () => {
     setShowDetailsModal(false);
@@ -125,24 +151,57 @@ const ProjectDiscovery = () => {
 
     try {
       setIsCreatingBid(true);
-      const totalPrice = calculateTotal();
+      setBidFormError(null);
+
+      const normalizedItems = bidItems.map((item) => ({
+        name: (item.name || '').trim(),
+        description: (item.description || '').trim() || undefined,
+        price: Number(item.price) || 0,
+      }));
+
+      const candidate = {
+        items: normalizedItems,
+        notes: bidNotes.trim() || undefined,
+        estimatedStartDate: bidStartDate.trim() || undefined,
+        estimatedEndDate: bidEndDate.trim() || undefined,
+        companyHighlights: bidCompanyHighlights.trim() || undefined,
+        relevantExperience: bidRelevantExperience.trim() || undefined,
+        credentials: bidCredentials.trim() || undefined,
+      };
+
+      const parsed = bidFormSchema.safeParse(candidate);
+
+      if (!parsed.success) {
+        const messages = parsed.error.issues.map((issue) => issue.message);
+        const summary = Array.from(new Set(messages)).join(' · ');
+        setBidFormError(summary);
+        toast({
+          title: 'Please fix the bid details',
+          description: summary,
+          variant: 'destructive',
+        });
+        setIsCreatingBid(false);
+        return;
+      }
+
+      const totalPrice = parsed.data.items.reduce((sum, item) => sum + item.price, 0);
 
       const bid = await createBid({
         projectId: selectedProject.id,
-        totalPrice: totalPrice,
-        notes: bidNotes,
-        items: bidItems,
-        estimatedStartDate: bidStartDate,
-        estimatedEndDate: bidEndDate,
-        companyHighlights: bidCompanyHighlights,
-        relevantExperience: bidRelevantExperience,
-        credentials: bidCredentials
+        totalPrice,
+        notes: parsed.data.notes,
+        items: parsed.data.items,
+        estimatedStartDate: parsed.data.estimatedStartDate,
+        estimatedEndDate: parsed.data.estimatedEndDate,
+        companyHighlights: parsed.data.companyHighlights,
+        relevantExperience: parsed.data.relevantExperience,
+        credentials: parsed.data.credentials,
       });
 
       await finalizeBidSubmission(bid.id);
 
       toast({
-        title: "Proposal Submitted Successfully",
+        title: 'Proposal Submitted Successfully',
         description: `Your bid of $${totalPrice.toLocaleString()} has been sent to the project owner.`,
       });
 
@@ -150,16 +209,17 @@ const ProjectDiscovery = () => {
       navigate('/gc-dashboard/bids');
 
     } catch (error: any) {
-      console.error("Failed to submit bid:", error);
+      console.error('Failed to submit bid:', error);
       toast({
-        title: "Submission Failed",
-        description: error.response?.data?.message || "We encountered an error while sending your proposal.",
-        variant: "destructive"
+        title: 'Submission Failed',
+        description: error.response?.data?.message || 'We encountered an error while sending your proposal.',
+        variant: 'destructive',
       });
     } finally {
       setIsCreatingBid(false);
     }
   };
+
 
   // Fetch Projects from API
   useEffect(() => {

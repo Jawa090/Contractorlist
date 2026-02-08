@@ -198,3 +198,66 @@ This document summarizes the codebase clean-up and production-readiness adjustme
   - Maintains all existing UX behavior (search debounce, default project selection, optimistic updates, and success/error toasts), but with more efficient backend usage.
 
 Overall, the new React Query hooks do **not** change what the user sees in the GC dashboard; they only improve how often and where the app calls the backend for projects and team members, reducing unnecessary repeated API calls and centralizing server-state handling for this part of the app.
+
+## 10. Zod-backed validation for GC project form
+
+## 11. Zod validation for GC team members and bids
+
+- **Team members – file**: `src/components/GC dashboard/EnterpriseTeamManagement.tsx`
+  - Added `teamMemberFormSchema` (Zod) to validate the **Add/Edit Team Member** dialog:
+    - Requires `name` (full name) and `role`.
+    - Enforces that when invitation method includes **email**, an email is provided and, if present, has a valid email format.
+    - Enforces that when invitation method includes **SMS**, a phone number is provided.
+  - The `handleAddMember` handler now:
+    - Normalizes the raw inputs (trim strings) and runs `safeParse` on the schema.
+    - Adds extra cross-field checks based on `inviteMethod` for email/phone.
+    - Shows inline field errors under **Full Name**, **Email Address**, and **Phone Number**, plus a toast summarizing all issues.
+    - Only calls `createTeamMember` / `updateTeamMember` when the Zod validation and invite method checks pass.
+
+- **Bid creation – file**: `src/components/GC dashboard/ProjectDiscovery.tsx`
+  - Added `bidItemSchema` and `bidFormSchema` to validate the **Submit Proposal** modal when a GC creates a new bid:
+    - Each line item must have a non-empty `name` and a non-negative numeric `price`.
+    - The items array must contain at least one item, and at least one item must have a price > 0.
+    - Notes, dates, and narrative fields (`companyHighlights`, `relevantExperience`, `credentials`) remain optional but are normalized (trimmed) before sending.
+  - The `handleSubmitBid` handler now:
+    - Normalizes all line items and text fields.
+    - Calls `bidFormSchema.safeParse(...)` and, on failure, sets a `bidFormError` string and shows a toast (`"Please fix the bid details"`) rather than calling `createBid`.
+    - Only calls `createBid` + `finalizeBidSubmission` when the bid payload passes Zod validation.
+    - Displays a red inline error banner inside the modal summarizing the validation issues.
+
+- **Bid item editing – file**: `src/components/GC dashboard/BidManagement.tsx`
+  - Added `bidItemEditSchema` and `editItemsError` state for the **edit line items** mode in the bid details dialog.
+  - When entering edit mode, existing bid items are normalized into editable objects; on save:
+    - Items are normalized (trimmed names, numeric prices).
+    - A Zod array schema ensures at least one item and that each item has a name and non-negative price.
+    - If validation fails, a red inline error banner appears above the items list and a toast explains the problem.
+    - Only when validation succeeds does the code call `updateBidItems` with `{ name, description, price }` objects.
+- **Effect**:
+  - All core GC dashboard flows that send structured data to the GC backend (project creation/edit, team member add/edit, bid creation, and bid item editing) now use Zod-backed validation and user-visible error messaging, ensuring invalid payloads are blocked before hitting the API and that GC users see clear instructions on how to fix their input.
+
+
+
+- **File**: `src/components/GC dashboard/MyProjects.tsx`
+- **Changes**:
+  - Introduced a Zod schema (`projectFormSchema`) describing the GC project form payload:
+    - `name`: required non-empty string (`"Project name is required"`).
+    - `client`, `project_type`, `city`, `state`: optional strings, trimmed and sent as `undefined` when left blank.
+    - `contract_value`: optional positive number (`"Contract value must be greater than 0"`), with a numeric-only field in the UI.
+    - `status`: restricted to the allowed GC statuses (`Planning`, `Bidding`, `Active`, `Completed`, `On Hold`).
+    - `start_date`, `expected_completion_date`: optional date strings, trimmed.
+  - Updated `handleSaveProject` to:
+    - Normalize raw form state (trim strings, convert contract value to `number | undefined`).
+    - Run `projectFormSchema.safeParse(...)` before calling `createProject` / `updateProject`.
+    - If validation fails, collect field-specific error messages and:
+      - Store them in `projectFormErrors` state (keyed by field name).
+      - Show a descriptive toast summarizing the issues ("Please fix the highlighted fields").
+    - Only call the GC API when the Zod validation succeeds.
+  - Updated the “Create/Edit Project” dialog UI to surface field-level errors:
+    - Under the **Project Name** input, shows the Zod error text if `name` is invalid.
+    - Under the **Contract Value** input, shows the Zod error text if the value is missing, zero, negative, or otherwise invalid.
+- **Why**:
+  - Ensures that GC dashboard project creation/editing sends structurally valid data to the backend (especially for numeric contract values and required project name).
+  - Gives GC users clear, field-specific feedback for mistakes instead of silently cleaning invalid input or submitting partial data.
+- **Effect**:
+  - The visual structure of the dialog is unchanged, but users now see precise error messages when they omit required data or enter invalid contract values, and invalid submissions are blocked before any GC API call is made.
+
