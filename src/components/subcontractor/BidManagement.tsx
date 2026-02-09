@@ -42,17 +42,35 @@ import {
   FileSearch
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { scDashboardService, Bid } from '@/services/scDashboardService';
+import * as scApi from '@/api/sc-apis';
 import { useToast } from '@/hooks/use-toast';
+
+// Internal bid format for the component (mapped from API)
+interface InternalBid {
+  id: string;
+  projectName: string;
+  gc: string;
+  location: string;
+  bidAmount: string;
+  budgetValue: number;
+  deadline: string;
+  deadlineDate: string;
+  status: 'DRAFT' | 'SUBMITTED' | 'IN-REVIEW' | 'WON' | 'LOST';
+  daysLeft: number;
+  lastModified: string;
+  probability: number;
+  type: 'active' | 'completed';
+}
 
 const BidManagement = () => {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('active');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('deadline');
-  const [bids, setBids] = useState<Bid[]>([]);
+  const [bids, setBids] = useState<InternalBid[]>([]);
+  const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingBid, setEditingBid] = useState<Bid | null>(null);
+  const [editingBid, setEditingBid] = useState<InternalBid | null>(null);
 
   // Form State
   const [formState, setFormState] = useState({
@@ -60,11 +78,69 @@ const BidManagement = () => {
     gc: '',
     location: '',
     bidAmount: '',
-    status: 'DRAFT' as Bid['status']
+    status: 'DRAFT' as InternalBid['status']
   });
 
+  // Map API bid to internal format
+  const mapApiBidToInternal = (apiBid: scApi.Bid): InternalBid => {
+    // Map API status to internal status
+    const statusMap: Record<string, InternalBid['status']> = {
+      'draft': 'DRAFT',
+      'submitted': 'SUBMITTED',
+      'viewed': 'IN-REVIEW',
+      'accepted': 'WON',
+      'started': 'WON',
+      'rejected': 'LOST',
+      'withdrawn': 'LOST',
+    };
+
+    const internalStatus = statusMap[apiBid.status] || 'DRAFT';
+    const isCompleted = internalStatus === 'WON' || internalStatus === 'LOST';
+
+    // Calculate days since update
+    const updatedAt = new Date(apiBid.updated_at);
+    const now = new Date();
+    const daysDiff = Math.floor((now.getTime() - updatedAt.getTime()) / (1000 * 60 * 60 * 24));
+    const lastModified = daysDiff === 0 ? 'TODAY' : daysDiff === 1 ? 'YESTERDAY' : `${daysDiff} DAYS AGO`;
+
+    return {
+      id: apiBid.id,
+      projectName: apiBid.project_name || 'Untitled Project',
+      gc: apiBid.client_name || 'Unknown Client',
+      location: apiBid.location || 'N/A',
+      bidAmount: `$${(apiBid.amount || 0).toLocaleString()}`,
+      budgetValue: apiBid.amount || 0,
+      deadline: apiBid.estimated_end_date ? new Date(apiBid.estimated_end_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A',
+      deadlineDate: apiBid.estimated_end_date || new Date().toISOString(),
+      status: internalStatus,
+      daysLeft: apiBid.estimated_end_date ? Math.max(0, Math.floor((new Date(apiBid.estimated_end_date).getTime() - now.getTime()) / (1000 * 60 * 60 * 24))) : 0,
+      lastModified,
+      probability: internalStatus === 'WON' ? 100 : internalStatus === 'LOST' ? 0 : 50,
+      type: isCompleted ? 'completed' : 'active',
+    };
+  };
+
+  // Fetch bids from API
+  const fetchBids = async () => {
+    try {
+      setLoading(true);
+      const apiBids = await scApi.getMyBids();
+      const mappedBids = apiBids.map(mapApiBidToInternal);
+      setBids(mappedBids);
+    } catch (error: any) {
+      console.error('Failed to fetch bids:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to load your bids. Please try again.',
+        variant: 'destructive'
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    setBids(scDashboardService.getBids());
+    fetchBids();
   }, []);
 
   const filteredBids = useMemo(() => {
@@ -93,7 +169,7 @@ const BidManagement = () => {
       return;
     }
 
-    const newBid: Bid = {
+    const newBid: InternalBid = {
       id: editingBid?.id || `BID-${Math.floor(Math.random() * 10000)}`,
       projectName: formState.projectName,
       gc: formState.gc,
@@ -109,8 +185,17 @@ const BidManagement = () => {
       type: (formState.status === 'WON' || formState.status === 'LOST') ? 'completed' : 'active'
     };
 
-    const updatedBids = scDashboardService.saveBid(newBid);
-    setBids(updatedBids);
+    // Note: Creating bids from BidManagement is for local tracking only
+    // Real bids should be created from Project Discovery
+    setBids(prev => {
+      const index = prev.findIndex(b => b.id === newBid.id);
+      if (index >= 0) {
+        const updated = [...prev];
+        updated[index] = newBid;
+        return updated;
+      }
+      return [...prev, newBid];
+    });
     setIsModalOpen(false);
     setEditingBid(null);
     setFormState({ projectName: '', gc: '', location: '', bidAmount: '', status: 'DRAFT' });
@@ -121,14 +206,40 @@ const BidManagement = () => {
     });
   };
 
-  const handleDelete = (id: string) => {
-    const updatedBids = scDashboardService.deleteBid(id);
-    setBids(updatedBids);
-    toast({
-      title: "Bid Deleted",
-      description: "Project record has been removed from your list.",
-      variant: "destructive"
-    });
+  const handleDelete = async (id: string) => {
+    try {
+      await scApi.deleteBid(id);
+      setBids(prev => prev.filter(b => b.id !== id));
+      toast({
+        title: "Bid Deleted",
+        description: "Bid has been removed successfully."
+      });
+    } catch (error: any) {
+      console.error('Failed to delete bid:', error);
+      toast({
+        title: "Error",
+        description: error.message || "Failed to delete bid.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleWithdraw = async (id: string) => {
+    try {
+      await scApi.withdrawBid(id);
+      await fetchBids(); // Refresh bids
+      toast({
+        title: "Bid Withdrawn",
+        description: "Your bid has been withdrawn successfully."
+      });
+    } catch (error: any) {
+      console.error('Failed to withdraw bid:', error);
+      toast({
+        title: "Error",
+        description: error.message || "Failed to withdraw bid.",
+        variant: "destructive"
+      });
+    }
   };
 
   const getStatusStyle = (status: string) => {
@@ -234,7 +345,12 @@ const BidManagement = () => {
             </div>
 
             <TabsContent value="active" className="space-y-4 focus-visible:outline-none">
-              {filteredBids.length > 0 ? (
+              {loading ? (
+                <div className="flex flex-col items-center justify-center py-20">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent mb-4"></div>
+                  <p className="text-gray-500 font-medium">Loading your bids...</p>
+                </div>
+              ) : filteredBids.length > 0 ? (
                 filteredBids.map((bid) => (
                   <Card key={bid.id} className="group bg-white dark:bg-[#1c1e24] border-gray-200 dark:border-white/5 transition-all rounded-xl overflow-hidden shadow-sm">
                     <CardContent className="p-6">
@@ -338,43 +454,49 @@ const BidManagement = () => {
             </TabsContent>
 
             <TabsContent value="completed" className="space-y-4 focus-visible:outline-none">
-              {filteredBids.map((bid) => (
-                <Card key={bid.id} className="group bg-white dark:bg-[#1c1e24] border-gray-200 dark:border-white/5 transition-all rounded-xl overflow-hidden shadow-sm hover:shadow-md grayscale hover:grayscale-0">
-                  <CardContent className="p-5">
-                    <div className="flex flex-col lg:flex-row justify-between gap-8 opacity-70 hover:opacity-100 transition-opacity">
-                      <div className="flex-1 space-y-4">
-                        <div className="flex flex-wrap items-center gap-3">
-                          <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{bid.id}</span>
-                          <h3 className="text-lg font-bold text-gray-900 dark:text-white uppercase tracking-tight">{bid.projectName}</h3>
-                          <Badge className={cn("border-none font-bold text-[10px] uppercase tracking-wider px-3 py-1 rounded-md", getStatusStyle(bid.status))}>
-                            {bid.status}
-                          </Badge>
+              {loading ? (
+                <div className="flex flex-col items-center justify-center py-20">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent mb-4"></div>
+                  <p className="text-gray-500 font-medium">Loading your history...</p>
+                </div>
+              ) : filteredBids.length > 0 ? (
+                filteredBids.map((bid) => (
+                  <Card key={bid.id} className="group bg-white dark:bg-[#1c1e24] border-gray-200 dark:border-white/5 transition-all rounded-xl overflow-hidden shadow-sm hover:shadow-md grayscale hover:grayscale-0">
+                    <CardContent className="p-5">
+                      <div className="flex flex-col lg:flex-row justify-between gap-8 opacity-70 hover:opacity-100 transition-opacity">
+                        <div className="flex-1 space-y-4">
+                          <div className="flex flex-wrap items-center gap-3">
+                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{bid.id}</span>
+                            <h3 className="text-lg font-bold text-gray-900 dark:text-white uppercase tracking-tight">{bid.projectName}</h3>
+                            <Badge className={cn("border-none font-bold text-[10px] uppercase tracking-wider px-3 py-1 rounded-md", getStatusStyle(bid.status))}>
+                              {bid.status}
+                            </Badge>
+                          </div>
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+                            <div className="space-y-1.5">
+                              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest block">GC Partner</span>
+                              <span className="text-sm font-semibold text-gray-900 dark:text-white uppercase">{bid.gc}</span>
+                            </div>
+                            <div className="space-y-1.5">
+                              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest block">Final Value</span>
+                              <span className="text-sm font-bold text-gray-900 dark:text-white font-mono">{bid.bidAmount}</span>
+                            </div>
+                            <div className="space-y-1.5">
+                              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest block">Completed On</span>
+                              <span className="text-sm font-semibold text-gray-900 dark:text-white">{bid.lastModified}</span>
+                            </div>
+                          </div>
                         </div>
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-                          <div className="space-y-1.5">
-                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest block">GC Partner</span>
-                            <span className="text-sm font-semibold text-gray-900 dark:text-white uppercase">{bid.gc}</span>
-                          </div>
-                          <div className="space-y-1.5">
-                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest block">Final Value</span>
-                            <span className="text-sm font-bold text-gray-900 dark:text-white font-mono">{bid.bidAmount}</span>
-                          </div>
-                          <div className="space-y-1.5">
-                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest block">Completed On</span>
-                            <span className="text-sm font-semibold text-gray-900 dark:text-white">{bid.lastModified}</span>
-                          </div>
+                        <div className="flex flex-col justify-center min-w-[200px] lg:pl-10 lg:border-l border-gray-100 dark:border-white/5">
+                          <Button variant="outline" className="h-11 w-full border-gray-200 dark:border-white/10 font-bold uppercase text-[10px] tracking-widest rounded-xl hover:bg-accent hover:text-accent-foreground transition-all">
+                            Review Bid
+                          </Button>
                         </div>
                       </div>
-                      <div className="flex flex-col justify-center min-w-[200px] lg:pl-10 lg:border-l border-gray-100 dark:border-white/5">
-                        <Button variant="outline" className="h-11 w-full border-gray-200 dark:border-white/10 font-bold uppercase text-[10px] tracking-widest rounded-xl hover:bg-accent hover:text-accent-foreground transition-all">
-                          Review Bid
-                        </Button>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-              {filteredBids.length === 0 && (
+                    </CardContent>
+                  </Card>
+                ))
+              ) : (
                 <div className="py-24 text-center">
                   <h3 className="text-xl font-bold text-gray-400 uppercase tracking-tight">No historical records found.</h3>
                 </div>

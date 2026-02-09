@@ -173,10 +173,6 @@ const SubcontractorHeader = ({ onMenuClick }: SubcontractorHeaderProps) => {
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator className="bg-gray-100 dark:bg-white/5" />
-                <DropdownMenuItem className="p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg cursor-pointer" onClick={() => navigate('/subcontractor-dashboard/my-profile')}>
-                  <User className="w-4 h-4 mr-3" />
-                  Update Profile
-                </DropdownMenuItem>
                 <DropdownMenuItem className="p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg cursor-pointer" onClick={() => navigate('/subcontractor-dashboard/settings')}>
                   <Settings className="w-4 h-4 mr-3" />
                   Settings

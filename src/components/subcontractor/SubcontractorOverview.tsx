@@ -76,16 +76,6 @@ const SubcontractorOverview = () => {
       borderColor: 'border-gray-200 dark:border-gray-700'
     },
     {
-      title: 'Profile Views',
-      value: '0',
-      subtext: 'New Opportunities',
-      icon: Eye,
-      isActive: false,
-      bgColor: 'bg-gray-100 dark:bg-gray-800/50',
-      iconColor: 'text-gray-400 dark:text-gray-500',
-      borderColor: 'border-gray-200 dark:border-gray-700'
-    },
-    {
       title: 'Contracted Value',
       value: `$0k`,
       subtext: 'Revenue YTD',

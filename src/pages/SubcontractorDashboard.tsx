@@ -131,7 +131,7 @@ const SubcontractorDashboard = () => {
                 <Route path="/overview" element={<SubcontractorOverview />} />
                 <Route path="/my-projects" element={<MyProjects />} />
                 <Route path="/bid-management" element={<BidManagement />} />
-                <Route path="/find-projects" element={<FindProjects />} />
+                <Route path="/find-projects" element={<ProjectDiscovery />} />
                 <Route path="/project-discovery" element={<ProjectDiscovery />} />
                 <Route path="/messages" element={<Communications />} />
                 <Route path="/products" element={<ProductsOverview />} />

@@ -56,15 +56,20 @@ const SubcontractorSidebar = ({ isOpen, onClose }: SubcontractorSidebarProps) =>
       label: 'Main',
       items: [
         { name: 'Overview', href: '/subcontractor-dashboard/overview', icon: LayoutDashboard },
-        { name: 'Find Projects', href: '/subcontractor-dashboard/find-projects', icon: Search, badge: '0' },
-        { name: 'Bid Management', href: '/subcontractor-dashboard/bid-management', icon: Gavel, badge: '0' },
         { name: 'My Projects', href: '/subcontractor-dashboard/my-projects', icon: Briefcase },
+      ]
+    },
+    {
+      label: 'Management',
+      items: [
+        { name: 'Bid Management', href: '/subcontractor-dashboard/bid-management', icon: Gavel, badge: '0' },
+        { name: 'Messages', href: '/subcontractor-dashboard/messages', icon: MessageSquare, badge: '12' },
       ]
     },
     {
       label: 'Platform',
       items: [
-        { name: 'Messages', href: '/subcontractor-dashboard/messages', icon: MessageSquare, badge: '12' },
+        { name: 'Find Projects', href: '/subcontractor-dashboard/find-projects', icon: Search, badge: '0' },
         { name: 'Suppliers', href: '/subcontractor-dashboard/suppliers', icon: Truck },
         { name: 'Products', href: '/subcontractor-dashboard/products', icon: Sparkles },
         { name: 'Services', href: '/subcontractor-dashboard/services', icon: Briefcase },
@@ -74,7 +79,6 @@ const SubcontractorSidebar = ({ isOpen, onClose }: SubcontractorSidebarProps) =>
       label: 'System',
       items: [
         { name: 'Customer Support', href: '/subcontractor-dashboard/customer-support', icon: LifeBuoy },
-        { name: 'Profile', href: '/subcontractor-dashboard/my-profile', icon: User },
         { name: 'Settings', href: '/subcontractor-dashboard/settings', icon: Settings },
       ]
     }
