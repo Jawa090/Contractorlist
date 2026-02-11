@@ -34,6 +34,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import authService from "@/api/authService";
 import { z } from "zod";
+import { supabase } from "@/integrations/supabase/client";
 
 // Helper component for displaying field errors
 const ErrorMessage = ({ touched, error }: { touched?: boolean; error?: string }) => {
@@ -673,6 +674,71 @@ const SignupMultiStep = () => {
       }
 
       await authService.register(payload);
+
+      // Supabase Integration: Create or Reuse Real Account
+      try {
+        console.log("Supabase: Registering/Logging in unique user:", formData.email);
+
+        // 1. Try to Sign Up (This creates the account in Supabase)
+        const { data: sbData, error: sbError } = await supabase.auth.signUp({
+          email: formData.email,
+          password: formData.password,
+          options: {
+            data: {
+              full_name: `${formData.firstName} ${formData.lastName}`,
+              company_name: formData.companyName,
+              role: 'general-contractor'
+            }
+          }
+        });
+
+        let currentUser = sbData.user;
+        let currentSession = sbData.session;
+
+        // 2. If user already exists in Supabase, sign them in with these credentials
+        if (sbError && sbError.message.includes("already registered")) {
+          const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+            email: formData.email,
+            password: formData.password
+          });
+          currentUser = signInData.user;
+          currentSession = signInData.session;
+        }
+
+        if (currentUser) {
+          // 3. UPSERT the profile (Works for both new and existing users)
+          await supabase.from('profiles').upsert({
+            id: currentUser.id,
+            user_id: currentUser.id, // Required field in schema
+            full_name: `${formData.firstName} ${formData.lastName}`,
+            email: formData.email,   // Required field in schema
+            company_name: formData.companyName,
+            phone: formData.phone
+          });
+
+          // 4. Handle Redirection / Verification Message
+          if (currentSession) {
+            toast({
+              title: "Signup Successful! 🎉",
+              description: "Redirecting to your dashboard...",
+            });
+            setTimeout(() => navigate("/gc-dashboard"), 800);
+            return;
+          } else {
+            // Email Verification is likely ENABLED in Supabase
+            toast({
+              title: "Account Created! 📧",
+              description: "Please check your email to verify your account before logging in.",
+              duration: 6000,
+            });
+            // Redirect to login as they can't access dashboard yet
+            setTimeout(() => navigate("/login"), 1500);
+            return;
+          }
+        }
+      } catch (sbErr) {
+        console.error("Supabase integration error:", sbErr);
+      }
 
       toast({
         title: "Account Created Successfully! 🎉",

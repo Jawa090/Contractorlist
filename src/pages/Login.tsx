@@ -3,10 +3,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, LoginFormData } from "@/validation/authSchemas";
-
 import { Eye, EyeOff, Mail, Lock, ArrowLeft } from "lucide-react";
 import { useAppDispatch } from "@/store/hooks";
-import { loginUser } from "@/store/slices/authSlice"; // Added import
+import { loginUser } from "@/store/slices/authSlice";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -19,7 +19,6 @@ import {
   CardFooter
 } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-
 
 
 const Login = () => {
@@ -55,10 +54,44 @@ const Login = () => {
 
     try {
       /* 
-       * REMOVED: Mock account check and bypass logic.
-       * Now exclusively using real API authentication.
+       * Authenticate with Node.js Backend (Main Auth)
        */
       const resultAction = await dispatch(loginUser(data));
+
+      // Attempt Supabase Login with ACTUAL user credentials
+      try {
+        console.log("Supabase: Logging in with user credentials...");
+
+        const { data: sbData, error: sbLoginError } = await supabase.auth.signInWithPassword({
+          email: data.email,
+          password: data.password,
+        });
+
+        if (sbData.session) {
+          // Sync/Update the Supabase profile with data from our main backend
+          const loggedInUser = resultAction.payload.user;
+          if (loggedInUser) {
+            await supabase.from('profiles').upsert({
+              id: sbData.user.id,
+              user_id: sbData.user.id, // Required field in schema
+              full_name: loggedInUser.name,
+              email: data.email, // Required field in schema
+              company_name: loggedInUser.companyName || ""
+            });
+          }
+        } else if (sbLoginError) {
+          console.error("Supabase login failed:", sbLoginError.message);
+          if (sbLoginError.message.toLowerCase().includes("email not confirmed")) {
+            toast({
+              title: "Email Not Verified",
+              description: "Please check your email and click the verification link before logging in.",
+              variant: "destructive",
+            });
+          }
+        }
+      } catch (sbErr) {
+        console.warn("Supabase auth handling error:", sbErr);
+      }
 
       if (loginUser.fulfilled.match(resultAction)) {
         const user = resultAction.payload.user;
@@ -92,8 +125,6 @@ const Login = () => {
             redirectPath = '/subcontractor-dashboard';
         }
 
-
-
         const params = new URLSearchParams(window.location.search);
         const token = params.get('token');
         if (token) {
@@ -115,16 +146,6 @@ const Login = () => {
       setIsLoading(false);
     }
   };
-
-  // Removed copyToClipboard as it was used for the helper buttons which are likely not needed if mock accounts are gone,
-  // but if the UI still has them, I should remove them too. 
-  // Looking at the view_file output, there are no buttons invoking copyToClipboard in the JSX shown (wait, let me check the full file again).
-  // Ah, I don't see the buttons in the JSX I read? 
-  // Let me double check the JSX content. lines 145-306.
-  // I don't see the mock account buttons in the JSX I read previously. 
-  // Wait, local variable `copiedRole` and function `copyToClipboard` were defined (lines 33, 134).
-  // If they are not used in JSX, I should remove them too to clean up.
-
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-orange-50 flex items-center justify-center p-4">

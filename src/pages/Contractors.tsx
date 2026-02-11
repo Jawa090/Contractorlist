@@ -959,7 +959,7 @@ const Contractors = () => {
             {!companiesLoading && !companiesError && companies.length > 0 && (
               <div className="flex flex-col sm:flex-row items-center justify-between mt-8 mb-6 gap-4">
                 {/* Items per page selector */}
-                <div className="flex items-center gap-2 text-sm text-gray-600">
+                <div className="flex items-center gap-2 text-sm text-gray-600 whitespace-nowrap">
                   <span>Show:</span>
                   <select
                     value={itemsPerPage}
@@ -979,92 +979,98 @@ const Contractors = () => {
                   <span>per page</span>
                 </div>
 
-                {totalCompaniesPages > 1 && (
-                  <div className="flex items-center gap-2">
-                    {/* First Page */}
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      className="w-8 h-8"
-                      disabled={companiesCurrentPage <= 1}
-                      onClick={() => goToCompaniesPage(1)}
-                      title="First Page"
-                    >
-                      <span className="sr-only">First Page</span>
-                      &laquo;
-                    </Button>
+                <div className="flex items-center gap-4">
+                  <span className="text-sm text-gray-600 font-medium whitespace-nowrap">
+                    Showing {Math.min((companiesCurrentPage - 1) * itemsPerPage + 1, totalCompanies)} - {Math.min(companiesCurrentPage * itemsPerPage, totalCompanies)} of {totalCompanies} results
+                  </span>
 
-                    {/* Previous Page */}
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      className="w-8 h-8"
-                      disabled={companiesCurrentPage <= 1}
-                      onClick={() => goToCompaniesPage(companiesCurrentPage - 1)}
-                      title="Previous Page"
-                    >
-                      <span className="sr-only">Previous Page</span>
-                      &lsaquo;
-                    </Button>
+                  {totalCompaniesPages > 1 && (
+                    <div className="flex items-center gap-2">
+                      {/* First Page */}
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="w-8 h-8"
+                        disabled={companiesCurrentPage <= 1}
+                        onClick={() => goToCompaniesPage(1)}
+                        title="First Page"
+                      >
+                        <span className="sr-only">First Page</span>
+                        &laquo;
+                      </Button>
 
-                    <div className="flex items-center gap-1">
-                      {(() => {
-                        const windowSize = 10;
-                        let startPage = Math.max(1, companiesCurrentPage - Math.floor(windowSize / 2));
-                        let endPage = Math.min(totalCompaniesPages, startPage + windowSize - 1);
+                      {/* Previous Page */}
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="w-8 h-8"
+                        disabled={companiesCurrentPage <= 1}
+                        onClick={() => goToCompaniesPage(companiesCurrentPage - 1)}
+                        title="Previous Page"
+                      >
+                        <span className="sr-only">Previous Page</span>
+                        &lsaquo;
+                      </Button>
 
-                        if (endPage - startPage + 1 < windowSize) {
-                          startPage = Math.max(1, endPage - windowSize + 1);
-                        }
+                      <div className="flex items-center gap-1">
+                        {(() => {
+                          const windowSize = 10;
+                          let startPage = Math.max(1, companiesCurrentPage - Math.floor(windowSize / 2));
+                          let endPage = Math.min(totalCompaniesPages, startPage + windowSize - 1);
 
-                        // Generate page numbers
-                        const pages = [];
-                        for (let i = startPage; i <= endPage; i++) {
-                          pages.push(i);
-                        }
+                          if (endPage - startPage + 1 < windowSize) {
+                            startPage = Math.max(1, endPage - windowSize + 1);
+                          }
 
-                        return pages.map((page) => (
-                          <button
-                            key={page}
-                            onClick={() => goToCompaniesPage(page)}
-                            className={`w-8 h-8 flex items-center justify-center text-sm font-medium rounded-md transition-colors ${companiesCurrentPage === page
-                              ? "bg-primary text-black hover:bg-primary/90"
-                              : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
-                              }`}
-                          >
-                            {page}
-                          </button>
-                        ));
-                      })()}
+                          // Generate page numbers
+                          const pages = [];
+                          for (let i = startPage; i <= endPage; i++) {
+                            pages.push(i);
+                          }
+
+                          return pages.map((page) => (
+                            <button
+                              key={page}
+                              onClick={() => goToCompaniesPage(page)}
+                              className={`w-8 h-8 flex items-center justify-center text-sm font-medium rounded-md transition-colors ${companiesCurrentPage === page
+                                ? "bg-primary text-black hover:bg-primary/90"
+                                : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
+                                }`}
+                            >
+                              {page}
+                            </button>
+                          ));
+                        })()}
+                      </div>
+
+                      {/* Next Page */}
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="w-8 h-8"
+                        disabled={companiesCurrentPage >= totalCompaniesPages}
+                        onClick={() => goToCompaniesPage(companiesCurrentPage + 1)}
+                        title="Next Page"
+                      >
+                        <span className="sr-only">Next Page</span>
+                        &rsaquo;
+                      </Button>
+
+                      {/* Last Page */}
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="w-8 h-8"
+                        disabled={companiesCurrentPage >= totalCompaniesPages}
+                        onClick={() => goToCompaniesPage(totalCompaniesPages)}
+                        title="Last Page"
+                      >
+                        <span className="sr-only">Last Page</span>
+                        &raquo;
+                      </Button>
                     </div>
-
-                    {/* Next Page */}
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      className="w-8 h-8"
-                      disabled={companiesCurrentPage >= totalCompaniesPages}
-                      onClick={() => goToCompaniesPage(companiesCurrentPage + 1)}
-                      title="Next Page"
-                    >
-                      <span className="sr-only">Next Page</span>
-                      &rsaquo;
-                    </Button>
-
-                    {/* Last Page */}
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      className="w-8 h-8"
-                      disabled={companiesCurrentPage >= totalCompaniesPages}
-                      onClick={() => goToCompaniesPage(totalCompaniesPages)}
-                      title="Last Page"
-                    >
-                      <span className="sr-only">Last Page</span>
-                      &raquo;
-                    </Button>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
             )}
             {/* Contractors List - Legacy Removed, using CompanyCard above */}

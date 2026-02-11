@@ -33,6 +33,7 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import authService from "@/api/authService";
+import { supabase } from "@/integrations/supabase/client";
 
 
 
@@ -98,6 +99,24 @@ const Signup = () => {
         // Add other fields mapping if necessary
         role: data.role // Pass original role just in case
       });
+
+      // Parallel Supabase Signup for Dashboard Access
+      try {
+        const { error: sbError } = await supabase.auth.signUp({
+          email: data.email,
+          password: data.password,
+          options: {
+            data: {
+              full_name: `${firstName} ${lastName}`,
+              company_name: data.company,
+              role: data.role
+            }
+          }
+        });
+        if (sbError) console.warn("Supabase signup warning:", sbError.message);
+      } catch (sbErr) {
+        console.error("Supabase signup exception:", sbErr);
+      }
 
       toast({
         title: "Account Created Successfully!",
