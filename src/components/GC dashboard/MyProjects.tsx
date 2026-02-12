@@ -354,137 +354,10 @@ const MyProjects = () => {
     setNewProjectName(project.name || '');
     setNewProjectLocation(project.location || '');
     setNewProjectClient(project.client || '');
-    setNewProjectBudget(project.budget?.estimated?.toString() || project.budget?.toString() || '');
-    setNewProjectDuration(project.timeline?.total?.toString() || project.duration?.toString() || '');
+    setNewProjectBudget(project.budget?.toString() || '');
     setNewProjectStatus(project.status || 'Planning');
     setNewProjectDescription(project.description || '');
     setShowNewProject(true);
-  };
-
-  const handleDeleteClick = (e: React.MouseEvent, projectId: number) => {
-    e.stopPropagation();
-    setProjectToDelete(projectId);
-    setShowDeleteConfirm(true);
-  };
-
-  const confirmDelete = async () => {
-    if (projectToDelete) {
-      try {
-        await deleteProjectAPI(projectToDelete);
-        setProjects(projects.filter(p => p.id !== projectToDelete));
-        toast({
-          title: "Project Deleted",
-          description: "Project has been successfully deleted.",
-        });
-      } catch (error) {
-        toast({
-          title: "Error",
-          description: "Failed to delete project",
-          variant: "destructive"
-        });
-      }
-      setShowDeleteConfirm(false);
-      setProjectToDelete(null);
-    }
-  };
-
-  // Extract project data from PDF/file
-  const extractProjectDataFromFile = async (file: File): Promise<Partial<{
-    name: string;
-    location: string;
-    client: string;
-    budget: number;
-    duration: number;
-    description: string;
-  }>> => {
-    return new Promise((resolve) => {
-      // For PDF files, we'll try to extract text
-      if (file.type === 'application/pdf') {
-        const reader = new FileReader();
-        reader.onload = async (e) => {
-          try {
-            // Simple extraction - in production, use PDF.js or similar
-            // For now, we'll use filename and let user fill details
-            const fileName = file.name.replace(/\.[^/.]+$/, '');
-            const extractedData = {
-              name: fileName,
-              location: '',
-              client: '',
-              budget: 0,
-              duration: 12,
-              description: `Project created from file: ${file.name}`
-            };
-            resolve(extractedData);
-          } catch (error) {
-            // Fallback to filename-based extraction
-            const fileName = file.name.replace(/\.[^/.]+$/, '');
-            resolve({
-              name: fileName,
-              location: '',
-              client: '',
-              budget: 0,
-              duration: 12,
-              description: `Project created from file: ${file.name}`
-            });
-          }
-        };
-        reader.readAsArrayBuffer(file);
-      } else {
-        // For other files, use filename
-        const fileName = file.name.replace(/\.[^/.]+$/, '');
-        resolve({
-          name: fileName,
-          location: '',
-          client: '',
-          budget: 0,
-          duration: 12,
-          description: `Project created from file: ${file.name}`
-        });
-      }
-    });
-  };
-
-  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    try {
-      setIsUploadingProject(true);
-      
-      // Extract project data from file
-      const extractedData = await extractProjectDataFromFile(file);
-      
-      // Pre-fill form with extracted data
-      setNewProjectName(extractedData.name || '');
-      setNewProjectLocation(extractedData.location || '');
-      setNewProjectClient(extractedData.client || '');
-      setNewProjectBudget(extractedData.budget?.toString() || '');
-      setNewProjectDuration(extractedData.duration?.toString() || '12');
-      setNewProjectDescription(extractedData.description || '');
-      setNewProjectStatus('Planning');
-      
-      // Open the project creation modal
-      setIsEditing(false);
-      setEditingProjectId(null);
-      setShowNewProject(true);
-      
-      toast({
-        title: "File Loaded",
-        description: "Project details extracted from file. Please review and save.",
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to process file",
-        variant: "destructive"
-      });
-    } finally {
-      setIsUploadingProject(false);
-      // Clear the input
-      if (event.target) {
-        event.target.value = '';
-      }
-    }
   };
 
   const toggleInvite = (memberId: string) => {
@@ -557,22 +430,65 @@ const MyProjects = () => {
     setSelectedGlobalFile(file);
   };
 
-  const handleStatusUpdate = async (projectId: number, newStatus: string) => {
-    try {
-      // Optimistic update
-      setProjects(prev => prev.map(p => p.id === projectId ? { ...p, status: newStatus } : p));
+  // Valid project statuses matching database constraint
+  const VALID_STATUSES = ['Planning', 'Bidding', 'Active', 'Completed', 'On Hold'] as const;
+  type ProjectStatus = typeof VALID_STATUSES[number];
 
-      await updateProjectAPI(projectId, { status: newStatus });
+  const handleStatusUpdate = async (projectId: number, newStatus: string) => {
+    // Normalize status: trim whitespace and validate
+    const normalizedStatus = newStatus.trim();
+    
+    // Validate status against allowed values
+    if (!VALID_STATUSES.includes(normalizedStatus as ProjectStatus)) {
       toast({
-        title: "Status Updated",
-        description: `Project marked as ${newStatus}`,
+        title: "Invalid Status",
+        description: `"${newStatus}" is not a valid project status. Valid statuses are: ${VALID_STATUSES.join(', ')}`,
+        variant: "destructive"
       });
-    } catch (error) {
-      console.error("Failed to update status", error);
-      // Revert or fetch again could be done here, but simple error toast for now
+      console.error(`Invalid status attempted: "${newStatus}". Valid statuses:`, VALID_STATUSES);
+      return;
+    }
+
+    // Store original status for potential revert
+    const originalProject = projects.find(p => p.id === projectId);
+    const originalStatus = originalProject?.status;
+
+    if (!originalProject) {
       toast({
         title: "Error",
-        description: "Failed to update status",
+        description: "Project not found",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      // Optimistic update with validated status
+      setProjects(prev => prev.map(p => p.id === projectId ? { ...p, status: normalizedStatus as ProjectStatus } : p));
+
+      // Send normalized status to backend
+      await updateProjectAPI(projectId, { status: normalizedStatus });
+      toast({
+        title: "Status Updated",
+        description: `Project marked as ${normalizedStatus}`,
+      });
+    } catch (error: any) {
+      console.error("Failed to update status", error);
+      
+      // Revert optimistic update on error
+      if (originalStatus) {
+        setProjects(prev => prev.map(p => p.id === projectId ? { ...p, status: originalStatus } : p));
+      }
+
+      // Show detailed error message from backend
+      const errorMessage = error?.response?.data?.error?.message || 
+                          error?.response?.data?.message || 
+                          error?.message || 
+                          "Failed to update status. Please try again.";
+
+      toast({
+        title: "Error",
+        description: errorMessage,
         variant: "destructive"
       });
     }
@@ -669,20 +585,11 @@ const MyProjects = () => {
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8 text-gray-400 hover:text-accent"
-                            onClick={(e) => { e.stopPropagation(); handleEditClick(e, project); }}
-                            title="Edit Project"
+                            className="h-8 w-8 text-black dark:text-white hover:bg-gray-100 dark:hover:bg-white/10 rounded-full"
+                            onClick={(e) => { e.stopPropagation(); navigate('/gc-dashboard/communications'); }}
+                            title="Project Chat"
                           >
-                            <FileText size={16} />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8 text-gray-400 hover:text-red-500"
-                            onClick={(e) => { e.stopPropagation(); handleDeleteClick(e, project.id); }}
-                            title="Delete Project"
-                          >
-                            <Trash2 size={16} />
+                            <Users2 size={16} />
                           </Button>
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
@@ -976,18 +883,6 @@ const MyProjects = () => {
               <div className="space-y-2"><Label className="text-gray-700 dark:text-gray-300">Client / Owner</Label><Input placeholder="Client Name" className="bg-gray-50 dark:bg-black/20 border-gray-200 dark:border-white/10 text-gray-900 dark:text-white" value={newProjectClient} onChange={(e) => setNewProjectClient(e.target.value)} /></div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2"><Label className="text-gray-700 dark:text-gray-300">Estimated Budget</Label><Input placeholder="$0.00" className="bg-gray-50 dark:bg-black/20 border-gray-200 dark:border-white/10 text-gray-900 dark:text-white" value={newProjectBudget} onChange={(e) => setNewProjectBudget(e.target.value)} /></div>
-<<<<<<< HEAD
-                <div className="space-y-2"><Label className="text-gray-700 dark:text-gray-300">Duration (Months)</Label><Input placeholder="12" type="number" className="bg-gray-50 dark:bg-black/20 border-gray-200 dark:border-white/10 text-gray-900 dark:text-white" value={newProjectDuration} onChange={(e) => setNewProjectDuration(e.target.value)} /></div>
-              </div>
-              <div className="space-y-2">
-                <Label className="text-gray-700 dark:text-gray-300">Status</Label>
-                <Select value={newProjectStatus} onValueChange={setNewProjectStatus}>
-                  <SelectTrigger className="bg-gray-50 dark:bg-black/20 border-gray-200 dark:border-white/10 text-gray-900 dark:text-white"><SelectValue placeholder="Select status" /></SelectTrigger>
-                  <SelectContent className="bg-white dark:bg-[#1c1e24] border-gray-200 dark:border-white/10 text-gray-900 dark:text-white">
-                    <SelectItem value="Planning">Planning</SelectItem><SelectItem value="In Progress">In Progress</SelectItem><SelectItem value="Bidding">Bidding</SelectItem><SelectItem value="On Hold">On Hold</SelectItem>
-                  </SelectContent>
-                </Select>
-=======
                 <div className="space-y-2">
                   <Label className="text-gray-700 dark:text-gray-300">Timeline / Status</Label>
                   <Select value={newProjectStatus} onValueChange={setNewProjectStatus}>
@@ -1001,7 +896,6 @@ const MyProjects = () => {
                     </SelectContent>
                   </Select>
                 </div>
->>>>>>> origin/haris-dev
               </div>
               <div className="space-y-2"><Label className="text-gray-700 dark:text-gray-300">Description (Optional)</Label><Textarea placeholder="Brief details..." className="bg-gray-50 dark:bg-black/20 border-gray-200 dark:border-white/10 text-gray-900 dark:text-white min-h-[80px]" value={newProjectDescription} onChange={(e) => setNewProjectDescription(e.target.value)} /></div>
             </div>
