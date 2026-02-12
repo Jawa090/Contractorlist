@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { signupSchema, SignupFormData } from "@/validation/authSchemas";
+
 import {
   Eye,
   EyeOff,
@@ -18,7 +19,7 @@ import {
   Store,
 } from "lucide-react";
 import { useAppDispatch } from "@/store/hooks";
-import { clearError } from "@/store/slices/authSlice";
+import { clearError, loginUser } from "@/store/slices/authSlice";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -32,46 +33,9 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import authService from "@/api/authService";
+import { supabase } from "@/integrations/supabase/client";
 
-const signupSchema = z
-  .object({
-    name: z.string().min(2, "Please Enter your name"),
-    email: z.string().email("Please enter a valid email address"),
-    password: z
-      .string()
-      .min(8, "Password must be at least 8 characters")
-      .regex(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-        "Password must contain at least one uppercase letter, one lowercase letter, and one number"
-      ),
-    confirmPassword: z.string(),
-    phone: z.string().optional(),
-    company: z.string().optional(),
-    // role: z.enum(["contractor", "client"], {
-    //   required_error: "Please select your account type",
-    // }),
 
-    role: z.preprocess(
-      (val) => (val === "" || val === null ? undefined : val),
-      z.enum(["contractor", "client", "vendor"], {
-        required_error: "Please select your account type",
-      })
-    ),
-    // Contractor specific fields
-    licenseNumber: z.string().optional(),
-    businessAddress: z.string().optional(),
-    yearsExperience: z.string().optional(),
-    specialties: z.string().optional(),
-    // Client specific fields
-    projectType: z.string().optional(),
-    budget: z.string().optional(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ["confirmPassword"],
-  });
-
-type SignupFormData = z.infer<typeof signupSchema>;
 
 const Signup = () => {
   const location = useLocation();
@@ -136,13 +100,77 @@ const Signup = () => {
         role: data.role // Pass original role just in case
       });
 
+      // Parallel Supabase Signup for Dashboard Access
+      try {
+        const { error: sbError } = await supabase.auth.signUp({
+          email: data.email,
+          password: data.password,
+          options: {
+            data: {
+              full_name: `${firstName} ${lastName}`,
+              company_name: data.company,
+              role: data.role
+            }
+          }
+        });
+        if (sbError) console.warn("Supabase signup warning:", sbError.message);
+      } catch (sbErr) {
+        console.error("Supabase signup exception:", sbErr);
+      }
+
       toast({
-        title: "Account Created Successfully!",
-        description: "Please check your email to verify your account.",
+        title: "Account Created!",
+        description: "Your account is ready. Logging you in...",
       });
 
-      // Redirect to verification notice page with email
-      navigate("/verify-email-notice", { state: { email: data.email } });
+      // Auto-login after successful registration
+      try {
+        const loginResult = await dispatch(loginUser({ email: data.email, password: data.password }));
+
+        if (loginUser.fulfilled.match(loginResult)) {
+          // Force a Supabase sign-in attempt (optional)
+          try {
+            await supabase.auth.signInWithPassword({
+              email: data.email,
+              password: data.password,
+            });
+          } catch (e) {
+            console.warn("Supabase auto-login failed:", e);
+          }
+
+          const user = loginResult.payload.user;
+          let redirectPath = '/subcontractor-dashboard';
+
+          // Determine redirect path matching Login.tsx logic
+          switch (user.role) {
+            case 'vendor':
+            case 'supplier': // Handle both potential role names
+              redirectPath = '/supplier-dashboard';
+              break;
+            case 'client':
+            case 'homeowner':
+              redirectPath = '/homeowner-dashboard';
+              break;
+            case 'general-contractor':
+              redirectPath = '/gc-dashboard';
+              break;
+            case 'subcontractor':
+              redirectPath = '/subcontractor-dashboard';
+              break;
+            case 'admin':
+              redirectPath = '/admin-dashboard';
+              break;
+            default:
+              redirectPath = '/subcontractor-dashboard';
+          }
+
+          navigate(redirectPath);
+        } else {
+          navigate("/login");
+        }
+      } catch (e) {
+        navigate("/login");
+      }
     } catch (err: any) {
       const errorMessage = err.message || "Registration failed. Please try again.";
       setError(errorMessage);

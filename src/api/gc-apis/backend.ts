@@ -176,6 +176,18 @@ export const createTeamMember = async (memberData: {
 };
 
 /**
+ * Bulk Upload Projects
+ */
+export const bulkUploadProjects = async (file: File): Promise<any> => {
+  const formData = new FormData();
+  formData.append('file', file);
+  const response = await api.post('/gc-dashboard/projects/bulk-upload', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  });
+  return response.data;
+};
+
+/**
  * Get Single Team Member
  */
 export const getTeamMemberById = async (id: number): Promise<any> => {
@@ -429,5 +441,36 @@ export const deleteBid = async (bidId: string): Promise<any> => {
  */
 export const getProjectBids = async (projectId: string | number): Promise<Bid[]> => {
   const response = await api.get(`/gc-dashboard/projects/${projectId}/bids`);
+  return response.data.data;
+};
+/**
+ * Get My Pending Invitations (Invited User View)
+ */
+export const getMyPendingInvitations = async (): Promise<any[]> => {
+  const response = await api.get('/gc-dashboard/invitations/my');
+  return response.data.data;
+};
+
+/**
+ * Verify Invitation Token (Public)
+ */
+export const verifyInvitation = async (token: string): Promise<any> => {
+  const response = await api.get(`/gc-dashboard/invitations/verify/${token}`);
+  return response.data.data;
+};
+
+/**
+ * Accept Invitation
+ */
+export const acceptInvitationAction = async (token: string): Promise<any> => {
+  const response = await api.post('/gc-dashboard/invitations/accept', { token });
+  return response.data.data;
+};
+
+/**
+ * Decline Invitation
+ */
+export const declineInvitationAction = async (token: string): Promise<any> => {
+  const response = await api.post('/gc-dashboard/invitations/decline', { token });
   return response.data.data;
 };

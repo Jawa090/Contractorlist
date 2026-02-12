@@ -4,16 +4,19 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Provider, useDispatch } from "react-redux";
+import { Provider } from "react-redux";
+
 import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from "@/store";
 import { useAppDispatch } from "@/store/hooks";
-import { fetchUserProfile, setUser } from "@/store/slices/authSlice";
+import { fetchUserProfile } from "@/store/slices/authSlice";
+
 import authService from "@/api/authService";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import RouteThemeManager from "@/components/RouteThemeManager";
 import AIChatbot from "@/components/AIChatbot";
 import NotificationSystem from "@/components/NotificationSystem";
+import InvitationHandler from "@/components/common/InvitationHandler";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -140,11 +143,6 @@ const AppRoutes = () => {
         <Route path="/locations/:state" element={<StateDetail />} />
         <Route path="/locations/:state/:city" element={<CityDetail />} />
 
-        <Route path="/projects/:id" element={<ProjectDetail />} />
-        <Route path="/contact-us" element={<ContactUs />} />
-        <Route path="/locations" element={<Locations />} />
-        <Route path="/locations/:state" element={<StateDetail />} />
-        <Route path="/locations/:state/:city" element={<CityDetail />} />
 
         {/* Protected Dashboard Routes */}
         <Route
@@ -196,6 +194,9 @@ const AppRoutes = () => {
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>
+
+      {/* Project Invitation Handler */}
+      <InvitationHandler />
 
       {/* AI Chatbot - Available on all pages */}
       <AIChatbot />

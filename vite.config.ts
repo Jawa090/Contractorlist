@@ -7,6 +7,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   return {
     server: {
+      allowedHosts:true,
       host: "::",
       port: parseInt(env.PORT || "3000"),
       proxy: {
@@ -20,6 +21,11 @@ export default defineConfig(({ mode }) => {
           target: env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000',
           changeOrigin: true,
           secure: false
+        },
+        '/socket.io': {
+          target: env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000',
+          ws: true,
+          changeOrigin: true
         }
       }
     },

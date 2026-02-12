@@ -2,10 +2,11 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { loginSchema, LoginFormData } from "@/validation/authSchemas";
 import { Eye, EyeOff, Mail, Lock, ArrowLeft } from "lucide-react";
 import { useAppDispatch } from "@/store/hooks";
-import { loginUser } from "@/store/slices/authSlice"; // Added import
+import { loginUser } from "@/store/slices/authSlice";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -19,12 +20,6 @@ import {
 } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 
-const loginSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
-});
-
-type LoginFormData = z.infer<typeof loginSchema>;
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -43,19 +38,88 @@ const Login = () => {
     resolver: zodResolver(loginSchema),
   });
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('token');
+    const email = params.get('email');
+
+    if (email) {
+      setValue("email", email);
+    }
+  }, [setValue]);
+
   const onSubmit = async (data: LoginFormData) => {
     setError("");
     setIsLoading(true);
 
     try {
       /* 
-       * REMOVED: Mock account check and bypass logic.
-       * Now exclusively using real API authentication.
+       * Authenticate with Node.js Backend (Main Auth)
        */
       const resultAction = await dispatch(loginUser(data));
 
+      // Check if backend login was successful
       if (loginUser.fulfilled.match(resultAction)) {
-        const user = resultAction.payload.user;
+        const user = (resultAction.payload as any).user;
+
+        // Attempt Supabase Login with ACTUAL user credentials
+        try {
+          console.log("Supabase: Logging in with user credentials...");
+
+          const { data: sbData, error: sbLoginError } = await supabase.auth.signInWithPassword({
+            email: data.email,
+            password: data.password,
+          });
+
+          if (sbData.session) {
+            // Sync/Update the Supabase profile with data from our main backend
+            if (user) {
+              await supabase.from('profiles').upsert({
+                user_id: sbData.user.id, // Required field in schema
+                full_name: user.name,
+                email: data.email, // Required field in schema
+                company_name: user.companyName || ""
+              });
+            }
+          } else if (sbLoginError) {
+            console.warn("Supabase login failed, attempting fallback to signup:", sbLoginError.message);
+
+            // If login fails (likely user doesn't exist in Supabase yet), try to register them in Supabase
+            // using the same credentials from the successful backend login
+            if (user) {
+              const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+                email: data.email,
+                password: data.password,
+                options: {
+                  data: {
+                    full_name: user.name,
+                    company_name: user.companyName,
+                    role: user.role
+                  }
+                }
+              });
+
+              if (signUpError) {
+                console.error("Supabase fallback signup failed:", signUpError);
+              } else if (signUpData.session) {
+                console.log("Supabase fallback signup successful, session created.");
+                // Sync profile immediately after signup
+                if (signUpData.user) {
+                  await supabase.from('profiles').upsert({
+                    user_id: signUpData.user.id,
+                    full_name: user.name,
+                    email: data.email,
+                    company_name: user.companyName || ""
+                  });
+                }
+              } else {
+                console.log("Supabase user created but waiting for verification (or auto-confirm is off).");
+              }
+            }
+          }
+        } catch (sbErr) {
+          console.warn("Supabase auth handling error:", sbErr);
+        }
 
         toast({
           title: "Login Successful!",
@@ -86,7 +150,11 @@ const Login = () => {
             redirectPath = '/subcontractor-dashboard';
         }
 
-
+        const params = new URLSearchParams(window.location.search);
+        const token = params.get('token');
+        if (token) {
+          redirectPath += (redirectPath.includes('?') ? '&' : '?') + `token=${token}`;
+        }
 
         navigate(redirectPath);
       } else {
@@ -103,16 +171,6 @@ const Login = () => {
       setIsLoading(false);
     }
   };
-
-  // Removed copyToClipboard as it was used for the helper buttons which are likely not needed if mock accounts are gone,
-  // but if the UI still has them, I should remove them too. 
-  // Looking at the view_file output, there are no buttons invoking copyToClipboard in the JSX shown (wait, let me check the full file again).
-  // Ah, I don't see the buttons in the JSX I read? 
-  // Let me double check the JSX content. lines 145-306.
-  // I don't see the mock account buttons in the JSX I read previously. 
-  // Wait, local variable `copiedRole` and function `copyToClipboard` were defined (lines 33, 134).
-  // If they are not used in JSX, I should remove them too to clean up.
-
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-orange-50 flex items-center justify-center p-4">

@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Zap, MessageSquare, ArrowRight, CheckCircle2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/gc/button';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/gc/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/gc/tabs';
 
 const ProductsOverview = () => {
     const [activeTab, setActiveTab] = useState("overview");
@@ -74,7 +74,7 @@ const ProductsOverview = () => {
                                             <product.icon className={`w-6 h-6 ${product.color}`} />
                                         </div>
                                         {product.status && (
-                                            <span className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-lg">
+                                            <span className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-lg">
                                                 {product.status}
                                             </span>
                                         )}

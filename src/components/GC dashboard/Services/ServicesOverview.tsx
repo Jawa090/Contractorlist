@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { LayoutDashboard, TrendingUp, Users, FileText, ArrowRight, CheckCircle2, Star } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/gc/button';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/gc/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/gc/tabs';
 
 const ServicesOverview = () => {
     const [activeTab, setActiveTab] = useState("overview");
@@ -83,7 +83,7 @@ const ServicesOverview = () => {
                                             <service.icon className={`w-6 h-6 ${service.color}`} />
                                         </div>
                                         {service.status && (
-                                            <span className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-lg">
+                                            <span className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-lg">
                                                 {service.status}
                                             </span>
                                         )}
