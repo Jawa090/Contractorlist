@@ -1,8 +1,8 @@
-import { Middleware, AnyAction } from '@reduxjs/toolkit';
+import { Middleware, UnknownAction } from '@reduxjs/toolkit';
 import { addNotification } from '../slices/uiSlice';
 
 // Error handling middleware
-export const errorMiddleware: Middleware = (store) => (next) => (action: AnyAction) => {
+export const errorMiddleware: Middleware = (store) => (next) => (action) => {
   // Handle rejected async thunks - DISABLED to prevent duplicate notifications
   // Components handle their own error display
   // if (action.type && action.type.endsWith('/rejected')) {

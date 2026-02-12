@@ -1,6 +1,6 @@
 import jsPDF from "jspdf";
 import { format } from "date-fns";
-import type { PayApplication, BudgetItem } from "@/apps/gc/hooks/useBudget";
+import type { PayApplication, BudgetItem } from "@/hooks/GC dashboard/useBudget";
 
 interface ProjectInfo {
     name: string;

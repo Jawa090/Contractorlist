@@ -19,7 +19,7 @@ import {
   Store,
 } from "lucide-react";
 import { useAppDispatch } from "@/store/hooks";
-import { clearError } from "@/store/slices/authSlice";
+import { clearError, loginUser } from "@/store/slices/authSlice";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -119,12 +119,58 @@ const Signup = () => {
       }
 
       toast({
-        title: "Account Created Successfully!",
-        description: "Please check your email to verify your account.",
+        title: "Account Created!",
+        description: "Your account is ready. Logging you in...",
       });
 
-      // Redirect to verification notice page with email
-      navigate("/verify-email-notice", { state: { email: data.email } });
+      // Auto-login after successful registration
+      try {
+        const loginResult = await dispatch(loginUser({ email: data.email, password: data.password }));
+
+        if (loginUser.fulfilled.match(loginResult)) {
+          // Force a Supabase sign-in attempt (optional)
+          try {
+            await supabase.auth.signInWithPassword({
+              email: data.email,
+              password: data.password,
+            });
+          } catch (e) {
+            console.warn("Supabase auto-login failed:", e);
+          }
+
+          const user = loginResult.payload.user;
+          let redirectPath = '/subcontractor-dashboard';
+
+          // Determine redirect path matching Login.tsx logic
+          switch (user.role) {
+            case 'vendor':
+            case 'supplier': // Handle both potential role names
+              redirectPath = '/supplier-dashboard';
+              break;
+            case 'client':
+            case 'homeowner':
+              redirectPath = '/homeowner-dashboard';
+              break;
+            case 'general-contractor':
+              redirectPath = '/gc-dashboard';
+              break;
+            case 'subcontractor':
+              redirectPath = '/subcontractor-dashboard';
+              break;
+            case 'admin':
+              redirectPath = '/admin-dashboard';
+              break;
+            default:
+              redirectPath = '/subcontractor-dashboard';
+          }
+
+          navigate(redirectPath);
+        } else {
+          navigate("/login");
+        }
+      } catch (e) {
+        navigate("/login");
+      }
     } catch (err: any) {
       const errorMessage = err.message || "Registration failed. Please try again.";
       setError(errorMessage);

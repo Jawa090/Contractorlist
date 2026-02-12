@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { LayoutDashboard, TrendingUp, Users, FileText, ArrowRight, CheckCircle2, Star } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/gc/button';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/gc/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/gc/tabs';
 
 const ServicesOverview = () => {
     const [activeTab, setActiveTab] = useState("overview");

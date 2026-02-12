@@ -247,11 +247,15 @@ const Communications = () => {
     if (!socket) return;
 
     socket.on('message:new', (msg: any) => {
-      if (String(activeChat) === String(msg.conversation_id)) {
+      console.log('📨 Real-time message received:', msg);
+
+      const isCurrentChat = String(activeChat).toLowerCase() === String(msg.conversation_id || msg.conversationId).toLowerCase();
+
+      if (isCurrentChat) {
         const newMsg: Message = {
           id: msg.id,
-          sender: msg.sender_id === currentUser?.id ? 'me' : 'them',
-          senderName: `${msg.sender?.first_name ?? ''} ${msg.sender?.last_name ?? ''}`.trim(),
+          sender: Number(msg.sender_id) === Number(currentUser?.id) ? 'me' : 'them',
+          senderName: msg.sender ? `${msg.sender.first_name ?? ''} ${msg.sender.last_name ?? ''}`.trim() : 'System',
           companyName: 'Company',
           content: msg.content,
           time: formatTime(msg.created_at),
@@ -261,28 +265,31 @@ const Communications = () => {
           isDeleted: msg.is_deleted,
           rawCreatedAt: msg.created_at
         };
+        console.log('✅ Appending to current chat messages');
         setMessagesList((prev) => {
           if (prev.some(m => m.id === newMsg.id)) return prev;
           return [...prev, newMsg];
         });
         scrollToBottom();
+      } else {
+        console.log('ℹ️ Message is for hidden chat:', msg.conversation_id);
       }
 
       setChats((prev) => {
         const updated = prev.map(c => {
-          if (String(c.id) === String(msg.conversation_id)) {
+          if (String(c.id).toLowerCase() === String(msg.conversation_id || msg.conversationId).toLowerCase()) {
             return {
               ...c,
               lastMessage: msg.content,
               time: formatTime(msg.created_at),
               timestamp: msg.created_at,
-              unread: String(activeChat) === String(c.id) ? 0 : (c.unread + 1)
+              unread: (String(activeChat).toLowerCase() === String(c.id).toLowerCase()) ? 0 : (c.unread + 1)
             };
           }
           return c;
         });
 
-        if (!updated.some(c => c.id === msg.conversation_id)) {
+        if (!updated.some(c => String(c.id).toLowerCase() === String(msg.conversation_id || msg.conversationId).toLowerCase())) {
           fetchConversations();
           return prev;
         }
@@ -318,6 +325,9 @@ const Communications = () => {
 
   useEffect(() => {
     if (!activeChat || !currentUser) return;
+
+    // Clear current list when switching chats to avoid flickers/old data
+    setMessagesList([]);
 
     const loadMessages = async () => {
       try {

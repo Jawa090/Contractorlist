@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Badge } from '@/components/ui/badge';
-import { Switch } from '@/components/ui/switch';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/gc/card';
+import { Button } from '@/components/ui/gc/button';
+import { Input } from '@/components/ui/gc/input';
+import { Label } from '@/components/ui/gc/label';
+import { Textarea } from '@/components/ui/gc/textarea';
+import { Badge } from '@/components/ui/gc/badge';
+import { Switch } from '@/components/ui/gc/switch';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/gc/avatar';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/gc/tabs';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/gc/dialog';
 import {
   Building,
   Shield,
@@ -72,7 +72,7 @@ const AccountSettings = () => {
 
     setUploading(fieldName);
     try {
-      const response = await uploadService.uploadImage(file);
+      const response = await uploadService.uploadFile(file);
       if (response.success) {
         setCompanyData((prev: any) => ({
           ...prev,

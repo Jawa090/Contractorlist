@@ -58,43 +58,68 @@ const Login = () => {
        */
       const resultAction = await dispatch(loginUser(data));
 
-      // Attempt Supabase Login with ACTUAL user credentials
-      try {
-        console.log("Supabase: Logging in with user credentials...");
-
-        const { data: sbData, error: sbLoginError } = await supabase.auth.signInWithPassword({
-          email: data.email,
-          password: data.password,
-        });
-
-        if (sbData.session) {
-          // Sync/Update the Supabase profile with data from our main backend
-          const loggedInUser = resultAction.payload.user;
-          if (loggedInUser) {
-            await supabase.from('profiles').upsert({
-              id: sbData.user.id,
-              user_id: sbData.user.id, // Required field in schema
-              full_name: loggedInUser.name,
-              email: data.email, // Required field in schema
-              company_name: loggedInUser.companyName || ""
-            });
-          }
-        } else if (sbLoginError) {
-          console.error("Supabase login failed:", sbLoginError.message);
-          if (sbLoginError.message.toLowerCase().includes("email not confirmed")) {
-            toast({
-              title: "Email Not Verified",
-              description: "Please check your email and click the verification link before logging in.",
-              variant: "destructive",
-            });
-          }
-        }
-      } catch (sbErr) {
-        console.warn("Supabase auth handling error:", sbErr);
-      }
-
+      // Check if backend login was successful
       if (loginUser.fulfilled.match(resultAction)) {
-        const user = resultAction.payload.user;
+        const user = (resultAction.payload as any).user;
+
+        // Attempt Supabase Login with ACTUAL user credentials
+        try {
+          console.log("Supabase: Logging in with user credentials...");
+
+          const { data: sbData, error: sbLoginError } = await supabase.auth.signInWithPassword({
+            email: data.email,
+            password: data.password,
+          });
+
+          if (sbData.session) {
+            // Sync/Update the Supabase profile with data from our main backend
+            if (user) {
+              await supabase.from('profiles').upsert({
+                user_id: sbData.user.id, // Required field in schema
+                full_name: user.name,
+                email: data.email, // Required field in schema
+                company_name: user.companyName || ""
+              });
+            }
+          } else if (sbLoginError) {
+            console.warn("Supabase login failed, attempting fallback to signup:", sbLoginError.message);
+
+            // If login fails (likely user doesn't exist in Supabase yet), try to register them in Supabase
+            // using the same credentials from the successful backend login
+            if (user) {
+              const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+                email: data.email,
+                password: data.password,
+                options: {
+                  data: {
+                    full_name: user.name,
+                    company_name: user.companyName,
+                    role: user.role
+                  }
+                }
+              });
+
+              if (signUpError) {
+                console.error("Supabase fallback signup failed:", signUpError);
+              } else if (signUpData.session) {
+                console.log("Supabase fallback signup successful, session created.");
+                // Sync profile immediately after signup
+                if (signUpData.user) {
+                  await supabase.from('profiles').upsert({
+                    user_id: signUpData.user.id,
+                    full_name: user.name,
+                    email: data.email,
+                    company_name: user.companyName || ""
+                  });
+                }
+              } else {
+                console.log("Supabase user created but waiting for verification (or auto-confirm is off).");
+              }
+            }
+          }
+        } catch (sbErr) {
+          console.warn("Supabase auth handling error:", sbErr);
+        }
 
         toast({
           title: "Login Successful!",

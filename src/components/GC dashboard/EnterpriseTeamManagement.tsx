@@ -3,16 +3,16 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { cn } from '@/lib/utils';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { Textarea } from '@/components/ui/textarea';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/gc/card';
+import { Button } from '@/components/ui/gc/button';
+import { Badge } from '@/components/ui/gc/badge';
+import { Progress } from '@/components/ui/gc/progress';
+import { Textarea } from '@/components/ui/gc/textarea';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/gc/avatar';
+import { Input } from '@/components/ui/gc/input';
+import { Label } from '@/components/ui/gc/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/gc/select';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/gc/dialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,7 +22,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+} from "@/components/ui/gc/alert-dialog";
 import { getTeamMembers, inviteTeamMember, createTeamMember, deleteTeamMember, updateTeamMember, sendTeamMemberReminder, getProjects } from '@/api/gc-apis';
 import { teamMemberFormSchema } from '@/validation/teamSchemas';
 
@@ -34,7 +34,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/ui/gc/dropdown-menu";
 
 import { useToast } from "@/hooks/use-toast";
 import {

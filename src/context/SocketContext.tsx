@@ -35,7 +35,7 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
             });
 
             socketInstance.on('connect_error', (error) => {
-                console.error('⚠️ Socket connection error:', error);
+                console.error('⚠️ Socket connection error:', error.message, error);
                 setIsConnected(false);
             });
 

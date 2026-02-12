@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { getProjectDiscovery } from '@/api/gc-apis';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
+import { Card } from '@/components/ui/gc/card';
+import { Button } from '@/components/ui/gc/button';
+import { Badge } from '@/components/ui/gc/badge';
+import { Input } from '@/components/ui/gc/input';
 import {
     Search,
     MapPin,
@@ -20,8 +20,8 @@ import {
     DollarSign
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Label } from '@/components/ui/gc/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/gc/select';
 import FilterAccordion from './FilterAccordion';
 
 const Suppliers = () => {

@@ -28,6 +28,8 @@ import {
   Eye,
   EyeOff,
 } from "lucide-react";
+import { useAppDispatch } from "@/store/hooks";
+import { registerUser } from "@/store/slices/authSlice";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -44,6 +46,7 @@ const ErrorMessage = ({ touched, error }: { touched?: boolean; error?: string })
 
 const SignupMultiStep = () => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const { toast } = useToast();
   const [currentStep, setCurrentStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
@@ -673,11 +676,12 @@ const SignupMultiStep = () => {
         };
       }
 
+      // Use authService directly to avoid auto-login in Redux
       await authService.register(payload);
 
-      // Supabase Integration: Create or Reuse Real Account
+      // Supabase Integration: Best-effort synchronization
       try {
-        console.log("Supabase: Registering/Logging in unique user:", formData.email);
+        console.log("Supabase: Attempting to register/login user:", formData.email);
 
         // 1. Try to Sign Up (This creates the account in Supabase)
         const { data: sbData, error: sbError } = await supabase.auth.signUp({
@@ -692,66 +696,43 @@ const SignupMultiStep = () => {
           }
         });
 
-        let currentUser = sbData.user;
-        let currentSession = sbData.session;
+        if (sbError) {
+          console.warn("Supabase signup failed (expected if email provider disabled or user exists):", sbError.message);
 
-        // 2. If user already exists in Supabase, sign them in with these credentials
-        if (sbError && sbError.message.includes("already registered")) {
-          const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
-            email: formData.email,
-            password: formData.password
-          });
-          currentUser = signInData.user;
-          currentSession = signInData.session;
-        }
-
-        if (currentUser) {
-          // 3. UPSERT the profile (Works for both new and existing users)
+          // Fallback: Try to sign in if signup failed (e.g. user exists)
+          if (sbError.message.includes("already registered") || sbError.message.includes("disabled")) {
+            try {
+              await supabase.auth.signInWithPassword({
+                email: formData.email,
+                password: formData.password
+              });
+              // Note: We don't block if this fails either
+            } catch (signInErr) {
+              console.warn("Supabase fallback login failed:", signInErr);
+            }
+          }
+        } else if (sbData.user) {
+          // 3. UPSERT the profile if signup succeeded
           await supabase.from('profiles').upsert({
-            id: currentUser.id,
-            user_id: currentUser.id, // Required field in schema
+            user_id: sbData.user.id, // Required field in schema
             full_name: `${formData.firstName} ${formData.lastName}`,
             email: formData.email,   // Required field in schema
             company_name: formData.companyName,
             phone: formData.phone
           });
-
-          // 4. Handle Redirection / Verification Message
-          if (currentSession) {
-            toast({
-              title: "Signup Successful! 🎉",
-              description: "Redirecting to your dashboard...",
-            });
-            setTimeout(() => navigate("/gc-dashboard"), 800);
-            return;
-          } else {
-            // Email Verification is likely ENABLED in Supabase
-            toast({
-              title: "Account Created! 📧",
-              description: "Please check your email to verify your account before logging in.",
-              duration: 6000,
-            });
-            // Redirect to login as they can't access dashboard yet
-            setTimeout(() => navigate("/login"), 1500);
-            return;
-          }
         }
       } catch (sbErr) {
-        console.error("Supabase integration error:", sbErr);
+        console.error("Supabase integration error (non-blocking):", sbErr);
       }
 
       toast({
         title: "Account Created Successfully! 🎉",
-        description: "Your account has been successfully created. Please login to continue.",
+        description: "Please login to continue.",
       });
 
-      const params = new URLSearchParams(window.location.search);
-      const token = params.get('token');
-      if (token) {
-        navigate(`/login?token=${token}`);
-      } else {
-        navigate("/login");
-      }
+      // Redirect to Login Page
+      setTimeout(() => navigate("/login"), 800);
+
     } catch (error: any) {
       console.error('Registration Error:', error);
 

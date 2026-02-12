@@ -1,34 +1,35 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import AppLayout from "@/apps/gc/AppLayout";
-import { AuthProvider } from "@/apps/gc/contexts/AuthContext";
+import AppLayout from "@/components/GC dashboard/AppLayout";
+import { AuthProvider } from "@/context/GC dashboard/contexts/AuthContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
-import ProtectedRoute from "@/apps/gc/ProtectedRoute";
+import ProtectedRoute from "@/components/GC dashboard/ProtectedRoute";
 
 // New Pages
-import DashboardPage from "@/apps/gc/pages/DashboardPage";
-import ProjectsPage from "@/apps/gc/pages/ProjectsPage";
-import ProjectDetailPage from "@/apps/gc/pages/ProjectDetailPage";
-import SchedulePage from "@/apps/gc/pages/SchedulePage";
-import DailyLogsPage from "@/apps/gc/pages/DailyLogsPage";
-import RFIManagementPage from "@/apps/gc/pages/RFIManagementPage";
-import PhotosPage from "@/apps/gc/pages/PhotosPage";
-import AnalyticsPage from "@/apps/gc/pages/AnalyticsPage";
-import FinancialsPage from "@/apps/gc/pages/FinancialsPage";
-import BillingPage from "@/apps/gc/pages/BillingPage";
-import ChangeOrdersPage from "@/apps/gc/pages/ChangeOrdersPage";
-import SignatureHistoryPage from "@/apps/gc/pages/SignatureHistoryPage";
-import LienWaiverManagementPage from "@/apps/gc/pages/LienWaiverManagementPage";
-import SafetyTrackingPage from "@/apps/gc/pages/SafetyTrackingPage";
-import InsuranceTrackingPage from "@/apps/gc/pages/InsuranceTrackingPage";
-import CertifiedPayrollPage from "@/apps/gc/pages/CertifiedPayrollPage";
-import ResourceManagementPage from "@/apps/gc/pages/ResourceManagementPage";
-import SettingsPage from "@/apps/gc/pages/SettingsPage";
-import ExternalSigningPage from "@/apps/gc/pages/ExternalSigningPage";
-import FindProjectsPage from "@/apps/gc/pages/FindProjectsPage";
-import DirectoryPage from "@/apps/gc/pages/DirectoryPage";
-import BidsPage from "@/apps/gc/pages/BidsPage";
-import CompleteProfilePage from "@/apps/gc/pages/CompleteProfilePage";
+import DashboardPage from "@/pages/GC dashboard/DashboardPage";
+import ProjectsPage from "@/pages/GC dashboard/ProjectsPage";
+import ProjectDetailPage from "@/pages/GC dashboard/ProjectDetailPage";
+import SchedulePage from "@/pages/GC dashboard/SchedulePage";
+import DailyLogsPage from "@/pages/GC dashboard/DailyLogsPage";
+import RFIManagementPage from "@/pages/GC dashboard/RFIManagementPage";
+import PhotosPage from "@/pages/GC dashboard/PhotosPage";
+import AnalyticsPage from "@/pages/GC dashboard/AnalyticsPage";
+import FinancialsPage from "@/pages/GC dashboard/FinancialsPage";
+import BillingPage from "@/pages/GC dashboard/BillingPage";
+import ChangeOrdersPage from "@/pages/GC dashboard/ChangeOrdersPage";
+import SignatureHistoryPage from "@/pages/GC dashboard/SignatureHistoryPage";
+import LienWaiverManagementPage from "@/pages/GC dashboard/LienWaiverManagementPage";
+import SafetyTrackingPage from "@/pages/GC dashboard/SafetyTrackingPage";
+import InsuranceTrackingPage from "@/pages/GC dashboard/InsuranceTrackingPage";
+import CertifiedPayrollPage from "@/pages/GC dashboard/CertifiedPayrollPage";
+import ResourceManagementPage from "@/pages/GC dashboard/ResourceManagementPage";
+import SettingsPage from "@/pages/GC dashboard/SettingsPage";
+import ExternalSigningPage from "@/pages/GC dashboard/ExternalSigningPage";
+import FindProjectsPage from "@/pages/GC dashboard/FindProjectsPage";
+import DirectoryPage from "@/pages/GC dashboard/DirectoryPage";
+import BidsPage from "@/pages/GC dashboard/BidsPage";
+import CompleteProfilePage from "@/pages/GC dashboard/CompleteProfilePage";
+
 
 
 // Old Preserved Pages
@@ -47,14 +48,6 @@ export default function GCDashboard() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <Routes>
-          <Route
-            path="complete-profile"
-            element={
-              <ProtectedRoute requireProfile={false}>
-                <CompleteProfilePage />
-              </ProtectedRoute>
-            }
-          />
           <Route
             path="*"
             element={

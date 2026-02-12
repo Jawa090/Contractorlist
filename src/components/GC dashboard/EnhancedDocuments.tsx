@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/gc/card';
+import { Button } from '@/components/ui/gc/button';
+import { Input } from '@/components/ui/gc/input';
+import { Badge } from '@/components/ui/gc/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/gc/tabs';
 import {
   FileText,
   Upload,
