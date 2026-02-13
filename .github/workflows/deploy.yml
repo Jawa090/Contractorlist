@@ -36,6 +36,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.VPS_PORT }}
           script: |
+            export TERM=xterm
             # Project directory path (CyberPanel ke andar)
             PROJECT_DIR="/home/${{ secrets.CYBERPANEL_USER }}/public_html"
             
@@ -61,7 +62,8 @@ jobs:
           port: ${{ secrets.VPS_PORT }}
           source: "dist/*"
           target: "/home/${{ secrets.CYBERPANEL_USER }}/public_html/"
-          strip_components: 0
+          strip_components: 1
+          overwrite: true
 
       - name: Set correct permissions
         uses: appleboy/ssh-action@v1.0.3
@@ -71,14 +73,15 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.VPS_PORT }}
           script: |
+            export TERM=xterm
             PROJECT_DIR="/home/${{ secrets.CYBERPANEL_USER }}/public_html"
             
             # Set ownership (CyberPanel user)
-            chown -R ${{ secrets.CYBERPANEL_USER }}:${{ secrets.CYBERPANEL_USER }} "$PROJECT_DIR/dist"
+            chown -R ${{ secrets.CYBERPANEL_USER }}:${{ secrets.CYBERPANEL_USER }} "$PROJECT_DIR"
             
             # Set permissions
-            find "$PROJECT_DIR/dist" -type d -exec chmod 755 {} \;
-            find "$PROJECT_DIR/dist" -type f -exec chmod 644 {} \;
+            find "$PROJECT_DIR" -type d -exec chmod 755 {} \;
+            find "$PROJECT_DIR" -type f -exec chmod 644 {} \;
             
             echo "Deployment completed successfully!"
             echo "Deployed at: $(date)"
