@@ -601,22 +601,65 @@ const MyProjects = () => {
     window.URL.revokeObjectURL(url);
   };
 
-  const handleStatusUpdate = async (projectId: number, newStatus: string) => {
-    try {
-      // Optimistic update
-      setProjects(prev => prev.map(p => p.id === projectId ? { ...p, status: newStatus } : p));
+  // Valid project statuses matching database constraint
+  const VALID_STATUSES = ['Planning', 'Bidding', 'Active', 'Completed', 'On Hold'] as const;
+  type ProjectStatus = typeof VALID_STATUSES[number];
 
-      await updateProjectAPI(projectId, { status: newStatus });
+  const handleStatusUpdate = async (projectId: number, newStatus: string) => {
+    // Normalize status: trim whitespace and validate
+    const normalizedStatus = newStatus.trim();
+    
+    // Validate status against allowed values
+    if (!VALID_STATUSES.includes(normalizedStatus as ProjectStatus)) {
       toast({
-        title: "Status Updated",
-        description: `Project marked as ${newStatus}`,
+        title: "Invalid Status",
+        description: `"${newStatus}" is not a valid project status. Valid statuses are: ${VALID_STATUSES.join(', ')}`,
+        variant: "destructive"
       });
-    } catch (error) {
-      console.error("Failed to update status", error);
-      // Revert or fetch again could be done here, but simple error toast for now
+      console.error(`Invalid status attempted: "${newStatus}". Valid statuses:`, VALID_STATUSES);
+      return;
+    }
+
+    // Store original status for potential revert
+    const originalProject = projects.find(p => p.id === projectId);
+    const originalStatus = originalProject?.status;
+
+    if (!originalProject) {
       toast({
         title: "Error",
-        description: "Failed to update status",
+        description: "Project not found",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      // Optimistic update with validated status
+      setProjects(prev => prev.map(p => p.id === projectId ? { ...p, status: normalizedStatus as ProjectStatus } : p));
+
+      // Send normalized status to backend
+      await updateProjectAPI(projectId, { status: normalizedStatus });
+      toast({
+        title: "Status Updated",
+        description: `Project marked as ${normalizedStatus}`,
+      });
+    } catch (error: any) {
+      console.error("Failed to update status", error);
+      
+      // Revert optimistic update on error
+      if (originalStatus) {
+        setProjects(prev => prev.map(p => p.id === projectId ? { ...p, status: originalStatus } : p));
+      }
+
+      // Show detailed error message from backend
+      const errorMessage = error?.response?.data?.error?.message || 
+                          error?.response?.data?.message || 
+                          error?.message || 
+                          "Failed to update status. Please try again.";
+
+      toast({
+        title: "Error",
+        description: errorMessage,
         variant: "destructive"
       });
     }
