@@ -92,7 +92,12 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
     {
       label: 'System',
       items: [
-        { name: 'Customer Support', href: '/gc-dashboard/customer-support', icon: LifeBuoy },
+        { 
+          name: 'Customer Support', 
+          href: '/gc-dashboard/customer-support', 
+          icon: LifeBuoy,
+          isSupport: true // Special flag for support item
+        },
         { name: 'Settings', href: '/gc-dashboard/settings', icon: Settings },
       ]
     }
@@ -194,21 +199,49 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                       className={cn(
                         "group flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 relative",
                         isActive
-                          ? "bg-accent text-accent-foreground shadow-lg shadow-accent/20"
-                          : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-white",
+                          ? item.isSupport
+                            ? "bg-gradient-to-r from-[#fce011] to-yellow-400 text-black shadow-lg shadow-[#fce011]/30"
+                            : "bg-accent text-accent-foreground shadow-lg shadow-accent/20"
+                          : item.isSupport
+                            ? "text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-[#fce011]/10 hover:to-yellow-400/10 dark:hover:from-[#fce011]/20 dark:hover:to-yellow-400/20 hover:text-gray-900 dark:hover:text-white"
+                            : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-white",
                         isCollapsed ? 'justify-center px-0 h-10 w-10 mx-auto' : ''
                       )}
                       title={isCollapsed ? item.name : ''}
                     >
-                      <item.icon className={cn(
-                        "w-5 h-5 transition-all duration-200 shrink-0",
-                        isActive && "scale-110"
-                      )} />
+                      {item.isSupport ? (
+                        <div className={cn(
+                          "w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200",
+                          isActive 
+                            ? "bg-black/10" 
+                            : "bg-[#fce011]/15 dark:bg-[#fce011]/20 group-hover:bg-[#fce011]/20 dark:group-hover:bg-[#fce011]/25"
+                        )}>
+                          <item.icon className={cn(
+                            "w-4 h-4 transition-all duration-200 shrink-0",
+                            isActive && "text-black",
+                            !isActive && "text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white"
+                          )} />
+                        </div>
+                      ) : (
+                        <item.icon className={cn(
+                          "w-5 h-5 transition-all duration-200 shrink-0",
+                          isActive && "scale-110"
+                        )} />
+                      )}
                       {!isCollapsed && (
                         <span className="truncate">{item.name}</span>
                       )}
-                      {isActive && !isCollapsed && (
+                      {item.isSupport && !isCollapsed && (
+                        <div className="ml-auto flex items-center gap-1.5">
+                          <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-lg shadow-green-500/50"></div>
+                          <span className="text-[10px] font-semibold text-green-600 dark:text-green-400">24/7</span>
+                        </div>
+                      )}
+                      {isActive && !isCollapsed && !item.isSupport && (
                         <div className="absolute left-0 w-1 h-4 bg-accent-foreground/50 rounded-r-full" />
+                      )}
+                      {isActive && !isCollapsed && item.isSupport && (
+                        <div className="absolute left-0 w-1 h-4 bg-black/30 rounded-r-full" />
                       )}
                       {!isCollapsed && hasSubItems && (
                         <ChevronRight className={cn(
