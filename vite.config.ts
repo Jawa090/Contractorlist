@@ -7,7 +7,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   return {
     server: {
-      allowedHosts:true,
+      allowedHosts: true,
       host: "::",
       port: parseInt(env.PORT || "3000"),
       proxy: {
