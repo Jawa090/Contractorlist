@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
+import axios from 'axios';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
@@ -26,6 +28,50 @@ interface HomeownerSidebarProps {
 const HomeownerSidebar = ({ isOpen, onClose }: HomeownerSidebarProps) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const location = useLocation();
+  const [userName, setUserName] = useState('User');
+  const [userInitial, setUserInitial] = useState('U');
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        // Get the auth token from localStorage
+        const token = localStorage.getItem('token');
+        if (!token) {
+          console.warn('No auth token found');
+          return;
+        }
+
+        // Fetch user profile from backend API
+        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+        const response = await axios.get(`${apiUrl}/users/profile`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+
+        if (response.data && response.data.user) {
+          const { firstName, lastName } = response.data.user;
+          const fullName = `${firstName || ''} ${lastName || ''}`.trim() || 'User';
+          setUserName(fullName);
+          setUserInitial((firstName || 'U').charAt(0).toUpperCase());
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        // Fallback to Supabase metadata if backend fails
+        try {
+          const { data: { user } } = await supabase.auth.getUser();
+          if (user) {
+            const fullName = user.user_metadata?.full_name || user.email?.split('@')[0] || 'User';
+            setUserName(fullName);
+            setUserInitial(fullName.charAt(0).toUpperCase());
+          }
+        } catch (sbError) {
+          console.error('Supabase fallback failed:', sbError);
+        }
+      }
+    };
+    fetchUserData();
+  }, []);
 
   const menuItems = [
     {
@@ -114,7 +160,7 @@ const HomeownerSidebar = ({ isOpen, onClose }: HomeownerSidebarProps) => {
               </div>
               <div>
                 <h2 className="font-bold text-lg text-white">ContractorsList</h2>
-                <p className="text-sm text-gray-400 font-medium">Homeowner Portal</p>
+                <p className="text-sm text-gray-400 font-medium">Project Owner</p>
               </div>
             </div>
           )}
@@ -151,7 +197,7 @@ const HomeownerSidebar = ({ isOpen, onClose }: HomeownerSidebarProps) => {
           <div className="p-6 border-b border-gray-800 bg-gray-800">
             <div className="flex items-center gap-4">
               <div className="size-12 rounded-full bg-accent flex items-center justify-center text-accent-foreground font-bold text-lg shadow-lg ring-4 ring-accent/20">
-                A
+                {userInitial}
               </div>
               <div className="flex flex-col overflow-hidden">
                 <p className="text-white text-base font-semibold truncate">Alex Johnson</p>

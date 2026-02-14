@@ -31,7 +31,8 @@ import { cn } from '@/lib/utils';
 import { useSocket } from '@/context/SocketContext';
 import { chatService } from '@/api/chatService';
 import { useAppSelector } from '@/store/hooks';
-import { getProjects, Project } from '@/api/gc-apis/backend';
+import { getProjects as getGcProjects, Project as GcProject } from '@/api/gc-apis/backend';
+import { getProjects as getScProjects } from '@/api/sc-apis/backend';
 import { uploadService } from '@/api/uploadService';
 
 interface ChatUser {
@@ -106,7 +107,7 @@ const Communications = () => {
   const [contacts, setContacts] = useState<any[]>([]); // For New Chat (Users)
   const [isLoadingContacts, setIsLoadingContacts] = useState(false);
 
-  const [availableProjects, setAvailableProjects] = useState<Project[]>([]);
+  const [availableProjects, setAvailableProjects] = useState<any[]>([]);
   const [isLoadingProjects, setIsLoadingProjects] = useState(false);
 
   const [sidebarSearch, setSidebarSearch] = useState('');
@@ -223,9 +224,26 @@ const Communications = () => {
 
   const fetchAvailableProjects = async () => {
     try {
+      if (!currentUser) return;
       setIsLoadingProjects(true);
-      const data = await getProjects({ limit: 100 });
-      setAvailableProjects(data || []);
+
+      if (currentUser.role === 'subcontractor' || currentUser.contractor_type === 'subcontractor') {
+        const data = await getScProjects({ limit: 100 });
+        const mapped = (data.projects || []).map(p => ({
+          id: p.id,
+          name: p.name,
+          client: p.client
+        }));
+        setAvailableProjects(mapped);
+      } else {
+        const data = await getGcProjects({ limit: 100 });
+        const mapped = (data || []).map(p => ({
+          id: p.id,
+          name: p.name,
+          client: p.client
+        }));
+        setAvailableProjects(mapped);
+      }
     } catch (error) {
       console.error('Failed projects', error);
     } finally {

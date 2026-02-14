@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { toast } from 'sonner';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -456,10 +457,10 @@ const ContractorDirectory = () => {
 
   const handleSendInvite = () => {
     if (!selectedProject) {
-      alert('Please select a project');
+      toast.error('Please select a project');
       return;
     }
-    alert(`Invitation sent to ${selectedContractor?.name} for project: ${selectedProject}`);
+    toast.success(`Invitation sent to ${selectedContractor?.name} for project: ${selectedProject}`);
     setInviteDialogOpen(false);
     setInviteMessage('');
     setSelectedProject('');
@@ -473,9 +474,9 @@ const ContractorDirectory = () => {
         contractor.specialties.some(specialty =>
           specialty.toLowerCase().includes(searchQuery.toLowerCase())
         );
-      
+
       const matchesCategory = selectedCategory === 'All Contractors' || contractor.category === selectedCategory;
-      
+
       return matchesSearch && matchesCategory;
     })
     .sort((a, b) => {
@@ -540,11 +541,10 @@ const ContractorDirectory = () => {
               <div key={category.id}>
                 {/* Main Category */}
                 <div
-                  className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all duration-200 ${
-                    selectedCategory === category.name || selectedCategory === category.id
+                  className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all duration-200 ${selectedCategory === category.name || selectedCategory === category.id
                       ? 'bg-gradient-to-r from-orange-50 to-yellow-50 dark:from-orange-900/20 dark:to-yellow-900/20 border border-orange-200 dark:border-orange-800 shadow-sm'
                       : 'hover:bg-gray-50 dark:hover:bg-gray-800'
-                  }`}
+                    }`}
                   onClick={() => {
                     if (category.subcategories) {
                       toggleFolder(category.id);
@@ -562,7 +562,7 @@ const ContractorDirectory = () => {
                   ) : (
                     <div className="w-4" />
                   )}
-                  
+
                   {category.subcategories ? (
                     expandedFolders.includes(category.id) ? (
                       <FolderOpen className={`w-5 h-5 ${category.color}`} />
@@ -572,15 +572,14 @@ const ContractorDirectory = () => {
                   ) : (
                     <category.icon className={`w-5 h-5 ${category.color}`} />
                   )}
-                  
-                  <span className={`flex-1 font-medium ${
-                    selectedCategory === category.name || selectedCategory === category.id
+
+                  <span className={`flex-1 font-medium ${selectedCategory === category.name || selectedCategory === category.id
                       ? 'text-orange-700 dark:text-orange-400'
                       : 'text-gray-700 dark:text-gray-300'
-                  }`}>
+                    }`}>
                     {category.name}
                   </span>
-                  
+
                   <Badge className="bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 text-xs font-semibold">
                     {category.count}
                   </Badge>
@@ -592,19 +591,16 @@ const ContractorDirectory = () => {
                     {category.subcategories.map((subcategory) => (
                       <div
                         key={subcategory.id}
-                        className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer transition-all duration-200 ${
-                          selectedCategory === subcategory.id
+                        className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer transition-all duration-200 ${selectedCategory === subcategory.id
                             ? 'bg-gradient-to-r from-orange-50 to-yellow-50 dark:from-orange-900/20 dark:to-yellow-900/20 border border-orange-200 dark:border-orange-800 shadow-sm'
                             : 'hover:bg-gray-50 dark:hover:bg-gray-800'
-                        }`}
+                          }`}
                         onClick={() => setSelectedCategory(subcategory.id)}
                       >
-                        <subcategory.icon className={`w-4 h-4 ${
-                          selectedCategory === subcategory.id ? 'text-orange-600 dark:text-orange-400' : 'text-gray-500 dark:text-gray-400'
-                        }`} />
-                        <span className={`flex-1 text-sm ${
-                          selectedCategory === subcategory.id ? 'text-orange-700 dark:text-orange-400 font-medium' : 'text-gray-600 dark:text-gray-400'
-                        }`}>
+                        <subcategory.icon className={`w-4 h-4 ${selectedCategory === subcategory.id ? 'text-orange-600 dark:text-orange-400' : 'text-gray-500 dark:text-gray-400'
+                          }`} />
+                        <span className={`flex-1 text-sm ${selectedCategory === subcategory.id ? 'text-orange-700 dark:text-orange-400 font-medium' : 'text-gray-600 dark:text-gray-400'
+                          }`}>
                           {subcategory.name}
                         </span>
                         <Badge className="bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 text-xs">
@@ -638,27 +634,27 @@ const ContractorDirectory = () => {
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
             <div>
               <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-1">
-                {selectedCategory === 'All Contractors' ? 'All Contractors' : 
-                 categoryStructure.find(cat => cat.id === selectedCategory)?.name ||
-                 categoryStructure.flatMap(cat => cat.subcategories || []).find(sub => sub.id === selectedCategory)?.name ||
-                 selectedCategory}
+                {selectedCategory === 'All Contractors' ? 'All Contractors' :
+                  categoryStructure.find(cat => cat.id === selectedCategory)?.name ||
+                  categoryStructure.flatMap(cat => cat.subcategories || []).find(sub => sub.id === selectedCategory)?.name ||
+                  selectedCategory}
               </h1>
               <p className="text-gray-600 dark:text-gray-400">
                 {filteredContractors.length} verified professionals found
               </p>
             </div>
-            
+
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                 <span>Live updates</span>
               </div>
-              
+
               <Button variant="outline" size="sm" className="gap-2" onClick={() => setSortBy(sortBy === 'rating' ? 'distance' : 'rating')}>
                 <SortAsc className="w-4 h-4" />
                 Sort: {sortBy === 'rating' ? 'Rating' : sortBy === 'distance' ? 'Distance' : 'Price'}
               </Button>
-              
+
               <Button className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white shadow-lg font-semibold gap-2">
                 <Users className="w-4 h-4" />
                 Post Project
@@ -697,14 +693,14 @@ const ContractorDirectory = () => {
               <p className="text-gray-600 dark:text-gray-400 mb-4">
                 Try adjusting your search or browse different categories
               </p>
-              <Button variant="outline" onClick={() => {setSearchQuery(''); setSelectedCategory('All Contractors');}} className="dark:border-gray-700 dark:text-gray-300">
+              <Button variant="outline" onClick={() => { setSearchQuery(''); setSelectedCategory('All Contractors'); }} className="dark:border-gray-700 dark:text-gray-300">
                 Clear Filters
               </Button>
             </div>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
               {filteredContractors.map((contractor) => (
-                <Card 
+                <Card
                   key={contractor.id}
                   className="hover:shadow-2xl transition-all duration-300 border-0 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm group hover:scale-[1.02] cursor-pointer"
                 >
@@ -712,7 +708,7 @@ const ContractorDirectory = () => {
                     {/* Header */}
                     <div className="flex justify-between items-start mb-4">
                       <div className="flex items-center gap-3">
-                        <div 
+                        <div
                           className="w-12 h-12 rounded-xl bg-cover bg-center shadow-md ring-2 ring-white"
                           style={{ backgroundImage: `url(${contractor.image})` }}
                         />
@@ -745,11 +741,10 @@ const ContractorDirectory = () => {
                       <Button
                         variant="ghost"
                         size="sm"
-                        className={`${
-                          savedContractors.includes(contractor.id)
+                        className={`${savedContractors.includes(contractor.id)
                             ? 'text-red-500 hover:bg-red-50'
                             : 'text-gray-400 hover:text-red-500 hover:bg-red-50'
-                        }`}
+                          }`}
                         onClick={(e) => {
                           e.stopPropagation();
                           toggleSaved(contractor.id);
@@ -780,7 +775,7 @@ const ContractorDirectory = () => {
                         </Badge>
                       </div>
                       <Progress value={contractor.aiScore} className="h-2 bg-gray-100">
-                        <div 
+                        <div
                           className="h-full bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full transition-all duration-500"
                           style={{ width: `${contractor.aiScore}%` }}
                         />
@@ -843,8 +838,8 @@ const ContractorDirectory = () => {
 
                     {/* Actions */}
                     <div className="space-y-2">
-                      <Button 
-                        size="sm" 
+                      <Button
+                        size="sm"
                         className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-semibold gap-2"
                         onClick={(e) => {
                           e.stopPropagation();
@@ -855,8 +850,8 @@ const ContractorDirectory = () => {
                         Invite to Bid
                       </Button>
                       <div className="flex gap-2">
-                        <Button 
-                          size="sm" 
+                        <Button
+                          size="sm"
                           variant="outline"
                           className="flex-1 hover:bg-gray-50 dark:hover:bg-gray-800"
                         >
@@ -894,7 +889,7 @@ const ContractorDirectory = () => {
               <Card className="bg-gradient-to-r from-accent/10 to-accent/5 border-accent/20">
                 <CardContent className="p-4">
                   <div className="flex items-center gap-4">
-                    <div 
+                    <div
                       className="w-16 h-16 rounded-xl bg-cover bg-center shadow-md ring-2 ring-white"
                       style={{ backgroundImage: `url(${selectedContractor.image})` }}
                     />

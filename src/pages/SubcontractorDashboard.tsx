@@ -30,7 +30,7 @@ import DirectoryPage from "@/pages/Subcontractor dashboard/DirectoryPage";
 import BidsPage from "@/pages/Subcontractor dashboard/BidsPage";
 
 // Subcontractor Components
-import SubcontractorMessages from "@/components/Subcontractor dashboard/SubcontractorMessages";
+import Communications from "@/components/common/Communications";
 import ProductsOverview from "@/components/Subcontractor dashboard/Products/ProductsOverview";
 import ServicesOverview from "@/components/Subcontractor dashboard/Services/ServicesOverview";
 import EnterpriseTeamManagement from "@/components/Subcontractor dashboard/EnterpriseTeamManagement";
@@ -82,7 +82,7 @@ export default function SubcontractorDashboard() {
                     <Route path="bids" element={<BidsPage />} />
                     <Route path="products" element={<ProductsOverview />} />
                     <Route path="services" element={<ServicesOverview />} />
-                    <Route path="communications" element={<SubcontractorMessages />} />
+                    <Route path="communications" element={<Communications />} />
 
                     <Route path="*" element={<Navigate to="/subcontractor-dashboard" replace />} />
                   </Routes>

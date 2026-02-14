@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { toast } from 'sonner';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -27,7 +28,9 @@ import {
   Zap,
   Activity,
   BarChart3,
-  Users
+  Users,
+  PenLine,
+  UserPlus
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -47,6 +50,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import CreateProjectDialog from './CreateProjectDialog';
+import PaymentSignatureDialog from './PaymentSignatureDialog';
 
 const MyProjects = () => {
   const [selectedProject, setSelectedProject] = useState('kitchen');
@@ -54,8 +58,49 @@ const MyProjects = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [createProjectOpen, setCreateProjectOpen] = useState(false);
   const [manageProjectOpen, setManageProjectOpen] = useState(false);
+  const [addTeamMemberOpen, setAddTeamMemberOpen] = useState(false);
   const [editingMilestone, setEditingMilestone] = useState<string | null>(null);
   const [uploadingDoc, setUploadingDoc] = useState(false);
+  const [signatureDialogOpen, setSignatureDialogOpen] = useState(false);
+  const [selectedPaymentRequest, setSelectedPaymentRequest] = useState<any>(null);
+
+  // Mock Data for Team
+  const [teamMembers, setTeamMembers] = useState([
+    { id: 1, name: 'Elite Builders', role: 'General Contractor', email: 'contact@elitebuilders.com', phone: '(555) 123-4567', avatar: '/home1.jpeg', status: 'Active' },
+    { id: 2, name: 'Austin Supply Co.', role: 'Supplier', email: 'orders@austinsupply.com', phone: '(555) 987-6543', avatar: null, status: 'Active' }
+  ]);
+
+  // Mock Data for Payment Requests
+  const [paymentRequests, setPaymentRequests] = useState([
+    { id: 1, title: 'Payment App #1', amount: 15000, date: '2024-02-15', status: 'Pending', contractor: 'Elite Builders', description: 'Initial deposit and materials' },
+    { id: 2, title: 'Payment App #2', amount: 8500, date: '2024-03-01', status: 'Paid', contractor: 'Elite Builders', description: 'Foundation work completion' }
+  ]);
+
+  const handleSignOff = (id: number) => {
+    const request = paymentRequests.find(req => req.id === id);
+    if (request) {
+      setSelectedPaymentRequest(request);
+      setSignatureDialogOpen(true);
+    }
+  };
+
+  const handleSignatureComplete = (signatureData: string, signerName: string, signerTitle: string) => {
+    if (selectedPaymentRequest) {
+      setPaymentRequests(prev => prev.map(req =>
+        req.id === selectedPaymentRequest.id
+          ? {
+            ...req,
+            status: 'Approved',
+            signatureData,
+            signerName,
+            signerTitle,
+            approvedDate: new Date().toISOString()
+          }
+          : req
+      ));
+      toast.success('Payment approved successfully with digital signature!');
+    }
+  };
 
   const projects = [
     {
@@ -235,7 +280,7 @@ const MyProjects = () => {
             </div>
           </div>
         </div>
-        
+
         <div className="flex gap-3">
           <Button variant="outline" className="gap-2 hover:bg-accent/10 border-accent/20 text-accent">
             <Filter className="w-4 h-4" />
@@ -263,7 +308,7 @@ const MyProjects = () => {
             </div>
           </CardContent>
         </Card>
-        
+
         <Card className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900/50 dark:to-gray-800/50 border-gray-200 dark:border-gray-800">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
@@ -277,7 +322,7 @@ const MyProjects = () => {
             </div>
           </CardContent>
         </Card>
-        
+
         <Card className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900/50 dark:to-gray-800/50 border-gray-200 dark:border-gray-800">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
@@ -291,7 +336,7 @@ const MyProjects = () => {
             </div>
           </CardContent>
         </Card>
-        
+
         <Card className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900/50 dark:to-gray-800/50 border-gray-200 dark:border-gray-800">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
@@ -317,7 +362,7 @@ const MyProjects = () => {
               Filter
             </Button>
           </div>
-          
+
           {isLoading ? (
             Array.from({ length: 3 }).map((_, i) => (
               <Card key={i} className="p-4">
@@ -335,18 +380,17 @@ const MyProjects = () => {
             ))
           ) : (
             projects.map((project) => (
-              <Card 
+              <Card
                 key={project.id}
-                className={`cursor-pointer transition-all duration-200 hover:shadow-xl ${
-                  selectedProject === project.id 
-                    ? 'ring-2 ring-accent shadow-lg bg-gradient-to-r from-accent/5 to-yellow-50/30 dark:from-accent/10 dark:to-yellow-900/10' 
-                    : 'hover:shadow-lg bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm'
-                }`}
+                className={`cursor-pointer transition-all duration-200 hover:shadow-xl ${selectedProject === project.id
+                  ? 'ring-2 ring-accent shadow-lg bg-gradient-to-r from-accent/5 to-yellow-50/30 dark:from-accent/10 dark:to-yellow-900/10'
+                  : 'hover:shadow-lg bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm'
+                  }`}
                 onClick={() => setSelectedProject(project.id)}
               >
                 <CardContent className="p-5">
                   <div className="flex gap-4 mb-4">
-                    <div 
+                    <div
                       className="w-16 h-16 rounded-xl bg-cover bg-center flex-shrink-0 shadow-md ring-2 ring-white"
                       style={{ backgroundImage: `url(${project.image})` }}
                     />
@@ -376,7 +420,7 @@ const MyProjects = () => {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="space-y-2">
                     <div className="flex justify-between text-xs font-semibold">
                       <span className="text-gray-600">
@@ -386,7 +430,7 @@ const MyProjects = () => {
                     </div>
                     <div className="relative">
                       <Progress value={project.progress} className="h-2 bg-gray-100" />
-                      <div 
+                      <div
                         className="absolute top-0 left-0 h-2 bg-gradient-to-r from-accent to-orange-500 rounded-full transition-all duration-500"
                         style={{ width: `${project.progress}%` }}
                       />
@@ -410,7 +454,7 @@ const MyProjects = () => {
             <CardHeader className="border-b border-gray-100 dark:border-gray-800 bg-gradient-to-r from-gray-50 to-accent/5 dark:from-gray-800 dark:to-accent/10">
               <div className="flex justify-between items-start">
                 <div className="flex items-center gap-4">
-                  <div 
+                  <div
                     className="w-20 h-20 rounded-xl bg-cover bg-center shadow-lg ring-4 ring-white dark:ring-gray-800"
                     style={{ backgroundImage: `url(${selectedProjectData.image})` }}
                   />
@@ -440,35 +484,35 @@ const MyProjects = () => {
                   </div>
                 </div>
                 <div className="flex gap-3">
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
+                  <Button
+                    variant="outline"
+                    size="sm"
                     className="gap-2 hover:bg-accent/10"
                     onClick={() => {
                       navigator.clipboard.writeText(window.location.href);
-                      alert('Project link copied to clipboard!');
+                      toast.success('Project link copied to clipboard!');
                     }}
                   >
                     <Share className="w-4 h-4" />
                     Share
                   </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
+                  <Button
+                    variant="outline"
+                    size="sm"
                     className="gap-2 hover:bg-accent/10"
                     onClick={() => {
                       if (selectedProjectData.contractorPhone) {
                         window.location.href = `tel:${selectedProjectData.contractorPhone}`;
                       } else {
-                        alert('No phone number available');
+                        toast.error('No phone number available');
                       }
                     }}
                   >
                     <Phone className="w-4 h-4" />
                     Call Contractor
                   </Button>
-                  <Button 
-                    size="sm" 
+                  <Button
+                    size="sm"
                     className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold gap-2"
                     onClick={() => setManageProjectOpen(true)}
                   >
@@ -581,11 +625,11 @@ const MyProjects = () => {
                                 of ${(selectedProjectData.budget / 1000).toFixed(0)}K spent
                               </span>
                             </div>
-                            
+
                             <div className="relative mb-4">
                               <div className="w-full bg-green-100 dark:bg-green-900/30 rounded-full h-3 overflow-hidden">
-                                <div 
-                                  className="bg-gradient-to-r from-green-400 to-emerald-500 dark:from-green-500 dark:to-emerald-600 h-full rounded-full transition-all duration-500" 
+                                <div
+                                  className="bg-gradient-to-r from-green-400 to-emerald-500 dark:from-green-500 dark:to-emerald-600 h-full rounded-full transition-all duration-500"
                                   style={{ width: `${selectedProjectData.budgetUtilization}%` }}
                                 />
                               </div>
@@ -845,6 +889,69 @@ const MyProjects = () => {
                           ))}
                         </div>
 
+
+                        {/* Payment Requests (Sign Off) */}
+                        <div className="space-y-4">
+                          <h4 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                            <DollarSign className="w-5 h-5 text-accent" />
+                            Payment Approvals & Sign-offs
+                          </h4>
+                          {paymentRequests.length === 0 ? (
+                            <p className="text-sm text-gray-500">No pending payment requests.</p>
+                          ) : (
+                            paymentRequests.map((req) => (
+                              <Card key={req.id} className="border-gray-200 dark:border-gray-800">
+                                <CardContent className="p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                                  <div>
+                                    <div className="flex items-center gap-2 mb-1">
+                                      <h5 className="font-bold text-gray-900 dark:text-white">{req.title}</h5>
+                                      <Badge variant={req.status === 'Pending' ? 'outline' : 'default'} className={
+                                        req.status === 'Pending' ? 'text-yellow-600 border-yellow-200 bg-yellow-50' :
+                                          req.status === 'Approved' ? 'bg-green-100 text-green-700 hover:bg-green-100' :
+                                            'bg-gray-100 text-gray-700'
+                                      }>
+                                        {req.status}
+                                      </Badge>
+                                    </div>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400">{req.description}</p>
+                                    <p className="text-xs text-gray-500 mt-1">
+                                      From: {req.contractor} • Date: {new Date(req.date).toLocaleDateString()}
+                                    </p>
+                                    {req.status === 'Approved' && req.signerName && (
+                                      <div className="mt-2 p-2 bg-green-50 dark:bg-green-900/20 rounded border border-green-200 dark:border-green-800">
+                                        <p className="text-xs text-green-800 dark:text-green-200">
+                                          <CheckCircle className="w-3 h-3 inline mr-1" />
+                                          Signed by: <span className="font-semibold">{req.signerName}</span>
+                                          {req.signerTitle && ` (${req.signerTitle})`}
+                                          {req.approvedDate && ` • ${new Date(req.approvedDate).toLocaleString()}`}
+                                        </p>
+                                      </div>
+                                    )}
+                                  </div>
+                                  <div className="flex items-center gap-4 w-full md:w-auto">
+                                    <div className="text-right mr-2">
+                                      <p className="text-xs text-gray-500">Amount Due</p>
+                                      <p className="text-xl font-bold text-gray-900 dark:text-white">${req.amount.toLocaleString()}</p>
+                                    </div>
+                                    {req.status === 'Pending' && (
+                                      <Button onClick={() => handleSignOff(req.id)} className="bg-accent hover:bg-accent/90 text-accent-foreground flex-1 md:flex-none">
+                                        <PenLine className="w-4 h-4 mr-2" />
+                                        Sign Off
+                                      </Button>
+                                    )}
+                                    {req.status === 'Approved' && (
+                                      <Button variant="outline" disabled className="text-green-600 border-green-200 flex-1 md:flex-none">
+                                        <CheckCircle className="w-4 h-4 mr-2" />
+                                        Approved
+                                      </Button>
+                                    )}
+                                  </div>
+                                </CardContent>
+                              </Card>
+                            ))
+                          )}
+                        </div>
+
                         {/* Recent Transactions */}
                         <div>
                           <div className="flex items-center justify-between mb-3">
@@ -882,8 +989,8 @@ const MyProjects = () => {
                 <TabsContent value="documents" className="space-y-4">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Project Documents</h3>
-                    <Button 
-                      size="sm" 
+                    <Button
+                      size="sm"
                       className="bg-accent hover:bg-accent/90 text-accent-foreground"
                       onClick={() => document.getElementById('file-upload')?.click()}
                       disabled={uploadingDoc}
@@ -899,7 +1006,7 @@ const MyProjects = () => {
                         if (e.target.files?.[0]) {
                           setUploadingDoc(true);
                           setTimeout(() => {
-                            alert(`File "${e.target.files![0].name}" uploaded successfully!`);
+                            toast.success(`File "${e.target.files![0].name}" uploaded successfully!`);
                             setUploadingDoc(false);
                           }, 1500);
                         }
@@ -954,9 +1061,57 @@ const MyProjects = () => {
                 </TabsContent>
 
                 <TabsContent value="team" className="space-y-4">
-                  <div className="text-center py-12">
-                    <Users className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-                    <p className="text-gray-600 dark:text-gray-400">Team view coming soon</p>
+                  <div className="space-y-6">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Project Team</h3>
+                      <Button onClick={() => setAddTeamMemberOpen(true)} className="bg-accent hover:bg-accent/90 text-accent-foreground gap-2">
+                        <UserPlus className="w-4 h-4" />
+                        Add Member
+                      </Button>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {teamMembers.map((member) => (
+                        <Card key={member.id} className="overflow-hidden hover:shadow-lg transition-shadow border-gray-200 dark:border-gray-800">
+                          <CardContent className="p-6">
+                            <div className="flex items-start justify-between mb-4">
+                              <div className="flex items-center gap-3">
+                                <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+                                  {member.avatar ? (
+                                    <img src={member.avatar} alt={member.name} className="w-full h-full object-cover" />
+                                  ) : (
+                                    <Users className="w-6 h-6 text-gray-500" />
+                                  )}
+                                </div>
+                                <div>
+                                  <h4 className="font-bold text-gray-900 dark:text-white">{member.name}</h4>
+                                  <p className="text-sm text-accent font-medium">{member.role}</p>
+                                </div>
+                              </div>
+                              <Badge variant="outline" className="border-green-200 text-green-700 bg-green-50">
+                                {member.status}
+                              </Badge>
+                            </div>
+
+                            <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                              <div className="flex items-center gap-2">
+                                <MessageSquare className="w-4 h-4" />
+                                <span>{member.email}</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Phone className="w-4 h-4" />
+                                <span>{member.phone}</span>
+                              </div>
+                            </div>
+
+                            <div className="mt-6 flex gap-2">
+                              <Button variant="outline" size="sm" className="flex-1">Message</Button>
+                              <Button variant="outline" size="sm" className="flex-1">Profile</Button>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
                   </div>
                 </TabsContent>
               </Tabs>
@@ -1093,10 +1248,10 @@ const MyProjects = () => {
             <Button variant="outline" onClick={() => setManageProjectOpen(false)}>
               Cancel
             </Button>
-            <Button 
+            <Button
               className="bg-accent hover:bg-accent/90 text-accent-foreground"
               onClick={() => {
-                alert('Project updated successfully!');
+                toast.success('Project updated successfully!');
                 setManageProjectOpen(false);
               }}
             >
@@ -1105,6 +1260,58 @@ const MyProjects = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Add Team Member Dialog */}
+      <Dialog open={addTeamMemberOpen} onOpenChange={setAddTeamMemberOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add Team Member</DialogTitle>
+            <DialogDescription>
+              Invite a GC, Supplier, or Subcontractor to the project team.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="role">Role</Label>
+              <select id="role" className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                <option value="GC">General Contractor</option>
+                <option value="Supplier">Supplier</option>
+                <option value="Subcontractor">Subcontractor</option>
+                <option value="Architect">Architect</option>
+              </select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email Address</Label>
+              <Input id="email" type="email" placeholder="colleague@example.com" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="name">Name (Optional)</Label>
+              <Input id="name" placeholder="John Doe" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="company">Company (Optional)</Label>
+              <Input id="company" placeholder="Company Name" />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setAddTeamMemberOpen(false)}>Cancel</Button>
+            <Button onClick={() => {
+              toast.success('Invitation sent successfully!');
+              setAddTeamMemberOpen(false);
+            }}>Send Invitation</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Payment Signature Dialog */}
+      {selectedPaymentRequest && (
+        <PaymentSignatureDialog
+          open={signatureDialogOpen}
+          onOpenChange={setSignatureDialogOpen}
+          paymentRequest={selectedPaymentRequest}
+          onSignOff={handleSignatureComplete}
+        />
+      )}
     </div>
   );
 };

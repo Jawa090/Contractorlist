@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   LayoutDashboard,
@@ -27,6 +28,7 @@ import {
   Package,
   Wrench,
   Users,
+  Lock as LockIcon,
 } from "lucide-react";
 
 interface NavItem {
@@ -34,6 +36,7 @@ interface NavItem {
   icon: React.ComponentType<{ className?: string }>;
   label: string;
   newTab?: boolean;
+  subItems?: NavItem[];
 }
 
 interface NavSection {
@@ -43,16 +46,45 @@ interface NavSection {
 
 const navSections: NavSection[] = [
   {
-    label: "Project",
+    label: "Main",
     items: [
       { to: "/subcontractor-dashboard", icon: LayoutDashboard, label: "Dashboard" },
-      { to: "/subcontractor-dashboard/project-discovery", icon: Search, label: "Find Projects" },
     ],
   },
   {
     label: "Project Management",
     items: [
-      { to: "/project-management", icon: ClipboardList, label: "Project Management", newTab: true },
+      {
+        to: "/project-management",
+        icon: ClipboardList,
+        label: "Project Management",
+        subItems: [
+          { to: "/subcontractor-dashboard/directory", icon: Users, label: "Directory" },
+          { to: "/subcontractor-dashboard/project-discovery", icon: Search, label: "Project Discovery" },
+          { to: "/subcontractor-dashboard/projects", icon: FolderKanban, label: "My Projects" },
+          { to: "/subcontractor-dashboard/bids", icon: Gavel, label: "Bid Management" },
+          { to: "/subcontractor-dashboard/schedule", icon: CalendarDays, label: "Schedule" },
+          { to: "/subcontractor-dashboard/daily-logs", icon: ClipboardList, label: "Daily Log" },
+          { to: "/subcontractor-dashboard/rfi", icon: FileSignature, label: "RFIs" },
+          { to: "/subcontractor-dashboard/photos", icon: Camera, label: "Photos" },
+          { to: "/subcontractor-dashboard/resources", icon: Package, label: "Resource Management" },
+          { to: "/subcontractor-dashboard/analytics", icon: BarChart3, label: "Analytics" },
+          { to: "/subcontractor-dashboard/financials", icon: DollarSign, label: "Budget" },
+          { to: "/subcontractor-dashboard/billing", icon: Receipt, label: "Pay Applications" },
+          { to: "/subcontractor-dashboard/change-orders", icon: ArrowLeftRight, label: "Change Events" },
+          { to: "/subcontractor-dashboard/signature-history", icon: FileCheck, label: "Signatures" },
+          { to: "/subcontractor-dashboard/liens", icon: Scale, label: "Commitments" },
+          { to: "/subcontractor-dashboard/safety", icon: HardHat, label: "Incidents" },
+          { to: "/subcontractor-dashboard/insurance", icon: AlertTriangle, label: "Insurances" },
+          { to: "/subcontractor-dashboard/payroll", icon: Landmark, label: "Certified Payroll" },
+        ],
+      },
+    ],
+  },
+  {
+    label: "Network",
+    items: [
+      { to: "/subcontractor-dashboard/communications", icon: MessageSquare, label: "Communications" },
     ],
   },
   {
@@ -67,12 +99,13 @@ const navSections: NavSection[] = [
 export default function AppSidebar() {
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
+  const [pmExpanded, setPmExpanded] = useState(false);
 
   return (
     <aside
       className={cn(
         "flex flex-col h-screen bg-sidebar border-r border-sidebar-border transition-all duration-200",
-        collapsed ? "w-16" : "w-60"
+        collapsed ? "w-16" : "w-70"
       )}
     >
       {/* Logo */}
@@ -109,25 +142,80 @@ export default function AppSidebar() {
             )}
             <div className="space-y-0.5 px-2">
               {section.items.map((item) => {
-                const isActive = location.pathname === item.to;
+                const isDashboard = item.to === "/gc-dashboard" || item.to === "/subcontractor-dashboard";
+                const isActive = isDashboard
+                  ? location.pathname === item.to
+                  : location.pathname === item.to || location.pathname.startsWith(item.to + "/");
+                const hasSubItems = item.subItems && item.subItems.length > 0;
+                const isPm = item.label === "Project Management";
+
                 return (
-                  <Link
-                    key={item.to}
-                    to={item.to}
-                    target={item.newTab ? "_blank" : undefined}
-                    rel={item.newTab ? "noopener noreferrer" : undefined}
-                    title={collapsed ? item.label : undefined}
-                    className={cn(
-                      "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
-                      isActive
-                        ? "bg-primary text-primary-foreground shadow-sm"
-                        : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
-                      collapsed && "justify-center px-2"
+                  <div key={item.label} className="flex flex-col">
+                    {hasSubItems ? (
+                      <button
+                        onClick={() => isPm && setPmExpanded(!pmExpanded)}
+                        className={cn(
+                          "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors w-full text-left",
+                          isActive && !pmExpanded
+                            ? "bg-primary text-primary-foreground shadow-sm"
+                            : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+                          collapsed && "justify-center px-2"
+                        )}
+                      >
+                        <item.icon className="w-4 h-4 shrink-0" />
+                        {!collapsed && (
+                          <>
+                            <span className="flex-1 whitespace-nowrap truncate">{item.label}</span>
+                            {pmExpanded ? (
+                              <ChevronDown className="w-3 h-3 opacity-60 shrink-0" />
+                            ) : (
+                              <ChevronRight className="w-3 h-3 opacity-60 shrink-0" />
+                            )}
+                          </>
+                        )}
+                      </button>
+                    ) : (
+                      <Link
+                        to={item.to}
+                        target={item.newTab ? "_blank" : undefined}
+                        rel={item.newTab ? "noopener noreferrer" : undefined}
+                        title={collapsed ? item.label : undefined}
+                        className={cn(
+                          "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                          isActive
+                            ? "bg-primary text-primary-foreground shadow-sm"
+                            : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+                          collapsed && "justify-center px-2"
+                        )}
+                      >
+                        <item.icon className="w-4 h-4 shrink-0" />
+                        {!collapsed && <span className="whitespace-nowrap truncate">{item.label}</span>}
+                      </Link>
                     )}
-                  >
-                    <item.icon className="w-4 h-4 shrink-0" />
-                    {!collapsed && <span>{item.label}</span>}
-                  </Link>
+
+                    {hasSubItems && pmExpanded && !collapsed && (
+                      <div className="mt-1 ml-4 border-l border-sidebar-border space-y-0.5">
+                        {item.subItems?.map((subItem) => {
+                          const isSubActive = location.pathname === subItem.to;
+                          return (
+                            <Link
+                              key={subItem.to}
+                              to={subItem.to}
+                              className={cn(
+                                "flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium transition-colors ml-2",
+                                isSubActive
+                                  ? "text-primary bg-primary/10"
+                                  : "text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent"
+                              )}
+                            >
+                              <subItem.icon className="w-3 h-3 shrink-0" />
+                              <span>{subItem.label}</span>
+                            </Link>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
                 );
               })}
             </div>
@@ -136,7 +224,7 @@ export default function AppSidebar() {
       </nav>
 
       {/* Footer */}
-      <div className="border-t border-sidebar-border p-2">
+      < div className="border-t border-sidebar-border p-2" >
         {!collapsed && (
           <div className="space-y-0.5 mb-2">
             <Link to="/subcontractor-dashboard/settings" className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors">

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { toast } from 'sonner';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -92,7 +93,7 @@ const BidManagement = () => {
     }
   ];
 
-  const bidsData: Record<string, any[]> = {
+  const [bidsData, setBidsData] = useState<Record<string, any[]>>({
     kitchen: [
       {
         id: 'bid1',
@@ -222,7 +223,7 @@ const BidManagement = () => {
         insurance: 'Fully insured + Bonded'
       }
     ]
-  };
+  });
 
   const selectedProjectData = postedProjects.find(p => p.id === selectedProject) || postedProjects[0];
   const projectBids = bidsData[selectedProject] || [];
@@ -240,6 +241,7 @@ const BidManagement = () => {
     switch (status) {
       case 'pending': return 'bg-gray-100 text-gray-700 border-gray-200';
       case 'shortlisted': return 'bg-accent/20 text-accent border-accent/30';
+      case 'pending_acceptance': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
       case 'awarded': return 'bg-green-100 text-green-800 border-green-200';
       case 'rejected': return 'bg-red-100 text-red-800 border-red-200';
       default: return 'bg-gray-100 text-gray-800 border-gray-200';
@@ -262,18 +264,31 @@ const BidManagement = () => {
   };
 
   const handleSendMessage = () => {
-    alert(`Message sent to ${currentBidData?.contractor.name}!`);
+    toast.success(`Message sent to ${currentBidData?.contractor.name}!`);
     setMessageText('');
     setMessageDialogOpen(false);
   };
 
   const handleConfirmAward = () => {
-    alert(`Project awarded to ${currentBidData?.contractor.name}!`);
+    setBidsData(prev => {
+      const newBids = { ...prev };
+      if (selectedProject && currentBidData) {
+        const pBids = [...(newBids[selectedProject] || [])];
+        const bidIndex = pBids.findIndex(b => b.id === currentBidData.id);
+        if (bidIndex !== -1) {
+          pBids[bidIndex] = { ...pBids[bidIndex], status: 'pending_acceptance' };
+          newBids[selectedProject] = pBids;
+        }
+      }
+      return newBids;
+    });
+
+    toast.success(`Project awarded to ${currentBidData?.contractor.name}! Status updated to Pending Acceptance.`);
     setAwardDialogOpen(false);
   };
 
   const handleShortlist = (bidId: string) => {
-    alert('Bid added to shortlist!');
+    toast.success('Bid added to shortlist!');
   };
 
   return (
@@ -302,7 +317,7 @@ const BidManagement = () => {
             </div>
           </div>
         </div>
-        
+
         <div className="flex gap-3">
           <Button variant="outline" className="gap-2 hover:bg-accent/10 border-accent/20 text-accent">
             <Filter className="w-4 h-4" />
@@ -330,7 +345,7 @@ const BidManagement = () => {
             </div>
           </CardContent>
         </Card>
-        
+
         <Card className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900/50 dark:to-gray-800/50 border-gray-200 dark:border-gray-800">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
@@ -344,7 +359,7 @@ const BidManagement = () => {
             </div>
           </CardContent>
         </Card>
-        
+
         <Card className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900/50 dark:to-gray-800/50 border-gray-200 dark:border-gray-800">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
@@ -358,7 +373,7 @@ const BidManagement = () => {
             </div>
           </CardContent>
         </Card>
-        
+
         <Card className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900/50 dark:to-gray-800/50 border-gray-200 dark:border-gray-800">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
@@ -380,20 +395,19 @@ const BidManagement = () => {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-bold text-gray-900 dark:text-white">Posted Projects</h2>
           </div>
-          
+
           {postedProjects.map((project) => (
-            <Card 
+            <Card
               key={project.id}
-              className={`cursor-pointer transition-all duration-200 hover:shadow-xl ${
-                selectedProject === project.id 
-                  ? 'ring-2 ring-accent shadow-lg bg-gradient-to-r from-accent/5 to-yellow-50/30 dark:from-accent/10 dark:to-yellow-900/10' 
-                  : 'hover:shadow-lg bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm'
-              }`}
+              className={`cursor-pointer transition-all duration-200 hover:shadow-xl ${selectedProject === project.id
+                ? 'ring-2 ring-accent shadow-lg bg-gradient-to-r from-accent/5 to-yellow-50/30 dark:from-accent/10 dark:to-yellow-900/10'
+                : 'hover:shadow-lg bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm'
+                }`}
               onClick={() => setSelectedProject(project.id)}
             >
               <CardContent className="p-5">
                 <div className="flex gap-4 mb-4">
-                  <div 
+                  <div
                     className="w-16 h-16 rounded-xl bg-cover bg-center flex-shrink-0 shadow-md ring-2 ring-white"
                     style={{ backgroundImage: `url(${project.image})` }}
                   />
@@ -421,7 +435,7 @@ const BidManagement = () => {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="space-y-2 pt-3 border-t border-gray-100 dark:border-gray-800">
                   <div className="flex items-center justify-between text-xs">
                     <span className="text-gray-500 dark:text-gray-400">Budget</span>
@@ -449,7 +463,7 @@ const BidManagement = () => {
             <CardHeader className="border-b border-gray-100 dark:border-gray-800 bg-gradient-to-r from-gray-50 to-accent/5 dark:from-gray-800 dark:to-accent/10">
               <div className="flex justify-between items-start">
                 <div className="flex items-center gap-4">
-                  <div 
+                  <div
                     className="w-20 h-20 rounded-xl bg-cover bg-center shadow-lg ring-4 ring-white dark:ring-gray-800"
                     style={{ backgroundImage: `url(${selectedProjectData.image})` }}
                   />
@@ -525,6 +539,7 @@ const BidManagement = () => {
                               <Badge className={`${getBidStatusColor(bid.status)} font-semibold`}>
                                 {bid.status === 'pending' && 'Pending Review'}
                                 {bid.status === 'shortlisted' && 'Shortlisted'}
+                                {bid.status === 'pending_acceptance' && 'Pending Acceptance'}
                                 {bid.status === 'awarded' && 'Awarded'}
                                 {bid.status === 'rejected' && 'Rejected'}
                               </Badge>
@@ -871,7 +886,7 @@ const BidManagement = () => {
                       Important
                     </p>
                     <p className="text-sm text-yellow-800 dark:text-yellow-300">
-                      Once you award this project, the contractor will be notified and other bids will be automatically declined. This action cannot be undone.
+                      Once you award this project, the status will change to Pending Acceptance until the contractor accepts.
                     </p>
                   </div>
                 </div>
