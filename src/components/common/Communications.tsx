@@ -34,6 +34,7 @@ import { useAppSelector } from '@/store/hooks';
 import { getProjects as getGcProjects, Project as GcProject } from '@/api/gc-apis/backend';
 import { getProjects as getScProjects } from '@/api/sc-apis/backend';
 import { uploadService } from '@/api/uploadService';
+import authService from '@/api/authService';
 
 interface ChatUser {
   id: number;
@@ -191,20 +192,36 @@ const Communications = () => {
   const fetchContacts = async () => {
     try {
       setIsLoadingContacts(true);
-      // Fetch all registered users (limited to 50 on backend by default)
+      // Try searching first
       const res = await chatService.searchUsers(contactSearch);
-      if (res.data) {
-        const platformUsers = res.data.map((u: any) => ({
+      let users = res.data || [];
+
+      // If no search results and no search query, try getting all users as fallback
+      if (users.length === 0 && !contactSearch.trim()) {
+        const allRes = await authService.getAllUsers();
+        if (allRes.success) {
+          users = allRes.data;
+        }
+      }
+
+      if (users) {
+        const platformUsers = users.map((u: any) => ({
           id: u.id,
           user_id: u.id,
           name: `${u.first_name} ${u.last_name}`,
+          first_name: u.first_name,
+          last_name: u.last_name,
           email: u.email,
+          role: u.role,
+          company: u.company_name || u.company,
           professional_category: 'Platform User'
         }));
         setContacts(platformUsers);
       }
     } catch (error) {
       console.error('Failed contacts', error);
+      // Fallback to empty if both fail
+      if (!contactSearch.trim()) setContacts([]);
     } finally {
       setIsLoadingContacts(false);
     }
@@ -901,10 +918,24 @@ const Communications = () => {
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <p className="font-bold text-sm text-gray-900 dark:text-white">{c.name}</p>
-                          <p className="text-[10px] text-gray-500 uppercase tracking-widest font-black">
-                            {c.email}
+                          <p className="font-bold text-sm text-gray-900 dark:text-white flex items-center gap-2">
+                            {c.name}
+                            {c.role && (
+                              <span className="text-[10px] px-1.5 py-0.5 rounded bg-gray-100 dark:bg-white/10 text-gray-500 font-bold uppercase">
+                                {c.role === 'general-contractor' ? 'GC' : c.role === 'subcontractor' ? 'SC' : c.role}
+                              </span>
+                            )}
                           </p>
+                          <div className="flex flex-col">
+                            {c.company && (
+                              <p className="text-[10px] text-yellow-600 font-bold uppercase truncate max-w-[200px]">
+                                {c.company}
+                              </p>
+                            )}
+                            <p className="text-[10px] text-gray-400 truncate">
+                              {c.email}
+                            </p>
+                          </div>
                         </div>
                       </div>
                       <Button size="sm" variant="ghost" className="rounded-lg h-8 opacity-0 group-hover:opacity-100 transition-opacity">Message</Button>
@@ -966,7 +997,15 @@ const Communications = () => {
                           <AvatarFallback className="text-[10px]">{getInitials(c.name)}</AvatarFallback>
                         </Avatar>
                         <div className="flex-1 min-w-0">
-                          <p className="font-semibold text-sm truncate">{c.name}</p>
+                          <p className="font-semibold text-sm truncate flex items-center gap-2">
+                            {c.name}
+                            {c.role && (
+                              <span className="text-[8px] px-1 py-0.5 rounded bg-gray-100 dark:bg-white/10 text-gray-500 font-bold uppercase">
+                                {c.role === 'general-contractor' ? 'GC' : c.role === 'subcontractor' ? 'SC' : c.role}
+                              </span>
+                            )}
+                          </p>
+                          <p className="text-[10px] text-yellow-600 font-bold truncate">{c.company}</p>
                           <p className="text-[10px] text-gray-500 truncate">{c.email}</p>
                         </div>
                       </label>
@@ -1050,9 +1089,19 @@ const Communications = () => {
                   !activeContact?.participants.some((p: any) => p.id === c.user_id) &&
                   (c.company_name?.toLowerCase().includes(participantSearch.toLowerCase()) || c.name?.toLowerCase().includes(participantSearch.toLowerCase()))
                 ).map(c => (
-                  <div key={c.id} className="flex justify-between items-center bg-white dark:bg-black/20 p-2 rounded border">
-                    <span className="text-xs truncate max-w-[150px]">{c.company_name || c.name}</span>
-                    <Button size="sm" className="h-6 text-[10px]" onClick={() => handleAddParticipant(c.user_id)}>Add</Button>
+                  <div key={c.id} className="flex flex-col bg-white dark:bg-black/20 p-2 rounded border gap-1">
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs font-bold truncate flex items-center gap-1">
+                        {c.name}
+                        {c.role && (
+                          <span className="text-[8px] px-1 py-0.5 rounded bg-gray-100 dark:bg-white/10 text-gray-400 font-bold uppercase">
+                            {c.role === 'general-contractor' ? 'GC' : c.role === 'subcontractor' ? 'SC' : c.role}
+                          </span>
+                        )}
+                      </span>
+                      <Button size="sm" variant="outline" className="h-6 px-2 text-[10px]" onClick={() => handleAddParticipant(c.user_id)}>Add</Button>
+                    </div>
+                    {c.company && <p className="text-[10px] text-yellow-600 font-bold truncate uppercase">{c.company}</p>}
                   </div>
                 ))}
                 {contacts.filter(c =>
@@ -1071,7 +1120,15 @@ const Communications = () => {
                       <AvatarFallback>{getInitials(`${p.first_name} ${p.last_name}`)}</AvatarFallback>
                     </Avatar>
                     <div>
-                      <p className="font-bold text-sm">{p.first_name} {p.last_name}</p>
+                      <p className="font-bold text-sm flex items-center gap-2">
+                        {p.first_name} {p.last_name}
+                        {p.role && (
+                          <span className="text-[8px] px-1 py-0.5 rounded bg-gray-100 dark:bg-white/10 text-gray-500 font-bold uppercase">
+                            {p.role === 'general-contractor' ? 'GC' : p.role === 'subcontractor' ? 'SC' : p.role}
+                          </span>
+                        )}
+                      </p>
+                      {p.company && <p className="text-[10px] text-yellow-600 font-bold uppercase truncate">{p.company}</p>}
                       <p className="text-xs text-gray-500">{p.email}</p>
                     </div>
                   </div>

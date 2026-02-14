@@ -49,6 +49,8 @@ const navSections: NavSection[] = [
     label: "Main",
     items: [
       { to: "/subcontractor-dashboard", icon: LayoutDashboard, label: "Dashboard" },
+       { to: "/subcontractor-dashboard/directory", icon: Users, label: "Directory" },
+          { to: "/subcontractor-dashboard/project-discovery", icon: Search, label: "Project Discovery" },
     ],
   },
   {

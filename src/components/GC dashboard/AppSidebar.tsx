@@ -49,6 +49,8 @@ const navSections: NavSection[] = [
     label: "Main",
     items: [
       { to: "/gc-dashboard", icon: LayoutDashboard, label: "Dashboard" },
+        { to: "/gc-dashboard/directory", icon: Users, label: "Directory" },
+          { to: "/gc-dashboard/project-discovery", icon: Search, label: "Project Discovery" },
     ],
   },
 

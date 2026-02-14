@@ -72,7 +72,18 @@ const MyProjects = () => {
 
   // Mock Data for Payment Requests
   const [paymentRequests, setPaymentRequests] = useState([
-    { id: 1, title: 'Payment App #1', amount: 15000, date: '2024-02-15', status: 'Pending', contractor: 'Elite Builders', description: 'Initial deposit and materials' },
+    {
+      id: 1,
+      title: 'Payment App #1',
+      amount: 15000,
+      date: '2024-02-15',
+      status: 'Pending',
+      contractor: 'Elite Builders',
+      description: 'Initial deposit and materials',
+      gcName: 'Michael Chen',
+      gcTitle: 'Project Manager',
+      gcSignature: 'Michael Chen' // Text-based signature for testing
+    },
     { id: 2, title: 'Payment App #2', amount: 8500, date: '2024-03-01', status: 'Paid', contractor: 'Elite Builders', description: 'Foundation work completion' }
   ]);
 
@@ -84,21 +95,33 @@ const MyProjects = () => {
     }
   };
 
-  const handleSignatureComplete = (signatureData: string, signerName: string, signerTitle: string) => {
+  const handleSignatureComplete = (
+    ownerSignature: string,
+    ownerName: string,
+    ownerTitle: string,
+    gcSignature: string,
+    gcName: string,
+    gcTitle: string,
+    receipt: File | null
+  ) => {
     if (selectedPaymentRequest) {
       setPaymentRequests(prev => prev.map(req =>
         req.id === selectedPaymentRequest.id
           ? {
             ...req,
             status: 'Approved',
-            signatureData,
-            signerName,
-            signerTitle,
+            ownerSignature,
+            ownerName,
+            ownerTitle,
+            gcSignature,
+            gcName,
+            gcTitle,
+            receiptName: receipt?.name || null,
             approvedDate: new Date().toISOString()
           }
           : req
       ));
-      toast.success('Payment approved successfully with digital signature!');
+      toast.success('Payment approved successfully with signatures and receipt!');
     }
   };
 
@@ -917,14 +940,43 @@ const MyProjects = () => {
                                     <p className="text-xs text-gray-500 mt-1">
                                       From: {req.contractor} • Date: {new Date(req.date).toLocaleDateString()}
                                     </p>
-                                    {req.status === 'Approved' && req.signerName && (
-                                      <div className="mt-2 p-2 bg-green-50 dark:bg-green-900/20 rounded border border-green-200 dark:border-green-800">
-                                        <p className="text-xs text-green-800 dark:text-green-200">
-                                          <CheckCircle className="w-3 h-3 inline mr-1" />
-                                          Signed by: <span className="font-semibold">{req.signerName}</span>
-                                          {req.signerTitle && ` (${req.signerTitle})`}
-                                          {req.approvedDate && ` • ${new Date(req.approvedDate).toLocaleString()}`}
-                                        </p>
+                                    {req.status === 'Approved' && (req.ownerName || req.gcName) && (
+                                      <div className="mt-3 p-3 bg-green-50 dark:bg-green-900/10 rounded-xl border border-green-200 dark:border-green-800 space-y-2">
+                                        <div className="flex flex-wrap gap-4">
+                                          {req.ownerName && (
+                                            <div className="flex items-center gap-2">
+                                              <div className="p-1 rounded bg-green-100 dark:bg-green-900/30">
+                                                <CheckCircle className="w-3 h-3 text-green-600" />
+                                              </div>
+                                              <p className="text-xs text-green-800 dark:text-green-200">
+                                                Owner: <span className="font-bold">{req.ownerName}</span>
+                                              </p>
+                                            </div>
+                                          )}
+                                          {req.gcName && (
+                                            <div className="flex items-center gap-2">
+                                              <div className="p-1 rounded bg-blue-100 dark:bg-blue-900/30">
+                                                <CheckCircle className="w-3 h-3 text-blue-600" />
+                                              </div>
+                                              <p className="text-xs text-blue-800 dark:text-blue-200">
+                                                Contractor: <span className="font-bold">{req.gcName}</span>
+                                              </p>
+                                            </div>
+                                          )}
+                                        </div>
+                                        {req.receiptName && (
+                                          <div className="flex items-center gap-2 pt-1 border-t border-green-200/50 dark:border-green-800/50">
+                                            <FileText className="w-3 h-3 text-accent" />
+                                            <p className="text-xs text-gray-600 dark:text-gray-400">
+                                              Receipt: <span className="font-medium text-accent hover:underline cursor-pointer">{req.receiptName}</span>
+                                            </p>
+                                          </div>
+                                        )}
+                                        {req.approvedDate && (
+                                          <p className="text-[10px] text-gray-400 mt-1 uppercase tracking-wider font-semibold">
+                                            Finalized: {new Date(req.approvedDate).toLocaleString()}
+                                          </p>
+                                        )}
                                       </div>
                                     )}
                                   </div>

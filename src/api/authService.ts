@@ -246,6 +246,18 @@ class AuthService {
       throw error.response?.data || { success: false, message: 'Failed to verify SMS OTP' };
     }
   }
+
+  /**
+   * Get all platform users
+   */
+  async getAllUsers(): Promise<ApiResponse<User[]>> {
+    try {
+      const response = await api.get('/auth/users');
+      return response.data;
+    } catch (error: any) {
+      throw error.response?.data || { success: false, message: 'Failed to fetch users' };
+    }
+  }
 }
 
 export default new AuthService();
