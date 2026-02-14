@@ -42,9 +42,9 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { companyService, CompanySearchFilters } from '@/api/companyService';
 import { normalizeCompanyData } from '@/utils/normalizeCompany';
-import { getProjectDiscovery } from '@/api/gc-apis/backend';
 import FilterAccordion from '@/components/GC dashboard/FilterAccordion';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/gc/select';
+import { mockSuppliers } from '@/data/mockSuppliers';
 
 // Internal Components for GCs, Subcontractors and Suppliers
 
@@ -151,69 +151,12 @@ const SubcontractorList = ({ filters }: { filters: any }) => {
     );
 };
 
-const TEST_SUPPLIERS = [
-    {
-        id: 's1',
-        name: 'Lone Star Materials',
-        location: 'Austin, TX',
-        rating: 4.8,
-        status: 'Verified',
-        inventory: ['Lumber', 'Drywall', 'Tools'],
-        reviews: 124
-    },
-    {
-        id: 's2',
-        name: 'Alamo Concrete Supply',
-        location: 'San Antonio, TX',
-        rating: 4.6,
-        status: 'Premium',
-        inventory: ['Concrete', 'Aggregates', 'Masonry'],
-        reviews: 89
-    },
-    {
-        id: 's3',
-        name: 'Metro Electric Wholesale',
-        location: 'Dallas, TX',
-        rating: 4.9,
-        status: 'Verified',
-        inventory: ['Electrical', 'Lighting', 'Wire'],
-        reviews: 215
-    },
-    {
-        id: 's4',
-        name: 'Texas Plumbing Depot',
-        location: 'Houston, TX',
-        rating: 4.7,
-        status: 'Verified',
-        inventory: ['Plumbing', 'Pipe', 'Fixtures'],
-        reviews: 156
-    },
-    {
-        id: 's5',
-        name: 'BuildRight Hardware',
-        location: 'Fort Worth, TX',
-        rating: 4.5,
-        status: 'Standard',
-        inventory: ['Hardware', 'Fasteners', 'Tools'],
-        reviews: 78
-    }
-];
+// TEST_SUPPLIERS is now replaced by mockSuppliers from central data
 
 const SupplierList = ({ filters }: { filters: any }) => {
-    const { data: suppliers = [], isLoading } = useQuery<any[]>({
-        queryKey: ['directory-suppliers', filters],
-        queryFn: async () => {
-            // Simulate API delay
-            await new Promise(resolve => setTimeout(resolve, 800));
-
-            // Return mock data for now
-            return TEST_SUPPLIERS.filter(s => {
-                if (filters.searchQuery && !s.name.toLowerCase().includes(filters.searchQuery.toLowerCase())) return false;
-                if (filters.location && !s.location.toLowerCase().includes(filters.location.split(',')[0].toLowerCase())) return false;
-                return true;
-            });
-        }
-    });
+    // Return all mock data directly to ensure they show up
+    const suppliers = mockSuppliers;
+    const isLoading = false;
 
     if (isLoading) {
         return (

@@ -227,7 +227,7 @@ const FindProjectsPage = () => {
             {/* Page Header */}
             <div className="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-foreground">Find Projects</h1>
+                    <h1 className="text-2xl font-bold text-foreground">Projects Discovery</h1>
                     <p className="text-sm text-muted-foreground mt-1">
                         Discover new opportunities and bid on active solicitations in your region.
                     </p>

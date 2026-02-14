@@ -23,6 +23,7 @@ import { cn } from '@/lib/utils';
 import { Label } from '@/components/Subcontractor dashboard/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/Subcontractor dashboard/ui/select';
 import FilterAccordion from './FilterAccordion';
+import { mockSuppliers } from '@/data/mockSuppliers';
 
 const Suppliers = () => {
     const [searchQuery, setSearchQuery] = useState('');
@@ -47,30 +48,30 @@ const Suppliers = () => {
     const loadSuppliers = async () => {
         try {
             setIsLoading(true);
-            const filters: any = {};
-            if (searchQuery) filters.search = searchQuery;
-            if (materialCategory) filters.category = materialCategory;
-            if (radius) filters.radius = radius;
-            filters.type = 'Supplier';
 
-            // Mock API parameters for new filters if needed in future
-            // filters.productType = productType;
-            // filters.inStock = inStock;
-            // filters.delivery = deliveryAvailable;
+            // Simulate API delay
+            await new Promise(resolve => setTimeout(resolve, 600));
 
-            const data = await getProjectDiscovery(filters);
+            // Return all mock data for debugging
+            const filtered = mockSuppliers;
+            /*
+            const filtered = mockSuppliers.filter(s => {
+                if (searchQuery && !s.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+                if (materialCategory && !s.category.toLowerCase().includes(materialCategory.toLowerCase())) return false;
+                if (deliveryAvailable && !s.deliveryAvailable) return false;
+                return true;
+            });
+            */
 
-            // In a real app, filtering happens on backend. 
-            // For now, we'll map and display what we get.
-            setSuppliers(data.map((s: any) => ({
+            setSuppliers(filtered.map((s: any) => ({
                 id: s.id,
                 name: s.name,
-                category: s.trade || 'General Supply',
+                category: s.category || 'General Supply',
                 location: s.location || 'N/A',
                 rating: s.rating || 0,
-                inventory: s.specialties || ['Lumber', 'Drywall', 'Tools'],
-                status: s.tier || 'Verified',
-                logo: s.avatar || s.name.substring(0, 2).toUpperCase(),
+                inventory: s.inventory || ['Lumber', 'Drywall', 'Tools'],
+                status: s.status || 'Verified',
+                logo: s.name.substring(0, 2).toUpperCase(),
                 brand: 'Premium Brands', // Mock
                 leadTime: '1-3 Days' // Mock
             })));

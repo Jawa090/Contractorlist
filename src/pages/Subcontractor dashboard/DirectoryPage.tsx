@@ -45,6 +45,7 @@ import { normalizeCompanyData } from '@/utils/normalizeCompany';
 import { getProjectDiscovery } from '@/api/gc-apis/backend';
 import FilterAccordion from '@/components/Subcontractor dashboard/FilterAccordion';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/Subcontractor dashboard/ui/select';
+import { mockSuppliers } from '@/data/mockSuppliers';
 
 // Internal Components for GCs, Subcontractors and Suppliers
 const GCList = ({ filters }: { filters: any }) => {
@@ -261,22 +262,8 @@ const SubcontractorList = ({ filters }: { filters: any }) => {
 };
 
 const SupplierList = ({ filters }: { filters: any }) => {
-    const { data: suppliers = [], isLoading } = useQuery<any[]>({
-        queryKey: ['directory-suppliers', filters],
-        queryFn: async () => {
-            const apiFilters: CompanySearchFilters = {
-                search: filters.searchQuery || undefined,
-                location: filters.location || undefined,
-                professional_category: "Suppliers",
-                limit: 50
-            };
-            const response = await companyService.searchCompanies(apiFilters);
-            if (response.success) {
-                return response.data.map((item: any) => normalizeCompanyData(item.company || item));
-            }
-            return [];
-        }
-    });
+    const suppliers = mockSuppliers;
+    const isLoading = false;
 
     if (isLoading) {
         return (
@@ -359,7 +346,7 @@ const SupplierList = ({ filters }: { filters: any }) => {
 const DirectoryPage = () => {
     const { user } = useAppSelector((state) => state.auth);
     const [searchParams, setSearchParams] = useSearchParams();
-    const isGC = user?.role === 'gc';
+    const isGC = user?.role === 'general-contractor';
 
     // Default tab based on user role
     const defaultTab = isGC ? 'sc' : 'gc';
