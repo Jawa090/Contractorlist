@@ -201,7 +201,6 @@ const HomeownerSidebar = ({ isOpen, onClose }: HomeownerSidebarProps) => {
               </div>
               <div className="flex flex-col overflow-hidden">
                 <p className="text-white text-base font-semibold truncate">Alex Johnson</p>
-                <p className="text-gray-400 text-sm truncate">Premium Homeowner</p>
                 <div className="flex items-center gap-2 mt-1">
                   <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                   <span className="text-xs text-green-400 font-medium">Active</span>
